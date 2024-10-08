@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>World News</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300..800;1,300..800&display=swap" rel="stylesheet">
+  <link rel="icon" href="./favicon.png">
+</head>
+<body>
+  <header>
+    <div class="container">
+      <h1><big><i class="fa-solid fa-globe"></i></big> World News</h1>
+      <nav>
+        <ul>
+          <li><a href="#" onclick="active(this)" class="category active" data-category="general">General</a></li>
+          <li><a href="#" onclick="active(this)" class="category" data-category="technology">Technology</a></li>
+          <li><a href="#" onclick="active(this)" class="category" data-category="sports">Sports</a></li>
+          <li><a href="#" onclick="active(this)" class="category" data-category="health">Health</a></li>
+          <li><a href="#" onclick="active(this)" class="category" data-category="entertainment">Entertainment</a></li>
+        </ul>
+      </nav>
+      <div id="opt">
+        <input type="text" id="search-input" placeholder="Search for the latest news...">
+        <button id="search-btn">Search</button>
+        <select id="language-select">
+          <option value="en" selected>en</option>
+          <option value="fr">fr</option>
+          <option value="es">es</option>
+          <option value="de">de</option>
+          <option value="ar">ar</option>
+        </select> 
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <div class="container">
+      <section id="news-articles">
+        <!-- News articles will be displayed here -->
+      </section>
+    </div>
+  </main>
+
+  <footer>
+    <div class="container">
+      <p><big><i class="fa-solid fa-globe"></i></big> World News - - &copy;2024 News Website. All rights reserved for haytam hadad</p>
+    </div>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>
