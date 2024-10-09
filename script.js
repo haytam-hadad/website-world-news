@@ -5,8 +5,9 @@ const categoryLinks = document.querySelectorAll('.category');
 const languageSelect = document.getElementById("language-select");
 
 const apiKey = "7050f6e3f12b4a4794b0ab06803e88e5";
+const protocol = "http";
 let currentLanguage = 'en';
-const url = `https://newsapi.org/v2/top-headlines?language=${currentLanguage}&apiKey=${apiKey}`;
+const url = `${protocol}://newsapi.org/v2/top-headlines?language=${currentLanguage}&apiKey=${apiKey}`;
 
 
 function fetchNews(fetchUrl) {
@@ -49,7 +50,7 @@ fetchNews(url);
 searchBtn.addEventListener("click", () => {
   const query = searchInput.value.trim();
   if (query) {
-    const searchUrl = `https://newsapi.org/v2/everything?q=${query}&language=${currentLanguage}&apiKey=${apiKey}`;
+    const searchUrl = `${protocol}://newsapi.org/v2/everything?q=${query}&language=${currentLanguage}&apiKey=${apiKey}`;
     fetchNews(searchUrl);
   }
 });
@@ -59,7 +60,7 @@ categoryLinks.forEach(link => {
   link.addEventListener('click', (event) => {
     event.preventDefault();
     const category = event.target.getAttribute('data-category');
-    const categoryUrl = `https://newsapi.org/v2/top-headlines?country=us&category=${category}&language=${currentLanguage}&apiKey=${apiKey}`;
+    const categoryUrl = `${protocol}://newsapi.org/v2/top-headlines?country=us&category=${category}&language=${currentLanguage}&apiKey=${apiKey}`;
     fetchNews(categoryUrl);
   });
 });
@@ -67,7 +68,7 @@ categoryLinks.forEach(link => {
 // Event listener for language change
 languageSelect.addEventListener('change', (event) => {
   currentLanguage = event.target.value;
-  const languageUrl = `https://newsapi.org/v2/top-headlines?country=us&language=${currentLanguage}&apiKey=${apiKey}`;
+  const languageUrl = `${protocol}://newsapi.org/v2/top-headlines?country=us&language=${currentLanguage}&apiKey=${apiKey}`;
   fetchNews(languageUrl); // Fetch news in the selected language
 });
 
