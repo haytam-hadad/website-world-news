@@ -5,11 +5,55 @@ const categoryLinks = document.querySelectorAll('.category');
 const languageSelect = document.getElementById("language-select");
 
 const apiKey = "7050f6e3f12b4a4794b0ab06803e88e5";
-const protocol = "http";
+const protocol = "https";
 let currentLanguage = 'en';
 const url = `${protocol}://newsapi.org/v2/top-headlines?language=${currentLanguage}&apiKey=${apiKey}`;
 
 
+function fetchNews(fetchUrl) {
+  fetch(fetchUrl, {
+    method: 'GET',
+    mode: 'cors',
+    headers: {
+      'Accept': 'application/json'
+    }
+  })
+  .then(response => {
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+    return response.json();
+  })
+  .then(data => {
+    newsContainer.innerHTML = ''; // Clear old articles
+    if (data.articles.length > 0) {
+      data.articles.forEach(article => {
+        if (article.urlToImage != null) {
+          const author = article.author ? article.author : 'Unknown author';
+          const timeSincePublished = timeAgo(article.publishedAt);
+
+          const newsArticle = document.createElement("article");
+          newsArticle.innerHTML = `
+                <img src="${article.urlToImage}" alt="News Image">
+                <p><small>Published : ${timeSincePublished} <i class="fa-regular fa-clock"></i></small></p>
+                <h2>${article.title}</h2>
+                <p class="desc">${article.description}</p>
+                <p><strong>By: ${author} <i class="fa-solid fa-feather"></i></strong></p>
+                <hr><a href="${article.url}" target="_blank">Click here for more :</a>
+              `;
+          newsContainer.appendChild(newsArticle);
+        }
+      });
+    } else {
+      newsContainer.innerHTML = '<p>No articles found.</p>';
+    }
+  })
+  .catch(error => {
+    console.error('Error fetching news:', error);
+  });
+}
+
+/*
 function fetchNews(fetchUrl) {
   fetch(fetchUrl)
     .then(response => response.json())
@@ -41,12 +85,10 @@ function fetchNews(fetchUrl) {
       console.error('Error fetching news:', error);
     });
 }
+*/
 
-
-// Initial fetch on page load
 fetchNews(url);
 
-// Event listener for search
 searchBtn.addEventListener("click", () => {
   const query = searchInput.value.trim();
   if (query) {
@@ -55,7 +97,6 @@ searchBtn.addEventListener("click", () => {
   }
 });
 
-// Event listeners for category filtering
 categoryLinks.forEach(link => {
   link.addEventListener('click', (event) => {
     event.preventDefault();
@@ -65,7 +106,6 @@ categoryLinks.forEach(link => {
   });
 });
 
-// Event listener for language change
 languageSelect.addEventListener('change', (event) => {
   currentLanguage = event.target.value;
   const languageUrl = `${protocol}://newsapi.org/v2/top-headlines?country=us&language=${currentLanguage}&apiKey=${apiKey}`;
@@ -80,6 +120,7 @@ function active(link) {
 
   link.classList.add("active");
 }
+
 
 function timeAgo(publishedDate) {
   const now = new Date();
