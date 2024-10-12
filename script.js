@@ -36,7 +36,6 @@ function fetchNews(fetchUrl) {
             newsContainer.appendChild(newsArticle);
           }
         });
-n
         observeArticles();
       } else {
         newsContainer.innerHTML = "<p>No articles found.</p>";
