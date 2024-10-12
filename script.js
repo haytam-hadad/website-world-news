@@ -22,7 +22,7 @@ function fetchNews(fetchUrl) {
             const newsArticle = document.createElement("article");
             newsArticle.innerHTML = `
                   <img src="${article.urlToImage}" alt="News Image">
-                  <p><small>Published : ${timeSincePublished} <i class="fa-regular fa-clock"></i></small></p>
+                  <p class="Published"><small>Published : ${timeSincePublished} <i class="fa-regular fa-clock"></i></small></p>
                   <h2>${article.title}</h2>
                   <p class="desc">${article.description}</p>
                   <p><strong>By: ${author} <i class="fa-solid fa-feather"></i></strong></p>
@@ -40,10 +40,10 @@ function fetchNews(fetchUrl) {
     });
 }
 
-// Initial fetch on page load
+
 fetchNews(url);
 
-// Event listener for search
+
 searchBtn.addEventListener("click", () => {
   const query = searchInput.value.trim();
   if (query) {
@@ -52,7 +52,7 @@ searchBtn.addEventListener("click", () => {
   }
 });
 
-// Event listeners for category filtering
+
 categoryLinks.forEach((link) => {
   link.addEventListener("click", (event) => {
     event.preventDefault();
@@ -62,11 +62,11 @@ categoryLinks.forEach((link) => {
   });
 });
 
-// Event listener for language change
+
 languageSelect.addEventListener("change", (event) => {
   currentLanguage = event.target.value;
   const languageUrl = `https://newsapi.org/v2/top-headlines?country=us&language=${currentLanguage}&apiKey=${apiKey}`;
-  fetchNews(languageUrl); // Fetch news in the selected language
+  fetchNews(languageUrl);
 });
 
 function active(link) {

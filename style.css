@@ -17,9 +17,16 @@ body {
   color: #333;
   line-height: 1.6;
 }
+.Published{
+  background-color: #91000010;
+  color: rgb(0, 0, 0);
+  padding: 0 15px;
+  margin: 0 -16px;
+  border-left: 5px solid var(--primary_color);
+}
 
 header {
-  background: linear-gradient(135deg, var(--primary_color) 30%, #2b0505 70%);
+  background: linear-gradient(135deg, var(--primary_color) 30%, #450303 70%);
   width: 100%;
   color: #fff;
   position: sticky;
@@ -28,19 +35,12 @@ header {
   right: 0;
   z-index: 9999;
   box-shadow: 3px 3px 10px 3px rgba(0, 0, 0, 0.5);
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 10px 30px;
-}
-
-.container {
-  padding: 15px 0;
-  width: 100%;
+  padding: 20px 0;
   display: flex;
   justify-content: space-around;
   align-items: center;
 }
+
 hr {
   border: hsla(0, 0%, 0%, 0.5) 1px solid;
 }
@@ -85,7 +85,7 @@ main {
 
 article {
   background: linear-gradient(135deg, #ffffff 75%, hsl(0, 0%, 95%) 25%);
-  animation: anim 300ms ease;
+  animation: anim 250ms;
   padding: 15px;
   border: 1px solid #ddd;
   flex: 1 1 30%;
@@ -109,7 +109,7 @@ article img {
 
 article img:hover {
   filter: contrast(1.2) grayscale(50%) brightness(1.1);
-  transform: scale(1.02);
+  transform: scale(1.01);
 }
 
 article h2 {
@@ -125,7 +125,8 @@ article h2 {
 }
 article h2:hover {
   background-color: hsla(0, 100%, 38%, 0.1);
-  transform: scale(1.02);
+  transform: scale(1.01);
+  text-decoration: underline;
 }
 
 a {
@@ -137,7 +138,7 @@ a {
 }
 
 footer {
-  background: var(--primary_color);
+  background: linear-gradient(135deg, var(--primary_color) 30%, #450303 70%);
   color: #fff;
   text-align: center;
   padding: 10px 0;
@@ -175,7 +176,7 @@ input:focus {
   transition: 200ms;
 }
 #search-btn:hover {
-  scale: 1.05;
+  scale: 1.03;
 }
 
 strong {
@@ -186,7 +187,7 @@ strong {
 @keyframes anim {
   0% {
     opacity: 0;
-    scale: 0.6;
+    scale: 0.7;
   }
   100% {
     opacity: 1;
@@ -194,11 +195,37 @@ strong {
   }
 }
 
-@media only screen and (max-width: 768px) {
+
+
+@media only screen and (max-width: 800px) {
+  * {
+    font-size: 0.9rem !important;
+  }
   header nav ul {
-    flex-direction: column;
+    display: none;
   }
   main {
-    flex-direction: row;
+    flex-direction: column;
+    align-items: center;
+  }
+  article {
+    width: 100%;
+    flex: 1 1 100%;
+  }
+  article img {
+    width: 100%;
+  }
+  article h2 {
+    font-size: 1.2rem;
+  }
+  article p {
+    font-size: 1rem;
+  }
+  #opt{
+    scale: 0.8;
+  }
+  select{
+    display: none;
   }
 }
+
