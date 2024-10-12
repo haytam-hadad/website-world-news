@@ -21,16 +21,19 @@ function fetchNews(fetchUrl) {
 
             const newsArticle = document.createElement("article");
             newsArticle.innerHTML = `
-                  <img src="${article.urlToImage}" alt="News Image">
-                  <p class="Published"><small>Published : ${timeSincePublished} <i class="fa-regular fa-clock"></i></small></p>
-                  <h2>${article.title}</h2>
-                  <p class="desc">${article.description}</p>
-                  <p><strong>By: ${author} <i class="fa-solid fa-feather"></i></strong></p>
-                  <hr><a href="${article.url}" target="_blank">Click here for more :</a>
-                `;
+              <img src="${article.urlToImage}" alt="News Image">
+              <p class="Published"><small>Published : ${timeSincePublished} <i class="fa-regular fa-clock"></i></small></p>
+              <h2>${article.title}</h2>
+              <p class="desc">${article.description}</p>
+              <p><strong>By: ${author} <i class="fa-solid fa-feather"></i></strong></p>
+              <hr><a href="${article.url}" target="_blank">Click here for more :</a>
+            `;
+            newsArticle.classList.add("hidden"); // Hide initially for animation
             newsContainer.appendChild(newsArticle);
           }
         });
+
+        observeArticles();
       } else {
         newsContainer.innerHTML = "<p>No articles found.</p>";
       }
@@ -40,9 +43,7 @@ function fetchNews(fetchUrl) {
     });
 }
 
-
 fetchNews(url);
-
 
 searchBtn.addEventListener("click", () => {
   const query = searchInput.value.trim();
@@ -52,7 +53,6 @@ searchBtn.addEventListener("click", () => {
   }
 });
 
-
 categoryLinks.forEach((link) => {
   link.addEventListener("click", (event) => {
     event.preventDefault();
@@ -61,7 +61,6 @@ categoryLinks.forEach((link) => {
     fetchNews(categoryUrl);
   });
 });
-
 
 languageSelect.addEventListener("change", (event) => {
   currentLanguage = event.target.value;
@@ -102,4 +101,22 @@ function timeAgo(publishedDate) {
   } else {
     return `${seconds} second${seconds > 1 ? "s" : ""} ago`;
   }
+}
+
+
+function observeArticles() {
+  const articles = document.querySelectorAll('article');
+  const observer = new IntersectionObserver((entries, observer) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.remove('hidden');
+        entry.target.classList.add('in-view');
+        observer.unobserve(entry.target);
+      }
+    });
+  });
+
+  articles.forEach(article => {
+    observer.observe(article);
+  });
 }
