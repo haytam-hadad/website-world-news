@@ -1,6 +1,6 @@
 {
   "hosting": {
-    "public": "world news",
+    "public": "public",
     "ignore": [
       "firebase.json",
       "**/.*",
