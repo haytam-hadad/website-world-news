@@ -1,7 +1,7 @@
 // netlify/functions/fetchNews.js
-const fetch = require('node-fetch');
+import fetch from 'node-fetch';
 
-exports.handler = async function(event, context) {
+export async function handler(event, context) {
   const apiKey = process.env.MY_NEWS_API_KEY; // Your Netlify environment variable
   const { search, category, language } = event.queryStringParameters; // Get query parameters from request
   let url;
@@ -28,7 +28,7 @@ exports.handler = async function(event, context) {
       body: JSON.stringify({ error: 'Error fetching data from API' }),
     };
   }
-};
+}
 
 // index.js (Frontend Code)
 const newsContainer = document.getElementById("news-articles");
