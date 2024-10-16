@@ -1,55 +1,22 @@
-// netlify/functions/fetchNews.js
-import fetch from 'node-fetch';
-
-export async function handler(event, context) {
-  const apiKey = process.env.MY_NEWS_API_KEY; // Your Netlify environment variable
-  const { search, category, language } = event.queryStringParameters; // Get query parameters from request
-  let url;
-
-  if (search) {
-    url = `https://newsapi.org/v2/everything?q=${search}&language=${language}&apiKey=${apiKey}`;
-  } else if (category) {
-    url = `https://newsapi.org/v2/top-headlines?country=us&category=${category}&language=${language}&apiKey=${apiKey}`;
-  } else {
-    url = `https://newsapi.org/v2/top-headlines?language=${language}&apiKey=${apiKey}`;
-  }
-
-  try {
-    const response = await fetch(url);
-    const data = await response.json();
-
-    return {
-      statusCode: 200,
-      body: JSON.stringify(data),
-    };
-  } catch (error) {
-    return {
-      statusCode: 500,
-      body: JSON.stringify({ error: 'Error fetching data from API' }),
-    };
-  }
-}
-
-// index.js (Frontend Code)
 const newsContainer = document.getElementById("news-articles");
 const searchBtn = document.getElementById("search-btn");
 const searchInput = document.getElementById("search-input");
 const categoryLinks = document.querySelectorAll(".category");
 const languageSelect = document.getElementById("language-select");
 
+const apiKey = "7050f6e3f12b4a4794b0ab06803e88e5";
 let currentLanguage = "en";
+const url = `https://newsapi.org/v2/top-headlines?language=${currentLanguage}&apiKey=${apiKey}`;
 
-// Fetch news using the Netlify serverless function
-function fetchNews(search = "", category = "") {
-  const fetchUrl = `/.netlify/functions/fetchNews?search=${encodeURIComponent(search)}&category=${encodeURIComponent(category)}&language=${currentLanguage}`;
-  
+
+function fetchNews(fetchUrl) {
   fetch(fetchUrl)
     .then((response) => response.json())
     .then((data) => {
       console.log("API Response Data:", data);
-      newsContainer.innerHTML = ""; // Clear the old content
+      newsContainer.innerHTML = "";
 
-      if (data.articles && data.articles.length > 0) {
+      if (data.articles.length > 0) {
         data.articles.forEach((article) => {
           if (article.urlToImage != null) {
             const author = article.author ? article.author : "Unknown author";
@@ -79,13 +46,14 @@ function fetchNews(search = "", category = "") {
     });
 }
 
-// Initial fetch for top headlines
-fetchNews();
+
+fetchNews(url);
 
 searchBtn.addEventListener("click", () => {
   const query = searchInput.value.trim();
   if (query) {
-    fetchNews(query); // Fetch news with search query
+    const searchUrl = `https://newsapi.org/v2/everything?q=${query}&language=${currentLanguage}&apiKey=${apiKey}`;
+    fetchNews(searchUrl);
   }
 });
 
@@ -93,16 +61,25 @@ categoryLinks.forEach((link) => {
   link.addEventListener("click", (event) => {
     event.preventDefault();
     const category = event.target.getAttribute("data-category");
-    fetchNews("", category); // Fetch news by category
+    const categoryUrl = `https://newsapi.org/v2/top-headlines?country=us&category=${category}&language=${currentLanguage}&apiKey=${apiKey}`;
+    fetchNews(categoryUrl);
   });
 });
 
 languageSelect.addEventListener("change", (event) => {
   currentLanguage = event.target.value;
-  fetchNews(); // Fetch news with the new language
+  const languageUrl = `https://newsapi.org/v2/top-headlines?country=us&language=${currentLanguage}&apiKey=${apiKey}`;
+  fetchNews(languageUrl);
 });
 
-// Time ago function
+function active(link) {
+  categoryLinks.forEach((elem) => {
+    elem.classList.remove("active");
+  });
+
+  link.classList.add("active");
+}
+
 function timeAgo(publishedDate) {
   const now = new Date();
   const published = new Date(publishedDate);
@@ -130,7 +107,7 @@ function timeAgo(publishedDate) {
   }
 }
 
-// Observe articles for scroll animation
+
 function observeArticles() {
   const articles = document.querySelectorAll('article');
   const observer = new IntersectionObserver((entries, observer) => {
