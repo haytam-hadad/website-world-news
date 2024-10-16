@@ -4,7 +4,30 @@ const searchInput = document.getElementById("search-input");
 const categoryLinks = document.querySelectorAll(".category");
 const languageSelect = document.getElementById("language-select");
 
+const fetch = require('node-fetch');
 const apiKey = process.env.MY_NEWS_API_KEY;
+
+exports.handler = async function(event, context) {
+  const apiKey = process.env.MY_NEWS_API_KEY;
+  const url = `https://newsapi.org/v2/everything?q=keyword&apiKey=${apiKey}`;
+
+  try {
+    const response = await fetch(url);
+    const data = await response.json();
+
+    return {
+      statusCode: 200,
+      body: JSON.stringify(data),
+    };
+  } catch (error) {
+    return {
+      statusCode: 500,
+      body: JSON.stringify({ error: 'Error fetching data from API' }),
+    };
+  }
+};
+
+
 let currentLanguage = "en";
 const url = `https://newsapi.org/v2/top-headlines?language=${currentLanguage}&apiKey=${apiKey}`;
 
