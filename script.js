@@ -4,7 +4,7 @@ const searchInput = document.getElementById("search-input");
 const categoryLinks = document.querySelectorAll(".category");
 const languageSelect = document.getElementById("language-select");
 
-const apiKey = "7050f6e3f12b4a4794b0ab06803e88e5";
+const apiKey = process.env.MY_NEWS_API_KEY;
 let currentLanguage = "en";
 const url = `https://newsapi.org/v2/top-headlines?language=${currentLanguage}&apiKey=${apiKey}`;
 
