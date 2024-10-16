@@ -1,15 +1,18 @@
-const newsContainer = document.getElementById("news-articles");
-const searchBtn = document.getElementById("search-btn");
-const searchInput = document.getElementById("search-input");
-const categoryLinks = document.querySelectorAll(".category");
-const languageSelect = document.getElementById("language-select");
-
+// netlify/functions/fetchNews.js
 const fetch = require('node-fetch');
-const apiKey = process.env.MY_NEWS_API_KEY;
 
 exports.handler = async function(event, context) {
-  const apiKey = process.env.MY_NEWS_API_KEY;
-  const url = `https://newsapi.org/v2/everything?q=keyword&apiKey=${apiKey}`;
+  const apiKey = process.env.MY_NEWS_API_KEY; // Your Netlify environment variable
+  const { search, category, language } = event.queryStringParameters; // Get query parameters from request
+  let url;
+
+  if (search) {
+    url = `https://newsapi.org/v2/everything?q=${search}&language=${language}&apiKey=${apiKey}`;
+  } else if (category) {
+    url = `https://newsapi.org/v2/top-headlines?country=us&category=${category}&language=${language}&apiKey=${apiKey}`;
+  } else {
+    url = `https://newsapi.org/v2/top-headlines?language=${language}&apiKey=${apiKey}`;
+  }
 
   try {
     const response = await fetch(url);
@@ -27,19 +30,26 @@ exports.handler = async function(event, context) {
   }
 };
 
+// index.js (Frontend Code)
+const newsContainer = document.getElementById("news-articles");
+const searchBtn = document.getElementById("search-btn");
+const searchInput = document.getElementById("search-input");
+const categoryLinks = document.querySelectorAll(".category");
+const languageSelect = document.getElementById("language-select");
 
 let currentLanguage = "en";
-const url = `https://newsapi.org/v2/top-headlines?language=${currentLanguage}&apiKey=${apiKey}`;
 
-
-function fetchNews(fetchUrl) {
+// Fetch news using the Netlify serverless function
+function fetchNews(search = "", category = "") {
+  const fetchUrl = `/.netlify/functions/fetchNews?search=${encodeURIComponent(search)}&category=${encodeURIComponent(category)}&language=${currentLanguage}`;
+  
   fetch(fetchUrl)
     .then((response) => response.json())
     .then((data) => {
       console.log("API Response Data:", data);
       newsContainer.innerHTML = ""; // Clear the old content
 
-      if (data.articles.length > 0) {
+      if (data.articles && data.articles.length > 0) {
         data.articles.forEach((article) => {
           if (article.urlToImage != null) {
             const author = article.author ? article.author : "Unknown author";
@@ -69,14 +79,13 @@ function fetchNews(fetchUrl) {
     });
 }
 
-
-fetchNews(url);
+// Initial fetch for top headlines
+fetchNews();
 
 searchBtn.addEventListener("click", () => {
   const query = searchInput.value.trim();
   if (query) {
-    const searchUrl = `https://newsapi.org/v2/everything?q=${query}&language=${currentLanguage}&apiKey=${apiKey}`;
-    fetchNews(searchUrl);
+    fetchNews(query); // Fetch news with search query
   }
 });
 
@@ -84,25 +93,16 @@ categoryLinks.forEach((link) => {
   link.addEventListener("click", (event) => {
     event.preventDefault();
     const category = event.target.getAttribute("data-category");
-    const categoryUrl = `https://newsapi.org/v2/top-headlines?country=us&category=${category}&language=${currentLanguage}&apiKey=${apiKey}`;
-    fetchNews(categoryUrl);
+    fetchNews("", category); // Fetch news by category
   });
 });
 
 languageSelect.addEventListener("change", (event) => {
   currentLanguage = event.target.value;
-  const languageUrl = `https://newsapi.org/v2/top-headlines?country=us&language=${currentLanguage}&apiKey=${apiKey}`;
-  fetchNews(languageUrl);
+  fetchNews(); // Fetch news with the new language
 });
 
-function active(link) {
-  categoryLinks.forEach((elem) => {
-    elem.classList.remove("active");
-  });
-
-  link.classList.add("active");
-}
-
+// Time ago function
 function timeAgo(publishedDate) {
   const now = new Date();
   const published = new Date(publishedDate);
@@ -130,7 +130,7 @@ function timeAgo(publishedDate) {
   }
 }
 
-
+// Observe articles for scroll animation
 function observeArticles() {
   const articles = document.querySelectorAll('article');
   const observer = new IntersectionObserver((entries, observer) => {
