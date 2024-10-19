@@ -1,14 +1,16 @@
-import Header from "./components/Header"
-import Articles from "./components/Articles"
+import React from 'react';
+import Header from "./components/Header";
+import Articles from "./components/Articles";
+import Footer from './components/Footer';
 
 function App() {
-
   return (
-    <>
-      <Header/>
-      <Articles/>
-    </>
-  )
+    <React.Fragment>
+      <Header />
+      <Articles />
+      <Footer/>
+    </React.Fragment>
+  );
 }
 
-export default App
+export default App;

@@ -1,8 +1,22 @@
-
+import { FaSearch } from "react-icons/fa";
+import { useState } from "react";
+import { Link } from "react-router-dom";
 
 function Header() {
-    return (
-        <header>
+  const [showInpBox, setShowInpBox] = useState(false);
+  const [activeCategory, setActiveCategory] = useState("general");
+
+  const showSearchInputBloc = () => {
+    setShowInpBox(!showInpBox);
+  };
+
+  const handleCategoryClick = (category) => {
+    setActiveCategory(category);
+  };
+
+  return (
+    <header>
+      <div className="header">
         <h1 id="logo">
           <big>
             <i className="fa-solid fa-globe" />
@@ -12,76 +26,73 @@ function Header() {
         <nav>
           <ul>
             <li>
-              <a
-                href="#"
-                onClick="active(this)"
-                className="category active"
-                data-category="general"
+              <Link
+                to="/general"
+                className={`category ${activeCategory === "general" ? "active" : ""}`}
               >
                 General
-              </a>
+              </Link>
             </li>
             <li>
-              <a
-                href="#"
-                onClick="active(this)"
-                className="category"
-                data-category="technology"
+              <Link
+                to="/technology"
+                className={`category ${activeCategory === "technology" ? "active" : ""}`}
               >
                 Technology
-              </a>
+              </Link>
             </li>
             <li>
-              <a
-                href="#"
-                onClick="active(this)"
-                className="category"
-                data-category="sports"
+              <Link
+                to="/sports"
+                className={`category ${activeCategory === "sports" ? "active" : ""}`}
               >
                 Sports
-              </a>
+              </Link>
             </li>
             <li>
-              <a
-                href="#"
-                onClick="active(this)"
-                className="category"
-                data-category="health"
+              <Link
+                to="/health"
+                className={`category ${activeCategory === "health" ? "active" : ""}`}
               >
                 Health
-              </a>
+              </Link>
             </li>
             <li>
-              <a
-                href="#"
-                onClick="active(this)"
-                className="category"
-                data-category="entertainment"
+              <Link
+                to="/entertainment"
+                className={`category ${activeCategory === "entertainment" ? "active" : ""}`}
               >
                 Entertainment
-              </a>
+              </Link>
             </li>
           </ul>
         </nav>
-        <div id="opt">
+        <span id="icon_search" onClick={showSearchInputBloc}>
+          <span id="search-word"> </span> <FaSearch />
+        </span>
+      </div>
+
+      {showInpBox && (
+        <div id="input_box">
           <input
             type="text"
             id="search-input"
             placeholder="Search for the latest news..."
           />
-          <button id="search-btn">Search</button>
-          <select id="language-select">
-            <option value="en" selected="">
-              en
-            </option>
+          <button id="search-btn">
+            <FaSearch /> Search
+          </button>
+          <select id="language-select" defaultValue="en">
+            <option value="en">en</option>
             <option value="fr">fr</option>
             <option value="es">es</option>
             <option value="de">de</option>
             <option value="ar">ar</option>
           </select>
         </div>
-      </header>
-    )
+      )}
+    </header>
+  );
 }
 
-export default Header
+export default Header;
