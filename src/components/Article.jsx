@@ -1,4 +1,4 @@
-
+import { Link } from "react-router-dom";
 const Article = ({
   publishedAt,
   urlToImage,
@@ -33,9 +33,9 @@ const Article = ({
         </strong>
       </p>
       <hr />
-      <a href={url} target="_blank" rel="noopener noreferrer">
+      <Link className="link_art" to={url} target="_blank" rel="noopener noreferrer">
         Read full article:
-      </a>
+      </Link>
     </article>
   );
 };
