@@ -3,11 +3,14 @@ import { useState } from "react";
 import { NavLink } from "react-router-dom";
 
 function Header() {
-  const [showInpBox, setShowInpBox] = useState(true);
+  const [showInpBox, setShowInpBox] = useState(false);
   const [activeCategory, setActiveCategory] = useState("general");
 
   const showSearchInputBloc = () => {
     setShowInpBox(!showInpBox);
+    setTimeout(() => {
+      document.getElementById("search-input").focus();
+    }, 250);
   };
 
   // const handleCategoryClick = (category) => {

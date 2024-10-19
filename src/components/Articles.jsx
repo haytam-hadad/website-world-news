@@ -54,13 +54,14 @@ const Articles = () => {
     const url = `https://newsapi.org/v2/top-headlines?language=${currentLanguage}&apiKey=${apiKey}`;
     fetchNews(url);
   }, []);
-
+  console.log(articles)
   return (
     <main>
       {articles.length > 0 ? (
         articles.map((article, index) => (
           <Article
             key={index}
+            source={article.source.name}
             publishedAt={timeAgo(article.publishedAt)}
             urlToImage={article.urlToImage}
             title={article.title}
