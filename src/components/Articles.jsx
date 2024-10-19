@@ -3,7 +3,8 @@ import { useState, useEffect } from 'react';
 import { FaSpinner } from "react-icons/fa";
 
 
-const apiKey = "7050f6e3f12b4a4794b0ab06803e88e5";
+const apiKey = process.env.REACT_APP_API_KEY;
+console.log(apiKey);
 const currentLanguage = "en";
 
 const timeAgo = (publishedDate) => {

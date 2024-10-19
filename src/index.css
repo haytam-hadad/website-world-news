@@ -11,7 +11,7 @@
   --primary_color:    #111 ;
   --secondary_color: #fff;
   --bg_body : url(./assets/bg_gif.svg);
-  --dark : #aaa;
+  --dark : #444;
 }
 .active {
   text-decoration: underline solid white 2px;
