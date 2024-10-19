@@ -2,8 +2,8 @@ import Article from './Article.jsx';
 import { useState, useEffect } from 'react';
 import { FaSpinner } from "react-icons/fa";
 
-
-const apiKey = process.env.REACT_APP_API_KEY;
+//7050f6e3f12b4a4794b0ab06803e88e5
+const apiKey = "7050f6e3f12b4a4794b0ab06803e88e5" ;
 console.log(apiKey);
 const currentLanguage = "en";
 
