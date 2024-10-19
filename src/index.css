@@ -1,12 +1,14 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
-  font-family: "Open Sans", sans-serif;
+  font-family: "Poppins";
 }
 /* #7a1010 */
 :root {
-  --primary_color:    #161D25 ;
+  --primary_color:    #112132 ;
   --secondary_color: #fff;
   --bg_body : url(./assets/bg_gif.svg);
   --dark : #111;
@@ -45,8 +47,8 @@ header{
   border-bottom: solid 1px hsla(0, 0%, 100%, 0.3);
 }
 .main_btn{
-  padding: 6px 20px;
-  border-radius: 7px;
+  padding: 8px 20px;
+  border-radius: 5px;
   border: none;
   outline: none;
   background-color:white;
@@ -57,7 +59,7 @@ header{
   transition: 250ms;
 }
 .main_btn:hover{
-  border-bottom: 4px black solid ;
+  scale: 1.05;
 }
 hr {
   width: 100%;
@@ -105,6 +107,8 @@ main {
 }
 
 article {
+  overflow: hidden;
+  position: relative;
   background-color: whitesmoke;
   padding: 10px;
   border: 1px solid #ddd;
@@ -137,11 +141,12 @@ article h2 {
   color: var(--primary_color);
   font-size: 18px;
   line-height: 1.2;
-  padding: 10px 15px;
-  background-color: hsla(0, 0%, 0%, 0.1) ;
-  border-radius: 10px;
+  padding: 15px;
+  background-color: white ;
+  border-radius: 5px;
   margin: 0 -15px;
-  margin-bottom: 10px;
+  margin-bottom: 5px;
+  border-bottom: solid 5px var(--primary_color);
 }
 article h2:hover {
   text-decoration: underline;
@@ -154,7 +159,7 @@ a {
 }
 .desc {
   font-size: 15px;
-  margin-bottom: 15px;
+
   opacity: 1;
 }
 #input_box{
@@ -187,7 +192,7 @@ a {
 
 #input_box input{
   padding: 10px 20px;
-  border-radius: 10px;
+  border-radius: 5px;
   border: none;
   outline: none;
   font-size: 13px;
@@ -200,7 +205,7 @@ a {
 }
 #input_box button{
   padding: 5px 10px;
-  border-radius: 10px;
+  border-radius: 5px;
   border: none;
   outline: none;
   background-color: var(--primary_color);
@@ -221,7 +226,7 @@ option{
   font-weight: bold;
   border: 1px solid #727272;
   padding: 5px 10px;
-  border-radius: 10px;
+  border-radius: 5px;
   outline: none;
   background-color: #2c2c2c;
   color: #fff;
@@ -253,7 +258,7 @@ strong {
   cursor: pointer;
   text-align: center;
   padding: 5px 10px;
-  border-radius: 20px;
+  border-radius:50%;
   transition: 200ms;
 }
 .v1:hover , .v2{
@@ -276,6 +281,17 @@ strong {
   100%{
     rotate: 360deg;
   }
+}
+
+.time{
+  position: absolute;
+  display: inline-block;
+  width: fit-content;
+  background-color: #111;
+  font-weight: bold;
+  color: white;
+  padding: 5px;
+  font-size: small;
 }
 
 @keyframes anim {

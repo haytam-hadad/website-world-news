@@ -7,7 +7,6 @@ const Article = ({
   url = "#",
   author = "Unknown",
 }) => {
-  console.log({ publishedAt, urlToImage, title, description, url, author });
 
   const handleImageError = (e) => {
     e.target.src = "src/assets/favicon.png";
@@ -21,9 +20,9 @@ const Article = ({
         onError={handleImageError}
         loading="lazy"
       />
-      <p>
+      <p className="time">
         <small>
-          Published: {publishedAt} <i className="fa-regular fa-clock" />
+          Published : {publishedAt} <i className="fa-regular fa-clock" />
         </small>
       </p>
       <h2>{title}</h2>
