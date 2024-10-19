@@ -1,5 +1,6 @@
 import Article from './Article.jsx';
 import { useState, useEffect } from 'react';
+import { FaSpinner } from "react-icons/fa";
 
 
 const apiKey = "7050f6e3f12b4a4794b0ab06803e88e5";
@@ -69,7 +70,7 @@ const Articles = () => {
           />
         ))
       ) : (
-        <p>No articles found.</p>
+        <FaSpinner className='spinner' />
       )}
     </main>
   );

@@ -1,18 +1,18 @@
 import { FaSearch } from "react-icons/fa";
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { NavLink } from "react-router-dom";
 
 function Header() {
-  const [showInpBox, setShowInpBox] = useState(false);
+  const [showInpBox, setShowInpBox] = useState(true);
   const [activeCategory, setActiveCategory] = useState("general");
 
   const showSearchInputBloc = () => {
     setShowInpBox(!showInpBox);
   };
 
-  const handleCategoryClick = (category) => {
-    setActiveCategory(category);
-  };
+  // const handleCategoryClick = (category) => {
+  //   setActiveCategory(category);
+  // };
 
   return (
     <header>
@@ -26,50 +26,59 @@ function Header() {
         <nav>
           <ul>
             <li>
-              <Link
-                to="/general"
+              <NavLink
+                to="/"
                 className={`category ${activeCategory === "general" ? "active" : ""}`}
               >
                 General
-              </Link>
+              </NavLink>
             </li>
             <li>
-              <Link
+              <NavLink
                 to="/technology"
                 className={`category ${activeCategory === "technology" ? "active" : ""}`}
               >
                 Technology
-              </Link>
+              </NavLink>
             </li>
             <li>
-              <Link
+              <NavLink
                 to="/sports"
                 className={`category ${activeCategory === "sports" ? "active" : ""}`}
               >
                 Sports
-              </Link>
+              </NavLink>
             </li>
             <li>
-              <Link
+              <NavLink
                 to="/health"
                 className={`category ${activeCategory === "health" ? "active" : ""}`}
               >
                 Health
-              </Link>
+              </NavLink>
             </li>
             <li>
-              <Link
+              <NavLink
                 to="/entertainment"
                 className={`category ${activeCategory === "entertainment" ? "active" : ""}`}
               >
                 Entertainment
-              </Link>
+              </NavLink>
             </li>
           </ul>
         </nav>
-        <span id="icon_search" onClick={showSearchInputBloc}>
-          <span id="search-word"> </span> <FaSearch />
-        </span>
+        <div style={  { display: "flex", gap: "10px" ,alignItems:"center"}}>
+          <span className= {showInpBox ?  "icon_search v2" : "icon_search v1"} onClick={showSearchInputBloc}>
+            <span id="search-word"> </span> <FaSearch />
+          </span>
+          <button className="main_btn">
+              Sign In
+            </button>
+            <button className="main_btn">
+              Log In
+            </button>          
+        </div>
+
       </div>
 
       {showInpBox && (
@@ -91,6 +100,7 @@ function Header() {
           </select>
         </div>
       )}
+      
     </header>
   );
 }
