@@ -8,10 +8,10 @@
 }
 
 :root {
-  --primary_color:    #010409 ;
+  --primary_color: #151d23;
   --secondary_color: #fff;
-  --bg_body : #010409;
-  --third_color : #151d23;
+  --third_color : #010409;
+  --bg_body : var(--third_color);
   --border_lightColor : hsla(0, 0%, 100%, 0.3);
 }
 .active {
@@ -70,7 +70,7 @@ header{
   color: var(--primary_color);
   transition: color 0.3s ease;
   margin-top: 5px;
-  background-color: var(--third_color);
+  background-color: var(--primary_color);
   color: var(--secondary_color);
   padding: 10px 30px;
 }
@@ -317,7 +317,7 @@ strong {
   position: absolute;
   display: inline-block;
   width: fit-content;
-  background-color: #111;
+  background-color: var(--primary_color);
   font-weight: bold;
   color: white;
   padding: 5px;
