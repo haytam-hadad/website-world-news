@@ -55,6 +55,8 @@ const Articles = () => {
     const url = `https://newsapi.org/v2/top-headlines?language=${currentLanguage}&apiKey=${apiKey}`;
     fetchNews(url);
   }, []);
+
+  
   console.log(articles)
   return (
     <main>
