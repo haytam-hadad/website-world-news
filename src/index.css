@@ -82,12 +82,12 @@ hr {
   font-size: 24px;
 }
 .header nav {
-  width: 50%;
+  width: 49%;
 }
 .header nav ul {width: 100%;
   list-style: none;
   display: flex;
-  justify-content: space-around;
+  justify-content: space-evenly;
 }
 
 .header nav ul li {
@@ -148,6 +148,7 @@ article:hover {
 }
 
 article img {
+  border-radius: 5px;
   width: 100%;
   height: auto;
   transition: 250ms;
@@ -299,12 +300,9 @@ strong {
 
 }
 .spinner{
-  font-size: 4rem;
-  color: white;
   display: block;
   text-align: center;
   margin: auto;
-  animation:rotate 1s ease infinite;
 }
 @keyframes rotate {
   0%{
@@ -344,15 +342,19 @@ strong {
     position: relative;
     grid-area: img;
     object-fit: cover;
-    width: 100%;
-    max-height: 400px;
+    max-height: 370px;
     border: 2px solid var(--primary_color);
     filter: brightness(1.1);
   }
   
   article:first-child h2 {
     grid-area: title;
+    padding: 20px;
     border-bottom: 5px solid var(--primary_color);
+    text-decoration: underline;
+  }
+  article:first-child hr {
+    display: none;
   }
   article:first-child .desc {
     grid-area: desc;
@@ -369,19 +371,23 @@ strong {
   article:first-child .source{
     grid-area: source;
     color: white;
+    background-color: var(--primary_color);
+    border-left: solid 4px  var(--secondary_color);
   }
   article:first-child a{
-    width: 50%;
+    width: 40%;
     margin: 0 auto;
     text-align: center;
     background-color: var(--secondary_color);
     border-radius:5px ;
+    grid-area: link;
   }
   article:first-child strong {
-    display: none;
+    grid-area: author;
+    color: var(--secondary_color);
   }
   article:first-child {
-    padding: 0 0 10px 0;
+    padding: 5px;
     color: white;
     max-width: 100%;
     background: var(--third_color);
@@ -390,15 +396,19 @@ strong {
     display: grid !important;
     grid-template-areas:
       "img title"
+      "img source"
       "img desc"
-      "time source";
+      "img author"
+      "time link";
+
     grid-template-columns: 1fr 1fr;
-    gap: 0 10px ;
+    gap: 1px 20px ;
     align-items: center;
+    
   }
-  article:hover {
-      scale: 1 ;
-  }  
+  /* article:first-child:hover {
+      translate: none !important;  
+  }   */
 }
 
 
@@ -437,7 +447,7 @@ strong {
 }
 
 
-@media only screen and (max-width: 600px) {
+@media only screen and (max-width: 650px) {
   * {
     font-size: 0.9rem !important;
   }
@@ -473,7 +483,7 @@ strong {
   }
 
   #input_box select{
-    flex-grow:1 ;
+    flex-grow: 1 ;
     scale: 0.95;
   }
 }

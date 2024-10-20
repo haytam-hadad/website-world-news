@@ -1,6 +1,6 @@
 import Article from './Article.jsx';
 import { useState, useEffect } from 'react';
-import { FaSpinner } from "react-icons/fa";
+import ClipLoader from "react-spinners/MoonLoader.js";
 
 //7050f6e3f12b4a4794b0ab06803e88e5
 const apiKey = "7050f6e3f12b4a4794b0ab06803e88e5" ;
@@ -74,7 +74,7 @@ const Articles = () => {
           />
         ))
       ) : (
-        <FaSpinner className='spinner' />
+        <ClipLoader className='spinner' color={"#fff"} loading={true} size={40} />
       )}
     </main>
   );

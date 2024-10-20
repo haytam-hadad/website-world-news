@@ -13,7 +13,7 @@ const Article = ({
     e.target.src = "src/assets/favicon.png";
   };
 
-  if(title != "[Removed]"){
+  if(title != "[Removed]" && urlToImage != null) {
     return (
 
       <article>
@@ -38,7 +38,7 @@ const Article = ({
         </p>
         <hr />
         <Link className="link_art" to={url ? url : "#" } target="_blank" rel="noopener noreferrer">
-          Read full article:
+          Read full article:  <i className="fa-solid fa-arrow-up-right-from-square"> </i> 
         </Link>
       </article>
     );    
