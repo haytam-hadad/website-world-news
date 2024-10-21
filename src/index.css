@@ -139,7 +139,7 @@ article {
   transition: transform 250ms cubic-bezier(0.4, 0, 0.2, 1);
   animation: onScrollAnim linear;
   animation-timeline: view();
-  animation-range: 0 35vh;
+  animation-range: 0 40vh;
 }
 
 @keyframes onScrollAnim {
