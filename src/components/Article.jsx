@@ -8,21 +8,6 @@ const Article = ({
   author,
   source,
 }) => {
-
-  // const doThisOnHover = (e) => {
-  //   const h2Element = e.target. ;
-  //   if (h2Element) {
-  //     h2Element.classList.add("underlinee");
-  //   }
-  //   console.log(h2Element);
-  // };
-  
-  // const doThisNotHover = (e) => {
-  //   const h2Element = e.target.querySelector('.h22');
-  //   if (h2Element) {
-  //     h2Element.classList.remove("underlinee");
-  //   }
-  // };
   
   const handleImageError = (e) => {
     e.target.src = "src/assets/favicon.png";
