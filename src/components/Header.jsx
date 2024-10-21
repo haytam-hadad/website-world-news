@@ -1,4 +1,4 @@
-import { FaSearch } from "react-icons/fa";
+import { FaSearch , FaBars } from "react-icons/fa";
 import { useState } from "react";
 import { NavLink } from "react-router-dom";
 
@@ -19,13 +19,15 @@ function Header() {
 
   return (
     <header>
+      <div className="first_header" >
+        <span id="dateNow"> <i className="fa-regular fa-calendar"></i> - {new Date().toDateString()}</span>
+          <h1 id="logo">
+            <i className="fa-solid fa-globe" /> World News
+          </h1>
+          <span ></span>
+      </div>
       <div className="header">
-        <h1 id="logo">
-          <big>
-            <i className="fa-solid fa-globe" />
-          </big>{" "}
-          World News
-        </h1>
+        <FaBars id="bars"/>
         <nav>
           <ul>
             <li>
@@ -68,9 +70,17 @@ function Header() {
                 Entertainment
               </NavLink>
             </li>
+            <li>
+              <NavLink
+                to="/entertainment"
+                className={`category ${activeCategory === "Weather" ? "active" : ""}`}
+              >
+                Weather
+              </NavLink>
+            </li>
           </ul>
         </nav>
-        <div style={  { display: "flex", gap: "10px" ,alignItems:"center"}}>
+        <div className="notNav">
           <span className= {showInpBox ?  "icon_search v2" : "icon_search v1"} onClick={showSearchInputBloc}>
             <span id="search-word"> </span> <FaSearch />
           </span>

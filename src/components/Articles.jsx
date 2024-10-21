@@ -4,7 +4,6 @@ import ClipLoader from "react-spinners/MoonLoader.js";
 
 //7050f6e3f12b4a4794b0ab06803e88e5
 const apiKey = "7050f6e3f12b4a4794b0ab06803e88e5" ;
-console.log(apiKey);
 const currentLanguage = "en";
 
 const timeAgo = (publishedDate) => {

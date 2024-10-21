@@ -9,14 +9,29 @@ const Article = ({
   source,
 }) => {
 
+  // const doThisOnHover = (e) => {
+  //   const h2Element = e.target. ;
+  //   if (h2Element) {
+  //     h2Element.classList.add("underlinee");
+  //   }
+  //   console.log(h2Element);
+  // };
+  
+  // const doThisNotHover = (e) => {
+  //   const h2Element = e.target.querySelector('.h22');
+  //   if (h2Element) {
+  //     h2Element.classList.remove("underlinee");
+  //   }
+  // };
+  
   const handleImageError = (e) => {
     e.target.src = "src/assets/favicon.png";
   };
 
   if(title != "[Removed]" && urlToImage != null) {
     return (
-
-      <article>
+      // onMouseOver={doThisOnHover} onMouseOut={doThisNotHover}
+      <article >
         <img
           src={urlToImage ? urlToImage : "src/assets/favicon.png"}
           alt={title ? `${title} - News Image` : "News Image"}
@@ -29,7 +44,7 @@ const Article = ({
           </small>
         </p>
         <p className="source">{source ? source : "Unknown source"} - source</p>
-        <h2>{title}</h2>
+        <h2 className="h22">{title}</h2>
         <p className='desc'>{description ? description : "No Description"}</p>
         <p>
           <strong>
