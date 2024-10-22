@@ -83,6 +83,9 @@ hr {
   align-items: center;
   height: 100%;
 }
+nav li {
+  font-weight: bold;
+}
 .notNav{
   grid-area: rest;
   display: flex;
@@ -183,7 +186,8 @@ article img:hover {
   left: 0;
   color: var(--secondary_color);
   padding: 0 20px;
-  font-size: 14px;
+  font-size: 12px;
+  font-weight: bold;
 }
 .first_header{
   border-bottom: solid 1px var(--border_lightColor);

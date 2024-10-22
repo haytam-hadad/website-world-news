@@ -1,10 +1,7 @@
 import { FaSearch , FaBars } from "react-icons/fa";
 import { useState } from "react";
-import { NavLink } from "react-router-dom";
 
 function Header({setCategState}) {
-
-
   const [showInpBox, setShowInpBox] = useState(false);
   const showSearchInputBloc = () => {
     setShowInpBox(!showInpBox);
@@ -13,11 +10,15 @@ function Header({setCategState}) {
     }, 250);
   };
 
+  function changeCateg(e) {
+    setCategState(e.target.innerText);
+  }
+
 
   return (
     <header>
       <div className="first_header" >
-        <span id="dateNow"> <i className="fa-regular fa-calendar"></i> - {new Date().toDateString()}</span>
+        <span id="dateNow"> - {new Date().toDateString()}</span>
           <h1 id="logo">
             <i className="fa-solid fa-globe" /> World News
           </h1>
@@ -27,59 +28,32 @@ function Header({setCategState}) {
         <FaBars id="bars"/>
         <nav>
           <ul>
-            <li>
-              <NavLink
-                to="/"
-                className="general"
-                onClick={() => setCategState('general')}
-              >
+            <li className="general"
+                onClick={(e) => changeCateg(e)}>
                 General
-              </NavLink>
             </li>
-            <li>
-              <NavLink
-                to="/"
-                className="technology"
-                onClick={() => setCategState('technology')}
-              >
+            <li className="technology"
+                onClick={(e) => changeCateg(e)}>
                 Technology
-              </NavLink>
             </li>
-            <li>
-              <NavLink
-                to="/"
-                className="sports"
-                onClick={() => setCategState('sports')}
-              >
+            <li className="sports"
+                onClick={(e) => changeCateg(e)}>
+
                 Sports
-              </NavLink>
             </li>
-            <li>
-              <NavLink
-                to="/"
-                className="health"
-                onClick={() => setCategState('health')}
-              >
+            <li
+              className="health"
+              onClick={(e) => changeCateg(e)}>
                 Health
-              </NavLink>
             </li>
-            <li>
-              <NavLink
-                to="/"
-                className="entertainment"
-                onClick={() => setCategState('entertainment')}
-              >
+            <li className="entertainment"
+                onClick={(e) => changeCateg(e)}>
                 Entertainment
-              </NavLink>
             </li>
-            <li>
-              <NavLink
-                to="/"
+            <li
                 className="weather"
-                onClick={() => setCategState('weather')}
-              >
+                onClick={(e) => changeCateg(e)}>
                 Weather
-              </NavLink>
             </li>
           </ul>
         </nav>

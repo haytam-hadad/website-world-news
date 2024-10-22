@@ -2,8 +2,8 @@ import Article from './Article.jsx';
 import { useState, useEffect } from 'react';
 import ClipLoader from "react-spinners/MoonLoader.js";
 
-//7050f6e3f12b4a4794b0ab06803e88e5
-const apiKey = "547e6918c4b84b66bbb625cbb545fad8" ;
+
+const apiKey = "547e6918c4b84b66bbb625cbb545fad8";
 const currentLanguage = "en";
 
 const timeAgo = (publishedDate) => {
@@ -16,7 +16,7 @@ const timeAgo = (publishedDate) => {
   const minutes = Math.floor(diffInSeconds / 60);
   const hours = Math.floor(minutes / 60);
   const days = Math.floor(hours / 24);
-  const months = Math.floor(days / 30.44); 
+  const months = Math.floor(days / 30.44);
   const years = Math.floor(days / 365.25);
 
   if (years > 0) {
@@ -34,24 +34,26 @@ const timeAgo = (publishedDate) => {
   }
 };
 
-const Articles = ({categState}) => {
-
+const Articles = ({ categState }) => {
   const [articles, setArticles] = useState([]);
   const [url, seturl] = useState(`https://newsapi.org/v2/top-headlines?language=${currentLanguage}&apiKey=${apiKey}`);
-
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    seturl(`https://newsapi.org/v2/top-headlines?country=us&category=${categState}&language=${currentLanguage}&apiKey=${apiKey}`)
+    seturl(`https://newsapi.org/v2/top-headlines?country=us&category=${categState}&language=${currentLanguage}&apiKey=${apiKey}`);
   }, [categState]);
 
   const fetchNews = (fetchUrl) => {
+    setLoading(true);
     fetch(fetchUrl)
       .then((response) => response.json())
       .then((data) => {
         setArticles(data.articles);
+        setLoading(false);
       })
       .catch((error) => {
         console.error(error);
+        setLoading(false);
       });
   };
 
@@ -59,28 +61,33 @@ const Articles = ({categState}) => {
     fetchNews(url);
   }, [url]);
 
+  console.log(articles);
   
-  console.log(articles)
   return (
     <main>
-      {articles.length > 0 ? (
-        articles.map((article, index) => (
-          <Article
-            key={index}
-            source={article.source.name}
-            publishedAt={timeAgo(article.publishedAt)}
-            urlToImage={article.urlToImage}
-            title={article.title}
-            description={article.description}
-            url={article.url}
-            author={article.author}
-          />
-        ))
-      ) : (
+      {loading ? (
         <ClipLoader className='spinner' color={"#fff"} loading={true} size={40} />
+      ) : (
+        articles.length > 0 ? (
+          articles.map((article, index) => (
+            <Article
+              key={index}
+              source={article.source.name}
+              publishedAt={timeAgo(article.publishedAt)}
+              urlToImage={article.urlToImage}
+              title={article.title}
+              description={article.description}
+              url={article.url}
+              author={article.author}
+            />
+          ))
+        ) : (
+          <p>No articles available.</p>
+        )
       )}
     </main>
   );
 };
 
 export default Articles;
+
