@@ -15,7 +15,7 @@ const Article = ({
 
   if(title != "[Removed]" && urlToImage != null) {
     return (
-      // onMouseOver={doThisOnHover} onMouseOut={doThisNotHover}
+      
       <article >
         <img
           src={urlToImage ? urlToImage : "src/assets/favicon.png"}

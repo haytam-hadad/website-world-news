@@ -13,9 +13,8 @@
   --bg_body : var(--primary_color) ;
   --border_lightColor : #545b65;
 }
-.active {
-  text-decoration: underline solid white 2px;
-  text-underline-offset: 6px;
+a .active {
+  text-decoration: underline 2px;
 }
 body {
   font-family: Arial, sans-serif;

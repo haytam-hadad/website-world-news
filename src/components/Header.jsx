@@ -2,10 +2,10 @@ import { FaSearch , FaBars } from "react-icons/fa";
 import { useState } from "react";
 import { NavLink } from "react-router-dom";
 
-function Header() {
-  const [showInpBox, setShowInpBox] = useState(false);
-  const [activeCategory, setActiveCategory] = useState("general");
+function Header({setCategState}) {
 
+
+  const [showInpBox, setShowInpBox] = useState(false);
   const showSearchInputBloc = () => {
     setShowInpBox(!showInpBox);
     setTimeout(() => {
@@ -13,9 +13,6 @@ function Header() {
     }, 250);
   };
 
-  // const handleCategoryClick = (category) => {
-  //   setActiveCategory(category);
-  // };
 
   return (
     <header>
@@ -33,47 +30,53 @@ function Header() {
             <li>
               <NavLink
                 to="/"
-                className={`category ${activeCategory === "general" ? "active" : ""}`}
+                className="general"
+                onClick={() => setCategState('general')}
               >
                 General
               </NavLink>
             </li>
             <li>
               <NavLink
-                to="/technology"
-                className={`category ${activeCategory === "technology" ? "active" : ""}`}
+                to="/"
+                className="technology"
+                onClick={() => setCategState('technology')}
               >
                 Technology
               </NavLink>
             </li>
             <li>
               <NavLink
-                to="/sports"
-                className={`category ${activeCategory === "sports" ? "active" : ""}`}
+                to="/"
+                className="sports"
+                onClick={() => setCategState('sports')}
               >
                 Sports
               </NavLink>
             </li>
             <li>
               <NavLink
-                to="/health"
-                className={`category ${activeCategory === "health" ? "active" : ""}`}
+                to="/"
+                className="health"
+                onClick={() => setCategState('health')}
               >
                 Health
               </NavLink>
             </li>
             <li>
               <NavLink
-                to="/entertainment"
-                className={`category ${activeCategory === "entertainment" ? "active" : ""}`}
+                to="/"
+                className="entertainment"
+                onClick={() => setCategState('entertainment')}
               >
                 Entertainment
               </NavLink>
             </li>
             <li>
               <NavLink
-                to="/entertainment"
-                className={`category ${activeCategory === "Weather" ? "active" : ""}`}
+                to="/"
+                className="weather"
+                onClick={() => setCategState('weather')}
               >
                 Weather
               </NavLink>

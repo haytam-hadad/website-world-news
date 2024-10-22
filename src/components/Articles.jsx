@@ -3,7 +3,7 @@ import { useState, useEffect } from 'react';
 import ClipLoader from "react-spinners/MoonLoader.js";
 
 //7050f6e3f12b4a4794b0ab06803e88e5
-const apiKey = "7050f6e3f12b4a4794b0ab06803e88e5" ;
+const apiKey = "547e6918c4b84b66bbb625cbb545fad8" ;
 const currentLanguage = "en";
 
 const timeAgo = (publishedDate) => {
@@ -34,10 +34,15 @@ const timeAgo = (publishedDate) => {
   }
 };
 
-
-const Articles = () => {
+const Articles = ({categState}) => {
 
   const [articles, setArticles] = useState([]);
+  const [url, seturl] = useState(`https://newsapi.org/v2/top-headlines?language=${currentLanguage}&apiKey=${apiKey}`);
+
+
+  useEffect(() => {
+    seturl(`https://newsapi.org/v2/top-headlines?country=us&category=${categState}&language=${currentLanguage}&apiKey=${apiKey}`)
+  }, [categState]);
 
   const fetchNews = (fetchUrl) => {
     fetch(fetchUrl)
@@ -46,14 +51,13 @@ const Articles = () => {
         setArticles(data.articles);
       })
       .catch((error) => {
-        console.error("Error fetching news:", error);
+        console.error(error);
       });
   };
 
   useEffect(() => {
-    const url = `https://newsapi.org/v2/top-headlines?language=${currentLanguage}&apiKey=${apiKey}`;
     fetchNews(url);
-  }, []);
+  }, [url]);
 
   
   console.log(articles)
