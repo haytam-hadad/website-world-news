@@ -8,19 +8,13 @@ const Article = ({
   author,
   source,
 }) => {
-  
-  const handleImageError = (e) => {
-    e.target.src = "src/assets/favicon.png";
-  };
 
   if(title != "[Removed]" && urlToImage != null) {
     return (
-      
       <article >
         <img
           src={urlToImage ? urlToImage : "src/assets/favicon.png"}
           alt={title ? `${title} - News Image` : "News Image"}
-          onError={handleImageError}
           loading="lazy"
         />
         <p className="time">
@@ -43,7 +37,6 @@ const Article = ({
       </article>
     );    
   }
-
 };
 
 

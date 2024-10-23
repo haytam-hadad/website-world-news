@@ -2,10 +2,6 @@ import Article from './Article.jsx';
 import { useState, useEffect } from 'react';
 import ClipLoader from "react-spinners/MoonLoader.js";
 
-
-const apiKey = "547e6918c4b84b66bbb625cbb545fad8";
-const currentLanguage = "en";
-
 const timeAgo = (publishedDate) => {
   const now = new Date();
   const published = new Date(publishedDate);
@@ -34,21 +30,28 @@ const timeAgo = (publishedDate) => {
   }
 };
 
-const Articles = ({ categState }) => {
+const Articles = ({ apiKey, categState, language, dosearch, setDosearch, search }) => {
   const [articles, setArticles] = useState([]);
-  const [url, seturl] = useState(`https://newsapi.org/v2/top-headlines?language=${currentLanguage}&apiKey=${apiKey}`);
+  const [url, setUrl] = useState(`https://newsapi.org/v2/top-headlines?language=${language}&apiKey=${apiKey}`);
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    seturl(`https://newsapi.org/v2/top-headlines?country=us&category=${categState}&language=${currentLanguage}&apiKey=${apiKey}`);
+    setUrl(`https://newsapi.org/v2/top-headlines?country=us&category=${categState}&language=${language}&apiKey=${apiKey}`);
   }, [categState]);
+
+  useEffect(() => {
+    if (dosearch) {
+      setUrl(`https://newsapi.org/v2/everything?q=${encodeURIComponent(search)}&language=${language}&apiKey=${apiKey}`);
+      setDosearch(false);
+    }
+  }, [dosearch, language]);
 
   const fetchNews = (fetchUrl) => {
     setLoading(true);
     fetch(fetchUrl)
       .then((response) => response.json())
       .then((data) => {
-        setArticles(data.articles);
+        setArticles(data.articles || []);
         setLoading(false);
       })
       .catch((error) => {
@@ -61,12 +64,10 @@ const Articles = ({ categState }) => {
     fetchNews(url);
   }, [url]);
 
-  console.log(articles);
-  
   return (
     <main>
       {loading ? (
-        <ClipLoader className='spinner' color={"#fff"} loading={true} size={40} />
+        <ClipLoader className="spinner" color={"#fff"} loading={true} size={40} />
       ) : (
         articles.length > 0 ? (
           articles.map((article, index) => (
@@ -82,7 +83,10 @@ const Articles = ({ categState }) => {
             />
           ))
         ) : (
-          <p>No articles available.</p>
+          <div className="no_articles_container">
+            <h1 className="no_articles">{dosearch ? search : categState} - language : {language}</h1>
+            <h1 className="no_articles">No articles available.</h1>
+          </div>
         )
       )}
     </main>
@@ -90,4 +94,3 @@ const Articles = ({ categState }) => {
 };
 
 export default Articles;
-
