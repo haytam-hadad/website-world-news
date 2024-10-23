@@ -24,7 +24,7 @@ function Header({setCategState, setLanguage , language , search , setSearch , se
           <h1 id="logo">
             <i className="fa-solid fa-globe" /> World News
           </h1>
-          <span id="timeNow">{new Date().toLocaleTimeString()}</span>
+          <span id="timeNow">{new Date().toLocaleTimeString().slice(0,5)} <i className="fa-regular fa-clock" /></span>
       </div>
       <div className="header">
         <FaBars id="bars"/>

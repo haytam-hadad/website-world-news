@@ -4,7 +4,7 @@
   margin: 0;
   padding: 0;
   box-sizing: border-box;
-  font-family: "Poppins";
+  font-family: "Poppins" , sans-serif;
 }
 :root {
   --primary_color: #0d1117;
@@ -81,14 +81,11 @@ hr {
 .header nav ul {
   list-style: none;
   display: flex;
-  justify-content: space-evenly;
+  justify-content: space-around;
   align-items: center;
   height: 100%;
 }
-nav li {
-  cursor: pointer;
-  font-weight: bold;
-}
+
 .notNav{
   grid-area: rest;
   display: flex;
@@ -98,11 +95,10 @@ nav li {
 }
 .header nav ul li {
   transition: 250ms;
-  font-size: 13px;
-  display: inline;
-  margin-left: 20px;
+  font-weight: bold;
+  font-size: 0.9rem;
   transition: 250ms;
-  border-bottom:1px solid rgba(255, 255, 255, 0) ;
+  border-bottom:1px solid rgba(255, 255, 255, 0);
 }
 .header nav ul li:hover{
   border-bottom:1px solid white ;
@@ -192,6 +188,7 @@ article img:hover {
   color: var(--secondary_color);
   text-shadow: 3px 3px 3px rgba(0, 0, 0, 0.5);
   cursor: pointer;
+  font-family: "Poppins" , sans-serif;
 }
 #dateNow{
   position: absolute;
@@ -199,6 +196,7 @@ article img:hover {
   color: var(--secondary_color);
   padding: 0 20px;
   font-size: 14px;
+  letter-spacing: 1px;
 }
 #timeNow{
   position: absolute;
@@ -206,6 +204,7 @@ article img:hover {
   color: var(--secondary_color);
   padding: 0 20px;
   font-size: 14px;
+  letter-spacing: 1px;
 }
 .first_header{
   border-bottom: solid 1px var(--border_lightColor);

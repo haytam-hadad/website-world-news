@@ -9,7 +9,7 @@ const Article = ({
   source,
 }) => {
 
-  if(title != "[Removed]" && urlToImage != null) {
+  if(title != "[Removed]" && urlToImage != null ) {
     return (
       <article >
         <img
