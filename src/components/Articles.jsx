@@ -47,6 +47,7 @@ const Articles = ({ apiKey, categState, language, dosearch, setDosearch, search 
   }, [dosearch, language]);
 
   const fetchNews = (fetchUrl) => {
+    scroll(0, 0);
     setLoading(true);
     fetch(fetchUrl)
       .then((response) => response.json())
