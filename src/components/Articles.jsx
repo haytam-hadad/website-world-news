@@ -29,69 +29,66 @@ const timeAgo = (publishedDate) => {
     return "Just now";
   }
 };
-let useInput = false ;
 
 const Articles = ({ apiKey, categState, language, dosearch, setDosearch, search }) => {
   const [articles, setArticles] = useState([]);
-  const [url, setUrl] = useState(`https://newsapi.org/v2/top-headlines?language=${language}&apiKey=${apiKey}`);
   const [loading, setLoading] = useState(false);
-  
+  const [error, setError] = useState('');
 
   useEffect(() => {
-    setUrl(`https://newsapi.org/v2/top-headlines?country=us&category=${categState}&language=${language}&apiKey=${apiKey}`);
-    useInput = false;
-  }, [categState]);
+    const fetchNews = async () => {
+      setLoading(true);
+      setError('');
 
-  useEffect(() => {
-    if (dosearch && search !== "")
-      setUrl(`https://newsapi.org/v2/everything?q=${encodeURIComponent(search)}&language=${language}&apiKey=${apiKey}`);
-    setDosearch(false);
-    useInput = true;
-  }, [dosearch, language]);
+      // Determine the URL based on the current state
+      let fetchUrl = `https://newsapi.org/v2/top-headlines?country=us&category=${categState}&language=${language}&apiKey=${apiKey}`;
+      if (dosearch && search) {
+        fetchUrl = `https://newsapi.org/v2/everything?q=${encodeURIComponent(search)}&language=${language}&apiKey=${apiKey}`;
+      }
 
-  const fetchNews = (fetchUrl) => {
-    scroll(0, 0);
-    setLoading(true);
-    fetch(fetchUrl)
-      .then((response) => response.json())
-      .then((data) => {
+      try {
+        const response = await fetch(fetchUrl);
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        const data = await response.json();
         setArticles(data.articles || []);
+      } catch (error) {
+        console.error("Error fetching articles:", error);
+        setError('Failed to fetch articles. Please try again later.');
+      } finally {
         setLoading(false);
-      })
-      .catch((error) => {
-        console.error(error);
-        setLoading(false);
-      });
-  };
+        setDosearch(false); // Reset search state
+      }
+    };
 
-  useEffect(() => {
-    fetchNews(url);
-  }, [url]);
+    fetchNews();
+  }, [apiKey, categState, language, dosearch, search, setDosearch]);
 
   return (
     <main>
       {loading ? (
         <ClipLoader className="spinner" color={"#fff"} loading={true} size={40} />
+      ) : error ? (
+        <div className="error">{error}</div>
+      ) : articles.length > 0 ? (
+        articles.map((article, index) => (
+          <Article
+            key={index}
+            source={article.source.name}
+            publishedAt={timeAgo(article.publishedAt)}
+            urlToImage={article.urlToImage}
+            title={article.title}
+            description={article.description}
+            url={article.url}
+            author={article.author}
+          />
+        ))
       ) : (
-        articles.length > 0 ? (
-          articles.map((article, index) => (
-            <Article
-              key={index}
-              source={article.source.name}
-              publishedAt={timeAgo(article.publishedAt)}
-              urlToImage={article.urlToImage}
-              title={article.title}
-              description={article.description}
-              url={article.url}
-              author={article.author}
-            />
-          ))
-        ) : (
-          <div className="no_articles_container">
-            <h1 className="no_articles">{useInput ? search : categState} - language : {language}</h1>
-            <h1 className="no_articles">No articles available.</h1>
-          </div>
-        )
+        <div className="no_articles_container">
+          <h1 className="no_articles">{dosearch ? search : categState} - language : {language}</h1>
+          <h1 className="no_articles">No articles available.</h1>
+        </div>
       )}
     </main>
   );

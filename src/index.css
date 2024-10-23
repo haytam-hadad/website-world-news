@@ -198,14 +198,14 @@ article img:hover {
   left: 0;
   color: var(--secondary_color);
   padding: 0 20px;
-  font-size: 12px;
+  font-size: 14px;
 }
 #timeNow{
   position: absolute;
   right: 0;
   color: var(--secondary_color);
   padding: 0 20px;
-  font-size: 12px;
+  font-size: 14px;
 }
 .first_header{
   border-bottom: solid 1px var(--border_lightColor);
