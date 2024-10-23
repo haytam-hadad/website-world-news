@@ -29,21 +29,24 @@ const timeAgo = (publishedDate) => {
     return "Just now";
   }
 };
+let useInput = false ;
 
 const Articles = ({ apiKey, categState, language, dosearch, setDosearch, search }) => {
   const [articles, setArticles] = useState([]);
   const [url, setUrl] = useState(`https://newsapi.org/v2/top-headlines?language=${language}&apiKey=${apiKey}`);
   const [loading, setLoading] = useState(false);
+  
 
   useEffect(() => {
     setUrl(`https://newsapi.org/v2/top-headlines?country=us&category=${categState}&language=${language}&apiKey=${apiKey}`);
+    useInput = false;
   }, [categState]);
 
   useEffect(() => {
-    if (dosearch) {
+    if (dosearch && search !== "")
       setUrl(`https://newsapi.org/v2/everything?q=${encodeURIComponent(search)}&language=${language}&apiKey=${apiKey}`);
-      setDosearch(false);
-    }
+    setDosearch(false);
+    useInput = true;
   }, [dosearch, language]);
 
   const fetchNews = (fetchUrl) => {
@@ -85,7 +88,7 @@ const Articles = ({ apiKey, categState, language, dosearch, setDosearch, search 
           ))
         ) : (
           <div className="no_articles_container">
-            <h1 className="no_articles">{dosearch ? search : categState} - language : {language}</h1>
+            <h1 className="no_articles">{useInput ? search : categState} - language : {language}</h1>
             <h1 className="no_articles">No articles available.</h1>
           </div>
         )
