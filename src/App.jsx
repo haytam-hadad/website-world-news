@@ -4,7 +4,9 @@ import Articles from "./components/Articles";
 import Footer from './components/Footer';
 import { useState } from 'react';
 
-const apiKey = process.env.REACT_APP_API_KEY;
+const apiKey = import.meta.env.VITE_API_KEY;
+console.log("Using API Key:", apiKey);
+
 
 function App() {
   const [categState, setCategState] = useState('general');
