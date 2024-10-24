@@ -8,11 +8,11 @@
 }
 
 :root {
-  --primary_color: #000 ;
+  --primary_color: #111 ;
   --secondary_color: #fff;
-  --third_color :#500000;
-  --bg_body : var(--primary_color) ;
-  --border_lightColor : rgba(255, 255, 255, 0.2);
+  --third_color : #810000;
+  --bg_body : #222;
+  --border_lightColor : rgba(0, 0, 0, 0.4);
   --erreure_color : rgb(191, 0, 0) ;
 }
 .active {
@@ -143,6 +143,7 @@ article {
   flex: 1 1 30%;
   max-width: 50%;
   border-radius: 5px;
+  border : 1px solid var(--border_lightColor);
   border-bottom: 10px solid var(--border_lightColor);
   display: flex;
   flex-direction: column;

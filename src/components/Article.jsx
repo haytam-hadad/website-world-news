@@ -19,7 +19,7 @@ const Article = ({
         />
         <p className="time">
           <small>
-            Published at : {publishedAt ? publishedAt : "Unknown time"} <i className="fa-regular fa-clock" />
+          Published : {publishedAt ? publishedAt : "Unknown time"} <i className="fa-regular fa-clock" />
           </small>
         </p>
         <p className="source">{source ? source : "Unknown source"} - source</p>
