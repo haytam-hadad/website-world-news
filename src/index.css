@@ -512,7 +512,7 @@ strong {
     color: white;
     max-width: 100%;
     background: var(--primary_color);
-    border: 1px solid rgba(255, 255, 255, 0.3);
+    border: 1px solid var(--border_lightColor);
     flex: 1 1 100%;
     display: grid !important;
     grid-template-areas:
