@@ -10,9 +10,9 @@
 :root {
   --primary_color: #111 ;
   --secondary_color: #fff;
-  --third_color : #810000;
-  --bg_body : #222;
-  --border_lightColor : rgba(0, 0, 0, 0.4);
+  --third_color : #0f1b29 ;
+  --bg_body : var(--third_color);
+  --border_lightColor : rgba(255, 255, 255, 0.2);
   --erreure_color : rgb(191, 0, 0) ;
 }
 .active {
@@ -327,7 +327,7 @@ footer {
 }
 
 strong {
-  color: var(--border_lightColor);
+  color: var(--primary_color);
   font-size: 12px;
   padding: 0 15px;
 }
