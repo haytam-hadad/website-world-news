@@ -8,11 +8,11 @@
 }
 
 :root {
-  --primary_color: #111 ;
+  --primary_color: #000 ;
   --secondary_color: #fff;
-  --third_color :#460c0c;
+  --third_color :#500000;
   --bg_body : var(--primary_color) ;
-  --border_lightColor : #222;
+  --border_lightColor : rgba(255, 255, 255, 0.3);
   --erreure_color : rgb(191, 0, 0) ;
 }
 .active {
@@ -512,7 +512,7 @@ strong {
     color: white;
     max-width: 100%;
     background: var(--primary_color);
-    border: 1px solid var(--border_lightColor);
+    border: 1px solid rgba(255, 255, 255, 0.3);
     flex: 1 1 100%;
     display: grid !important;
     grid-template-areas:
