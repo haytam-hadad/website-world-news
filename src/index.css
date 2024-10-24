@@ -525,7 +525,7 @@ strong {
 }
 
 
-@media only screen and (max-width: 950px) {
+@media only screen and (max-width: 900px) {
   * {
     font-size: 0.9rem ;
   }
