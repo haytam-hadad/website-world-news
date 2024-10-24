@@ -8,9 +8,9 @@
 }
 
 :root {
-  --primary_color: #111 ;
+  --primary_color: #111;
   --secondary_color: #fff;
-  --third_color : #0f1b29 ;
+  --third_color : #0b1724 ;
   --bg_body : var(--third_color);
   --border_lightColor : rgba(255, 255, 255, 0.2);
   --erreure_color : rgb(191, 0, 0) ;

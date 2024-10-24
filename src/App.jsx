@@ -6,7 +6,8 @@ import { useState  } from 'react';
 import SideMenu from './components/SideMenu';
 
 const apiKey = import.meta.env.VITE_API_KEY;
-console.log("Using API Key:", apiKey);
+const apiUrl = import.meta.env.VITE_API_URL;
+
 
 
 function App() {
@@ -28,7 +29,7 @@ function App() {
       setShowSideMenu={setShowSideMenu}
     />
     { showSideMenu ?  <SideMenu setCategState={setCategState}/> : null }
-    <Articles apiKey={apiKey} categState={categState} language={language}
+    <Articles apiUrl={apiUrl} apiKey={apiKey} categState={categState} language={language}
       dosearch={dosearch} setDosearch={setDosearch} search={search}/>
       <Footer/>
     </React.Fragment>
