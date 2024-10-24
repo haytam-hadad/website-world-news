@@ -468,12 +468,7 @@ strong {
     align-items: center;
     border-bottom: var(--border_lightColor) 10px solid;
   }
-  /* article:first-child:hover {
-      translate: none !important;  
-  }   */
 }
-
-
 
 
 @media only screen and (max-width: 900px) {
@@ -484,6 +479,7 @@ strong {
     display: block;
     margin: auto;
     scale: 1.6;
+    cursor: pointer;
   }
   #logo{
     font-size: 25px !important;
@@ -520,6 +516,9 @@ strong {
   }
   .no_articles_container{
     scale: 0.7;
+  }
+  footer p , footer #logo{
+    font-size: 1rem !important;
   }
 }
 
@@ -559,8 +558,9 @@ strong {
     flex-grow: 1 ;
     scale: 0.95;
   }
-  #dateNow{
+  #dateNow , #timeNow{
     display: none;
   }
+
 }
 
