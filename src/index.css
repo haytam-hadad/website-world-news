@@ -270,7 +270,7 @@ article h2 {
   font-size: 13px;
   flex-grow: 2;
   font-weight: bold;
-  border: var(--border_lightColor) solid 3px;
+  border: var(--third_color) solid 3px;
 }
 
 #input_box button{
