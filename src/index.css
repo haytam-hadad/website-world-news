@@ -12,7 +12,7 @@
   --secondary_color: #fff;
   --third_color :#460c0c;
   --bg_body : var(--primary_color) ;
-  --border_lightColor : #333;
+  --border_lightColor : #222;
   --erreure_color : rgb(191, 0, 0) ;
 }
 .active {
