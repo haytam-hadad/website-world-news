@@ -12,7 +12,7 @@
   --secondary_color: #fff;
   --third_color :#3C0A0A;
   --bg_body : var(--primary_color) ;
-  --border_lightColor : #3b4148c9;
+  --border_lightColor : #3b4148df;
   --erreure_color : rgb(191, 0, 0) ;
 }
 .active {
@@ -23,7 +23,7 @@ body {
   font-family: Arial, sans-serif;
   background: var(--bg_body);
   line-height: 1.6;
-  min-width: 100vh;
+  min-height: 100vh;
 }
 
 header{
@@ -460,11 +460,13 @@ strong {
   article:nth-child(1) h2 {
     line-height: 30px;
     grid-area: title;
-    padding: 10px;
+    padding: 5px 20px;
     text-decoration: underline 2px;
     text-underline-offset: 5px;
-    border-left: solid 4px  var(--secondary_color);
-    border-bottom:none ;
+    border-left: solid 4px  var(--third_color);
+    color: var(--secondary_color);
+    background-color: var(--primary_color);
+    border-bottom:none;
   }
   article:nth-child(1) hr {
     display: none;
