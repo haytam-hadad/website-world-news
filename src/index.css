@@ -6,12 +6,13 @@
   box-sizing: border-box;
   font-family: "Poppins" , sans-serif;
 }
+
 :root {
-  --primary_color: #0d1117;
+  --primary_color: #0d1117 ;
   --secondary_color: #fff;
-  --third_color :#252529;
+  --third_color :#3C0A0A;
   --bg_body : var(--primary_color) ;
-  --border_lightColor : #545b65;
+  --border_lightColor : #4e555e;
   --erreure_color : rgb(255, 147, 147) ;
 }
 .active {
@@ -226,7 +227,7 @@ article h2 {
   background-color: var(--secondary_color) ;
   border-radius: 5px;
   margin-bottom: 5px;
-  border-bottom: solid 5px var(--primary_color);
+  border-bottom: solid 5px var(--third_color);
 }
 
 .desc {
@@ -263,7 +264,7 @@ article h2 {
 }
 
 #input_box input{
-  padding: 10px 20px;
+  padding: 5px 20px;
   border-radius: 5px;
   border: none;
   outline: none;
@@ -308,6 +309,9 @@ option{
   flex-grow: 1;
   text-align: center;
 }
+option{
+  background-color: var(--primary_color);
+}
 #input_box select:hover{
   background-color: var(--third_color);
 }
@@ -318,7 +322,7 @@ footer {
   text-align: center;
   padding: 10px 0;
   margin-top: 20px;
-  border-bottom: var(--secondary_color) 20px solid;
+  border-top: var(--border_lightColor) 1px solid;
 }
 
 strong {
@@ -383,7 +387,7 @@ strong {
   position: fixed;
   top: 0;
   left: 0;
-  width: 40%;
+  width: 45%;
   height: 100%;
   background: var(--third_color);
   z-index: 100;
@@ -422,7 +426,7 @@ strong {
   font-size: 1.1rem;
   cursor: pointer;
   text-align: center;
-  padding: 10px;
+  padding: 15px;
 }
 
 @keyframes anim {
@@ -468,7 +472,7 @@ strong {
     padding: 30px 15px;
     margin: 0;
     border-left: solid 4px  var(--secondary_color);
-    background-color: var(--third_color);
+    background-color: var(--primary_color);
   }
   article:nth-child(1) .time{
     grid-area: time;
@@ -477,7 +481,7 @@ strong {
   article:nth-child(1) .source{
     grid-area: source;
     color: var(--secondary_color);
-    background-color: var(--primary_color);
+    background-color: var(--third_color);
     border-left: solid 4px  var(--secondary_color);
   }
   article:nth-child(1) .link_art{
@@ -498,7 +502,7 @@ strong {
     padding: 5px;
     color: white;
     max-width: 100%;
-    background: var(--third_color);
+    background: var(--primary_color);
     border: 1px solid var(--border_lightColor);
     flex: 1 1 100%;
     display: grid !important;
@@ -565,6 +569,25 @@ strong {
   }
   footer p , footer #logo{
     font-size: 1rem !important;
+  }
+  #input_box{
+    animation: drop_down_anim 0.2s ease;
+    padding: 10px;
+    gap: 5px;
+  }
+  #input_box input{
+    padding: 5px 15px;
+    scale: 0.95;
+    flex-grow:3 ;
+  }
+  #input_box button{
+    padding: 5px 10px;
+    scale: 0.95;
+    flex-grow:2 ;
+  }
+  #input_box select{
+    flex-grow: 1 ;
+    scale: 0.95;
   }
 }
 
