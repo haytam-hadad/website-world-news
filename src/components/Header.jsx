@@ -1,8 +1,15 @@
-import { FaSearch , FaBars } from "react-icons/fa";
+import { FaSearch } from "react-icons/fa";
 import { useState } from "react";
 
-function Header({setCategState, setLanguage , language , search , setSearch , setDosearch }) {
+function Header({setCategState, setLanguage , language , search , setSearch , setDosearch , setShowSideMenu}) {
   const [showInpBox, setShowInpBox] = useState(false);
+
+  const ShowSideMenu = (e) => {
+    e.target.classList.toggle("fa-bars");
+    e.target.classList.toggle("fa-xmark");
+    
+    setShowSideMenu(prev => !prev);
+  };
 
   function changeCateg(e) {
     addActivation(e);
@@ -27,7 +34,7 @@ function Header({setCategState, setLanguage , language , search , setSearch , se
           <span id="timeNow">{new Date().toLocaleTimeString().slice(0,5)} <i className="fa-regular fa-clock" /></span>
       </div>
       <div className="header">
-        <FaBars id="bars"/>
+      <i id="bars" class="fa-solid fa-bars" onClick={(e) => ShowSideMenu(e)} ></i>
         <nav>
           <ul>
             <li className="general active"
@@ -74,7 +81,7 @@ function Header({setCategState, setLanguage , language , search , setSearch , se
 
       {!showInpBox ? null : (
         <div id="input_box">
-          <input
+          <input ref={input => input && input.focus()}
             type="text"
             id="search-input"
             placeholder="Search for the latest news..."
