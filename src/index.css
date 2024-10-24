@@ -12,7 +12,7 @@
   --secondary_color: #fff;
   --third_color :#3C0A0A;
   --bg_body : var(--primary_color) ;
-  --border_lightColor : #4e555e;
+  --border_lightColor : #3b4148c9;
   --erreure_color : rgb(191, 0, 0) ;
 }
 .active {
@@ -350,7 +350,7 @@ strong {
   color: var(--secondary_color);
 }
 .v1:hover , .v2{
-  background: hsla(0, 0%, 100%, 0.4);
+  background: hsla(0, 0%, 100%, 0.3);
 
 }
 .spinner{
@@ -392,6 +392,7 @@ strong {
   z-index: 100;
   animation: animToRight 0.3s ease;
   animation-fill-mode: forwards;
+  border-right: solid  2px var(--border_lightColor);
 }
 
 @keyframes animToRight {
@@ -426,6 +427,8 @@ strong {
   cursor: pointer;
   text-align: center;
   padding: 15px;
+  border-top: solid  1px var(--border_lightColor);
+  border-bottom: solid  1px var(--border_lightColor);
 }
 
 @keyframes anim {

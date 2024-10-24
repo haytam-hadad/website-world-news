@@ -2,7 +2,7 @@ import React from 'react';
 import Header from "./components/Header";
 import Articles from "./components/Articles";
 import Footer from './components/Footer';
-import { useState } from 'react';
+import { useState  } from 'react';
 import SideMenu from './components/SideMenu';
 
 const apiKey = import.meta.env.VITE_API_KEY;
