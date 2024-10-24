@@ -23,14 +23,9 @@ body {
   font-family: Arial, sans-serif;
   background: var(--bg_body);
   line-height: 1.6;
+  min-width: 100vh;
 }
-.Published{
-  background-color: var(--border_lightColor);
-  color: rgb(0, 0, 0);
-  padding: 0 15px;
-  margin: 0 -16px;
-  border-left: 5px solid var(--primary_color);
-}
+
 header{
   position: sticky;
   top :0;
@@ -130,8 +125,8 @@ main {
   padding: 20px 5%;
   display: flex;
   flex-wrap: wrap;
-  gap: 20px;
-  min-height: 54vh;
+  gap: 30px 15px;
+  min-height: 60vh;
 }
 
 article {
@@ -220,7 +215,7 @@ article img:hover {
   padding: 5px;
 }
 article h2 {
-  color: var(--primary_color);
+  color: var(--third_color);
   font-size: 18px;
   line-height: 1.2;
   padding: 10px;
@@ -342,13 +337,13 @@ strong {
 }
 .link_art{
   padding: 5px 10%;
-  background: var(--primary_color);
+  background: var(--third_color);
   width: fit-content;
   color: var(--secondary_color);
   border-radius: 5px;
 }
 .link_art:hover{
-  background-color: var(--third_color);
+  background-color: var(--primary_color);
   color: var(--secondary_color);
 }
 .v1:hover , .v2{
@@ -378,6 +373,7 @@ strong {
   color: white;
   padding: 5px;
   font-size: 0.9rem;
+  border-radius:5px ;
 }
 #bars{
   display: none;
@@ -459,9 +455,10 @@ strong {
     line-height: 30px;
     grid-area: title;
     padding: 10px;
-    border-bottom: 5px solid var(--primary_color);
     text-decoration: underline 2px;
     text-underline-offset: 5px;
+    border-left: solid 4px  var(--secondary_color);
+    border-bottom:none ;
   }
   article:nth-child(1) hr {
     display: none;
@@ -472,11 +469,13 @@ strong {
     padding: 30px 15px;
     margin: 0;
     border-left: solid 4px  var(--secondary_color);
-    background-color: var(--primary_color);
+    background-color: rgba(255, 255, 255, 0.03);
   }
   article:nth-child(1) .time{
     grid-area: time;
-    width: 100%;
+    position: absolute;
+    padding: 5px 20px;
+    bottom: 0;
   }
   article:nth-child(1) .source{
     grid-area: source;
@@ -511,12 +510,11 @@ strong {
       "img source"
       "img desc"
       "img author"
-      "time link";
+      "img link";
 
     grid-template-columns: 1fr 1fr;
     gap: 1px 20px ;
     align-items: center;
-    border-bottom: var(--border_lightColor) 10px solid;
   }
 }
 
