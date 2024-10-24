@@ -88,7 +88,7 @@ const Articles = ({ apiKey, categState, language, dosearch, setDosearch, search 
           ))
         ) : (
           <div className="no_articles_container">
-            <h1 className="no_articles">{useInput ? search : categState} - language : {language}</h1>
+            <h1 className="no_articles"> `{useInput ? search  : categState}` -- language : `{language}`</h1>
             <h1 className="no_articles">No articles available.</h1>
           </div>
         )

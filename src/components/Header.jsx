@@ -1,5 +1,5 @@
 import { FaSearch } from "react-icons/fa";
-import { useState } from "react";
+import { useState , useRef } from "react";
 
 function Header({setCategState, setLanguage , language , search , setSearch , setDosearch , setShowSideMenu}) {
   const [showInpBox, setShowInpBox] = useState(false);
@@ -24,6 +24,13 @@ function Header({setCategState, setLanguage , language , search , setSearch , se
     e.currentTarget.classList.add("active");
   }
 
+  const toggleSearchInput = () => {
+    setShowInpBox(prev => !prev);
+    if (showInpBox) {
+      setSearch(""); 
+    }
+  };
+
   return (
     <header>
       <div className="first_header" >
@@ -34,7 +41,7 @@ function Header({setCategState, setLanguage , language , search , setSearch , se
           <span id="timeNow">{new Date().toLocaleTimeString().slice(0,5)} <i className="fa-regular fa-clock" /></span>
       </div>
       <div className="header">
-      <i id="bars" class="fa-solid fa-bars" onClick={(e) => ShowSideMenu(e)} ></i>
+      <i id="bars" className="fa-solid fa-bars" onClick={(e) => ShowSideMenu(e)} ></i>
         <nav>
           <ul>
             <li className="general active"
@@ -67,7 +74,7 @@ function Header({setCategState, setLanguage , language , search , setSearch , se
           </ul>
         </nav>
         <div className="notNav">
-          <span className={showInpBox ? "icon_search v2" : "icon_search v1"} onClick={() => setShowInpBox(prev => !prev)}>
+          <span className={showInpBox ? "icon_search v2" : "icon_search v1"} onClick={toggleSearchInput}>
             <span id="search-word"> </span> <FaSearch />
           </span>
           <button className="main_btn">
@@ -81,7 +88,10 @@ function Header({setCategState, setLanguage , language , search , setSearch , se
 
       {!showInpBox ? null : (
         <div id="input_box">
-          <input ref={input => input && input.focus()}
+          <input
+            ref={input => {
+              input && input.focus();
+            }}
             type="text"
             id="search-input"
             placeholder="Search for the latest news..."

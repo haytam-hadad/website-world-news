@@ -13,7 +13,7 @@
   --third_color :#3C0A0A;
   --bg_body : var(--primary_color) ;
   --border_lightColor : #4e555e;
-  --erreure_color : rgb(255, 147, 147) ;
+  --erreure_color : rgb(191, 0, 0) ;
 }
 .active {
   text-decoration: underline 2px;
@@ -116,6 +116,9 @@ hr {
   font-size: 1.7rem;
   color: var(--secondary_color);
   color: var(--erreure_color);
+  background-color: rgba(255, 255, 255, 0.03);
+  padding: 10px;
+  border-radius: 5px;
 }
 article a:hover {
   color: var(--primary_color);
