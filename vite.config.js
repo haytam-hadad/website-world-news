@@ -7,9 +7,9 @@ export default defineConfig({
     port: 3000,
     proxy: {
       '/api': {
-        target: 'https://newsapi.org', // Target the NewsAPI
+        target: 'https://newsapi.org',
         changeOrigin: true,
-        rewrite: (path) => path.replace(/^\/api/, ''), // Rewrite path
+        rewrite: (path) => path.replace(/^\/api/, ''),
       },
     },
   },
