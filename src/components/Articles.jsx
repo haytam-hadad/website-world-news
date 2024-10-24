@@ -27,18 +27,18 @@ let useInput = false ;
 
 const Articles = ({ apiKey, categState, language, dosearch, setDosearch, search }) => {
   const [articles, setArticles] = useState([]);
-  const [url, setUrl] = useState(`https://newsapi.org/v2/top-headlines?language=${language}&apiKey=${apiKey}`);
+  const [url, setUrl] = useState(`/api/v2/top-headlines?language=${language}&apiKey=${apiKey}`);
   const [loading, setLoading] = useState(false);
   
 
   useEffect(() => {
-    setUrl(`https://newsapi.org/v2/top-headlines?country=us&category=${categState}&language=${language}&apiKey=${apiKey}`);
+    setUrl(`/api/v2/top-headlines?country=us&category=${categState}&language=${language}&apiKey=${apiKey}`);
     useInput = false;
   }, [categState]);
 
   useEffect(() => {
     if (dosearch && search !== "")
-      setUrl(`https://newsapi.org/v2/everything?q=${encodeURIComponent(search)}&language=${language}&apiKey=${apiKey}`);
+      setUrl(`/api/v2/everything?q=${encodeURIComponent(search)}&language=${language}&apiKey=${apiKey}`);
     setDosearch(false);
     useInput = true;
   }, [dosearch, language]);
