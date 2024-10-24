@@ -8,11 +8,11 @@
 }
 
 :root {
-  --primary_color: #0d1117 ;
+  --primary_color: #111 ;
   --secondary_color: #fff;
-  --third_color :#3C0A0A;
+  --third_color :#460c0c;
   --bg_body : var(--primary_color) ;
-  --border_lightColor : #3b4148df;
+  --border_lightColor : #333;
   --erreure_color : rgb(191, 0, 0) ;
 }
 .active {
@@ -484,6 +484,7 @@ strong {
     position: absolute;
     padding: 5px 20px;
     bottom: 0;
+    background-color: var(--third_color);
   }
   article:nth-child(1) .source{
     grid-area: source;
