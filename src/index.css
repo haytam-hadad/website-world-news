@@ -135,13 +135,10 @@ article {
   overflow: hidden;
   position: relative;
   background-color: hsla(0, 0%, 100%, 0.95);
-  padding: 10px;
-  border: 1px solid var(--border_lightColor);
   flex: 1 1 30%;
   max-width: 50%;
   border-radius: 5px;
   border : 1px solid var(--border_lightColor);
-  border-bottom: 10px solid var(--border_lightColor);
   display: flex;
   flex-direction: column;
   justify-content: space-between;
@@ -167,15 +164,13 @@ article:hover h2 {
 }
 
 
-
-
-
 article img {
   border-radius: 5px;
   width: 100%;
   height: auto;
   transition: 250ms;
-  object-fit: contain;
+  object-fit: cover;
+  max-height: 40%;
 }
 
 article img:hover {
@@ -226,7 +221,14 @@ article h2 {
   margin-bottom: 5px;
   border-bottom: solid 5px var(--third_color);
 }
-
+#content {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+  gap: 1px;
+  padding: 1px 8px;
+  flex: 1;
+}
 .desc {
   font-size: 15px;
   opacity: 1;

@@ -18,22 +18,24 @@ const Article = ({
           loading="lazy"
         />
         <p className="time">
-          <small>
-          Published : {publishedAt ? publishedAt : "Unknown time"} <i className="fa-regular fa-clock" />
-          </small>
+            <small>
+            Published : {publishedAt ? publishedAt : "Unknown time"} <i className="fa-regular fa-clock" />
+            </small>
         </p>
-        <p className="source">{source ? source : "Unknown source"} - source</p>
-        <h2 className="h22">{title}</h2>
-        <p className='desc'>{description ? description : "No Description"}</p>
-        <p>
-          <strong>
-           Author: {author ? author : "Unknown"} <i className="fa-solid fa-feather" />
-          </strong>
-        </p>
-        <hr />
-        <Link className="link_art" to={url ? url : "#" } target="_blank" rel="noopener noreferrer">
-          Read full article:  <i className="fa-solid fa-arrow-up-right-from-square"> </i> 
-        </Link>
+        <div id="content">
+          <p className="source">{source ? source : "Unknown source"} - source</p>
+          <h2 className="h22">{title}</h2>
+          <p className='desc'>{description ? description : "No Description"}</p>
+          <p>
+            <strong>
+            Author: {author ? author : "Unknown"} <i className="fa-solid fa-feather" />
+            </strong>
+          </p>
+          <hr />
+          <Link className="link_art" to={url ? url : "#" } target="_blank" rel="noopener noreferrer">
+            Read full article:  <i className="fa-solid fa-arrow-up-right-from-square"> </i> 
+          </Link>
+        </div>
       </article>
     );    
   }
