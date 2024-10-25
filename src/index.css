@@ -8,11 +8,11 @@
 }
 
 :root {
-  --primary_color: #111;
+  --primary_color: #010409;
   --secondary_color: #fff;
   --third_color : #151b23 ;
   --bg_body : var(--third_color);
-  --border_lightColor : rgba(255, 255, 255, 0.2);
+  --border_lightColor : rgba(255, 255, 255, 0.25);
   --erreure_color : rgb(191, 0, 0) ;
 }
 .active {
