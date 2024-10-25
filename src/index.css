@@ -8,7 +8,7 @@
 }
 
 :root {
-  --primary_color: #010409;
+  --primary_color: #0d1117;
   --secondary_color: #fff;
   --third_color : #151b23 ;
   --bg_body : var(--third_color);
