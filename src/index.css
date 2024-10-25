@@ -10,7 +10,7 @@
 :root {
   --primary_color: #111;
   --secondary_color: #fff;
-  --third_color : #0b1724 ;
+  --third_color : #151b23 ;
   --bg_body : var(--third_color);
   --border_lightColor : rgba(255, 255, 255, 0.2);
   --erreure_color : rgb(191, 0, 0) ;
@@ -234,6 +234,7 @@ article h2 {
   font-size: 15px;
   opacity: 1;
   padding: 10px;
+  letter-spacing: 1px;
 }
 #input_box{
   animation: drop_down_anim 0.1s ease;
