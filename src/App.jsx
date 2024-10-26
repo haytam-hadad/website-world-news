@@ -1,17 +1,16 @@
-import React from 'react';
+import React, { useState } from 'react';
 import Header from "./components/Header";
 import Articles from "./components/Articles";
 import Footer from './components/Footer';
-import { useState  } from 'react';
 import SideMenu from './components/SideMenu';
 import TopSearchBar from './components/TopSearchBar';
 import MainTitle from './components/MainTitle';
+import { app } from './firebaseConfig';
 
 const apiKey = import.meta.env.VITE_API_KEY;
 const apiUrl = import.meta.env.VITE_API_URL;
 
 const TopSearshsArray = ["russia and ukraine", "isreal and gaza", "morocco news", "USA election"];
-
 
 function App() {
   const [categState, setCategState] = useState('general');
@@ -34,12 +33,24 @@ function App() {
         showInpBox={showInpBox}
         setShowInpBox={setShowInpBox}
       />
-      <TopSearchBar TopSearshsArray={TopSearshsArray} setSearch={setSearch} setDosearch={setDosearch} setShowInpBox={setShowInpBox}  />
-      <MainTitle title={"Today's Top News Headlines"}/>
-      { showSideMenu ?  <SideMenu setCategState={setCategState}/> : null }
-      <Articles apiUrl={apiUrl} apiKey={apiKey} categState={categState} language={language}
-        dosearch={dosearch} setDosearch={setDosearch} search={search}/>
-        <Footer/>
+      <TopSearchBar 
+        TopSearshsArray={TopSearshsArray} 
+        setSearch={setSearch} 
+        setDosearch={setDosearch} 
+        setShowInpBox={setShowInpBox}  
+      />
+      <MainTitle title={"Today's Top News Headlines"} />
+      { showSideMenu ? <SideMenu setCategState={setCategState}/> : null }
+      <Articles 
+        apiUrl={apiUrl} 
+        apiKey={apiKey} 
+        categState={categState} 
+        language={language}
+        dosearch={dosearch} 
+        setDosearch={setDosearch} 
+        search={search}
+      />
+      <Footer />
     </React.Fragment>
   );
 }
