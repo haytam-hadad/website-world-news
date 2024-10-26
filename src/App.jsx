@@ -7,8 +7,8 @@ import TopSearchBar from './components/TopSearchBar';
 import MainTitle from './components/MainTitle';
 import { app } from './firebaseConfig';
 
-const apiKey = import.meta.env.VITE_API_KEY;
-const apiUrl = import.meta.env.VITE_API_URL;
+const apiKey = "2375d165f5e8447d9334bfd59e44e34e";
+const apiUrl = "https://newsapi.org/v2/";
 
 const TopSearshsArray = ["russia and ukraine", "isreal and gaza", "morocco news", "USA election"];
 
