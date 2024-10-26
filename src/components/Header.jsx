@@ -1,6 +1,7 @@
 import { FaSearch } from "react-icons/fa";
 import SideMenu from './SideMenu';
 import { useState } from 'react';
+import UserLocation from "./CurrentWeather";
 
 function Header({setCategState, setLanguage , language , search , setSearch , setDosearch , showInpBox , setShowInpBox}) {
   const [showSideMenu, setShowSideMenu] = useState(false);
@@ -39,7 +40,8 @@ function Header({setCategState, setLanguage , language , search , setSearch , se
           <h1 id="logo">
             <i className="fa-solid fa-globe" /> World News
           </h1>
-          <span id="timeNow">{new Date().toLocaleTimeString().slice(0,5)} <i className="fa-regular fa-clock" /></span>
+          <span id="weatherNow"><UserLocation/></span>
+            {/*new Date().toLocaleTimeString().slice(0,5)*/}
       </div>
       <div className="header">
       <i id="bars" className="fa-solid fa-bars" onClick={(e) => ShowSideMenu(e)} ></i>

@@ -1,6 +1,7 @@
 import Article from './Article.jsx';
 import { useState, useEffect } from 'react';
 import ClipLoader from "react-spinners/MoonLoader.js";
+import MainTitle from './MainTitle.jsx';
 
 const Articles = ({ apiUrl, apiKey, categState, language, dosearch, setDosearch, search }) => {
   const [articles, setArticles] = useState([]);
@@ -40,11 +41,14 @@ const Articles = ({ apiUrl, apiKey, categState, language, dosearch, setDosearch,
     fetchNews(url);
   }, [url]);
 
-  return (
+  return (<>
+  <MainTitle title={"Today's Top News Headlines"} />
     <main>
+    
       {loading ? (
         <ClipLoader className="spinner" color={"#fff"} loading={true} size={40} />
       ) : articles.length > 0 ? (
+        
         articles.map((article, index) => (
           <Article
             key={index}
@@ -64,7 +68,7 @@ const Articles = ({ apiUrl, apiKey, categState, language, dosearch, setDosearch,
         </div>
       )}
     </main>
-  );
+    </>);
 };
 
 export default Articles;

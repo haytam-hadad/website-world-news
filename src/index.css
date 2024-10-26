@@ -252,7 +252,7 @@ article img:hover {
   letter-spacing: 1px;
   font-weight: bold;
 }
-#timeNow{
+#weatherNow{
   position: absolute;
   right: 0;
   color: var(--secondary_color);
@@ -260,6 +260,13 @@ article img:hover {
   font-size: 14px;
   letter-spacing: 1px;
   font-weight: bold;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+#weatherNow img{
+  width: 30px;
+  height: auto;
 }
 .first_header{
   border-bottom: solid 1px var(--border_lightColor);
