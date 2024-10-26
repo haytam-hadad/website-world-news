@@ -1,8 +1,6 @@
 import { FaSearch } from "react-icons/fa";
-import { useState , useRef } from "react";
 
-function Header({setCategState, setLanguage , language , search , setSearch , setDosearch , setShowSideMenu}) {
-  const [showInpBox, setShowInpBox] = useState(false);
+function Header({setCategState, setLanguage , language , search , setSearch , setDosearch , setShowSideMenu , showInpBox , setShowInpBox}) {
 
   const ShowSideMenu = (e) => {
     e.target.classList.toggle("fa-bars");
