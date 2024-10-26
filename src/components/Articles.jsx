@@ -8,10 +8,12 @@ const Articles = ({ apiUrl, apiKey, categState, language, dosearch, setDosearch,
   const [url, setUrl] = useState(`${apiUrl}/top-headlines?country=us&category=${categState}&language=${language}&apiKey=${apiKey}`);
 
   useEffect(() => {
+
     setUrl(`${apiUrl}/top-headlines?country=us&category=${categState}&language=${language}&apiKey=${apiKey}`);
   }, [categState, language, apiKey, apiUrl]);
 
   useEffect(() => {
+
     if (dosearch && search) {
       setUrl(`${apiUrl}/everything?q=${encodeURIComponent(search)}&language=${language}&apiKey=${apiKey}`);
       setDosearch(false);
@@ -22,6 +24,9 @@ const Articles = ({ apiUrl, apiKey, categState, language, dosearch, setDosearch,
     setLoading(true);
     try {
       const response = await fetch(fetchUrl);
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
       const data = await response.json();
       setArticles(data.articles || []);
     } catch (error) {

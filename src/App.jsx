@@ -8,7 +8,7 @@ import MainTitle from './components/MainTitle';
 import { app } from './firebaseConfig';
 
 const apiKey = "2375d165f5e8447d9334bfd59e44e34e";
-const apiUrl = "https://newsapi.org/v2/";
+const apiUrl = "https://newsapi.org/v2";
 
 const TopSearshsArray = ["russia and ukraine", "isreal and gaza", "morocco news", "USA election"];
 
