@@ -1,7 +1,9 @@
 import { FaSearch } from "react-icons/fa";
+import SideMenu from './SideMenu';
+import { useState } from 'react';
 
-function Header({setCategState, setLanguage , language , search , setSearch , setDosearch , setShowSideMenu , showInpBox , setShowInpBox}) {
-
+function Header({setCategState, setLanguage , language , search , setSearch , setDosearch , showInpBox , setShowInpBox}) {
+  const [showSideMenu, setShowSideMenu] = useState(false);
   const ShowSideMenu = (e) => {
     e.target.classList.toggle("fa-bars");
     e.target.classList.toggle("fa-xmark");
@@ -30,6 +32,7 @@ function Header({setCategState, setLanguage , language , search , setSearch , se
   };
 
   return (
+    <>
     <header>
       <div className="first_header" >
         <span id="dateNow">{new Date().toDateString()}</span>
@@ -109,6 +112,8 @@ function Header({setCategState, setLanguage , language , search , setSearch , se
       )}
       
     </header>
+    { showSideMenu ? <SideMenu setCategState={setCategState}/> : null }
+    </>
   );
 }
 

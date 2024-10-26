@@ -19,7 +19,6 @@ function App() {
   const [language, setLanguage] = useState('en');
   const [search, setSearch] = useState('');
   const [dosearch, setDosearch] = useState(false);
-  const [showSideMenu, setShowSideMenu] = useState(false);
   const [showInpBox, setShowInpBox] = useState(false);
 
   return (
@@ -31,7 +30,6 @@ function App() {
         search={search} 
         setSearch={setSearch} 
         setDosearch={setDosearch}
-        setShowSideMenu={setShowSideMenu}
         showInpBox={showInpBox}
         setShowInpBox={setShowInpBox}
       />
@@ -42,7 +40,6 @@ function App() {
         setShowInpBox={setShowInpBox}  
       />
       <MainTitle title={"Today's Top News Headlines"} />
-      { showSideMenu ? <SideMenu setCategState={setCategState}/> : null }
       <Articles 
         apiUrl={apiUrl} 
         apiKey={apiKey} 
