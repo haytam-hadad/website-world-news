@@ -135,24 +135,30 @@ article a:hover {
 
 #top_searchs{
   background-color: var(--secondary_color);
-  padding: 10px 2%;
+  padding: 5px;
   display: flex;
   flex-wrap: wrap;
-  justify-content: space-around;
-  border-bottom: 1px solid var(--border_lightColor);
+  justify-content: space-evenly;
+  align-items: center;
+  border-top: 4px solid var(--border_lightColor);
   flex-wrap: nowrap;
+  gap: 2px;
+  overflow-y: auto ;
 }
 .search{
-  padding: 3px 20px;
+  padding: 3px 15px;
   border-radius: 20px;
   border: 1px solid var(--border_lightColor);
-  background-color: var(--third_color);
+  background-color: var(--primary_color);
   color: var(--secondary_color);
   cursor: pointer;
   font-size: 0.9rem;
   font-weight: bold;
   border: 2px solid var(--third_color);
   transition: 100ms;
+  text-align: center;
+  white-space: nowrap;
+  box-shadow: 1px 4px 8px rgba(0, 0, 0, 0.3);
 }
 .search:hover{
   background-color: var(--secondary_color);
@@ -163,6 +169,7 @@ article a:hover {
   color: var(--primary_color);
   font-weight: bold;
   font-size: 1rem;
+  white-space: nowrap;
 }
 
 main {
