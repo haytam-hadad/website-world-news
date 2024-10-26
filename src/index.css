@@ -512,10 +512,6 @@ strong {
 
 
 
-
-
-
-
 @media only screen and (min-width: 900px){
   article:nth-child(1) img {
     position: relative;
@@ -730,7 +726,7 @@ strong {
     flex-grow: 1 ;
     scale: 0.95;
   }
-  #dateNow , #timeNow{
+  #dateNow , #weatherNow{
     display: none;
   }
 }
