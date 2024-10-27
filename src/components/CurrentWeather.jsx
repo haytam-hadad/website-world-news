@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 
 const CurrentWeather = () => {
   const [weather, setWeather] = useState(null);
@@ -14,9 +14,8 @@ const CurrentWeather = () => {
         }
 
         const locationData = await locationResponse.json();
-        const city = locationData.city; // Get the city from the location data
+        const city = locationData.city; 
 
-        // Step 2: Fetch weather data for the city
         const weatherResponse = await fetch(
           `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${apiKey}&units=metric`
         );
