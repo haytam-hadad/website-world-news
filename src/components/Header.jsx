@@ -2,6 +2,11 @@ import { FaSearch } from "react-icons/fa";
 import SideMenu from './SideMenu';
 import { useState } from 'react';
 import UserLocation from "./CurrentWeather";
+import TopSearchBar from './TopSearchBar';
+const TopSearshsArray = ["russia and ukraine", "isreal and gaza", "morocco news", "USA election"
+  ,"BBC news" , "Football News"
+];
+
 
 function Header({setCategState, setLanguage , language , search , setSearch , setDosearch , showInpBox , setShowInpBox}) {
   const [showSideMenu, setShowSideMenu] = useState(false);
@@ -90,6 +95,7 @@ function Header({setCategState, setLanguage , language , search , setSearch , se
       </div>
 
       {!showInpBox ? null : (
+        <>
         <div id="input_box">
           <input
             ref={input => {
@@ -111,6 +117,13 @@ function Header({setCategState, setLanguage , language , search , setSearch , se
             <option value="ar">ar</option>
           </select>
         </div>
+              <TopSearchBar 
+              TopSearshsArray={TopSearshsArray} 
+              setSearch={setSearch} 
+              setDosearch={setDosearch} 
+              setShowInpBox={setShowInpBox}  
+            />
+        </>
       )}
       
     </header>

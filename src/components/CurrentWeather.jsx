@@ -40,7 +40,7 @@ const CurrentWeather = () => {
       {error && <p>Error: {error}</p>}
       {weather ? (
         <>
-          <img
+          <img id='weather_icon'
           src={`http://openweathermap.org/img/wn/${weather.weather[0].icon}@2x.png`}
           alt={weather.weather[0].description}
           />

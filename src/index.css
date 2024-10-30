@@ -145,6 +145,7 @@ article a:hover {
   flex-wrap: nowrap;
   gap: 2px;
   overflow-y: auto ;
+  border-top: var(--third_color) solid 1px;
 }
 .search{
   padding: 3px 15px;
@@ -326,6 +327,9 @@ article h2 {
     opacity: 1;
     transform: translateY(0);
   }
+}
+#weather_icon{
+  scale: 1.2;
 }
 
 #input_box input{
