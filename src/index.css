@@ -113,7 +113,6 @@ hr {
 }
 .header nav ul li:hover{
   background-color: var(--primary_color);
-  border-radius: 5px;
 }
 
 
