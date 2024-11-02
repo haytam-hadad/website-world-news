@@ -12,28 +12,22 @@ export default function SideMenu({ setCategState}) {
         e.currentTarget.classList.add("active");
       }
       
+    
+const navLinkCatg = [
+  "general",
+  "business",
+  "entertainment",
+  "health",
+  "science",
+  "sports",
+  "technology",
+];
+
   return (
     <div id="sidemenu_cnt">
       <nav id="sidemenu">
         <ul>
-          <li className="general active" onClick={(e) => changeCateg(e)}>
-            General
-          </li>
-          <li className="technology" onClick={(e) => changeCateg(e)}>
-            Technology
-          </li>
-          <li className="sports" onClick={(e) => changeCateg(e)}>
-            Sports
-          </li>
-          <li className="health" onClick={(e) => changeCateg(e)}>
-            Health
-          </li>
-          <li className="entertainment" onClick={(e) => changeCateg(e)}>
-            Entertainment
-          </li>
-          <li className="weather" onClick={(e) => changeCateg(e)}>
-            Weather
-          </li>
+          {navLinkCatg.map((elm, i) => <li key={i} className={elm} onClick={(e) => changeCateg(e)}>{elm.charAt(0).toUpperCase() + elm.slice(1)}</li>)}
         </ul>
       </nav>
     </div>

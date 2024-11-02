@@ -11,7 +11,7 @@ const Articles = ({ apiUrl, apiKey, categState, language, dosearch, setDosearch,
   useEffect(() => {
 
     setUrl(`${apiUrl}/top-headlines?country=us&category=${categState}&language=${language}&apiKey=${apiKey}`);
-  }, [categState, language, apiKey, apiUrl]);
+  }, [categState, language]);
 
   useEffect(() => {
 
@@ -19,7 +19,7 @@ const Articles = ({ apiUrl, apiKey, categState, language, dosearch, setDosearch,
       setUrl(`${apiUrl}/everything?q=${encodeURIComponent(search)}&language=${language}&apiKey=${apiKey}`);
       setDosearch(false);
     }
-  }, [dosearch, search, language, apiKey, apiUrl]);
+  }, [dosearch, search, language]);
 
   const fetchNews = async (fetchUrl) => {
     setLoading(true);

@@ -86,7 +86,7 @@ hr {
 .header nav ul {
   list-style: none;
   display: flex;
-  justify-content: space-around;
+  justify-content: space-between;
   align-items: center;
   height: 100%;
 }
@@ -109,9 +109,11 @@ hr {
   justify-content: center;
   flex-grow:1 ;
   border-bottom: solid 1px transparent;
+  text-transform: capitalize;
 }
 .header nav ul li:hover{
-  border-bottom:1px solid white ;
+  background-color: var(--primary_color);
+  border-radius: 5px;
 }
 
 
@@ -590,6 +592,7 @@ strong {
     grid-template-columns: 1fr 1fr;
     gap: 1px 20px ;
     align-items: center;
+    margin: 2px;
   }
 }
 

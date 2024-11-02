@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import Header from "./components/Header";
 import Articles from "./components/Articles";
 import Footer from './components/Footer';
-import TopSearchBar from './components/TopSearchBar';
 
 
 const apiKey = "2375d165f5e8447d9334bfd59e44e34e";
