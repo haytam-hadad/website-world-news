@@ -3,6 +3,7 @@ import Article from './Article.jsx';
 import ClipLoader from "react-spinners/MoonLoader.js";
 import MainTitle from './MainTitle.jsx';
 
+const apiurl = import.meta.env.REACT_APP_NEWS_API_URL;
 const Articles = ({ categState, language, dosearch, setDosearch, search }) => {
   const [articles, setArticles] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -23,16 +24,15 @@ const Articles = ({ categState, language, dosearch, setDosearch, search }) => {
       setLoading(false);
     }
   };
-
   useEffect(() => {
     if (!dosearch) {
-      fetchNews(`/api/news/top-headlines?country=us&category=${categState}&language=${language}`);
+      fetchNews(`${apiurl}/api/news/top-headlines?country=us&category=${categState}&language=${language}`);
     }
   }, [categState, language]);
 
   useEffect(() => {
     if (dosearch && search) {
-      fetchNews(`/api/news/search?q=${search}&language=${language}`);
+      fetchNews(`${apiurl}/api/news/search?q=${search}&language=${language}`);
       setDosearch(false);
     }
   }, [dosearch, search, language]);
