@@ -4,6 +4,8 @@ import ClipLoader from "react-spinners/MoonLoader.js";
 import MainTitle from './MainTitle.jsx';
 
 const apiurl = import.meta.env.VITE_API_URL;
+console.log("API URL:", apiurl);
+
 
 const Articles = ({ categState, language, dosearch, setDosearch, search }) => {
   const [articles, setArticles] = useState([]);
