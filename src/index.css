@@ -10,7 +10,7 @@
 :root {
   --primary_color: #0d1117;
   --secondary_color: #fff;
-  --third_color : #151b23 ;
+  --third_color : #1a212b ;
   --bg_body : var(--third_color);
   --border_lightColor : rgba(255, 255, 255, 0.25);
   --erreure_color : rgb(210, 220, 255);
