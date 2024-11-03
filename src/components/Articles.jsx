@@ -3,7 +3,8 @@ import Article from './Article.jsx';
 import ClipLoader from "react-spinners/MoonLoader.js";
 import MainTitle from './MainTitle.jsx';
 
-const apiurl = import.meta.env.REACT_APP_NEWS_API_URL;
+const apiurl = import.meta.env.VITE_API_URL;
+
 const Articles = ({ categState, language, dosearch, setDosearch, search }) => {
   const [articles, setArticles] = useState([]);
   const [loading, setLoading] = useState(false);
