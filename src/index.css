@@ -212,7 +212,7 @@ article {
   margin: 0 auto;
   overflow: hidden;
   position: relative;
-  background-color: hsla(0, 0%, 100%, 0.95);
+  background-color: var(--secondary_color);
   flex: 1 1 30%;
   max-width: 50%;
   border-radius: 5px;
@@ -225,7 +225,7 @@ article {
   animation-timeline: view();
   animation-range: 0 25vh;
   padding: 1px ;
-  box-shadow: 1px 10px 10px rgba(0, 0, 0, 0.2);
+  box-shadow: 1px 10px 10px 5px rgba(0, 0, 0, 0.2);
 }
 
 @keyframes onScrollAnim {
@@ -304,7 +304,7 @@ article h2 {
   font-size: 18px;
   line-height: 1.2;
   padding: 10px;
-  background-color: var(--secondary_color) ;
+  background-color: var(--c4_color) ;
   border-radius: 5px;
   margin-bottom: 5px;
   border-bottom: solid 5px var(--third_color);
