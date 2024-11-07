@@ -313,7 +313,7 @@ article h2 {
   flex-direction: column;
   justify-content: space-evenly;
   gap: 1px;
-  padding: 1px 8px;
+  padding: 1px 5px;
   flex: 1;
 }
 .desc {
