@@ -301,10 +301,9 @@ article img:hover {
 }
 article h2 {
   font-size: 18px;
-  line-height: 1.2;
   padding: 10px;
-  background-color: var(--c4_color) ;
-  color: var(--secondary_color);
+  background-color: aliceblue;
+  color: #000;
   border-radius: 5px;
   margin-bottom: 5px;
   border-bottom: solid 5px var(--third_color);
