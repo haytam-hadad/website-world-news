@@ -7,6 +7,8 @@ const apiurl = import.meta.env.VITE_API_URL;
 console.log("API URL:", apiurl);
 
 
+
+
 const Articles = ({ categState, language, dosearch, setDosearch, search }) => {
   const [articles, setArticles] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -40,6 +42,7 @@ const Articles = ({ categState, language, dosearch, setDosearch, search }) => {
     }
   }, [dosearch, search, language]);
 
+
   return (
     <>
       <MainTitle title={"Today's Top News Headlines"} />
@@ -51,14 +54,7 @@ const Articles = ({ categState, language, dosearch, setDosearch, search }) => {
             <Article
               key={index}
               source={article.source.name}
-              publishedAt={new Intl.DateTimeFormat(undefined, {
-                year: "2-digit",
-                month: "short",
-                day: "2-digit",
-                hour: "2-digit",
-                minute: "2-digit",
-                hour12: false
-              }).format(new Date(article.publishedAt))}
+              publishedAt= {article.publishedAt}
               urlToImage={article.urlToImage}
               title={article.title}
               description={article.description}
