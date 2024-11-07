@@ -8,10 +8,10 @@
 }
 
 :root {
-  --primary_color:  #151515;
+  --primary_color:  #000;
   --secondary_color: #fff;
-  --third_color :  #212A3E ;
-  --c4_color : #E4E0E1;
+  --third_color :  #222 ;
+  --c4_color : #DEDEDE;
   --border_lightColor : rgba(255, 255, 255, 0.25);
   --bg_body : var(--c4_color);
 }
@@ -114,7 +114,8 @@ hr {
   text-transform: capitalize;
 }
 .header nav ul li:hover{
-  background-color: var(--primary_color);
+  background-color: var(--secondary_color);
+  color: var(--primary_color);
 }
 
 
@@ -168,7 +169,7 @@ article a:hover {
 
 
 .search{
-  padding: 3px 15px;
+  padding: 2px 12px;
   border-radius: 20px;
   cursor: pointer;
   font-size: 0.9rem;
@@ -185,17 +186,15 @@ article a:hover {
   background-color: var(--secondary_color);
   color: var(--primary_color);
   border-color: var(--third_color);
-  scale: 1.04;
 }
 
 #main_title_top_search{
-  color: var(--secondary_color);
+  color: black;
   font-weight: bold;
   font-size: 1rem;
   white-space: nowrap;
-  padding: 10px;
-  border-radius: 9px;
-  background: var(--primary_color);
+  padding: 5px;
+  border-bottom: 4px solid var(--c4_color);
   position: sticky;
   left: 0;
 }
@@ -523,6 +522,7 @@ strong {
   padding: 15px;
   border-top: solid  1px var(--border_lightColor);
   border-bottom: solid  1px var(--border_lightColor);
+  text-transform: capitalize;
 }
 
 @keyframes anim {

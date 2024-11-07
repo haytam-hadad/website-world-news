@@ -83,15 +83,18 @@ function Header({
           ></i>
           <nav>
             <ul>
-              {navLinkCatg.map((catg) => (
+              {navLinkCatg.map((catg, i) => (
                 <li
                   key={catg}
-                  className={catg.toLowerCase()}
+                  className={
+                    i === 0 ? `${catg.toLowerCase()} active` : catg.toLowerCase()
+                  } 
                   onClick={(e) => changeCateg(e)}
                 >
                   {catg}
                 </li>
-              ))}
+              )) }
+
             </ul>
           </nav>
           <div className="notNav">
@@ -107,7 +110,7 @@ function Header({
         </div>
 
         {!showInpBox ? null : (
-          <>
+          <div id="switch">
             <div id="input_box">
               <input
                 ref={(input) => {
@@ -139,7 +142,7 @@ function Header({
               setDosearch={setDosearch}
               setShowInpBox={setShowInpBox}
             />
-          </>
+          </div>
         )}
       </header>
       {showSideMenu ? <SideMenu setCategState={setCategState} /> : null}

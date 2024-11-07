@@ -27,7 +27,7 @@ const navLinkCatg = [
     <div id="sidemenu_cnt">
       <nav id="sidemenu">
         <ul>
-          {navLinkCatg.map((elm, i) => <li key={i} className={elm} onClick={(e) => changeCateg(e)}>{elm.charAt(0).toUpperCase() + elm.slice(1)}</li>)}
+          {navLinkCatg.map((elm, i) => <li key={i} className={i === 0 ? "active " + elm : elm} onClick={(e) => changeCateg(e)}>{elm}</li>)}
         </ul>
       </nav>
     </div>
