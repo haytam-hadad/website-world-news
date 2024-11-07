@@ -164,7 +164,7 @@ article a:hover {
   color: var(--primary_color);
   text-align: center;
   transition: 100ms;
-  box-shadow: #000 2px 2px 10px;
+  box-shadow: hsla(0, 0%, 0%, 0.4) 2px 2px 10px;
 }
 
 
@@ -225,7 +225,7 @@ article {
   animation-timeline: view();
   animation-range: 0 25vh;
   padding: 1px ;
-  box-shadow: 1px 10px 10px rgba(0, 0, 0, 0.3);
+  box-shadow: 1px 10px 10px rgba(0, 0, 0, 0.2);
 }
 
 @keyframes onScrollAnim {
@@ -321,7 +321,6 @@ article h2 {
   font-size: 15px;
   opacity: 1;
   padding: 10px;
-  letter-spacing: 1px;
 }
 #input_box{
   animation: drop_down_anim 0.1s ease;
