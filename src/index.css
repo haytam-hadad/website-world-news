@@ -225,6 +225,7 @@ article {
   animation-timeline: view();
   animation-range: 0 25vh;
   padding: 1px ;
+  box-shadow: 1px 4px 8px rgba(0, 0, 0, 0.2);
 }
 
 @keyframes onScrollAnim {
