@@ -301,8 +301,8 @@ article img:hover {
 }
 article h2 {
   font-size: 18px;
+  line-height: 1.1;
   padding: 10px;
-  background-color: aliceblue;
   color: #000;
   border-radius: 5px;
   margin-bottom: 5px;
