@@ -225,7 +225,7 @@ article {
   animation-timeline: view();
   animation-range: 0 25vh;
   padding: 1px ;
-  box-shadow: 1px 4px 8px rgba(0, 0, 0, 0.2);
+  box-shadow: 1px 4px 8px rgba(0, 0, 0, 0.3);
 }
 
 @keyframes onScrollAnim {
@@ -706,7 +706,6 @@ strong {
   text-shadow: 4px 4px 6px rgba(0, 0, 0, 0.7);
   background: linear-gradient(90deg, var(--bg_body), var(--third_color) , var(--bg_body));
   padding: 10px;
-  margin: 8px 0;
   transition: transform 0.3s ease, box-shadow 0.3s ease;
   font-family: 'Poppins', sans-serif;
   margin-bottom: 0;
