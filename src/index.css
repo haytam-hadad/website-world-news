@@ -8,12 +8,12 @@
 }
 
 :root {
-  --primary_color: #0d1117;
+  --primary_color:  #151515;
   --secondary_color: #fff;
-  --third_color : #1a212b ;
-  --bg_body : var(--third_color);
+  --third_color :  #212A3E ;
+  --c4_color : #E4E0E1;
   --border_lightColor : rgba(255, 255, 255, 0.25);
-  --erreure_color : rgb(210, 220, 255);
+  --bg_body : var(--c4_color);
 }
 .active {
   border-bottom: solid 2px var(--secondary_color) !important;
@@ -55,7 +55,7 @@ header{
   border-radius: 5px;
   border: none;
   outline: none;
-  background-color:white;
+  background-color:var(--secondary_color);
   color: var(--primary_color);
   font-weight: bold;
   cursor: pointer;
@@ -63,6 +63,8 @@ header{
   transition: 250ms;
 }
 .main_btn:hover{
+  background-color: var(--primary_color);
+  color: var(--secondary_color);
   scale: 1.02;
 }
 .source{
@@ -128,7 +130,7 @@ hr {
   text-align: center;
   margin: auto 10px;
   font-size: 1.7rem;
-  color: var(--erreure_color);
+  color: var(--c4_color);
   padding: 20px;
 }
 article a:hover {
@@ -168,14 +170,13 @@ article a:hover {
 .search{
   padding: 3px 15px;
   border-radius: 20px;
-  border: 1px solid var(--border_lightColor);
-  background-color: var(--third_color);
-  color: var(--secondary_color);
   cursor: pointer;
   font-size: 0.9rem;
+  background-color: var(--primary_color);
+  color: var(--secondary_color);
   font-weight: bold;
-  border: 2px solid var(--third_color);
-  transition: 100ms;
+  border: 3px solid var(--primary_color);
+  transition: 50ms;
   text-align: center;
   white-space: nowrap;
   box-shadow: 1px 4px 8px rgba(0, 0, 0, 0.3);
@@ -183,16 +184,18 @@ article a:hover {
 .search:hover{
   background-color: var(--secondary_color);
   color: var(--primary_color);
+  border-color: var(--third_color);
+  scale: 1.04;
 }
 
 #main_title_top_search{
-  color: var(--primary_color);
+  color: var(--secondary_color);
   font-weight: bold;
   font-size: 1rem;
   white-space: nowrap;
-  padding: 5px 10px;
+  padding: 10px;
   border-radius: 9px;
-  background: var(--erreure_color);
+  background: var(--primary_color);
   position: sticky;
   left: 0;
 }
@@ -324,7 +327,7 @@ article h2 {
   animation: drop_down_anim 0.1s ease;
   padding: 5px 20%;
   width: 100%;
-  background-color: var(--secondary_color);
+  background-color: var(--c4_color);
   text-align: center;
   display: flex;
   justify-content: center;
@@ -700,18 +703,12 @@ strong {
   font-weight: bold;
   color: var(--secondary_color);
   text-shadow: 4px 4px 6px rgba(0, 0, 0, 0.7);
-  background: linear-gradient(135deg, var(--third_color), #000 , var(--third_color));
+  background: linear-gradient(90deg, var(--bg_body), var(--third_color) , var(--bg_body));
   padding: 10px;
   margin: 8px 0;
-  box-shadow: 0 8px 15px rgba(0, 0, 0, 0.3); 
   transition: transform 0.3s ease, box-shadow 0.3s ease;
   font-family: 'Poppins', sans-serif;
   margin-bottom: 0;
-}
-
-.main_title:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 12px 20px rgba(0, 0, 0, 0.5);
 }
 
 
