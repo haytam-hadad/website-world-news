@@ -121,8 +121,12 @@ function Header({
                 placeholder="Search for the latest news..."
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
+                onKeyDown={(e) => e.key == "Enter" && setDosearch(true)}
               />
-              <button id="search-btn" onClick={() => setDosearch(true)}>
+              <button 
+                id="search-btn" 
+                onClick={() => setDosearch(true)} 
+              >
                 <FaSearch /> Search
               </button>
               <select
