@@ -213,7 +213,7 @@ article {
   margin: 0 auto;
   overflow: hidden;
   position: relative;
-  background-image: linear-gradient( 130deg , var(--secondary_color) 70%, var(--c4_color) 30%);
+  background-image: var(--secondary_color);
   flex: 1 1 30%;
   max-width: 50%;
   border-radius: 5px;
