@@ -131,7 +131,8 @@ hr {
   text-align: center;
   margin: auto 10px;
   font-size: 1.7rem;
-  color: var(--c4_color);
+  color: var(--secondary_color);
+  text-shadow: 4px 4px 6px rgba(0, 0, 0, 0.5);
   padding: 20px;
 }
 article a:hover {
@@ -195,6 +196,7 @@ article a:hover {
   padding: 5px;
   border-bottom: 4px solid var(--c4_color);
   position: sticky;
+  background-color: var(--secondary_color);
   left: 0;
 }
 
