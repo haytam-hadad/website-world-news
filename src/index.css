@@ -644,6 +644,7 @@ strong {
   article {
     width: 100%;
     flex: 1 1 40% !important;
+    animation: none;
   }
   article img {
     width: 100%;
