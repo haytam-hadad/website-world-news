@@ -132,7 +132,7 @@ hr {
   margin: auto 10px;
   font-size: 1.7rem;
   color: var(--secondary_color);
-  text-shadow: 4px 4px 6px rgba(0, 0, 0, 0.5);
+  text-shadow: 4px 5px 20px rgba(0, 0, 0, 0.8);
   padding: 20px;
 }
 article a:hover {
@@ -193,7 +193,7 @@ article a:hover {
   font-weight: bold;
   font-size: 1rem;
   white-space: nowrap;
-  padding: 5px;
+  padding: 3px;
   border-bottom: 4px solid var(--c4_color);
   position: sticky;
   background-color: var(--secondary_color);
@@ -708,7 +708,7 @@ strong {
   font-size: 1.7rem;
   font-weight: bold;
   color: var(--secondary_color);
-  text-shadow: 4px 4px 6px rgba(0, 0, 0, 0.7);
+  text-shadow: 4px 4px 6px rgba(0, 0, 0, 0.6);
   background: linear-gradient(90deg, var(--bg_body), var(--primary_color) , var(--bg_body));
   padding: 10px;
   transition: transform 0.3s ease, box-shadow 0.3s ease;

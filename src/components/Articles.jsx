@@ -45,7 +45,7 @@ const Articles = ({ categState, language, dosearch, setDosearch, search }) => {
 
   return (
     <>
-      { categState === "general" && <MainTitle title={"Today's Top News Headlines"}/> }
+      { categState.toLowerCase() === "general" && !loading ? <MainTitle title={"Today's Top News Headlines"}/> : null}
       <main>
         {loading ? (
           <ClipLoader className="spinner" color={"#000"} loading={true} size={45} />
