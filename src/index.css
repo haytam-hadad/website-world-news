@@ -617,7 +617,7 @@ strong {
     gap: 1px 20px ;
     align-items: center;
     margin: 2px;
-    background-image: linear-gradient(140deg, var(--primary_color) 90%, #222 10%);
+    background-image: linear-gradient(140deg, var(--primary_color) 95%, var(--third_color) 5%);
   }
 }
 
