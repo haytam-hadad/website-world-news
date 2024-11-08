@@ -213,7 +213,7 @@ article {
   margin: 0 auto;
   overflow: hidden;
   position: relative;
-  background-image: linear-gradient(140deg, var(--secondary_color) 80%, #EEE 20%);
+  background-image: linear-gradient(140deg, var(--secondary_color) 90%, #EEE 10%);
   flex: 1 1 30%;
   max-width: 50%;
   border-radius: 5px;
@@ -604,8 +604,6 @@ strong {
     padding: 5px;
     color: white;
     max-width: 100%;
-    background: var(--primary_color);
-    border: 1px solid var(--border_lightColor);
     flex: 1 1 100%;
     display: grid !important;
     grid-template-areas:
@@ -619,6 +617,7 @@ strong {
     gap: 1px 20px ;
     align-items: center;
     margin: 2px;
+    background-image: linear-gradient(140deg, var(--primary_color) 90%, #222 10%);
   }
 }
 
