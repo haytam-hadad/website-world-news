@@ -11,7 +11,7 @@
   --primary_color:  #000;
   --secondary_color: #fff;
   --third_color :  #222 ;
-  --c4_color : #c0c0c0;
+  --c4_color : #FBFBFB;
   --border_lightColor : rgba(255, 255, 255, 0.25);
   --bg_body : var(--c4_color);
 }
