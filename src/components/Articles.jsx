@@ -6,7 +6,7 @@ import MainTitle from './MainTitle.jsx';
 const apiurl = import.meta.env.VITE_API_URL;
 console.log("API URL:", apiurl);
 
-
+let isSearch = false ;
 
 
 const Articles = ({ categState, language, dosearch, setDosearch, search }) => {
@@ -31,12 +31,14 @@ const Articles = ({ categState, language, dosearch, setDosearch, search }) => {
   };
   useEffect(() => {
     if (!dosearch) {
+      isSearch = false ;
       fetchNews(`${apiurl}/api/news/top-headlines?country=us&category=${categState}&language=${language}`);
     }
   }, [categState, language]);
 
   useEffect(() => {
     if (dosearch && search) {
+      isSearch = true;
       fetchNews(`${apiurl}/api/news/search?q=${search}&language=${language}`);
       setDosearch(false);
     }
@@ -45,7 +47,7 @@ const Articles = ({ categState, language, dosearch, setDosearch, search }) => {
 
   return (
     <>
-      { categState.toLowerCase() === "general" ? <MainTitle title={"Breaking News"} /> : <MainTitle title={`Top ${categState} Headlines`} /> }
+      { categState.toLowerCase() === "general" && isSearch ? <MainTitle title={"Breaking News"} /> : <MainTitle title={`Top ${categState} Headlines`} /> }
       <main>
         {loading ? (
           <ClipLoader className="spinner" color={"#000"} loading={true} size={45} />
