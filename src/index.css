@@ -131,8 +131,8 @@ hr {
   text-align: center;
   margin: auto 10px;
   font-size: 1.7rem;
-  color: var(--secondary_color);
-  text-shadow: 4px 5px 20px rgba(0, 0, 0, 0.8);
+  color: crimson;
+  font-weight: 300;
   padding: 20px;
 }
 article a:hover {
