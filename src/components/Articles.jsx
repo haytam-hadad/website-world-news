@@ -4,14 +4,13 @@ import ClipLoader from "react-spinners/MoonLoader.js";
 import MainTitle from './MainTitle.jsx';
 
 const apiurl = import.meta.env.VITE_API_URL;
-console.log("API URL:", apiurl);
 
-let isSearch = false ;
 
 
 const Articles = ({ categState, language, dosearch, setDosearch, search }) => {
   const [articles, setArticles] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [isSearching, setisSearching] = useState(false);
 
   const fetchNews = async (url) => {
     setLoading(true);
@@ -31,14 +30,15 @@ const Articles = ({ categState, language, dosearch, setDosearch, search }) => {
   };
   useEffect(() => {
     if (!dosearch) {
-      isSearch = false ;
+      
+      setisSearching(false)
       fetchNews(`${apiurl}/api/news/top-headlines?country=us&category=${categState}&language=${language}`);
     }
   }, [categState, language]);
 
   useEffect(() => {
     if (dosearch && search) {
-      isSearch = true;
+      setisSearching(true)
       fetchNews(`${apiurl}/api/news/search?q=${search}&language=${language}`);
       setDosearch(false);
     }
@@ -47,7 +47,7 @@ const Articles = ({ categState, language, dosearch, setDosearch, search }) => {
 
   return (
     <>
-      { categState.toLowerCase() === "general" && isSearch ? <MainTitle title={"Breaking News"} /> : <MainTitle title={`Top ${categState} Headlines`} /> }
+      { categState.toLowerCase() === "general" && !isSearching ? <MainTitle title={"Breaking News"} /> : !isSearching ? <MainTitle title={`Top ${categState} Headlines`} /> : null}
       <main>
         {loading ? (
           <ClipLoader className="spinner" color={"#000"} loading={true} size={45} />
