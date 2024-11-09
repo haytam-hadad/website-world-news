@@ -176,7 +176,7 @@ article a:hover {
   border-radius: 20px;
   cursor: pointer;
   font-size: 0.9rem;
-  background-image: linear-gradient(to top, var(--primary_color), transparent);
+  background-image: linear-gradient(to bottom, var(--primary_color), transparent);
   color: var(--secondary_color);
   font-weight: bold;
   border: 2px solid var(--primary_color);
