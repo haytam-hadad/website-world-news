@@ -26,7 +26,6 @@ const TopSearshsArray = [
   "Bitcoin",
 ];
 
-
 function Header({
   setCategState,
   setLanguage,
@@ -90,14 +89,15 @@ function Header({
                 <li
                   key={catg}
                   className={
-                    i === 0 ? `${catg.toLowerCase()} active` : catg.toLowerCase()
-                  } 
+                    i === 0
+                      ? `${catg.toLowerCase()} active`
+                      : catg.toLowerCase()
+                  }
                   onClick={(e) => changeCateg(e)}
                 >
                   {catg}
                 </li>
-              )) }
-
+              ))}
             </ul>
           </nav>
           <div className="notNav">
@@ -126,10 +126,7 @@ function Header({
                 onChange={(e) => setSearch(e.target.value)}
                 onKeyDown={(e) => e.key == "Enter" && setDosearch(true)}
               />
-              <button 
-                id="search-btn" 
-                onClick={() => setDosearch(true)} 
-              >
+              <button id="search-btn" onClick={() => setDosearch(true)}>
                 <FaSearch /> Search
               </button>
               <select
