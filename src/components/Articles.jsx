@@ -63,7 +63,7 @@ const Articles = ({ categState, language, dosearch, setDosearch, search }) => {
           ))
         ) : (
           <div className="no_articles_container">
-            <h1 className="no_articles"> `{search}` -- language: `{language}`</h1>
+            <h1 className="no_articles"> <strong>`{search}`</strong> - - language: <strong>`{language}`</strong></h1>
             <h1 className="no_articles">No articles available.</h1>
           </div>
         )}
