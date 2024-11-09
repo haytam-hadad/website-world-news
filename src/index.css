@@ -183,7 +183,7 @@ article a:hover {
   transition: 50ms;
   text-align: center;
   white-space: nowrap;
-  box-shadow: 1px 5px 10px rgba(0, 0, 0, 0.4);
+  box-shadow: 1px 5px 10px rgba(0, 0, 0, 0.5);
 }
 .search:hover{
   background-image: linear-gradient(to bottom, var(--secondary_color), var(--secondary_color));
