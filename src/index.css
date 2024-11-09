@@ -756,5 +756,8 @@ strong {
   #dateNow , #weatherNow{
     display: none;
   }
+  #scrolle{
+    scale: 1.4;
+  }
 }
 
