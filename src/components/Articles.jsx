@@ -42,7 +42,7 @@ const Articles = ({ categState, language, dosearch, setDosearch, search }) => {
       fetchNews(`${apiurl}/api/news/search?q=${search}&language=${language}`);
       setDosearch(false);
     }
-  }, [dosearch, search, language]);
+  }, [dosearch , language]);
 
 
   return (
