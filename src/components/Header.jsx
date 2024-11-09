@@ -16,7 +16,9 @@ const navLinkCatg = [
 
 const TopSearshsArray = [
   "BBC news",
-  "russia and ukraine",
+  "CNN news",
+  "fox news",
+  "russia ukraine",
   "gaza",
   "morocco",
   "Trump",
