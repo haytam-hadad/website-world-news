@@ -4,16 +4,6 @@ import { useState } from "react";
 import UserLocation from "./CurrentWeather";
 import TopSearchBar from "./TopSearchBar";
 
-const TopSearshsArray = [
-  "russia and ukraine",
-  "isreal and gaza",
-  "morocco news",
-  "USA election",
-  "BBC news",
-  "Football News",
-
-];
-
 const navLinkCatg = [
   "general",
   "business",
@@ -23,6 +13,17 @@ const navLinkCatg = [
   "sports",
   "technology",
 ];
+
+const TopSearshsArray = [
+  "BBC news",
+  "russia and ukraine",
+  "gaza",
+  "morocco",
+  "Trump",
+  "Football News",
+  "Bitcoin",
+];
+
 
 function Header({
   setCategState,
