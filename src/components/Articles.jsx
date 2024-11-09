@@ -29,12 +29,9 @@ const Articles = ({ categState, language, dosearch, setDosearch, search }) => {
     }
   };
   useEffect(() => {
-    if (!dosearch) {
-      
-      setisSearching(false)
-      fetchNews(`${apiurl}/api/news/top-headlines?country=us&category=${categState}&language=${language}`);
-    }
-  }, [categState, language]);
+    setisSearching(false)
+    fetchNews(`${apiurl}/api/news/top-headlines?country=us&category=${categState}&language=${language}`);
+  }, [categState]);
 
   useEffect(() => {
     if (dosearch && search) {
@@ -42,7 +39,7 @@ const Articles = ({ categState, language, dosearch, setDosearch, search }) => {
       fetchNews(`${apiurl}/api/news/search?q=${search}&language=${language}`);
       setDosearch(false);
     }
-  }, [dosearch , language]);
+  }, [dosearch]);
 
 
   return (
