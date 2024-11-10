@@ -258,7 +258,7 @@ article img {
   max-height: 40%;
 }
 
-article img:hover {
+article:hover img {
   filter: contrast(1.1) grayscale(30%) brightness(1.1);
 }
 #logo {
