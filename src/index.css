@@ -13,10 +13,11 @@
   --primary_color:  #000;
   --secondary_color: #fff;
   --third_color :  #222 ;
-  --c4_color : #eee;
+  --c4_color : #ddd;
   --border_lightColor : rgba(255, 255, 255, 0.25);
   --bg_body : var(--c4_color);
 }
+
 .active {
   border-bottom: solid 2px var(--secondary_color) !important;
 }
