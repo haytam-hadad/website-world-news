@@ -256,7 +256,6 @@ article img {
   transition: 250ms;
   object-fit: cover;
   max-height: 40%;
-  box-shadow: 1px 4px 8px rgba(0, 0, 0, 0.2);
 }
 
 article img:hover {
