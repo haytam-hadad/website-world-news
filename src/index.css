@@ -14,9 +14,10 @@
   --primary_color:  #000;
   --secondary_color: #fff;
   --third_color :  #222 ;
-  --c4_color : #ccc;
-  --border_lightColor : rgba(255, 255, 255, 0.25);
-  --bg_body : linear-gradient(to top, #dbdcd7 0%, #dddcd7 24%, #e2c9cc 30%, #e7627d 46%, #b8235a 59%, #801357 71%, #3d1635 84%, #1c1a27 100%);
+  --c4_color : #eee;
+  --border_lightColor : rgba(255, 255, 255, 0.3);
+  --bg_body : #111 ;
+
 }
 
 .active {
@@ -33,7 +34,7 @@
 
 body {
   font-family: Arial, sans-serif;
-  background-image: var(--bg_body);
+  background: var(--bg_body);
   line-height: 1.6;
 }
 
@@ -144,13 +145,13 @@ article a:hover {
 }
 
 #top_searchs{
-  background-color: var(--secondary_color);
+  background-color: var(--c4_color);
   padding: 4px;
   display: flex;
   flex-wrap: wrap;
   justify-content: space-evenly;
   align-items: center;
-  border-top: 4px solid var(--border_lightColor);
+  border-top: 1px solid var(--border_lightColor);
   flex-wrap: nowrap;
   gap: 2px;
   overflow-y: auto ;
@@ -203,9 +204,8 @@ article a:hover {
   font-size: 1rem;
   white-space: nowrap;
   padding: 3px;
-  border-bottom: 4px solid var(--c4_color);
+  border-bottom: 4px solid var(--primary_color);
   position: sticky;
-  background-color: var(--secondary_color);
   left: 0;
 }
 
