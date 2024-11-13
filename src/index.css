@@ -213,7 +213,7 @@ main {
   padding: 20px 5%;
   display: flex;
   flex-wrap: wrap;
-  gap: 20px 10px;
+  gap: 15px;
   min-height: 55vh;
   width: 100%;
 }
