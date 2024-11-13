@@ -9,13 +9,14 @@
   font-family: 'Cairo', sans-serif;
 }
 
+
 :root {
   --primary_color:  #000;
   --secondary_color: #fff;
   --third_color :  #222 ;
-  --c4_color : #eceae2;
+  --c4_color : #ccc;
   --border_lightColor : rgba(255, 255, 255, 0.25);
-  --bg_body : var(--c4_color) ;
+  --bg_body : linear-gradient(to top, #dbdcd7 0%, #dddcd7 24%, #e2c9cc 30%, #e7627d 46%, #b8235a 59%, #801357 71%, #3d1635 84%, #1c1a27 100%);
 }
 
 .active {
@@ -32,7 +33,7 @@
 
 body {
   font-family: Arial, sans-serif;
-  background: var(--bg_body);
+  background-image: var(--bg_body);
   line-height: 1.6;
 }
 
@@ -136,6 +137,7 @@ hr {
   color: crimson;
   font-weight: 300;
   padding: 20px;
+  text-shadow: 4px 14px 16px rgba(0, 0, 0, 0.1);
 }
 article a:hover {
   color: var(--primary_color);
@@ -715,7 +717,7 @@ strong {
   font-weight: bold;
   color: var(--secondary_color);
   text-shadow: 4px 4px 6px rgba(0, 0, 0, 0.6);
-  background: linear-gradient(90deg, var(--bg_body), var(--primary_color) , var(--bg_body));
+  background: linear-gradient(90deg, transparent, var(--primary_color) , transparent );
   padding: 10px;
   transition: transform 0.3s ease, box-shadow 0.3s ease;
   font-family: 'Poppins', sans-serif;
