@@ -47,7 +47,7 @@ const Articles = ({ categState, language, dosearch, setDosearch, search }) => {
       { categState.toLowerCase() === "general" && !isSearching ? <MainTitle title={"Breaking News"} /> : !isSearching ? <MainTitle title={`Top ${categState} Headlines`} /> : null}
       <main>
         {loading ? (
-          <ClipLoader className="spinner" color={"#fff"} loading={true} size={40} />
+          <ClipLoader className="spinner" color={"#000"} loading={true} size={40} />
         ) : articles.length > 0 ? (
           articles.map((article, index) => (
             <Article

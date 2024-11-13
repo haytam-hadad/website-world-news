@@ -16,7 +16,7 @@
   --third_color :  #0d1117 ;
   --c4_color : #eee;
   --border_lightColor : rgba(255, 255, 255, 0.3);
-  --bg_body : var(--third_color);
+  --bg_body : var(--c4_color);
 
 }
 
@@ -155,7 +155,7 @@ article a:hover {
   flex-wrap: nowrap;
   gap: 2px;
   overflow-y: auto ;
-  border-top: gainsboro solid 1px;
+  border-top: rgb(195, 195, 195) solid 1px;
 }
 #scrolle{
   position: fixed;
