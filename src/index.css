@@ -13,10 +13,10 @@
 :root {
   --primary_color:  #000;
   --secondary_color: #fff;
-  --third_color :  #222 ;
+  --third_color :  #161b22 ;
   --c4_color : #eee;
   --border_lightColor : rgba(255, 255, 255, 0.3);
-  --bg_body : #222 ;
+  --bg_body : var(--third_color);
 
 }
 
