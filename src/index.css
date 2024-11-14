@@ -216,7 +216,7 @@ main {
   padding: 20px 5%;
   display: flex;
   flex-wrap: wrap;
-  gap: 15px;
+  gap: 20px 10px;
   min-height: 55vh;
   width: 100%;
 }
@@ -269,7 +269,7 @@ article img {
   height: auto;
   transition: 250ms;
   object-fit: cover;
-  max-height: 40%;
+  max-height: 35%;
 }
 
 article:hover img {
