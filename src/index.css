@@ -497,7 +497,7 @@ strong {
   position: fixed;
   top: 0;
   left: 0;
-  width: 45%;
+  width: 46%;
   height: 100%;
   background: var(--primary_color);
   z-index: 99999999;
@@ -518,10 +518,12 @@ strong {
 #sidemenu ul {
   display: flex;
   flex-direction: column;
-  justify-content: start;
+  justify-content: space-evenly;
+  height: 80%;
+}
+#sidemenu{
   height: 100%;
 }
-
 #sidemenu ul li {
   background-color: var(--primary_color);
   font-size: 1.1rem;
@@ -532,6 +534,7 @@ strong {
   border-bottom: solid 1px var(--border_lightColor);
   text-transform: capitalize;
   color: var(--secondary_color);
+  border-top: none;
 }
 
 #sidemenu ul li:hover {
