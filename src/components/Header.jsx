@@ -37,10 +37,7 @@ function Header({
   setShowInpBox,
 }) {
   const [showSideMenu, setShowSideMenu] = useState(false);
-  const ShowSideMenu = (e) => {
-    e.target.classList.toggle("fa-bars");
-    e.target.classList.toggle("fa-xmark");
-
+  const ShowSideMenu = () => {
     setShowSideMenu((prev) => !prev);
   };
 
@@ -75,13 +72,12 @@ function Header({
           <span id="weatherNow">
             <UserLocation />
           </span>
-          {/*new Date().toLocaleTimeString().slice(0,5)*/}
         </div>
         <div className="header">
           <i
             id="bars"
             className="fa-solid fa-bars"
-            onClick={(e) => ShowSideMenu(e)}
+            onClick={() => ShowSideMenu()}
           ></i>
           <nav>
             <ul>
@@ -149,7 +145,7 @@ function Header({
           </div>
         )}
       </header>
-      {showSideMenu ? <SideMenu setCategState={setCategState} /> : null}
+      {showSideMenu ? <SideMenu setCategState={setCategState} setShowSideMenu={setShowSideMenu} /> : null}
     </>
   );
 }

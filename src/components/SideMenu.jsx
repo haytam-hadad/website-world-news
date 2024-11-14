@@ -1,4 +1,4 @@
-export default function SideMenu({ setCategState}) {
+export default function SideMenu({ setCategState , setShowSideMenu}) {
     function changeCateg(e) {
         addActivation(e);
         setCategState(e.target.innerText);
@@ -27,6 +27,12 @@ const navLinkCatg = [
     <div id="sidemenu_cnt">
       <nav id="sidemenu">
         <ul>
+          <li>
+            <i
+            className="fa-solid fa-xmark"
+            onClick={() => setShowSideMenu((prev) => !prev)}
+          ></i>
+          </li>
           {navLinkCatg.map((elm, i) => <li key={i} className={i === 0 ? "active " + elm : elm} onClick={(e) => changeCateg(e)}>{elm}</li>)}
         </ul>
       </nav>
