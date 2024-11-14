@@ -747,6 +747,7 @@ strong {
   main {
     flex-direction: column;
     gap: 5px;
+    padding: 10px;
   }
   article {
     min-width: 100%;
