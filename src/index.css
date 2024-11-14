@@ -743,6 +743,7 @@ strong {
 @media only screen and (max-width: 650px) {
   main {
     flex-direction: column;
+    gap: 9px;
   }
   article {
     min-width: 100%;
