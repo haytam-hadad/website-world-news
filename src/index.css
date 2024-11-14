@@ -16,7 +16,7 @@
   --third_color :  #0d1117 ;
   --c4_color : #eee;
   --border_lightColor : rgba(255, 255, 255, 0.3);
-  --bg_body : var(--c4_color);
+  --bg_body : #fff;
 
 }
 
