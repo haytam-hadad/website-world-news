@@ -30,7 +30,7 @@ const Articles = ({ categState, language, dosearch, setDosearch, search }) => {
   useEffect(() => {
     setisSearching(false)
     const fetchTopHeadlines = async () => {
-      await fetchNews(`${apiurl}/api/news/top-headlines?country=us&category=${categState}&language=${language}`);
+      await fetchNews(`${apiurl}/api/news-articles/top-news/${categState}/${language}`);
     };
     fetchTopHeadlines();
     window.scrollTo({top: 0, left: 0, behavior: 'smooth'})
@@ -40,7 +40,7 @@ const Articles = ({ categState, language, dosearch, setDosearch, search }) => {
     const fetchSearch = async () => {
       if (dosearch && search) {
         setisSearching(true)
-        await fetchNews(`${apiurl}/api/news/search?q=${search}&language=${language}`);
+        await fetchNews(`${apiurl}/api/news-articles/search/${search}/${language}`);
         setDosearch(false);
       }
     };
