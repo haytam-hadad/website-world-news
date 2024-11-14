@@ -16,7 +16,7 @@
   --third_color :  #0d1117 ;
   --c4_color : #eee;
   --border_lightColor : rgba(255, 255, 255, 0.3);
-  --bg_body : #fff;
+  --bg_body : var(--c4_color);
 
 }
 
@@ -153,7 +153,7 @@ article a:hover {
   align-items: center;
   border-top: 1px solid var(--border_lightColor);
   flex-wrap: nowrap;
-  gap: 2px;
+  gap: 3px;
   overflow-y: auto ;
   border-top: rgb(195, 195, 195) solid 1px;
 }
@@ -186,7 +186,7 @@ article a:hover {
   transition: 50ms;
   text-align: center;
   white-space: nowrap;
-  box-shadow: 1px 5px 10px rgba(0, 0, 0, 0.4);
+  box-shadow: 1px 5px 10px rgba(0, 0, 0, 0.2);
 }
 
 .search:hover{
@@ -207,6 +207,7 @@ article a:hover {
   border-bottom: 4px solid var(--primary_color);
   position: sticky;
   left: 0;
+  background-color: var(--c4_color);
 }
 
 main {
@@ -699,7 +700,7 @@ strong {
   #input_box button{
     padding: 5px 10px;
     scale: 0.95;
-    flex-grow:2 ;
+    flex-grow:1 ;
   }
   #input_box select{
     flex-grow: 1 ;
@@ -710,6 +711,9 @@ strong {
   }
   .main_title{
     font-size: 1.4rem !important;
+  }
+  b{
+    font-size: larger;
   }
 }
 
