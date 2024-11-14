@@ -497,7 +497,7 @@ strong {
   position: fixed;
   top: 0;
   left: 0;
-  width: 46%;
+  width: 50%;
   height: 100%;
   background: var(--primary_color);
   z-index: 99999999;
