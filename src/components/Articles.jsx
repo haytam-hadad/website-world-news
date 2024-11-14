@@ -6,7 +6,6 @@ import MainTitle from './MainTitle.jsx';
 const apiurl = import.meta.env.VITE_API_URL;
 
 
-
 const Articles = ({ categState, language, dosearch, setDosearch, search }) => {
   const [articles, setArticles] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -30,15 +29,23 @@ const Articles = ({ categState, language, dosearch, setDosearch, search }) => {
   };
   useEffect(() => {
     setisSearching(false)
-    fetchNews(`${apiurl}/api/news/top-headlines?country=us&category=${categState}&language=${language}`);
+    const fetchTopHeadlines = async () => {
+      await fetchNews(`${apiurl}/api/news/top-headlines?country=us&category=${categState}&language=${language}`);
+    };
+    fetchTopHeadlines();
+    window.scrollTo({top: 0, left: 0, behavior: 'smooth'})
   }, [categState]);
 
   useEffect(() => {
-    if (dosearch && search) {
-      setisSearching(true)
-      fetchNews(`${apiurl}/api/news/search?q=${search}&language=${language}`);
-      setDosearch(false);
-    }
+    const fetchSearch = async () => {
+      if (dosearch && search) {
+        setisSearching(true)
+        await fetchNews(`${apiurl}/api/news/search?q=${search}&language=${language}`);
+        setDosearch(false);
+      }
+    };
+    fetchSearch();
+    window.scrollTo({top: 0, left: 0, behavior: 'smooth'})
   }, [dosearch]);
 
 
