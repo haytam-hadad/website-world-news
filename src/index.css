@@ -746,7 +746,7 @@ strong {
 @media only screen and (max-width: 650px) {
   main {
     flex-direction: column;
-    gap: 9px;
+    gap: 5px;
   }
   article {
     min-width: 100%;
