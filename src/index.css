@@ -273,7 +273,7 @@ article img {
 }
 
 article:hover img {
-  filter: contrast(1.1) brightness(1.1);
+  filter: contrast(1.1);
 }
 #logo {
   text-align: center;
