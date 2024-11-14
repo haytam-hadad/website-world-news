@@ -1,14 +1,12 @@
 @import url('https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap');
 
 
-
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
   font-family: 'Cairo', sans-serif;
 }
-
 
 :root {
   --primary_color:  #000;
@@ -235,7 +233,7 @@ article {
   animation-timeline: view();
   animation-range: 0 25vh;
   padding: 2px ;
-  box-shadow: 1px 5px 10px 5px rgba(0, 0, 0, 0.04);
+  box-shadow: 1px 5px 10px 5px rgba(0, 0, 0, 0.1);
 }
 
 @keyframes onScrollAnim {
