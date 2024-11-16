@@ -53,7 +53,7 @@ const Home = ({ categState, language, dosearch, setDosearch, search }) => {
 
   return (
     <>
-      { encodeURIComponent(categState).toLowerCase() === "general" && !isSearching ? <MainTitle title={"breaking news"} /> : !isSearching ? <MainTitle title={`top ${categState} headlines`} /> : null}
+      {categState === "general" && !isSearching ? <MainTitle title={"breaking news"} /> : !isSearching ? <MainTitle title={`top ${categState} headlines`} /> : null}
       <main>
         {loading ? (
           // <ClipLoader className="spinner" color={"#000"} loading={true} size={40}/>
