@@ -30,26 +30,24 @@ const Home = ({ categState, language, dosearch, setDosearch, search }) => {
   };
 
   useEffect(() => {
-    setisSearching(false)
+    setisSearching(false);
     const fetchTopHeadlines = async () => {
       await fetchNews(`${process.env.NEXT_PUBLIC_API_URL}/api/news-articles/top-news/${categState}/${language}`);
     };
     fetchTopHeadlines();
-    window.scrollTo({top: 0, left: 0, behavior: 'smooth'})
-  }, [categState]);
+    window.scrollTo({ top: 0, left: 0, behavior: 'smooth' });
+  }, [categState, language]);
 
   useEffect(() => {
     const fetchSearch = async () => {
       if (dosearch && search) {
-        setisSearching(true)
-        await fetchNews(`${process.env.NEXT_PUBLIC_API_URL}/api/news-articles/search?q=${encodeURIComponent(search)}/${language}`);
+        setisSearching(true);
+        console.log("Searching for:", search);
+        await fetchNews(`${process.env.NEXT_PUBLIC_API_URL}/api/news-articles/search/${encodeURIComponent(search)}/${language}`);
         setDosearch(false);
       }
     };
-    fetchSearch();
-    window.scrollTo({top: 0, left: 0, behavior: 'smooth'})
-  }, [dosearch]);
-
+  
 
   return (
     <>
