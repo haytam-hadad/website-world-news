@@ -9,7 +9,7 @@ const CurrentWeather = () => {
   useEffect(() => {
     const getWeather = async () => {
       try {
-        const locationResponse = await fetch('http://ip-api.com/json');
+        const locationResponse = await fetch('https://ip-api.com/json');
         if (!locationResponse.ok) {
           throw new Error('Failed to fetch location data');
         }
