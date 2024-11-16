@@ -43,7 +43,7 @@ function Header({
 
   function changeCateg(e) {
     addActivation(e);
-    setCategState(e.target.innerText);
+    setCategState(e.target.innerText.toLowerCase());
   }
 
   function addActivation(e) {
