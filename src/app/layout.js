@@ -14,7 +14,6 @@ export default function RootLayout({ children }) {
   const [search, setSearch] = useState('');
   const [dosearch, setDosearch] = useState(false);
   const [showInpBox, setShowInpBox] = useState(false);
-
   const [showScrollUp, setShowScrollUp] = useState(false);
 
   useEffect(() => {
