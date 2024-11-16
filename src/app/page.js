@@ -5,8 +5,7 @@ import Article from './components/Article';
 import MainTitle from './components/MainTitle.jsx';
 // import ClipLoader from "react-spinners/MoonLoader.js";
 
-const apiurl = process.env.NEXT_PUBLIC_API_URL;
-console.log(apiurl);
+
 
 const Home = ({ categState, language, dosearch, setDosearch, search }) => {
   const [articles, setArticles] = useState([]);
@@ -33,7 +32,7 @@ const Home = ({ categState, language, dosearch, setDosearch, search }) => {
   useEffect(() => {
     setisSearching(false)
     const fetchTopHeadlines = async () => {
-      await fetchNews(`${apiurl}/api/news-articles/top-news/${categState}/${language}`);
+      await fetchNews(`${process.env.NEXT_PUBLIC_API_URL}/api/news-articles/top-news/${categState}/${language}`);
     };
     fetchTopHeadlines();
     window.scrollTo({top: 0, left: 0, behavior: 'smooth'})
@@ -43,7 +42,7 @@ const Home = ({ categState, language, dosearch, setDosearch, search }) => {
     const fetchSearch = async () => {
       if (dosearch && search) {
         setisSearching(true)
-        await fetchNews(`${apiurl}/api/news-articles/search?q=${encodeURIComponent(search)}/${language}`);
+        await fetchNews(`${process.env.NEXT_PUBLIC_API_URL}/api/news-articles/search?q=${encodeURIComponent(search)}/${language}`);
         setDosearch(false);
       }
     };
