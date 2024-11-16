@@ -83,11 +83,11 @@ function Header({
             <ul>
               {navLinkCatg.map((catg, i) => (
                 <li
-                  key={catg}
+                  key={i}
                   className={
                     i === 0
-                      ? `${catg.toLowerCase()} active`
-                      : catg.toLowerCase()
+                      ? `${catg} active`
+                      : catg
                   }
                   onClick={(e) => changeCateg(e)}
                 >
