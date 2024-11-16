@@ -378,11 +378,11 @@ article h2 {
   font-size: 13px;
   flex-grow: 3;
   font-weight: bold;
-  border: var(--third_color) solid 3px;
+  border: grey solid 3px;
 }
 
 #input_box input:focus {
-  outline: 1px solid var(--third_color);
+  outline: 1px solid gray;
   outline-offset: -4px;
 }
 
