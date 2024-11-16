@@ -1,4 +1,6 @@
-import { Link } from "react-router-dom";
+import { Link } from 'next/link';
+import Image from 'next/image';
+
 const Article = ({
   publishedAt,
   urlToImage,
@@ -28,10 +30,12 @@ const Article = ({
   if(title != "[Removed]" && urlToImage != null ) {
     return (
       <article >
-        <img
+        <Image
           src={urlToImage ? urlToImage : "src/assets/favicon.png"}
           alt={title ? `${title} - News Image` : "News Image"}
           loading="lazy"
+          width={400}
+          height={200}
         />
         <p className="time">
             <small>

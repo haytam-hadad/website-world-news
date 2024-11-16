@@ -1,14 +1,14 @@
-import React, { useState } from 'react';
-import Header from "./components/Header";
-import Articles from "./components/Articles";
-import Footer from './components/Footer';
-import ScrolleUp from "./components/ScrolleUp";
-import { useEffect } from 'react';
+"use client";
+import "./globals.css";
+import Header from "../app/components/Header.jsx";
+import Footer from "../app/components/Footer.jsx";
+import ScrolleUp from "../app/components/ScrolleUp.jsx";
+import { useState, useEffect } from "react";
 
-const apiKey = "2375d165f5e8447d9334bfd59e44e34e";
-const apiUrl = "https://newsapi.org/v2";
 
-function App() {
+
+export default function RootLayout({ children }) {
+
   const [categState, setCategState] = useState('general');
   const [language, setLanguage] = useState('en');
   const [search, setSearch] = useState('');
@@ -32,8 +32,9 @@ function App() {
 
 
   return (
-    <React.Fragment>
-      <Header 
+  <html lang={language} dir={language === 'ar' ? 'rtl' : 'ltr'}>
+    <body>
+      <Header
         setCategState={setCategState} 
         setLanguage={setLanguage} 
         language={language}
@@ -43,22 +44,11 @@ function App() {
         showInpBox={showInpBox}
         setShowInpBox={setShowInpBox}
       />
-
-      <Articles 
-        apiUrl={apiUrl} 
-        apiKey={apiKey} 
-        categState={categState} 
-        language={language}
-        dosearch={dosearch} 
-        setDosearch={setDosearch} 
-        search={search}
-      />
+        {children}
       <Footer />
-
       { showScrollUp && <ScrolleUp/> }
-    
-    </React.Fragment>
+    </body>
+  </html>
+
   );
 }
-
-export default App;

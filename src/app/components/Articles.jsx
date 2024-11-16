@@ -1,9 +1,10 @@
+"use client";
 import { useState, useEffect } from 'react';
 import Article from './Article.jsx';
-import ClipLoader from "react-spinners/MoonLoader.js";
+// import ClipLoader from "react-spinners/MoonLoader.js";
 import MainTitle from './MainTitle.jsx';
 
-const apiurl = import.meta.env.VITE_API_URL;
+const apiurl = process.env.API_URL;
 
 
 const Articles = ({ categState, language, dosearch, setDosearch, search }) => {
@@ -40,7 +41,7 @@ const Articles = ({ categState, language, dosearch, setDosearch, search }) => {
     const fetchSearch = async () => {
       if (dosearch && search) {
         setisSearching(true)
-        await fetchNews(`${apiurl}/api/news-articles/search/${search}/${language}`);
+        await fetchNews(`${apiurl}/api/news-articles/search?q=${encodeURIComponent(search)}/${language}`);
         setDosearch(false);
       }
     };
@@ -51,10 +52,11 @@ const Articles = ({ categState, language, dosearch, setDosearch, search }) => {
 
   return (
     <>
-      { categState.toLowerCase() === "general" && !isSearching ? <MainTitle title={"Breaking News"} /> : !isSearching ? <MainTitle title={`Top ${categState} Headlines`} /> : null}
+      { encodeURIComponent(categState).toLowerCase() === "general" && !isSearching ? <MainTitle title={"breaking news"} /> : !isSearching ? <MainTitle title={`top ${categState} headlines`} /> : null}
       <main>
         {loading ? (
-          <ClipLoader className="spinner" color={"#000"} loading={true} size={40} />
+          // <ClipLoader className="spinner" color={"#000"} loading={true} size={40}/>
+          ""
         ) : articles.length > 0 ? (
           articles.map((article, index) => (
             <Article

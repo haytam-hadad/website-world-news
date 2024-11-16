@@ -1,4 +1,4 @@
-import { FaSearch } from "react-icons/fa";
+"use client";
 import SideMenu from "./SideMenu";
 import { useState } from "react";
 import UserLocation from "./CurrentWeather";
@@ -101,7 +101,7 @@ function Header({
               className={showInpBox ? "icon_search v2" : "icon_search v1"}
               onClick={toggleSearchInput}
             >
-              <span id="search-word"> </span> <FaSearch />
+              <span id="search-word"> </span> <i className="fa-solid fa-magnifying-glass"></i>
             </span>
             <button className="main_btn">Sign In</button>
             <button className="main_btn">Log In</button>
@@ -123,7 +123,7 @@ function Header({
                 onKeyDown={(e) => e.key == "Enter" && setDosearch(true)}
               />
               <button id="search-btn" onClick={() => setDosearch(true)}>
-                <FaSearch /> Search
+              <i className="fa-solid fa-magnifying-glass"></i> Search
               </button>
               <select
                 id="language-select"
