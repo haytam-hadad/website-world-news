@@ -57,7 +57,7 @@ const Home = ({ categState, language, dosearch, setDosearch, search }) => {
       <main>
         {loading ? (
           // <ClipLoader className="spinner" color={"#000"} loading={true} size={40}/>
-          ""
+          "Loading..."
         ) : articles.length > 0 ? (
           articles.map((article, index) => (
             <Article
