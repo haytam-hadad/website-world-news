@@ -35,6 +35,7 @@ const Home = ({ categState, language, dosearch, setDosearch, search }) => {
       await fetchNews(`${process.env.NEXT_PUBLIC_API_URL}/api/news-articles/top-news/${categState}/${language}`);
     };
     fetchTopHeadlines();
+    console.log("category:", categState);
     window.scrollTo({ top: 0, left: 0, behavior: 'smooth' });
   }, [categState, language]);
 
@@ -47,6 +48,7 @@ const Home = ({ categState, language, dosearch, setDosearch, search }) => {
         setDosearch(false);
       }
     };
+    console.log("search:", search);
   });
 
   return (
