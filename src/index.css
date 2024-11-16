@@ -145,7 +145,7 @@ article a:hover {
 
 #top_searchs {
   background-color: var(--c4_color);
-  padding: 4px;
+  padding: 1px;
   display: flex;
   flex-wrap: wrap;
   justify-content: space-evenly;
@@ -315,7 +315,7 @@ article:hover img {
   display: flex;
   justify-content: center;
   align-items: center;
-  padding: 5px;
+  padding: 1px;
 }
 article h2 {
   font-size: 18px;
@@ -381,21 +381,28 @@ article h2 {
   border: var(--third_color) solid 3px;
 }
 
+#input_box input:focus {
+  outline: 1px solid var(--primary_color);
+  outline-offset: -5px;
+}
+
 #input_box button {
   border-radius: 5px;
   border: none;
-  background-color: var(--secondary_color);
-  box-shadow: 1px 1px 5px 1px rgba(0, 0, 0, 0.3);
-  color: var(--primary_color);
+  background-image: linear-gradient( 20deg, var(--c4_color) , var(--primary_color) );
+  color: var(--secondary_color);
   cursor: pointer;
   flex-grow: 1;
   font-weight: bold;
-  transition: 100ms;
+  transition: 200ms all;
   font-size: 0.9rem;
 }
-
+#input_box button:hover {
+  background-image: linear-gradient( 20deg, var(--secondary_color) , var(--third_color) );
+  color: var(--secondary_color);
+}
 #input_box button:active {
-  background-color: var(--primary_color) !important;
+  background: var(--third_color) !important;
   color: var(--secondary_color);
 }
 
