@@ -5,7 +5,7 @@ import Article from './components/Article';
 import MainTitle from './components/MainTitle.jsx';
 // import ClipLoader from "react-spinners/MoonLoader.js";
 
-const apiurl = process.env.API_URL;
+const apiurl = process.env.NEXT_PUBLIC_API_URL;
 
 const Home = ({ categState, language, dosearch, setDosearch, search }) => {
   const [articles, setArticles] = useState([]);
