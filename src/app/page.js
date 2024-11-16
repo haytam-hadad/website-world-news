@@ -6,6 +6,7 @@ import MainTitle from './components/MainTitle.jsx';
 // import ClipLoader from "react-spinners/MoonLoader.js";
 
 const apiurl = process.env.NEXT_PUBLIC_API_URL;
+console.log(apiurl);
 
 const Home = ({ categState, language, dosearch, setDosearch, search }) => {
   const [articles, setArticles] = useState([]);
