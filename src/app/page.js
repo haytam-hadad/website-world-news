@@ -47,7 +47,7 @@ const Home = ({ categState, language, dosearch, setDosearch, search }) => {
         setDosearch(false);
       }
     };
-  
+  });
 
   return (
     <>
@@ -80,4 +80,4 @@ const Home = ({ categState, language, dosearch, setDosearch, search }) => {
   );
 };
 
-export default Home;
+export default Home
