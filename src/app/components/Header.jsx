@@ -43,7 +43,11 @@ function Header({
     setShowSideMenu((prev) => !prev);
   };
 
-
+  const setActivation = (e) => {
+    const navLinks = document.querySelectorAll('nav .link');
+    navLinks.forEach(link => link.classList.remove('active'));
+    e.target.classList.add('active');
+  };
 
   const toggleSearchInput = () => {
     setShowInpBox((prev) => !prev);
@@ -74,17 +78,14 @@ function Header({
             <ul>
             {navLinkCatg.map((catg, i) => (
                 <Link
-                  href={`${window.location.origin}/news/${catg}`}
+                  href={`${window.location.origin}/${catg}`}
                   key={i}
-                  className={
-                    i === 0
-                      ? "link active"
-                      : "link" 
-                  }
+                  className={"link" + (window.location.pathname === `/${catg}` ? " active" : "")}
+                  onClick={(e) => setActivation(e)}
                 >
                   {catg}
                 </Link>
-              ))}
+            ))}
 
             </ul>
           </nav>

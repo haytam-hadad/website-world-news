@@ -1,7 +1,7 @@
 
 // "use client";
-import Article from "../../components/Article";
-import MainTitle from "../../components/MainTitle";
+import Article from "../components/Article";
+import MainTitle from "../components/MainTitle";
 
 const News = ({ params }) => {
   let articles = [];

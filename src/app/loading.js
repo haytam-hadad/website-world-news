@@ -13,7 +13,7 @@ function Loading() {
     //   <div className="loading-spinner" />
       
     // </div>
-    <p>Loading...</p>
+    <h1>Loading...</h1>
   );
 }
 
