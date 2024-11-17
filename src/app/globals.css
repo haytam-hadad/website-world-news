@@ -175,8 +175,8 @@ article a:hover {
 }
 
 .search {
-  padding: 2px 15px;
-  border-radius: 10px;
+  padding: 2px 20px;
+  border-radius: 20px;
   cursor: pointer;
   font-size: 0.9rem;
   background-color: var(--third_color);
