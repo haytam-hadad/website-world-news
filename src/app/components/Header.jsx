@@ -1,5 +1,6 @@
 "use client";
 
+import { usePathname } from "next/navigation";
 import SideMenu from "./SideMenu";
 import { useState } from "react";
 import UserLocation from "./CurrentWeather";
@@ -56,6 +57,7 @@ function Header({
     }
   };
 
+  const pathname = usePathname();
   return (
     <>
       <header>
@@ -78,9 +80,9 @@ function Header({
             <ul>
             {navLinkCatg.map((catg, i) => (
                 <Link
-                  href={`${window.location.origin}/${catg}`}
+                  href={`/${catg}`}
                   key={i}
-                  className={"link" + (window.location.pathname === `/${catg}` ? " active" : "")}
+                  className={"link" + (pathname === `./${catg}` ? " active" : "")}
                   onClick={(e) => setActivation(e)}
                 >
                   {catg}
