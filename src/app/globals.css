@@ -104,7 +104,9 @@ hr {
   flex-grow: 1;
   justify-content: space-evenly;
 }
-.header nav ul li {
+.header nav ul .link {
+  color: var(--secondary_color);
+  text-decoration: none;
   font-weight: bold;
   font-size: 0.9rem;
   transition: 200ms;
@@ -180,7 +182,7 @@ article a:hover {
   cursor: pointer;
   font-size: 0.9rem;
   background-color: var(--third_color);
-  color: var(--third_color);
+  color: var(--secondary_color);
   font-weight: bold;
   border: 2px solid transparent;
   transition: 50ms;
@@ -752,6 +754,7 @@ strong {
   transition: transform 0.3s ease, box-shadow 0.3s ease;
   font-family: "Poppins", sans-serif;
   margin-bottom: 0;
+  text-transform: capitalize;
 }
 
 @media only screen and (max-width: 650px) {

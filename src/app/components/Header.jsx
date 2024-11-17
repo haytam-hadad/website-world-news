@@ -1,8 +1,10 @@
 "use client";
+
 import SideMenu from "./SideMenu";
 import { useState } from "react";
 import UserLocation from "./CurrentWeather";
 import TopSearchBar from "./TopSearchBar";
+import  Link from "next/link";
 
 const navLinkCatg = [
   "general",
@@ -41,18 +43,7 @@ function Header({
     setShowSideMenu((prev) => !prev);
   };
 
-  function changeCateg(e) {
-    addActivation(e);
-    setCategState(e.target.innerText.toLowerCase());
-  }
 
-  function addActivation(e) {
-    const elements = document.querySelectorAll("li");
-    elements.forEach((element) => {
-      element.classList.remove("active");
-    });
-    e.currentTarget.classList.add("active");
-  }
 
   const toggleSearchInput = () => {
     setShowInpBox((prev) => !prev);
@@ -81,19 +72,20 @@ function Header({
           ></i>
           <nav>
             <ul>
-              {navLinkCatg.map((catg, i) => (
-                <li
+            {navLinkCatg.map((catg, i) => (
+                <Link
+                  href={`${window.location.origin}/news/${catg}`}
                   key={i}
                   className={
                     i === 0
-                      ? `${catg} active`
-                      : catg
+                      ? "link active"
+                      : "link" 
                   }
-                  onClick={(e) => changeCateg(e)}
                 >
                   {catg}
-                </li>
+                </Link>
               ))}
+
             </ul>
           </nav>
           <div className="notNav">

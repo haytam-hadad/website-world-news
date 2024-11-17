@@ -6,7 +6,6 @@ import ScrolleUp from "../app/components/ScrolleUp.jsx";
 import { useState, useEffect } from "react";
 
 
-
 export default function RootLayout({ children }) {
 
   const [categState, setCategState] = useState('general');
@@ -15,6 +14,7 @@ export default function RootLayout({ children }) {
   const [dosearch, setDosearch] = useState(false);
   const [showInpBox, setShowInpBox] = useState(false);
   const [showScrollUp, setShowScrollUp] = useState(false);
+  
 
   useEffect(() => {
     const handleScroll = () => {

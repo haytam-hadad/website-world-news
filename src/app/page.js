@@ -52,7 +52,7 @@ const Home = ({ categState, language, dosearch, setDosearch, search }) => {
   });
 
   return (
-    <>
+    <div>
       {categState === "general" && !isSearching ? <MainTitle title={"breaking news"} /> : !isSearching ? <MainTitle title={`top ${categState} headlines`} /> : null}
       <main>
         {loading ? (
@@ -78,7 +78,7 @@ const Home = ({ categState, language, dosearch, setDosearch, search }) => {
           </div>
         )}
       </main>
-    </>
+    </div>
   );
 };
 
