@@ -118,13 +118,12 @@ hr {
   flex-grow: 1;
   text-transform: capitalize;
 }
-.header nav ul li:hover {
+.header nav ul .link:hover {
+  background-color: var(--primary_color);
+}
+.header nav ul .link:active {
   background-color: var(--secondary_color);
   color: var(--primary_color);
-}
-.header nav ul li:active {
-  background-color: var(--primary_color);
-  color: var(--secondary_color);
 }
 
 .no_articles_container {
