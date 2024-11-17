@@ -1,3 +1,6 @@
+
+import Link from "next/link";
+
 export default function SideMenu({ setCategState , setShowSideMenu}) {
     function changeCateg(e) {
         addActivation(e);
@@ -31,9 +34,9 @@ const navLinkCatg = [
             <i
             className="fa-solid fa-xmark"
             onClick={() => setShowSideMenu((prev) => !prev)}
-          ></i>
+            ></i>
           </li>
-          {navLinkCatg.map((elm, i) => <li key={i} className={i === 0 ? "active " + elm : elm} onClick={(e) => changeCateg(e)}>{elm}</li>)}
+          {navLinkCatg.map((catg, i) => <li key={i}><Link href={`${window.location.origin}/news/${catg}`} key={i} className={i === 0 ? "link active" + catg : "link"} onClick={(e) => changeCateg(e)}>{catg}</Link></li>)}
         </ul>
       </nav>
     </div>
