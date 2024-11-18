@@ -1,4 +1,3 @@
-// src/app/loading.js
 
 import React from 'react';
 
@@ -9,7 +8,7 @@ const LoadingScreen = () => {
       justifyContent: 'center',
       alignItems: 'center',
       flexDirection: 'column',
-      height: '100vh',
+      height: '90vh',
     },
     spinner: {
       width: '50px',

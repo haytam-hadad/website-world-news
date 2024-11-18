@@ -12,7 +12,7 @@
   --primary_color: #000;
   --secondary_color: #fff;
   --third_color: #0d1117;
-  --c4_color: #eee;
+  --c4_color: #e0e0e0;
   --border_lightColor: rgba(255, 255, 255, 0.3);
   --bg_body: var(--c4_color);
 }
@@ -143,8 +143,8 @@ article a:hover {
 }
 
 #top_searchs {
-  background-color: var(--c4_color);
-  padding: 1px;
+  background-color: var(--secondary_color);
+  padding: 3px 0px; 
   display: flex;
   flex-wrap: wrap;
   justify-content: space-evenly;
@@ -172,7 +172,7 @@ article a:hover {
 }
 
 .search {
-  padding: 2px 20px;
+  padding: 1px 20px;
   border-radius: 20px;
   cursor: pointer;
   font-size: 0.9rem;
@@ -205,10 +205,10 @@ article a:hover {
   font-size: 1rem;
   white-space: nowrap;
   padding: 3px;
-  border-bottom: 4px solid var(--primary_color);
+  border-bottom: 3px solid var(--primary_color);
   position: sticky;
   left: 0;
-  background-color: var(--c4_color);
+  background-color: var(--secondary_color);
 }
 
 main {
@@ -227,7 +227,7 @@ article {
   background-image: linear-gradient(
     140deg,
     var(--secondary_color) 90%,
-    #eee 10%
+    rgba(255, 255, 255, 0.7) 10%
   );
   flex: 1 1 30%;
   max-width: 50%;
