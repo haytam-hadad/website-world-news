@@ -10,6 +10,7 @@ const News = async ({ params }) => {
 
 
   const fetchNews = async (url) => {
+    console.log(url);
     try {
       const response = await fetch(url);
       if (!response.ok) {
