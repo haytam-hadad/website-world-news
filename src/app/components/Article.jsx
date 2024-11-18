@@ -1,5 +1,5 @@
-"use client";
-import { Link } from 'next/link';
+
+import Link  from 'next/link';
 import Image from 'next/image';
 
 const Article = ({
@@ -53,12 +53,14 @@ const Article = ({
             </strong>
           </p>
           <hr />
-          <Link className="link_art" to={url ? url : "#" } target="_blank" rel="noopener noreferrer">
+          <Link className="link_art" href={url ? url : "#" } target="_blank" rel="noopener noreferrer">
             Read full article:  <i className="fa-solid fa-arrow-up-right-from-square"> </i> 
           </Link>
         </div>
       </article>
     );    
+  }else{
+    return null 
   }
 };
 

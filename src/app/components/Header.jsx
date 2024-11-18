@@ -78,17 +78,18 @@ function Header({
           ></i>
           <nav>
             <ul>
-            {navLinkCatg.map((catg, i) => (
-                <Link
+            { 
+              navLinkCatg.map((catg, i) => (
+                catg ? (<Link
                   href={`/${catg}`}
                   key={i}
                   className={"link" + (pathname === `./${catg}` ? " active" : "")}
                   onClick={(e) => setActivation(e)}
                 >
                   {catg}
-                </Link>
-            ))}
-
+                </Link>  ) : null
+              ))
+            }
             </ul>
           </nav>
           <div className="notNav">

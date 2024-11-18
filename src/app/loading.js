@@ -1,20 +1,37 @@
-// "use client";
-// import { useEffect, useState } from "react";
+// src/app/loading.js
 
-function Loading() {
-  // const [loading, setLoading] = useState(true);
+import React from 'react';
 
-  // useEffect(() => {
-  //   setTimeout(() => setLoading(false), 1500);
-  // }, []);
+const LoadingScreen = () => {
+  const style = {
+    loadingContainer: {
+      display: 'flex',
+      justifyContent: 'center',
+      alignItems: 'center',
+      flexDirection: 'column',
+      height: '100vh',
+    },
+    spinner: {
+      width: '50px',
+      height: '50px',
+      borderRadius: '50%',
+      border: '10px solid #ccc',
+      borderTop: '10px solid #333',
+      animation: 'spin 1s linear infinite',
+    },
+    '@keyframes spin': {
+      '0%': { transform: 'rotate(0deg)' },
+      '100%': { transform: 'rotate(360deg)' },
+    },
+  };
 
   return (
-    // <div className={`loading ${loading ? "" : "hidden"}`}>
-    //   <div className="loading-spinner" />
-      
-    // </div>
-    <h1>Loading...</h1>
+    <div style={style.loadingContainer}>
+      <div style={style.spinner}></div>
+      <p>Loading...</p>
+    </div>
   );
-}
+};
 
-export default Loading;
+export default LoadingScreen;
+

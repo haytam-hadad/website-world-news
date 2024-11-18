@@ -1,11 +1,13 @@
 
-// "use client";
+
 import Article from "../components/Article";
 import MainTitle from "../components/MainTitle";
 
-const News = ({ params }) => {
+const News = async ({ params }) => {
+  const language = "en";
+  const { category } = await params;
   let articles = [];
-  const { category, language } = params;
+
 
   const fetchNews = async (url) => {
     try {
@@ -15,23 +17,21 @@ const News = ({ params }) => {
       }
       const data = await response.json();
       articles = data.articles || [];
-      console.log(data);
     } catch (error) {
       console.error("Error fetching articles:", error);
-    } finally {
     }
   };
 
-  fetchNews(
+  await fetchNews(
     `${process.env.NEXT_PUBLIC_API_URL}/api/news-articles/top-news/${category}/${language}`
   );
 
   return (
     <div>
-      {category === "general" ? (
+      {category === "general" && articles.length > 0 ? (
         <MainTitle title={"breaking news"} />
-      ) : (
-        <MainTitle title={`top ${category} headlines`} />
+      ) : ( articles.length > 0 ?
+        <MainTitle title={`top ${category} headlines`} /> : null
       )}
       <main>
         {articles.length > 0
@@ -47,11 +47,11 @@ const News = ({ params }) => {
                 author={article.author}
               />
             ))
-          : //   <div className="no_articles_container">
-            //     <h1 className="no_articles"> <b>`{search}`</b> - - language: <b>`{language}`</b></h1>
-            //     <h1 className="no_articles">No articles available.</h1>
-            //   </div>
-            " loading... "}
+          : 
+            <div className="no_articles_container">
+                <h1 className="no_articles">No articles available in <b>{category}</b></h1>
+              </div>
+        }
       </main>
     </div>
   );
