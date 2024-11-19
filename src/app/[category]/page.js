@@ -2,8 +2,17 @@
 
 import Article from "../components/Article";
 import MainTitle from "../components/MainTitle";
+import usePathname from "next/navigation";
+
+
+// export const metadata = {
+//   title: `${category[0].toUpperCase()}${category.substring(1)} News - Breaking News`,
+//   description: `Stay informed with the latest updates on ${category}. Comprehensive coverage of top stories and news, updated regularly.`,
+// };
+
 
 const News = async ({ params }) => {
+
   const language = "en";
   const { category } = await params;
   let articles = [];
