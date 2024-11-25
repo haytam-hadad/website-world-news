@@ -3,7 +3,7 @@ import Link  from 'next/link';
 import Image from 'next/image';
 
 const Article = ({
-  publishedAt,
+  timeAgo,
   urlToImage,
   title,
   description ,
@@ -12,20 +12,20 @@ const Article = ({
   source,
 }) => {
 
-  const timeAgo = (dateString) => {
-    const publishedDate = new Date(dateString);
-    const now = new Date();
-    const diffInMs = now - publishedDate;
-    const diffInSeconds = Math.floor(diffInMs / 1000);
-    const diffInMinutes = Math.floor(diffInSeconds / 60);
-    const diffInHours = Math.floor(diffInMinutes / 60);
-    const diffInDays = Math.floor(diffInHours / 24);
+  // const timeAgo = (dateString) => {
+  //   const publishedDate = new Date(dateString);
+  //   const now = new Date();
+  //   const diffInMs = now - publishedDate;
+  //   const diffInSeconds = Math.floor(diffInMs / 1000);
+  //   const diffInMinutes = Math.floor(diffInSeconds / 60);
+  //   const diffInHours = Math.floor(diffInMinutes / 60);
+  //   const diffInDays = Math.floor(diffInHours / 24);
 
-    if (diffInSeconds < 60) return `${diffInSeconds} seconds ago`;
-    if (diffInMinutes < 60) return `${diffInMinutes} minutes ago`;
-    if (diffInHours < 24) return `${diffInHours} hours ago`;
-    return `${diffInDays} days ago`;
-  };
+  //   if (diffInSeconds < 60) return `${diffInSeconds} seconds ago`;
+  //   if (diffInMinutes < 60) return `${diffInMinutes} minutes ago`;
+  //   if (diffInHours < 24) return `${diffInHours} hours ago`;
+  //   return `${diffInDays} days ago`;
+  // };
 
 
   if(title != "[Removed]" && urlToImage != null ) {
@@ -40,7 +40,7 @@ const Article = ({
         />
         <p className="time">
             <small>
-            Published : {publishedAt ? timeAgo(publishedAt) : "Unknown time"} <i className="fa-regular fa-clock" />
+            Published : {timeAgo ? timeAgo : "Unknown time"} h <i className="fa-regular fa-clock" />
             </small>
         </p>
         <div id="content">

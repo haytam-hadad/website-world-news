@@ -19,21 +19,20 @@ const News = async ({ params }) => {
 
 
   const fetchNews = async (url) => {
-    console.log(url);
     try {
       const response = await fetch(url);
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
       const data = await response.json();
-      articles = data.articles || [];
+      articles = data || [];
     } catch (error) {
       console.error("Error fetching articles:", error);
     }
   };
 
   await fetchNews(
-    `${process.env.NEXT_PUBLIC_API_URL}/api/news-articles/top-news/${category}/${language}`
+    `${process.env.NEXT_PUBLIC_API_URL}/api/articles/${category}`
   );
 
   return (
@@ -47,11 +46,11 @@ const News = async ({ params }) => {
         {articles.length > 0
           ? articles.map((article, index) => (
               <Article
-                key={index}
-                source={article.source.name}
-                publishedAt={article.publishedAt}
-                urlToImage={article.urlToImage}
                 title={article.title}
+                key={index}
+                source={article.source_name}
+                timeAgo={article.timeago}
+                urlToImage={article.url_to_image}
                 description={article.description}
                 url={article.url}
                 author={article.author}
