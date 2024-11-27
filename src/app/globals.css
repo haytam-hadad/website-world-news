@@ -14,8 +14,8 @@
 :root {
   --primary_color: #000;
   --secondary_color: #fff;
-  --third_color: rgb(163, 26, 26) ;
-  --c4_color: #eee ;
+  --third_color: #212830 ;
+  --c4_color: #ddd ;
   --border_lightColor: rgba(255, 255, 255, 0.3);
   --body-color: var(--c4_color);
 }
@@ -464,7 +464,8 @@ strong {
 }
 .link_art:hover {
   text-decoration: underline;
-  background-color: var(--c4_color);
+  background-color: var(--third_color);
+  color: var(--secondary_color);
 }
 
 .link_art:active {
@@ -497,7 +498,7 @@ strong {
   background-color: var(--primary_color);
   font-weight: bold;
   color: white;
-  padding: 5px;
+  padding: 3px 10px;
   font-size: 1rem;
   border-radius: 4px;
 }
@@ -585,22 +586,24 @@ strong {
     grid-area: img;
     object-fit: cover;
     width: 100%;
-    max-height: 350px;
+    max-height: 360px;
   }
   article:nth-child(1) .category {
-    grid-area: source;
-    background-color: var(--primary_color);
-    color: var(--secondary_color);
+    grid-area: category;
+    background-color: var(--secondary_color);
+    color: var(--primary_color);
+    padding: 0 30px;
   }
   article:nth-child(1) h2 {
     line-height: 30px;
     grid-area: title;
     padding: 5px 20px;
+    border-radius: 0;
     text-decoration: underline 2px;
     text-underline-offset: 5px;
-    border-left: solid 4px var(--third_color);
-    color: var(--secondary_color);
-    background-color: var(--primary_color);
+    border-left: solid 4px var(--primary_color);
+    color: var(--primary_color);
+    background-color: var(--secondary_color);
     border-bottom: none;
   }
   article:nth-child(1) hr {
@@ -611,42 +614,45 @@ strong {
     font-size: 1rem;
     padding: 30px 15px;
     margin: 0;
-    border-left: solid 4px var(--secondary_color);
-    background-color: rgba(255, 255, 255, 0.03);
-    color: var(--secondary_color);
+    border-left: solid 4px var(--third_color);
+    background-color: rgba(0,0,0,0.04);
+    color: var(--primary_color);
   }
   article:nth-child(1) .time {
     grid-area: time;
     position: absolute;
-    padding: 5px 20px;
+    padding: 2px 50px;
+    font-size: 1.1rem;
     bottom: 0;
+    background-color: var(--secondary_color);
+    color: var(--primary_color);
   }
   article:nth-child(1) .source {
     grid-area: source;
     color: var(--secondary_color);
     background-color: var(--third_color);
-    border-left: solid 4px var(--secondary_color);
+    border-left: solid 4px var(--primary_color);
   }
   article:nth-child(1) .link_art {
     width: fit-content;
     padding: 5px 10%;
     margin: 0 auto;
     text-align: center;
-    background-color: var(--secondary_color);
-    color: var(--primary_color);
+    background-color: var(--primary_color);
+    color: var(--secondary_color);
     border-radius: 5px;
     grid-area: link;
   }
   article:nth-child(1) .link_art:hover{
-    background-color: var(--c4_color);
+    background-color: var(--third_color);
   }
   article:nth-child(1) strong {
     grid-area: author;
-    color: var(--secondary_color);
+    color: var(--primary_color);
   }
   article:nth-child(1) {
     padding: 5px;
-    color: white;
+    color: black;
     max-width: 100%;
     flex: 1 1 100%;
     display: grid !important;
@@ -655,15 +661,12 @@ strong {
       "img source"
       "img desc"
       "img author"
+      "img category"
       "img link";
-
-    grid-template-columns: 1fr 1fr;
-    gap: 1px 30px;
-    background-image: linear-gradient(
-      140deg,
-      var(--primary_color) 95%,
-      transparent 5%
-    );
+      grid-template-rows: 1fr;
+    gap: 0 20px;
+    background-color: var(--secondary_color);
+    grid-template-columns: 1fr minmax(0, 1fr);
     animation: fromleft 0.29s ease-out;
   }
 }
@@ -764,6 +767,7 @@ strong {
 }
 
 .main_title {
+  letter-spacing: 1px;
   text-align: center;
   font-size: 1.7rem;
   font-weight: bold;
