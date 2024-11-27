@@ -54,6 +54,7 @@ const News = async ({ params }) => {
                 description={article.description}
                 url={article.url}
                 author={article.author}
+                category={article.category}
               />
             ))
           : 

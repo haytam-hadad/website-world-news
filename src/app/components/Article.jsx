@@ -10,6 +10,7 @@ const Article = ({
   url,
   author,
   source,
+  category
 }) => {
 
   // const timeAgo = (dateString) => {
@@ -40,18 +41,21 @@ const Article = ({
         />
         <p className="time">
             <small>
-            Published : {timeAgo ? timeAgo : "Unknown time"} h <i className="fa-regular fa-clock" />
+            Published : {timeAgo != 0 ? `${timeAgo} h ago ` : " just now "}<i className="fa-regular fa-clock" />
             </small>
         </p>
         <div id="content">
           <p className="source">{source ? source : "Unknown source"} - source</p>
+          
           <h2 className="h22">{title}</h2>
           <p className='desc'>{description ? description : "No Description"}</p>
           <p>
+            
             <strong>
             Author: {author ? author : "Unknown"} <i className="fa-solid fa-feather" />
             </strong>
           </p>
+          <p className="category">{category ? category : "Unknown"}</p>
           <hr />
           <Link className="link_art" href={url ? url : "#" } target="_blank" rel="noopener noreferrer">
             Read full article:  <i className="fa-solid fa-arrow-up-right-from-square"> </i> 
