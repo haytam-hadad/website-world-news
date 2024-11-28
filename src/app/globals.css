@@ -10,14 +10,14 @@
   box-sizing: border-box;
   font-family: "Aleo",   serif;
 }
-/* #cc3333 #14213d d8315b */
+
 :root {
   --primary_color: #222 ;
   --secondary_color: #fff;
-  --third_color: #00337b ;
-  --c4_color: #fff  ;
-  --body_color: var(--c4_color) ;
-  --light_gery : hsla(0, 0%, 73%, 0.4) ;
+  --third_color: #444 ;
+  --c4_color: #f5f5f5  ;
+  --body_color: var(--secondary_color) ;
+  --light_gery : hsla(0, 0%, 0%, 0.1) ;
 }
 
 .active {
@@ -171,7 +171,7 @@ article a:hover {
   bottom: 20px;
   right: 20px;
   z-index: 999;
-  padding: 4px 11px;
+  padding: 4px 15px;
   border-radius: 10px;
   cursor: pointer;
   font-size: 1.5rem;
@@ -179,7 +179,8 @@ article a:hover {
   color: var(--primary_color);
   text-align: center;
   transition: 100ms;
-  box-shadow: hsla(0, 0%, 0%, 0.4) 2px 2px 10px;
+  border: 2px solid var(--light_gery);
+  box-shadow: hsla(0, 0%, 0%, 0.1) 2px 2px 5px;
 }
 
 .search {
@@ -187,17 +188,17 @@ article a:hover {
   border-radius: 20px;
   cursor: pointer;
   font-size: 0.9rem;
-  background-color: var(--primary_color);
+  background:linear-gradient(to right , var(--third_color) , var(--primary_color)) ;
   color: var(--secondary_color);
   font-weight: bold;
-  border: 2px solid transparent;
+  border: 2px solid var(--third_color);
   transition: 200ms ;
   text-align: center;
   white-space: nowrap;
 }
 
 .search:hover {
-  background-color: var(--secondary_color) ;
+  background: var(--secondary_color) ;
   color: var(--primary_color);
   border: 2px solid var(--third_color);
 }
@@ -236,7 +237,6 @@ article {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  transition: transform 250ms cubic-bezier(0.4, 0, 0.2, 1);
   animation: onScrollAnim linear;
   animation-timeline: view();
   animation-range: 0 25vh;
@@ -332,6 +332,7 @@ article h2 {
   font-size: 16px;
   padding: 11px;
   color: var(--primary_color);
+  flex-grow: 1;
 }
 #input_box {
   animation: drop_down_anim 0.1s ease;
@@ -459,6 +460,7 @@ strong {
   font-weight: bold;
   text-decoration: none;
   font-size: 0.9rem;
+  margin: 2px;
 }
 .link_art:hover {
   text-decoration: underline;
@@ -606,7 +608,7 @@ strong {
   article:nth-child(1) .desc {
     grid-area: desc;
     font-size: 1rem;
-    padding: 30px 15px;
+    padding: 20px;
     margin: 0;
     border-left: solid 4px var(--third_color);
     background-color: rgba(0,0,0,0.04);
@@ -657,7 +659,7 @@ strong {
       "img category"
       "img link";
       grid-template-rows: 1fr;
-    gap: 0 20px;
+    gap: 2px 20px;
     background-color: var(--secondary_color);
     grid-template-columns: 1fr minmax(0, 1fr);
     animation: fromleft 0.29s ease-out;
@@ -769,15 +771,30 @@ strong {
   background: linear-gradient(
     90deg,
     transparent,
-    var(--third_color ), 
+    var(--third_color), 
     transparent
   );
   padding: 10px;
   text-transform: capitalize;
-
+  position: relative;
+  text-wrap: balance;
 }
 
-
+.main_title:before {
+  content: "";  
+  position: absolute;
+  left: 50%;
+  bottom: 0;
+  width: 100px;
+  height: 3px;
+  transform: translateX(-50%);
+  background-color: var(--secondary_color);
+  margin: 5px 0;
+  transition: 200ms;
+}
+.main_title:hover:before {
+  width: 150px !important;
+}
 @media only screen and (max-width: 650px) {
   main {
     flex-direction: column;
