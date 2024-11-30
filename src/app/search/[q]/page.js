@@ -1,22 +1,16 @@
 
-
-import Article from "../components/Article";
-import MainTitle from "../components/MainTitle";
-import usePathname from "next/navigation";
+import Article from "../../components/Article";
 
 
-// export const metadata = {
-//   title: `${category[0].toUpperCase()}${category.substring(1)} News - Breaking News`,
-//   description: `Stay informed with the latest updates on ${category}. Comprehensive coverage of top stories and news, updated regularly.`,
-// };
+export const metadata = {
+  title: "Search for News",
+  description: "Latest news from around the world",
+};
 
-
-const News = async ({ params }) => {
-
+const Search = async ({params}) => {
+  const q = await params.q ;
   const language = "en";
-  const { category } = await params;
   let articles = [];
-
 
   const fetchNews = async (url) => {
     try {
@@ -32,16 +26,11 @@ const News = async ({ params }) => {
   };
 
   await fetchNews(
-    `${process.env.NEXT_PUBLIC_API_URL}/api/articles/${category}`
+    `${process.env.NEXT_PUBLIC_API_URL}/api/search/${q}`
   );
 
   return (
     <div>
-      {category === "general" && articles.length > 0 ? (
-        <MainTitle title={"breaking news"} />
-      ) : ( articles.length > 0 ?
-        <MainTitle title={`top ${category} headlines`} /> : null
-      )}
       <main>
         {articles.length > 0
           ? articles.map((article, index) => (
@@ -59,7 +48,7 @@ const News = async ({ params }) => {
             ))
           : 
             <div className="no_articles_container">
-                <h1 className="no_articles">No articles available in <b>{category}</b></h1>
+                <h1 className="no_articles">No articles available with <b>{q}</b></h1>
               </div>
         }
       </main>
@@ -67,4 +56,4 @@ const News = async ({ params }) => {
   );
 };
 
-export default News;
+export default Search;

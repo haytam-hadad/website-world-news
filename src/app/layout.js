@@ -10,8 +10,6 @@ export default function RootLayout({ children }) {
 
   const [categState, setCategState] = useState('general');
   const [language, setLanguage] = useState('en');
-  const [search, setSearch] = useState('');
-  const [dosearch, setDosearch] = useState(false);
   const [showInpBox, setShowInpBox] = useState(false);
   const [showScrollUp, setShowScrollUp] = useState(false);
   
@@ -37,9 +35,6 @@ export default function RootLayout({ children }) {
         setCategState={setCategState} 
         setLanguage={setLanguage} 
         language={language}
-        search={search} 
-        setSearch={setSearch} 
-        setDosearch={setDosearch}
         showInpBox={showInpBox}
         setShowInpBox={setShowInpBox}
       />

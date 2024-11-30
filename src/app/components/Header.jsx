@@ -1,6 +1,6 @@
 "use client";
 
-import { usePathname } from "next/navigation";
+import { useRouter } from "next/navigation";
 import SideMenu from "./SideMenu";
 import { useState } from "react";
 import UserLocation from "./CurrentWeather";
@@ -8,7 +8,6 @@ import TopSearchBar from "./TopSearchBar";
 import  Link from "next/link";
 
 const navLinkCatg = [
-  "general",
   "business",
   "entertainment",
   "health",
@@ -16,6 +15,8 @@ const navLinkCatg = [
   "sports",
   "technology",
 ];
+
+
 
 const TopSearshsArray = [
   "BBC news",
@@ -33,15 +34,17 @@ function Header({
   setCategState,
   setLanguage,
   language,
-  search,
-  setSearch,
-  setDosearch,
   showInpBox,
   setShowInpBox,
 }) {
   const [showSideMenu, setShowSideMenu] = useState(false);
+  const [search, setSearch] = useState('');
   const ShowSideMenu = () => {
     setShowSideMenu((prev) => !prev);
+  };
+
+  const searchFunc = () => {
+    router.push(`/search/${search}`);
   };
 
   const setActivation = (e) => {
@@ -57,7 +60,9 @@ function Header({
     }
   };
 
-  const pathname = usePathname();
+  const router = useRouter();
+  console.log(router)
+
   return (
     <>
       <header>
@@ -79,17 +84,21 @@ function Header({
           <nav>
             <ul>
             { 
-              navLinkCatg.map((catg, i) => (
-                catg ? (<Link
-                  href={`/${catg}`}
+            navLinkCatg.map((catg, i) => {
+              const href = i === 0 ? "/" : `/category/${catg}`;
+              return (
+                <Link
+                  href={href}
                   key={i}
-                  className={"link" + (pathname === `./${catg}` ? " active" : "")}
+                  className={`link${router.pathname == href ? " active" : ""}`}
                   onClick={(e) => setActivation(e)}
                 >
-                  {catg}
-                </Link>  ) : null
-              ))
-            }
+                  {i === 0 ? "Home" : catg}
+                </Link>
+              );
+            })
+          }
+
             </ul>
           </nav>
           <div className="notNav">
@@ -116,9 +125,9 @@ function Header({
                 placeholder="Search for the latest news..."
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
-                onKeyDown={(e) => e.key == "Enter" && setDosearch(true)}
+                onKeyDown={(e) => e.key == "Enter" && searchFunc()}
               />
-              <button id="search-btn" onClick={() => setDosearch(true)}>
+              <button id="search-btn" onClick={() => searchFunc()}>
               <i className="fa-solid fa-magnifying-glass"></i> Search
               </button>
               <select
@@ -135,7 +144,6 @@ function Header({
             <TopSearchBar
               TopSearshsArray={TopSearshsArray}
               setSearch={setSearch}
-              setDosearch={setDosearch}
               setShowInpBox={setShowInpBox}
             />
           </div>
