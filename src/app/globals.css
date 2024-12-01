@@ -387,7 +387,6 @@ article h2 {
   border: 2px solid var(--light_gery);
   background-color: var(--secondary_color);
   color: var(--primary_color);
-  cursor: pointer;
   flex-grow: 1;
   font-weight: bold;
   transition: 200ms;
