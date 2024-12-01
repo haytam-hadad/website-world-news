@@ -14,6 +14,7 @@ const navLinkCatg = [
   "science",
   "sports",
   "technology",
+  "weather",
 ];
 
 

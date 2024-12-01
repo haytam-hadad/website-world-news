@@ -10,7 +10,7 @@
   box-sizing: border-box;
   font-family: "Aleo",   serif;
 }
-/* 27005D 34007e */
+
 :root {
   --primary_color: #000 ;
   --secondary_color: #fff;
@@ -47,18 +47,18 @@ header {
 .header {
   background: var(--third_color);
   color: var(--secondary_color);
-  padding: 0 4%;
+  padding: 0 5%;
   height: 45px;
   display: flex;
   justify-content: space-around;
   align-items: center;
-  gap: 70px;
+  gap: 100px;
 }
 
 .header nav {
   display: flex;
   align-items: center;
-  flex-grow: 2;
+  flex-grow: 3;
   height: 100%;
 }
 
@@ -124,7 +124,7 @@ header {
   height: 100%;
   text-align: center;
   text-transform: capitalize;
-  flex-grow:1 ;
+  flex-grow: 1 ;
   display: flex;
   align-items: center;
   justify-content: center;
