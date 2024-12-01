@@ -1,22 +1,22 @@
-'use client'; 
-
-import { Spinner } from '@nextui-org/spinner';
+"use client";
+import { SyncLoader } from 'react-spinners';
 
 const Loading = () => {
   return (
     <div style={styles.container}>
-      <Spinner color="primary" size="lg" />
+      <SyncLoader color="#111" size={20} />
     </div>
   );
 };
+
 
 const styles = {
   container: {
     display: 'flex',
     justifyContent: 'center',
     alignItems: 'center',
-    height: '100vh',
-    backgroundColor: '#f5f5f5',
+    height: '90vh',
+    backgroundColor: '#fff',
   },
 };
 
