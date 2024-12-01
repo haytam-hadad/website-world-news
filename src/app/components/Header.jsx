@@ -106,10 +106,10 @@ function Header({
             >
               <span id="search-word"> </span> <i className="fa-solid fa-magnifying-glass"></i>
             </span>
-            <Link href="/login">
+            <Link href="/log-in">
               <button className="main_btn">Log In</button>
             </Link>
-            <Link href="/signin">
+            <Link href="/sign-in">
               <button className="main_btn">Sign In</button>
             </Link>
           </div>
@@ -131,13 +131,13 @@ function Header({
                 onChange={(e) => setSearch(e.target.value)}
                 onKeyDown={(e) => e.key == "Enter" && searchFunc()}
                 />
-                <spam
+                <span
                   id="clear_input"
                   onClick={() => setSearch("")}
                 >
                 
                   <i className="fa-solid fa-xmark"></i>
-                </spam>
+                </span>
               </div>
               <button id="search-btn" onClick={() => searchFunc()}>
               <i className="fa-solid fa-magnifying-glass"></i> Search
