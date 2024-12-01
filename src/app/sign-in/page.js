@@ -54,7 +54,7 @@ const SigninPage = () => {
             placeholder='Enter your password'
           />
         </div>
-        <p className='form_link'>dont have an account? <Link href='/login'>Log in</Link></p>
+        <p className='form_link'>dont have an account? <Link href='/log-in'>Log in</Link></p>
         <button className='form_btn' type="submit">Submit</button>
       </form>
       <div className="form_image_c"></div>
