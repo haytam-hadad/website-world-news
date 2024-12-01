@@ -85,7 +85,7 @@ function Header({
           <nav>
             {
               navLinkCatg.map((catg, i) => {
-                const href = i === 0 ? "/" : `/category/${catg}`;
+                const href = i === 0 ? "/" : `/news/${catg}`;
                 return (
                   <Link
                     href={href}
@@ -118,7 +118,9 @@ function Header({
         {!showInpBox ? null : (
           <div id="switch">
             <div id="input_box">
-              <input
+            <div id="input_container">
+              <input 
+                
                 ref={(input) => {
                   input && input.focus();
                 }}
@@ -128,7 +130,15 @@ function Header({
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
                 onKeyDown={(e) => e.key == "Enter" && searchFunc()}
-              />
+                />
+                <spam
+                  id="clear_input"
+                  onClick={() => setSearch("")}
+                >
+                
+                  <i className="fa-solid fa-xmark"></i>
+                </spam>
+              </div>
               <button id="search-btn" onClick={() => searchFunc()}>
               <i className="fa-solid fa-magnifying-glass"></i> Search
               </button>

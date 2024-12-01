@@ -4,7 +4,7 @@ import MainTitle from "../../components/MainTitle";
 
 
 // export const metadata = async ({ params }) => {
-//   let category = await params.category ;
+//   let category = await params.news ;
 //   return {
 //     title: `World News - ${category}`,
 //     description: `Latest ${category} news from around the world`,

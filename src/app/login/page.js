@@ -66,7 +66,7 @@ const LoginPage = () => {
             placeholder='Enter a password'
           />
         </div>
-        <p className='form_link'>You have an account? <Link href='/signin'>Sign in</Link></p>
+        <p className='form_link'>have an account? <Link href='/signin'>Sign in</Link></p>
         <button className='form_btn' type="submit">Submit</button>
       </form>
       <div className="form_image_c"></div>

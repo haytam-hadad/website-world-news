@@ -32,7 +32,7 @@ const navLinkCatg = [
           </li>
           {navLinkCatg.map((catg, i) => (
             <li key={i}>
-              <Link href={i === 0 ? "/" : `/category/${catg}`} onClick={(e) => setActivation(e)} className={"link" + ( pathname === `/category/${catg}` ? " active" : "")}>
+              <Link href={i === 0 ? "/" : `/news/${catg}`} onClick={(e) => setActivation(e)} className={"link" + ( pathname === `/news/${catg}` ? " active" : "")}>
                 {i === 0 ? "Home" : catg}
               </Link>
             </li>

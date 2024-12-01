@@ -14,14 +14,15 @@
 :root {
   --primary_color: #111 ;
   --secondary_color: #fff;
-  --third_color: #842020 ;
+  --third_color: #761111 ;
   --c4_color: #f9f9f9 ;
-  --body_color: var(--c4_color);
-  --light_gery : hsla(0, 0%, 0%, 0.2) ;
+  --body_color: var(--secondary_color);
+  --light_gery : hsla(0, 0%, 0%, 0.3) ;
+  --c5_color : rgb(199, 129, 0) ;
 }
 
 .active {
-  border-bottom: solid 3px var(--secondary_color) !important;
+  border-bottom: solid 2px var(--secondary_color) !important;
 }
 
 
@@ -40,17 +41,18 @@ header {
   top: 0;
   z-index: 999;
   user-select: none;
-  box-shadow: 3px 3px 5px rgba(0, 0, 0, 0.3);
+  box-shadow: 3px 3px 5px rgba(0, 0, 0, 0.2);
 }
 
 .header {
   background: var(--third_color);
   color: var(--secondary_color);
-  padding: 0 8%;
+  padding: 0 4%;
   height: 50px;
   display: flex;
   justify-content: space-around;
   align-items: center;
+  gap: 70px;
 }
 
 .header nav {
@@ -61,19 +63,25 @@ header {
 }
 
 .main_btn {
-  padding: 8px 20px;
-  border-radius: 5px;
+  padding: 9px 20px;
+  border-radius: 10px;
   border: none;
   outline: none;
   background-color: var(--secondary_color);
   color: var(--primary_color);
   font-weight: bold;
   cursor: pointer;
-  transition: 250ms;
+  transition: 100ms;
+
 }
-.main_btn:active {
+.main_btn:hover{
   background-color: var(--c4_color);
-  scale: 1.02;
+
+}
+
+.main_btn:active {
+  background-color: var(--primary_color);
+  color: var(--secondary_color);
 }
 .source {
   font-weight: bold;
@@ -104,7 +112,7 @@ header {
 .notNav {
   display: flex;
   align-items: center;
-  justify-content: space-evenly;
+  justify-content: space-around;
   flex-grow: 1;
 }
 
@@ -124,7 +132,7 @@ header {
 }
 .header nav .link:hover {
   font-weight: bold;
-  scale: 1.02;
+  background-color: var(--primary_color);
 }
 .header nav .link:active {
   background-color: var(--secondary_color);
@@ -181,22 +189,24 @@ article a:hover {
   border-radius: 30px;
   cursor: pointer;
   font-size: 0.85rem;
-  background: var(--secondary_color) ;
-  color: var(--primary_color);
+  background: var(--primary_color) ;
+  color: var(--secondary_color);
   font-weight: bold;
-  border: 2px solid var(--third_color);
-  transition: 200ms ;
+  border: 2px solid var(--primary_color);
   text-align: center;
   white-space: nowrap;
 }
 
 .search:hover { 
   background-color: var(--third_color);
+  border: 2px solid var(--third_color);
   color: var(--secondary_color);
 }
 
 .search:active {
-  border: 2px solid var(--secondary_color);
+  border: 2px solid var(--primary_color);
+  background-color: var(--secondary_color);
+  color: var(--primary_color);
 }
 
 #main_title_top_search {
@@ -231,7 +241,7 @@ article {
   animation: onScrollAnim linear;
   animation-timeline: view();
   animation-range: 0 25vh;
-  border: 2px var(--light_gery) solid;
+  border: 1px var(--light_gery) solid;
   transition: 400ms;
 }
 article:hover {
@@ -366,21 +376,38 @@ article h2 {
   scale: 1.2;
 }
 
-#input_box input {
-  padding: 6px 20px;
-  border-radius: 5px;
-  border: none;
-  outline: none;
-  font-size: 13px;
+#input_box #input_container {
+  position: relative;
   flex-grow: 4;
+}
+#input_box input {
+  border-radius: 10px;
+  width: 100%;
+  outline: none;
+  border: 2px solid var(--light_gery);
+  background-color: var(--secondary_color);
+  color: var(--primary_color);
+  cursor: pointer;
+  flex-grow: 1;
   font-weight: bold;
-  border: var(--primary_color) solid 2px;
+  transition: 200ms;
+  font-size: 0.9rem;
+  padding: 6px 30px;
+}
+
+#clear_input{
+  cursor: pointer;
+  font-size: 1.2rem;
+  color: var(--third_color);
+  position: absolute;
+  padding: 2px;
+  right: 15px;
 }
 
 #input_box button {
-  border-radius: 5px;
+  border-radius: 10px;
   border: none;
-  background-color: var(--primary_color);
+  background-color: var(--third_color);
   color: var(--secondary_color);
   cursor: pointer;
   flex-grow: 1;
@@ -391,7 +418,7 @@ article h2 {
 #input_box button:hover {
   background-color: var(--third_color);
   color: var(--secondary_color);
-  box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.4);
+  box-shadow: 2px 2px 2px rgba(0, 0, 0, 0.1);
 }
 #input_box button:active {
   background: var(--secondary_color) !important;
@@ -812,13 +839,20 @@ strong {
 .main_title {
   text-align: center;
   font-size: 1.6rem;
-  font-weight: 300;
-  color: var(--third_color);
-  padding: 10px;
+  font-weight: bold;
+  padding: 9px;
   text-transform: capitalize;
   position: relative;
-  width: fit-content;
-  margin: 0 auto;
+  width: 90%;
+  min-width: fit-content;
+  margin: 10px auto;
+  margin-bottom: 0;
+  background: var(--primary_color);
+  color: var(--secondary_color);
+  border-radius: 6px;
+  border-left: var(--third_color) solid 5px;
+  border-right: var(--third_color) solid 5px;
+
 }
 .main_title:before {
   content: "";  
@@ -826,10 +860,10 @@ strong {
   left: 50%;
   bottom: 0;
   width: 100px;
-  height: 2px;
+  height: 3px;
   transform: translateX(-50%);
   background-color: var(--third_color);
-  margin: 9px 0;
+  margin: 8px 0;
   transition: 200ms;
 }
 .main_title:hover:before {
@@ -880,9 +914,8 @@ strong {
 
 .form_container {
   height: 80vh;
-  padding: 0 10%;
+  padding: 0 8%;
   display: flex;
-  border-radius: 10px;
   background-color: var(--secondary_color);
 }
 
@@ -931,18 +964,19 @@ strong {
   border-radius: 5px;
   border: none;
   outline: none;
-  margin-top: 10px;
+
   font-size: 0.9rem;
   font-weight: bold;
-  border: var(--third_color) solid 3px;
   background-color: var(--third_color);
   color: var(--secondary_color);
   cursor: pointer;
+  width: 50%;
+  min-width: fit-content;
+  margin: 0 auto;
+  margin-top: 10px;
 }
 .form_btn:hover{
-  background-color: var(--third_color);
-  color: var(--secondary_color);
-  box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.4);
+  box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.4);
 }
 
 .form_btn:active{
