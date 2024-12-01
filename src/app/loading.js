@@ -1,10 +1,10 @@
 "use client";
-import { SyncLoader } from 'react-spinners';
+import { MoonLoader } from 'react-spinners';
 
 const Loading = () => {
   return (
     <div style={styles.container}>
-      <SyncLoader color="#111" size={20} />
+      <MoonLoader color="#000" size={50} />
     </div>
   );
 };
@@ -15,7 +15,7 @@ const styles = {
     display: 'flex',
     justifyContent: 'center',
     alignItems: 'center',
-    height: '90vh',
+    height: '80vh',
     backgroundColor: '#fff',
   },
 };
