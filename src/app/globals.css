@@ -942,6 +942,8 @@ strong {
 .form_label{
   display: block;
   font-weight: bold;
+  font-size: 0.9rem;
+  margin: 0 5px ;
 }
 .form_input{
   width: 100%;
@@ -952,16 +954,19 @@ strong {
   font-size: 13px;
   font-weight: bold;
   border: var(--light_gery) solid 1px;
-  background-color: var(--c4_color);
+  background-color: var(--secondary_color);
   border-left: var(--third_color) solid 5px;
 }
 .form_input::placeholder{
   color: var(--light_gery);
 }
 .form_input:focus{
-  background-color: var(--secondary_color);
+  background-color: var(--c4_color);
 }
 
+.form p {
+  margin: 0 5px;
+}
 .form_btn{
   padding: 11px;
   border-radius: 15px;
