@@ -33,7 +33,7 @@ const Article = ({
     return (
       <article >
         <Image
-          src={urlToImage ? urlToImage : "src/assets/favicon.png"}
+          src={urlToImage}
           alt={title ? `${title} - News Image` : "News Image"}
           loading="lazy"
           width={400}
@@ -52,7 +52,7 @@ const Article = ({
           <p>
             
             <strong>
-            Author: {author ? author : "Unknown"} <i className="fa-solid fa-feather" />
+            Author: {author} <i className="fa-solid fa-feather" />
             </strong>
           </p>
           <p className="category">{category ? category : "Unknown"}</p>
