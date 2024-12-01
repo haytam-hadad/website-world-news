@@ -44,6 +44,7 @@ function Header({
   };
 
   const searchFunc = () => {
+    if (!search || search === " ") return;
     router.push(`/search/${search}`);
   };
 
@@ -82,24 +83,21 @@ function Header({
             onClick={() => ShowSideMenu()}
           ></i>
           <nav>
-            <ul>
-            { 
-            navLinkCatg.map((catg, i) => {
-              const href = i === 0 ? "/" : `/category/${catg}`;
-              return (
-                <Link
-                  href={href}
-                  key={i}
-                  className={`link${router.pathname == href ? " active" : ""}`}
-                  onClick={(e) => setActivation(e)}
-                >
-                  {i === 0 ? "Home" : catg}
-                </Link>
-              );
-            })
-          }
-
-            </ul>
+            {
+              navLinkCatg.map((catg, i) => {
+                const href = i === 0 ? "/" : `/category/${catg}`;
+                return (
+                  <Link
+                    href={href}
+                    key={i}
+                    className={`link${router.pathname == href ? " active" : ""}`}
+                    onClick={(e) => setActivation(e)}
+                  >
+                    {i === 0 ? "Home" : catg}
+                  </Link>
+                );
+              })
+            }
           </nav>
           <div className="notNav">
             <span
@@ -108,8 +106,12 @@ function Header({
             >
               <span id="search-word"> </span> <i className="fa-solid fa-magnifying-glass"></i>
             </span>
-            <button className="main_btn">Sign In</button>
-            <button className="main_btn">Log In</button>
+            <Link href="/login">
+              <button className="main_btn">Log In</button>
+            </Link>
+            <Link href="/signin">
+              <button className="main_btn">Sign In</button>
+            </Link>
           </div>
         </div>
 

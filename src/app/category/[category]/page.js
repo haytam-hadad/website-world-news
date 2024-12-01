@@ -55,7 +55,7 @@ const Category = async ({params}) => {
             ))
           : 
             <div className="no_articles_container">
-                <h1 className="no_articles">No articles available in <b>{category}</b></h1>
+                <h1 className="no_articles">No articles in this category &quot;<b>{category}</b>&quot; available</h1>
               </div>
         }
       </main>

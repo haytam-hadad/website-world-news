@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { useRouter } from "next/navigation";
 
 const setActivation = (e) => {
   const navLinks = document.querySelectorAll('#sidemenu .link');
@@ -12,7 +12,6 @@ const setActivation = (e) => {
 export default function SideMenu({ setCategState , setShowSideMenu}) {
     
 const navLinkCatg = [
-  "general",
   "business",
   "entertainment",
   "health",
@@ -20,7 +19,7 @@ const navLinkCatg = [
   "sports",
   "technology",
 ];
-  const pathname = usePathname();
+  const pathname = useRouter().pathname;
   return (
     <div id="sidemenu_cnt">
       <nav id="sidemenu">
@@ -31,7 +30,13 @@ const navLinkCatg = [
             onClick={() => setShowSideMenu((prev) => !prev)}
             ></i>
           </li>
-          {navLinkCatg.map((catg, i) => <li key={i}><Link href={`./${catg}`}  key={i} onClick={(e) => setActivation(e)} className={"link" + ( pathname === `/${catg}` ? " active" : "")}>{catg}</Link></li>)}
+          {navLinkCatg.map((catg, i) => (
+            <li key={i}>
+              <Link href={i === 0 ? "/" : `/category/${catg}`} onClick={(e) => setActivation(e)} className={"link" + ( pathname === `/category/${catg}` ? " active" : "")}>
+                {i === 0 ? "Home" : catg}
+              </Link>
+            </li>
+          ))}
         </ul>
       </nav>
     </div>

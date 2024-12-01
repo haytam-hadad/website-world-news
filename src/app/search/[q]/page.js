@@ -48,7 +48,7 @@ const Search = async ({params}) => {
             ))
           : 
             <div className="no_articles_container">
-                <h1 className="no_articles">No articles available with <b>{q}</b></h1>
+                <h1 className="no_articles">No articles with &quot;<b>{q}</b>&quot; in the title or description available</h1>
               </div>
         }
       </main>
