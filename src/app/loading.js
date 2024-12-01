@@ -4,7 +4,7 @@ import { MoonLoader } from 'react-spinners';
 const Loading = () => {
   return (
     <div style={styles.container}>
-      <MoonLoader color="#000" size={50} />
+      <MoonLoader color="#000" size={40} />
     </div>
   );
 };
