@@ -539,7 +539,7 @@ strong {
   position: fixed;
   top: 0;
   left: 0;
-  width: 100%;
+  width: 60%;
   height: 100%;
   background: var(--primary_color);
   z-index: 99999999;
@@ -581,6 +581,15 @@ strong {
   color: var(--secondary_color) !important;
   text-decoration: none !important;
   font-size: medium;
+}
+.link_form{
+  color: var(--primary_color) !important;
+  padding: 5px 10px;
+  text-align: center;
+  border-radius: 5px;
+  text-decoration: none !important;
+  font-size: medium;
+  background-color: var(--secondary_color);
 }
 
 #sidemenu ul li:hover {

@@ -30,6 +30,8 @@ const navLinkCatg = [
             onClick={() => setShowSideMenu((prev) => !prev)}
             ></i>
           </li>
+          <li><Link className="link_form" href="./log-in">Log in</Link></li>
+          <li><Link className="link_form" href="./sign-in">Sign in</Link></li>
           {navLinkCatg.map((catg, i) => (
             <li key={i}>
               <Link href={i === 0 ? "/" : `/news/${catg}`} onClick={(e) => setActivation(e)} className={"link" + ( pathname === `/news/${catg}` ? " active" : "")}>
