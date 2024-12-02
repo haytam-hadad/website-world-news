@@ -584,7 +584,8 @@ strong {
 }
 .link_form{
   color: var(--primary_color) !important;
-  padding: 5px 10px;
+  padding: 5px 15%;
+  min-width: fit-content;
   text-align: center;
   border-radius: 5px;
   text-decoration: none !important;
