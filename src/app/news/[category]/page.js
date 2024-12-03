@@ -3,16 +3,9 @@ import Article from "../../components/Article";
 import MainTitle from "../../components/MainTitle";
 
 
-// export const metadata = async ({ params }) => {
-//   let category = await params.news ;
-//   return {
-//     title: `World News - ${category}`,
-//     description: `Latest ${category} news from around the world`,
-//   };
-// };
 
 const Category = async ({params}) => {
-  const category = await params.category ;
+  const {category} = await params;
   const language = "en";
   let articles = [];
 
@@ -46,7 +39,7 @@ const Category = async ({params}) => {
                 key={index}
                 source={article.source_name}
                 timeAgo={article.timeago}
-                urlToImage={article.url_to_image}
+                urlToImage={article.media_url}
                 description={article.description}
                 url={article.url}
                 author={article.author}

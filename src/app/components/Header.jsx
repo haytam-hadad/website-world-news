@@ -3,7 +3,7 @@
 import { useRouter } from "next/navigation";
 import SideMenu from "./SideMenu";
 import { useState } from "react";
-import UserLocation from "./CurrentWeather";
+// import UserLocation from "./CurrentWeather";
 import TopSearchBar from "./TopSearchBar";
 import  Link from "next/link";
 
@@ -61,9 +61,7 @@ function Header({
       setSearch("");
     }
   };
-
   const router = useRouter();
-  console.log(router)
 
   return (
     <>
@@ -73,9 +71,9 @@ function Header({
           <h1 id="logo">
             <i className="fa-solid fa-globe" /> World News
           </h1>
-          <span id="weatherNow">
+          {/* <span id="weatherNow">
             <UserLocation />
-          </span>
+          </span> */}
         </div>
         <div className="header">
           <i

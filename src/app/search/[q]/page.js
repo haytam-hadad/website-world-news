@@ -8,7 +8,7 @@ export const metadata = {
 };
 
 const Search = async ({params}) => {
-  const q = await params.q ;
+  const {q} = await params;
   const language = "en";
   let articles = [];
 
@@ -20,6 +20,7 @@ const Search = async ({params}) => {
       }
       const data = await response.json();
       articles = data || [];
+      console.log(articles);
     } catch (error) {
       console.error("Error fetching articles:", error);
     }
@@ -39,7 +40,7 @@ const Search = async ({params}) => {
                 key={index}
                 source={article.source_name}
                 timeAgo={article.timeago}
-                urlToImage={article.url_to_image}
+                urlToImage={article.media_url}
                 description={article.description}
                 url={article.url}
                 author={article.author}
