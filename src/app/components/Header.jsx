@@ -3,7 +3,7 @@
 import { useRouter } from "next/navigation";
 import SideMenu from "./SideMenu";
 import { useState } from "react";
-// import UserLocation from "./CurrentWeather";
+import UserLocation from "./CurrentWeather";
 import TopSearchBar from "./TopSearchBar";
 import  Link from "next/link";
 
@@ -67,13 +67,13 @@ function Header({
     <>
       <header>
         <div className="first_header">
-          <span id="dateNow">{new Date().toDateString()}</span>
+          <span className="header_info" id="dateNow">{new Date().toDateString()}</span>
           <h1 id="logo">
             <i className="fa-solid fa-globe" /> World News
           </h1>
-          {/* <span id="weatherNow">
+          <span className="header_info" id="weatherNow">
             <UserLocation />
-          </span> */}
+          </span>
         </div>
         <div className="header">
           <i

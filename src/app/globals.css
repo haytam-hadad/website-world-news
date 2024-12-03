@@ -19,6 +19,7 @@
   --body_color: var(--secondary_color);
   --light_gery : hsla(0, 0%, 0%, 0.4) ;
   --c5_color : rgb(199, 129, 0) ;
+
 }
 
 .active {
@@ -72,7 +73,6 @@ header {
   font-weight: bold;
   cursor: pointer;
   transition: 100ms;
-
 }
 .main_btn:hover{
   background-color: var(--c4_color);
@@ -286,37 +286,40 @@ article img:hover  {
   cursor: pointer;
   letter-spacing: 1px;
 }
-#dateNow {
+.header_info{
   position: absolute;
-  left: 0;
   color: var(--secondary_color);
-  padding: 0 15px;
-  font-size: 14px;
-  letter-spacing: 1px;
-  font-weight: bold;
-}
-#weatherNow {
-  position: absolute;
-  right: 0;
-  color: var(--secondary_color);
-  padding: 0 15px;
-  font-size: 14px;
-  letter-spacing: 1px;
+  border: 1px solid #444;
+  background: #000;
+  border-radius: 6px;
+  padding: 5px 10px;
+  margin: 0 20px;
+  display: flex;
+  font-size: 13px;
   font-weight: bold;
   display: flex;
-  justify-content: center;
   align-items: center;
+  justify-content: center;
 }
-#weatherNow img {
-  width: 30px;
-  height: auto;
+.header_info:hover {
+  background-color: var(--secondary_color);
+  color: var(--primary_color);
+  border-color: var(--third_color);
 }
+#dateNow {
+  left: 0;
+  letter-spacing: 1px;
+  padding: 10px 20px;
+}
+#weatherNow {
+  right: 0;
+}
+
 .first_header {
   background-color: var(--primary_color);
   display: flex;
   justify-content: center;
   align-items: center;
-  padding: 1px;
   z-index: 9999;
 }
 article h2 {
@@ -377,7 +380,8 @@ article h2 {
   }
 }
 #weather_icon {
-  scale: 1.2;
+  width: 30px;
+  height: 30px;
 }
 
 #input_box #input_container {

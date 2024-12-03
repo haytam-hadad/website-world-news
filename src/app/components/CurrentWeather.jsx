@@ -1,5 +1,6 @@
 "use client";
 import { useEffect, useState } from 'react';
+import Image from 'next/image';
 
 const CurrentWeather = () => {
   const [weather, setWeather] = useState(null);
@@ -9,7 +10,7 @@ const CurrentWeather = () => {
   useEffect(() => {
     const getWeather = async () => {
       try {
-        const locationResponse = await fetch('https://ip-api.com/json');
+        const locationResponse = await fetch('http://ip-api.com/json');
         if (!locationResponse.ok) {
           throw new Error('Failed to fetch location data');
         }
@@ -41,11 +42,13 @@ const CurrentWeather = () => {
       {error && <p>Error: {error}</p>}
       {weather ? (
         <>
-          <img id='weather_icon'
+          <Image id='weather_icon'
           src={`http://openweathermap.org/img/wn/${weather.weather[0].icon}@2x.png`}
           alt={weather.weather[0].description}
+          width={50}
+          height={50}
           />
-          <p> {weather.name} -{weather.main.temp}°C -{weather.weather[0].description}</p>
+          <p> {weather.name} . {weather.main.temp}°C . {weather.weather[0].description}</p>
         </>
 
       ) : (
