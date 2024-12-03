@@ -1,18 +1,21 @@
 "use client";
 import { useEffect, useState } from 'react';
 import Image from 'next/image';
+import Loading from '../loading';
 
 const CurrentWeather = () => {
   const [weather, setWeather] = useState(null);
-  const [error, setError] = useState(null);
-  const apiKey = '98cd9888def271fe656d056b7f4c075f'; 
+  const [loading, setLoading] = useState(true);
+  const apiKey = '98cd9888def271fe656d056b7f4c075f';
+  // const apiKey = '5b2a1e0d8a4e1e0e0a4e0d8a4e1e0e0'; 
 
   useEffect(() => {
     const getWeather = async () => {
+      setLoading(true);
       try {
         const locationResponse = await fetch('http://ip-api.com/json');
         if (!locationResponse.ok) {
-          throw new Error('Failed to fetch location data');
+          throw new Error('Failed to fetch location data ');
         }
 
         const locationData = await locationResponse.json();
@@ -23,24 +26,23 @@ const CurrentWeather = () => {
         );
 
         if (!weatherResponse.ok) {
-          throw new Error('Failed to fetch weather data');
+          throw new Error('Failed to fetch weather data ');
         }
 
         const weatherData = await weatherResponse.json();
         setWeather(weatherData);
-        setError(null);
-      } catch (err) {
-        setError(err.message);
+      } catch (e) {
         setWeather(null); 
+      }finally{
+        setLoading(false);
       }
     };
 
     getWeather();
-  }, [apiKey]);
+  }, []);
 
   return (<>
-      {error && <p>Error: {error}</p>}
-      {weather ? (
+      {weather && !loading ? (
         <>
           <Image id='weather_icon'
           src={`http://openweathermap.org/img/wn/${weather.weather[0].icon}@2x.png`}
@@ -50,7 +52,6 @@ const CurrentWeather = () => {
           />
           <p> {weather.name} . {weather.main.temp}°C . {weather.weather[0].description}</p>
         </>
-
       ) : (
         <p>Loading weather...</p>
       )}

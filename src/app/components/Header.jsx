@@ -89,7 +89,7 @@ function Header({
                   <Link
                     href={href}
                     key={i}
-                    className={`link${router.pathname == href ? " active" : ""}`}
+                    className={`link${router.pathname === href ? " active" : ""}`}
                     onClick={(e) => setActivation(e)}
                   >
                     {i === 0 ? "Home" : catg}
