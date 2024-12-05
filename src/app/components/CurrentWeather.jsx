@@ -50,7 +50,7 @@ const CurrentWeather = () => {
           width={50}
           height={50}
           />
-          <p> {weather.name} . {weather.main.temp}°C . {weather.weather[0].description}</p>
+          <p> {weather.name} . {weather.main.temp}°C</p>
         </>
       ) : (
         <p>Loading weather...</p>

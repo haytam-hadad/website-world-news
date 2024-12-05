@@ -1,0 +1,12 @@
+<svg host="65bd71144e" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" width="326px" height="201px" viewBox="-0.5 -0.5 326 201" content="&lt;mxfile&gt;&lt;diagram id=&quot;Cg1zD6CkAdPsJL2TvPHo&quot; name=&quot;Page-1&quot;&gt;xVVLc9owEP41PnZGD7DJMSWEXHLi0LNiLbYmspeRBYb8+gp7je3SUJikiQ8e6duX9ttdKZLzYr90apM/owYbCab3kXyIhEiSu/A/AocW4JOJaJHMGU1YD6zMGxDICN0aDdVI0SNabzZjMMWyhNSPMOUc1mO1Ndpx1I3K4AxYpcqeo7+M9nmLzqasx5/AZHkXmTOSvKj0NXO4LSleiSW0kkJ1bki1ypXGegDJRSTnDtG3q2I/B3uktWOstXt8R3o6soPSX2MQ0zH8ocsadCCBts3B5c/cFzbseFie+6eQFW5dSi6ozF65DEhLttDR+cCMzrQELMC7Q1BwYJU3u3EFFBUyO+n1GYUFJfUOIxR5p+yWvH5Rylx8V87i3yk33QmaUqxz42G1UU02dZjmMQNrY+0cLbrGVvIXxUEccSz9AF83X8Ar7/AVBhLG4sX94yUud+A87C/SRFLJpq0JXSs/ZjHNUt0PKe/mKx8MaKf3EWqv6KaPUBszdceTW6gVD0kc7p1PofZ0K3XUJuILqeVXtO1tbOoZY4n8G2v3U8Ym7ALP4yJq48IDY7AMe1CV/xy6J+KPTk6m/4/usO1flUY2eLXl4jc=&lt;/diagram&gt;&lt;/mxfile&gt;">
+    <defs/>
+    <g>
+        <path d="M 126.79 60 L 81.52 134.56" fill="none" stroke="rgb(0, 0, 0)" stroke-miterlimit="10" pointer-events="stroke"/>
+        <path d="M 78.79 139.04 L 79.44 131.24 L 81.52 134.56 L 85.42 134.88 Z" fill="rgb(0, 0, 0)" stroke="rgb(0, 0, 0)" stroke-miterlimit="10" pointer-events="all"/>
+        <path d="M 177.73 60 L 227.58 105.7" fill="none" stroke="rgb(0, 0, 0)" stroke-miterlimit="10" pointer-events="stroke"/>
+        <path d="M 231.45 109.24 L 223.92 107.09 L 227.58 105.7 L 228.65 101.93 Z" fill="rgb(0, 0, 0)" stroke="rgb(0, 0, 0)" stroke-miterlimit="10" pointer-events="all"/>
+        <rect x="85" y="0" width="120" height="60" rx="9" ry="9" fill="#1ba1e2" stroke="#006eaf" pointer-events="all"/>
+        <rect x="0" y="140" width="120" height="60" rx="9" ry="9" fill="#60a917" stroke="#2d7600" pointer-events="all"/>
+        <rect x="205" y="110" width="120" height="60" rx="9" ry="9" fill="#d80073" stroke="#a50040" pointer-events="all"/>
+    </g>
+</svg>
