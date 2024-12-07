@@ -40,7 +40,7 @@ const Search = async ({params}) => {
                 key={index}
                 source={article.source_name}
                 timeAgo={article.timeago}
-                urlToImage={article.media_url}
+                urlToImage={article.url}
                 description={article.description}
                 url={article.url}
                 author={article.author}

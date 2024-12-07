@@ -18,8 +18,6 @@ const LoginPage = () => {
       return;
     }
     try {
-      // Replace with your login logic
-      // Example: await loginUser(email, password);
       router.push('/home');
     } catch (error) {
       setError('Login failed. Please try again.');

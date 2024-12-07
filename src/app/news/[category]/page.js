@@ -17,6 +17,7 @@ const Category = async ({params}) => {
       }
       const data = await response.json();
       articles = data || [];
+      console.log(articles)
     } catch (error) {
       console.error("Error fetching articles:", error);
     }
@@ -28,7 +29,7 @@ const Category = async ({params}) => {
 
   return (
     <div>
-      {articles.length > 0 ? 
+      {articles.length > 0 ?
         <MainTitle title={`top ${category} headlines`} />
       : null}
       <main>
@@ -39,7 +40,7 @@ const Category = async ({params}) => {
                 key={index}
                 source={article.source_name}
                 timeAgo={article.timeago}
-                urlToImage={article.media_url}
+                urlToImage={article.url}
                 description={article.description}
                 url={article.url}
                 author={article.author}
