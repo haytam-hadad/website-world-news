@@ -4,24 +4,7 @@
 @tailwind utilities;
 
 
-:root {
-  --mainColor: royalblue ;
-  --secondaryColor: #fff;
-  --thirdColor: #181818;
-  --mainTextColor: #000;
-  --mainBorderColor: #eee;
-}
 
-.nav_Link{
-  @apply flex-grow border-r transition-all hover:text-thirdColor font-semibold capitalize ; 
-}
-.separator{
-  @apply text-[gray];
-}
-body{
-  font-family: "Poppins", sans-serif;
-  background-color: var(--secondaryColor);
-}
 @layer base {
   :root {
     --background: 0 0% 100%;
@@ -49,6 +32,12 @@ body{
     --chart-4: 43 74% 66%;
     --chart-5: 27 87% 67%;
     --radius: 0.5rem;
+
+    --mainColor: royalblue ;
+    --secondaryColor: #fff;
+    --thirdColor: #181818;
+    --mainTextColor: #000;
+    --mainBorderColor: #eee;
   }
   .dark {
     --background: 0 0% 3.9%;
@@ -78,6 +67,11 @@ body{
   }
 }
 
+body{
+  font-family: "Poppins", sans-serif;
+  background-color: var(--secondaryColor);
+}
+
 @layer base {
   * {
     @apply border-border;
@@ -85,4 +79,11 @@ body{
   body {
     @apply bg-background text-foreground;
   }
+  .nav_Link{
+    @apply flex-grow border-r transition-all hover:text-thirdColor font-semibold capitalize ;
+  }
+  .separator{
+    @apply text-[gray];
+  }
+  
 }

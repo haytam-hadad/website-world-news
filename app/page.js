@@ -14,7 +14,11 @@ export default function Home() {
       <h1 className="text-2xl w-fit font-bold tracking-wide px-5 py-2 rounded-lg my-2 transition-all hover:px-10">
         Latest news -&gt;
       </h1>
-      <div className="flex flex-wrap gap-2">
+      <div className="flex flex-wrap gap-x-4 gap-y-10">
+        <Article
+          title="title 1"
+          desc="lorem ipsum dolor sit amet consectetur"
+        />
         <Article
           title="title 1"
           desc="lorem ipsum dolor sit amet consectetur"
@@ -25,9 +29,21 @@ export default function Home() {
            lorem ipsum dolor sit amet consectetur lorem ipsum dolor sit "
         />
         <Article
+          title="title 1"
+          desc="lorem ipsum dolor sit amet consectetur"
+        />
+        <Article
           title="title 2"
           desc="lorem ipsum dolor sit amet consectetur lorem ipsum dolor sit lorem ipsum dolor sit amet consectetur lorem ipsum dolor sit
            lorem ipsum dolor sit amet consectetur lorem ipsum dolor sit lorem ipsum dolor sit amet consectetur lorem ipsum dolor sit "
+        />
+        <Article
+          title="title 1"
+          desc="lorem ipsum dolor sit amet consectetur"
+        />{" "}
+        <Article
+          title="title 1"
+          desc="lorem ipsum dolor sit amet consectetur"
         />
       </div>
     </>

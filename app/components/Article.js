@@ -4,7 +4,7 @@ import { Clock3 } from "lucide-react";
 
 const Article = ({ title, desc }) => {
   return (
-    <div className="flex hover:shadow-md flex-col border shadow-sm flex-1 p-1 gap-1 min-w-[300px] rounded-xl overflow-hidden">
+    <div className="flex bg-[rgba(128,128,128,0.04)] border p-1 max-sm:max-w-[100%] max-w-[55%] mx-auto flex-col flex-1 gap-1 min-w-[300px] rounded-2xl overflow-hidden">
       <div className="rounded-xl overflow-hidden w-full h-fit">
         <Image
           className="w-full max-h-50 object-cover"
@@ -20,7 +20,7 @@ const Article = ({ title, desc }) => {
             target="_blank"
           >
             <Image
-              className="rounded-full w-7 h-7 mr-3 outline outline-2 outline-mainColor outline-offset-2"
+              className="rounded-full w-7 h-7 ml-1 mr-3 outline outline-2 outline-mainColor outline-offset-2"
               src="/images/image.jpg"
               alt="www"
               width={400}
@@ -35,9 +35,9 @@ const Article = ({ title, desc }) => {
         </div>
       </div>
 
-      <h1 className="font-bold font-serif text-3xl py-2 px-3 underline ">{title}</h1>
-      <p className="text-md  px-3 py-1 flex-grow">{desc}</p>
-      <div className="flex p-1 justify-between items-center mt-3">
+      <h1 className="font-bold font-serif text-3xl p-2 px-3 underline ">{title}</h1>
+      <p className="text-md  p-2 px-3 flex-grow">{desc}</p>
+      <div className="flex justify-between items-center mt-3">
         <Link
           className=" hover:underline w-1/2 min-w-fit text-center p-1 px-4 bg-mainColor text-secondaryColor rounded-full"
           href="#"
