@@ -32,10 +32,10 @@
     --chart-4: 43 74% 66%;
     --chart-5: 27 87% 67%;
     --radius: 0.5rem;
-
-    --mainColor: royalblue ;
+    
+    --mainColor: royalblue;
     --secondaryColor: #fff;
-    --thirdColor: #00001C;
+    --thirdColor: #111;
     --mainTextColor: #000;
     --mainBorderColor: #eee;
   }
@@ -84,6 +84,9 @@ body{
   }
   .separator{
     @apply text-[gray];
+  }
+  .sidenav_Link{
+    @apply text-mainColor text-xl font-semibold p-4 w-[150vw] text-center transition-all hover:bg-mainColor hover:text-secondaryColor duration-300 ease-in-out hover:translate-x-2;
   }
   
 }

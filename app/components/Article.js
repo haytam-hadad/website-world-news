@@ -55,7 +55,7 @@ const Article = ({ title, desc }) => {
         </div>
       </div>
 
-      <h1 className="font-bold font-serif underline underline-offset-4 border-l-4 border-mainColor text-2xl p-2 px-3 first-letter:capitalize">
+      <h1 className="font-bold font-serif underline underline-offset-4 text-2xl -5px] py-1 px-2 first-letter:capitalize">
         {title}
       </h1>
       <p className="text-md p-2 px-3 flex-grow first-letter:capitalize line-clamp-5">
@@ -70,7 +70,7 @@ const Article = ({ title, desc }) => {
         >
           Continue reading <ArrowUpRight className="w-5 h-5" />
         </Link>
-        <p className="text-mainColor cursor-pointer font-semibold p-1 mx-1 capitalize text-md">
+        <p className="text-mainColor dark:text-secondaryColor cursor-pointer font-semibold p-1 mx-1 capitalize text-md">
           sports
         </p>
       </div>
