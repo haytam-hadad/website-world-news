@@ -1,5 +1,5 @@
+
 import Link from "next/link";
-import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Search } from "lucide-react";
 import { Earth } from "lucide-react";
@@ -31,18 +31,26 @@ export default function Header({ setTheme, theme }) {
             <Switch onClick={() => setTheme((prev) => !prev)} />
             <Label htmlFor="Dark-Mode ">
               {!theme ? (
-                <Moon className="w-5 h-5" />
+                <Moon className="w-4 h-4" />
               ) : (
-                <Sun className="w-5 h-5" />
+                <Sun className="w-4 h-4" />
               )}
             </Label>
           </div>
-          <Button className="font-semibold px-9 max-md:px-4 max-md:h-9 rounded-2xl  transition-all text-sm">
-            Sign up
-          </Button>
-          <Button className="font-semibold px-9 max-md:px-4 max-md:h-9 rounded-2xl bg-mainColor hover:dark:bg-secondaryColor hover:dark:text-mainTextColor transition-all text-secondaryColor text-sm">
-            Log in
-          </Button>
+            <Link href="/login">
+              <button
+              className="py-2 px-5 max-md:px-3 max-md:py-1 font-semibold dark:bg-secondaryColor text-secondaryColor dark:text-mainTextColor bg-thirdColor border rounded-full"
+              >
+                Log in
+              </button>
+            </Link>
+            <Link href="/sign-in">
+              <button
+              className="py-2 px-5 max-md:px-3 max-md:py-1 font-semibold  border rounded-full bg-mainColor text-secondaryColor"
+              >
+                Sign in
+              </button>
+            </Link>
         </div>
       </div>
       <div className=" bg-mainColor shadow-md rounded-full text-sm py-2 px-4 flex justify-around items-center gap-1 max-md:py-1 max-md:px-2">

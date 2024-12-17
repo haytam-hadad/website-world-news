@@ -12,7 +12,7 @@ export default function RootLayout({ children }) {
     <html lang="en" className={theme == true ? "dark" : ""}>
       <body className="dark:bg-thirdColor dark:text-secondaryColor">
         <Header setTheme={setTheme} theme={theme}/>
-        <main className=" mx-auto max-w-[88%]">
+        <main className=" mx-auto max-w-[90%]">
           {children}
         </main>
         
