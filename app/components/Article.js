@@ -3,6 +3,7 @@
 import Link from "next/link";
 import Image from "next/image";
 import { Clock3 } from "lucide-react";
+import { ArrowUpRight } from 'lucide-react';
 
 const Article = ({ title, desc }) => {
   return (
@@ -61,13 +62,13 @@ const Article = ({ title, desc }) => {
         {desc}
       </p>
       <hr/>
-      <div className="flex justify-between items-center mt-3">
+      <div className="flex items-center justify-between mt-2">
         <Link
-          className=" hover:underline w-1/2 min-w-fit text-center p-1 px-4 bg-mainColor text-secondaryColor rounded-full"
+          className="flex text-sm items-center justify-center hover:underline w-1/2 min-w-fit text-center p-1 bg-mainColor text-secondaryColor rounded-full"
           href="#"
           target="_blank"
         >
-          Read full article
+          Continue reading <ArrowUpRight className="w-5 h-5" />
         </Link>
         <p className="text-mainColor cursor-pointer font-semibold p-1 mx-1 capitalize text-md">
           sports
