@@ -1,6 +1,5 @@
 
 import Link from "next/link";
-import { Input } from "@/components/ui/input";
 import { Search } from "lucide-react";
 import { Earth } from "lucide-react";
 import { Label } from "@/components/ui/label";
@@ -39,14 +38,14 @@ export default function Header({ setTheme, theme }) {
           </div>
             <Link href="/login">
               <button
-              className="py-2 px-5 max-md:px-3 max-md:py-1 font-semibold dark:bg-secondaryColor text-secondaryColor dark:text-mainTextColor bg-thirdColor border rounded-full"
+              className="py-2 px-6 max-md:px-3 max-md:py-1 font-semibold dark:bg-secondaryColor text-secondaryColor dark:text-mainTextColor bg-thirdColor border rounded-full"
               >
                 Log in
               </button>
             </Link>
             <Link href="/sign-in">
               <button
-              className="py-2 px-5 max-md:px-3 max-md:py-1 font-semibold  border rounded-full bg-mainColor text-secondaryColor"
+              className="py-2 px-6 max-md:px-3 max-md:py-1 font-semibold  border rounded-full bg-mainColor text-secondaryColor"
               >
                 Sign in
               </button>
@@ -83,9 +82,9 @@ export default function Header({ setTheme, theme }) {
 
         <div className="flex items-center w-2/5 max-md:w-full font-semibold gap-1">
           <div className="relative flex items-center w-full">
-            <Input
+            <input
               placeholder="Search for news..."
-              className="h-8 w-full border-2 border-secondaryColor px-5 rounded-full text-thirdColor bg-secondaryColor"
+              className="h-8 focus:outline-none w-full border-2 border-secondaryColor px-5 rounded-full text-thirdColor bg-secondaryColor"
             />
             <Search className="absolute right-2 w-5 h-5 text-mainColor" />
           </div>

@@ -35,7 +35,7 @@
 
     --mainColor: royalblue ;
     --secondaryColor: #fff;
-    --thirdColor: #181818;
+    --thirdColor: #00001C;
     --mainTextColor: #000;
     --mainBorderColor: #eee;
   }
@@ -80,7 +80,7 @@ body{
     @apply bg-background text-foreground;
   }
   .nav_Link{
-    @apply flex-grow border-r transition-all hover:text-thirdColor font-semibold capitalize ;
+    @apply flex-grow border-r border-secondaryColor last:border-none transition-all hover:text-thirdColor font-semibold capitalize ;
   }
   .separator{
     @apply text-[gray];

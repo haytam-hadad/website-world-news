@@ -20,11 +20,11 @@ export default function Home() {
           desc="lorem ipsum dolor sit amet consectetur"
         />
         <Article
-          title="title 1"
+          title="lorem ipsum dolor sit amet"
           desc="lorem ipsum dolor sit amet consectetur"
         />
         <Article
-          title="title 1"
+          title="lorem ipsum dolor sit amet lorem ipsum dolor sit amet"
           desc="lorem ipsum dolor sit amet consectetur lorem ipsum dolor sit lorem ipsum dolor sit amet consectetur lorem ipsum dolor sit
            lorem ipsum dolor sit amet consectetur lorem ipsum dolor sit "
         />
@@ -33,16 +33,16 @@ export default function Home() {
           desc="lorem ipsum dolor sit amet consectetur"
         />
         <Article
-          title="title 2"
+          title="lorem ipsum dolor sit amet"
           desc="lorem ipsum dolor sit amet consectetur lorem ipsum dolor sit lorem ipsum dolor sit amet consectetur lorem ipsum dolor sit
            lorem ipsum dolor sit amet consectetur lorem ipsum dolor sit lorem ipsum dolor sit amet consectetur lorem ipsum dolor sit "
         />
         <Article
-          title="title 1"
+          title="lorem ipsum dolor sit amet lorem"
           desc="lorem ipsum dolor sit amet consectetur"
         />{" "}
         <Article
-          title="title 1"
+          title="title 0 lorem ipsum dolor sit amet"
           desc="lorem ipsum dolor sit amet consectetur"
         />
       </div>
