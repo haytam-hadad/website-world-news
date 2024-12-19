@@ -9,10 +9,16 @@ import { Toggle } from "@/components/ui/toggle";
 import { Moon } from "lucide-react";
 import { Sun } from "lucide-react";
 import SideMenu from "./../components/SideMenu";
-import Image from "next/image";
 import { useState } from "react";
+import { useContext } from "react";
+import { ThemeContext } from "../layout";
+import Image from "next/image";
 
-export default function Header({ setTheme, theme }) {
+
+
+export default function Header() {
+
+  const { theme , setTheme } = useContext(ThemeContext);
   const [showMenu, setShowMenu] = useState(false);
 
   const toggleMenu = () => {
@@ -30,11 +36,11 @@ export default function Header({ setTheme, theme }) {
           <div className="flex justify-end items-center gap-4 max-md:gap-2">
             <div className="max-md:scale-75 border-2 border-mainColor rounded-full p-1 flex items-center gap-1">
               <Switch onClick={() => setTheme((prev) => !prev)} />
-              <Label htmlFor="Dark-Mode ">
+              <Label className="flex items-center" htmlFor="Dark-Mode">
                 {!theme ? (
-                  <Moon className="w-4 h-4" />
+                  <Moon className="w-4 h-4"/>
                 ) : (
-                  <Sun className="w-4 h-4" />
+                  <Sun className="w-4 h-4"/>
                 )}
               </Label>
             </div>
@@ -85,7 +91,7 @@ export default function Header({ setTheme, theme }) {
                 placeholder="Search for news..."
                 className="h-8 focus:outline-none w-full border-2 border-secondaryColor px-5 rounded-full text-thirdColor bg-secondaryColor"
               />
-              <Search className="absolute right-2 w-5 h-5 text-mainColor" />
+              <Search className="absolute right-2 w-5 h-5 text-mainColor"/>
             </div>
           </div>
         </div>
