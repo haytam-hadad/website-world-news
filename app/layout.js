@@ -4,8 +4,6 @@ import Header from "./components/Header";
 import { useState } from "react";
 
 
-
-
 export default function RootLayout({ children }) {
   const [theme, setTheme] = useState(false);
   return (
