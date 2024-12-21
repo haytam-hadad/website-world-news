@@ -40,6 +40,12 @@ export default function Home() {
           title="title 0 lorem ipsum dolor sit amet"
           desc="lorem ipsum dolor sit amet consectetur"
         />
+                <Article
+          title="lorem ipsum dolor sit amet lorem ipsum dolor sit amet"
+          desc="lorem ipsum dolor sit amet consectetur lorem ipsum dolor sit lorem ipsum dolor sit amet consectetur lorem ipsum dolor sit
+           lorem ipsum dolor sit amet consectetur lorem ipsum dolor sit lorem ipsum dolor sit amet consectetur lorem ipsum dolor sit lorem ipsum dolor sit amet consectetur lorem ipsum dolor sit
+           lorem ipsum dolor sit amet consectetur lorem ipsum dolor sit "
+        />
       </div>
     </>
   );

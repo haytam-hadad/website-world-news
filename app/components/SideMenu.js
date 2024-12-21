@@ -3,7 +3,7 @@ import Link from "next/link";
 const SideMenu = () => {
   return (
     <div
-      className="flex flex-col justify-start items-center fixed left-[-100%] w-full h-full bg-secondaryColor dark:bg-thirdColor transition-all ease-in-out" 
+      className="flex z-50 flex-col justify-start items-center fixed left-[-100%] w-full h-full bg-secondaryColor dark:bg-thirdColor transition-all ease-in-out" 
       style={{ animation: "slideIn 0.4s forwards" }}
     >
     <style>{"@keyframes slideIn { from { left: -100%; } to { left: 0; } }"}</style>
