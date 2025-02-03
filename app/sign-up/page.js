@@ -3,7 +3,7 @@ import Link from 'next/link';
 
 export default function SignUpPage() {
   return (
-    <div className="grid grid-cols-1 gap-0 md:px-20 md:grid-cols-2">
+    <div className="grid grid-cols-1 gap-0 md:px-14 md:grid-cols-2">
       <div className="p-6 md:p-12 rounded-md flex flex-col justify-center">
         <form className="flex flex-col space-y-5">
           <h1 className="text-center text-4xl font-bold text-foreground mb-1">
@@ -13,7 +13,7 @@ export default function SignUpPage() {
             <span className="text-sm font-medium">Username</span>
             <input
               type="text"
-              className="w-full rounded-md shadow-sm px-3 py-2 text-sm text-foreground outline-none ring-0 focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background dark:bg-[#333] border border-mainColor dark:border-mainColor-dark"
+              className="w-full rounded-md shadow-sm px-3 py-2 text-sm text-foreground outline-none ring-0 focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background dark:bg-[#333] bg-[#f5f5f5] dark:bg-[#333]"
               placeholder="Username"
               required
             />
@@ -22,7 +22,7 @@ export default function SignUpPage() {
             <span className="text-sm font-medium">Email</span>
             <input
               type="email"
-              className="w-full rounded-md shadow-sm px-3 py-2 text-sm text-foreground outline-none ring-0 focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background dark:bg-[#333] border border-mainColor dark:border-mainColor-dark"
+              className="w-full rounded-md shadow-sm px-3 py-2 text-sm text-foreground outline-none ring-0 focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background dark:bg-[#333] bg-[#f5f5f5] dark:bg-[#333]"
               placeholder="Email"
               required
             />
@@ -31,7 +31,7 @@ export default function SignUpPage() {
             <span className="text-sm font-medium">Password</span>
             <input
               type="password"
-              className="w-full rounded-md px-3 py-2 text-sm text-foreground outline-none ring-0 focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background dark:bg-[#333] border border-mainColor dark:border-mainColor-dark"
+              className="w-full rounded-md px-3 py-2 text-sm text-foreground outline-none ring-0 focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background dark:bg-[#333] bg-[#f5f5f5] dark:bg-[#333]"
               placeholder="Password"
               required
             />
@@ -40,7 +40,7 @@ export default function SignUpPage() {
             <span className="text-sm font-medium">Confirm Password</span>
             <input
               type="password"
-              className="w-full rounded-md px-3 py-2 text-sm text-foreground outline-none ring-0 focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background dark:bg-[#333] border border-mainColor dark:border-mainColor-dark"
+              className="w-full rounded-md px-3 py-2 text-sm text-foreground outline-none ring-0 focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background dark:bg-[#333] bg-[#f5f5f5] dark:bg-[#333]"
               placeholder="Confirm Password"
               required
             />

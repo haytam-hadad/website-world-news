@@ -3,7 +3,7 @@ import Link from 'next/link';
 
 export default function LoginPage() {
   return (
-    <div className="grid grid-cols-1 gap-0 md:px-20 md:grid-cols-2">
+    <div className="grid grid-cols-1 md:px-14 md:grid-cols-2">
       <div className="p-6 md:p-12 rounded-md flex flex-col justify-center ">
         <form className="flex flex-col space-y-5">
           <h1 className="text-center text-4xl font-bold text-foreground mb-1">
@@ -13,7 +13,7 @@ export default function LoginPage() {
             <span className="text-sm font-medium">Email</span>
             <input
               type="email"
-              className="w-full rounded-md shadow-sm px-3 py-2 text-sm text-foreground outline-none ring-0 focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background dark:bg-[#333] border border-mainColor"
+              className="w-full rounded-md shadow-sm px-3 py-2 text-sm text-foreground outline-none ring-0 focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background dark:bg-[#333] bg-[#f5f5f5]"
               placeholder="Email address"
             />
           </label>
@@ -21,13 +21,13 @@ export default function LoginPage() {
             <span className="text-sm font-medium">Password</span>
             <input
               type="password"
-              className="w-full rounded-md px-3 py-2 text-sm text-foreground outline-none ring-0 focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background dark:bg-[#333] border border-mainColor"
+              className="w-full rounded-md px-3 py-2 text-sm text-foreground outline-none ring-0 focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background dark:bg-[#333] bg-[#f5f5f5]"
               placeholder="Password"
             />
           </label>
           <span className="text-sm font-medium text-muted-foreground">
             Don't have an account? &nbsp; 
-            <Link href="/sign-in" className="text-primary underline">
+            <Link href="/sign-up" className="text-primary underline">
               Sign up
             </Link>
           </span>
