@@ -1,7 +1,6 @@
 "use client"
 import Link from "next/link";
 import { Search } from "lucide-react";
-import { Earth } from "lucide-react";
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
 import { Menu } from "lucide-react";
@@ -30,7 +29,9 @@ export default function Header() {
       <header className="flex flex-col px-[3%] w-full sticky top-0 z-50 bg-secondaryColor dark:bg-thirdColor max-md:px-1">
         <div className="flex justify-between p-4 items-center text-maintextColor dark:text-secondaryColor">
           <h1 className="font-bold text-3xl max-md:text-xl flex items-center justify-start">
-            <Earth className="w-11 h-11 max-md:w-8 max-md:h-8 mx-2" /> World
+            <Image src="/images/i1.svg" alt="logo" width={50} height={50} className="dark:filter dark:invert"/>
+            &nbsp;
+            World
             news
           </h1>
           <div className="flex justify-end items-center gap-4 max-md:gap-2">
@@ -49,16 +50,16 @@ export default function Header() {
                 Log in
               </button>
             </Link>
-            <Link href="/sign-in">
+            <Link href="/sign-up">
               <button className="text-sm py-2 px-7 max-md:px-4 font-semibold  border rounded-full bg-mainColor text-secondaryColor">
-                Sign in
+                Sign up
               </button>
             </Link>
           </div>
         </div>
         <div className="bg-mainColor shadow-md rounded-full text-sm py-2 px-4 flex justify-around items-center gap-1 max-md:py-1 max-md:px-2">
           <div className="text-secondaryColor flex max-md:hidden text-center w-3/5 justify-around items-center">
-            <Link href="/home" className="nav_Link">
+            <Link href="/" className="nav_Link">
               Home
             </Link>
             <Link href="/health" className="nav_Link">

@@ -33,7 +33,7 @@
     --chart-5: 27 87% 67%;
     --radius: 0.5rem;
     
-    --mainColor: royalblue;
+    --mainColor: rgb(85, 128, 255);
     --secondaryColor: #fff;
     --thirdColor: #111;
     --mainTextColor: #000;
@@ -89,4 +89,13 @@ body{
     @apply text-mainColor text-xl font-semibold p-4 w-[150vw] text-center transition-all hover:bg-mainColor hover:text-secondaryColor duration-300 ease-in-out hover:translate-x-2;
   }
   
+}
+
+@keyframes rotate {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
 }
