@@ -5,8 +5,8 @@ export default function SignUpPage() {
   return (
     <div className="grid grid-cols-1 gap-0 md:px-14 md:grid-cols-2">
       <div className="p-6 md:p-12 rounded-md flex flex-col justify-center">
-        <form className="flex flex-col space-y-5">
-          <h1 className="text-center text-4xl font-bold text-foreground mb-1">
+        <form className="flex flex-col space-y-4">
+          <h1 className="text-center text-5xl font-bold tracking-tight text-foreground mb-4">
             Sign up
           </h1>
           <label className="flex flex-col space-y-1">
@@ -60,6 +60,22 @@ export default function SignUpPage() {
           >
             Sign up
           </button>
+          <span className="text-sm font-medium text-muted-foreground">
+            Or continue with
+          </span>
+          <button
+            type="button"
+            className="mt-4 w-full shadow-lg text-white rounded-md border px-3 py-2 font-medium transition-colors bg-[#fff] text-mainTextColor focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#4285F4] focus-visible:ring-offset-2 focus-visible:ring-offset-background"
+          >
+            <Image
+              src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg"
+              width={24}
+              height={24}
+              alt="Google logo"
+              className="inline mr-2"
+            />
+            Continue with Google
+          </button>
         </form>
       </div>
       <div className="hidden md:block p-10 justify-center items-center">
@@ -74,5 +90,4 @@ export default function SignUpPage() {
     </div>
   );
 }
-
 
