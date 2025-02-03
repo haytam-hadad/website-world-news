@@ -34,7 +34,7 @@ export default function LoginPage() {
           </span>
           <button
             type="submit"
-            className="w-full rounded-lg bg-primary px-4 py-2 text-white font-medium transition-all hover:bg-opacity-90 focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2"
+            className="w-full rounded-lg bg-primary px-4 py-2 text-primary-foreground font-medium transition-all hover:bg-opacity-90 focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2"
           >
             Log in
           </button>
@@ -47,7 +47,7 @@ export default function LoginPage() {
           </div>
           <button
             type="button"
-            className="flex items-center justify-center w-full rounded-lg border px-4 py-2 font-medium bg-white shadow-md hover:shadow-lg transition-all focus:ring-2 focus:ring-[#4285F4] focus:ring-offset-2"
+            className="flex items-center justify-center w-full rounded-lg border px-4 py-2 font-medium bg-white shadow-md hover:shadow-lg transition-all focus:ring-2 focus:ring-[#4285F4] focus:ring-offset-2 text-black"
           >
             <Image
               src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg"
@@ -68,7 +68,7 @@ export default function LoginPage() {
           width={400}
           height={400}
           alt="Login Illustration"
-          className="w-[80%] max-w-sm object-contain"
+          className="w-[80%] max-w-sm object-contain dark:filter dark:invert"
         />
       </div>
     </div>
