@@ -68,7 +68,7 @@ export default function LoginPage() {
           width={400}
           height={400}
           alt="Login Illustration"
-          className="w-[80%] max-w-sm object-contain dark:filter dark:invert"
+          className="w-[80%] max-w-sm object-contain dark:filter dark:invert opacity-55"
         />
       </div>
     </div>
