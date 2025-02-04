@@ -82,7 +82,7 @@ export default function SignUpPage() {
           width={400}
           height={400}
           alt="Sign Up Illustration"
-          className="w-[80%] max-w-sm object-contain dark:filter dark:invert opacity-55"
+          className="w-[80%] max-w-sm object-contain dark:filter dark:invert opacity-60"
         />
       </div>
     </div>

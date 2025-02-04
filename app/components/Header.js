@@ -35,7 +35,7 @@ export default function Header() {
             news
           </h1>
           <div className="flex justify-end items-center gap-4 max-md:gap-2">
-            <div className="max-md:scale-75 border-2 border-mainColor rounded-full p-1 flex items-center gap-1">
+            <div className="max-md:scale-90 border-2 border-mainColor rounded-full p-1 flex items-center gap-1">
               <Switch onClick={() => setTheme((prev) => !prev)} />
               <Label className="flex items-center" htmlFor="Dark-Mode">
                 {!theme ? (
@@ -45,16 +45,18 @@ export default function Header() {
                 )}
               </Label>
             </div>
-            <Link href="/login">
-              <button className="text-sm py-2 px-7 max-md:px-4  font-semibold dark:bg-secondaryColor text-secondaryColor dark:text-mainTextColor bg-thirdColor border rounded-full">
-                Log in
-              </button>
-            </Link>
-            <Link href="/sign-up">
-              <button className="text-sm py-2 px-7 max-md:px-4 font-semibold  border rounded-full bg-mainColor text-secondaryColor">
-                Sign up
-              </button>
-            </Link>
+            <div className="hidden sm:flex gap-5">
+              <Link href="/login">
+                <button className="text-sm py-3 px-7 max-md:px-4  font-semibold dark:bg-secondaryColor text-secondaryColor dark:text-mainTextColor bg-thirdColor border rounded-full">
+                  Log in
+                </button>
+              </Link>
+              <Link href="/sign-up">
+                <button className="text-sm py-3 px-7 max-md:px-4 font-semibold  border rounded-full bg-mainColor text-secondaryColor">
+                  Sign up
+                </button>
+              </Link>
+            </div>
           </div>
         </div>
         <div className="bg-mainColor shadow-md rounded-full text-sm py-2 px-4 flex justify-around items-center gap-1 max-md:py-1 max-md:px-2">
@@ -98,7 +100,7 @@ export default function Header() {
         </div>
       </header>
       {showMenu && (
-          <SideMenu />
+          <SideMenu setVisible={setShowMenu} />
       )}
     </>
   );
