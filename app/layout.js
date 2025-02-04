@@ -38,7 +38,7 @@ export default function RootLayout({ children }) {
       <html lang="en" className={theme == true ? "dark" : ""}>
         <body className="dark:bg-thirdColor bg-secondaryColor dark:text-secondaryColor ">
           <Header/>
-          <main className=" mx-auto max-w-[90%]">
+          <main className=" mx-auto max-w-[90%] mb-7">
             {children}
           </main>
           <Footer/>

@@ -64,20 +64,20 @@ export default function Header() {
             <Link href="/" className="nav_Link">
               Home
             </Link>
-            <Link href="/health" className="nav_Link">
+            <Link href="/category/science" className="nav_Link">
+              Science
+            </Link>
+            <Link href="/category/technology" className="nav_Link">
+              Technology
+            </Link>
+            <Link href="/category/health" className="nav_Link">
               Health
             </Link>
-            <Link href="/sports" className="nav_Link">
+            <Link href="/category/sports" className="nav_Link">
               Sports
             </Link>
-            <Link href="/technologies" className="nav_Link">
-              Technologies
-            </Link>
-            <Link href="/politics" className="nav_Link">
+            <Link href="/category/politics" className="nav_Link">
               Politics
-            </Link>
-            <Link href="/weather" className="nav_Link">
-              Weather
             </Link>
           </div>
           <Toggle
