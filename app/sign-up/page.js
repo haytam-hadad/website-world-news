@@ -46,7 +46,7 @@ export default function SignUpPage() {
           </label>
           <span className="text-sm font-medium text-muted-foreground">
             Already have an account? &nbsp;
-            <Link href="/login" className="text-primary underline">Log in</Link>
+            <Link href="/login" className="text-primary underline hover:text-mainColor">Log in</Link>
           </span>
           <button
             type="submit"

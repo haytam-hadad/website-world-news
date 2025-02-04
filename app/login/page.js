@@ -26,9 +26,15 @@ export default function LoginPage() {
               placeholder="Password"
             />
           </label>
-          <span className="text-sm font-medium text-muted-foreground">
+          <span className="text-[12px] text-center font-medium text-muted-foreground">
+            Forgot your password?&nbsp;
+            <Link href="/forgot-password" className="text-primary underline hover:text-mainColor">
+              Click here
+            </Link>
+          </span>
+          <span className="text-sm mt-1 font-medium text-muted-foreground">
             Don't have an account?&nbsp;
-            <Link href="/sign-up" className="text-primary underline">
+            <Link href="/sign-up" className="text-primary underline hover:text-mainColor">
               Sign up
             </Link>
           </span>
