@@ -13,15 +13,25 @@ import { useContext } from "react";
 import { ThemeContext } from "../layout";
 import Image from "next/image";
 
-
-
 export default function Header() {
-
-  const { theme , setTheme } = useContext(ThemeContext);
+  const { theme, setTheme } = useContext(ThemeContext);
   const [showMenu, setShowMenu] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
 
   const toggleMenu = () => {
     setShowMenu((prev) => !prev);
+  };
+
+  const handleSearch = () => {
+    if (searchQuery.trim()) {
+      window.location.href = `/search/${encodeURIComponent(searchQuery.trim().toLowerCase())}`;
+    }
+  };
+
+  const handleKeyPress = (event) => {
+    if (event.key === "Enter") {
+      handleSearch();
+    }
   };
 
   return (
@@ -47,12 +57,12 @@ export default function Header() {
             </div>
             <div className="hidden sm:flex gap-5">
               <Link href="/login">
-                <button className="text-sm py-3 px-7 max-md:px-4  font-semibold dark:bg-secondaryColor text-secondaryColor dark:text-mainTextColor bg-thirdColor border rounded-full">
+                <button className="text-sm py-3 px-7 max-md:px-4 font-semibold dark:bg-secondaryColor text-secondaryColor dark:text-mainTextColor bg-thirdColor border rounded-full">
                   Log in
                 </button>
               </Link>
               <Link href="/sign-up">
-                <button className="text-sm py-3 px-7 max-md:px-4 font-semibold  border rounded-full bg-mainColor text-secondaryColor">
+                <button className="text-sm py-3 px-7 max-md:px-4 font-semibold border rounded-full bg-mainColor text-secondaryColor">
                   Sign up
                 </button>
               </Link>
@@ -93,14 +103,17 @@ export default function Header() {
               <input
                 placeholder="Search for news..."
                 className="h-8 focus:outline-none w-full border-2 border-secondaryColor px-5 rounded-full text-thirdColor bg-secondaryColor"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                onKeyPress={handleKeyPress}
               />
-              <Search className="absolute right-2 w-5 h-5 text-mainColor"/>
+              <Search className="absolute right-2 w-5 h-5 text-mainColor cursor-pointer" onClick={handleSearch} />
             </div>
           </div>
         </div>
       </header>
       {showMenu && (
-          <SideMenu setVisible={setShowMenu} />
+        <SideMenu setVisible={setShowMenu} />
       )}
     </>
   );

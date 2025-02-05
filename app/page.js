@@ -30,7 +30,7 @@ export default async function Home() {
         <h1 className="text-3xl font-bold text-white mb-4 text-center sm:text-left lg:text-3xl xl:text-4xl">
           Welcome to the World of News!
         </h1>
-        <div className="bg-white w-48 h-1 scale-75 rounded-md inline-block mb-2 p-1"></div>
+        <div className="bg-white w-40 h-1 scale-75 rounded-md inline-block mb-2 p-1"></div>
 
         <p className="text-lg text-white mb-4 text-center sm:text-left lg:text-lg xl:text-xl">
           Stay updated with the latest news from around the globe. Explore, learn, and stay informed. Your source for the most reliable news!
