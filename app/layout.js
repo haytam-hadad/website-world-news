@@ -2,48 +2,69 @@
 import "./globals.css";
 import Header from "./components/Header";
 import Footer from "./components/Footer";
-import { createContext, useState } from "react";
-export const ThemeContext = createContext();
+import SideMenu from "./components/SideMenu";
+import { ThemeProvider, ThemeContext } from "./ThemeProvider";
+import { useState, useContext, useEffect } from "react";
 
-export const favicon = (
-  <link rel="icon" href="/images/favicon.png" type="image/png" sizes="16x16" />
-);
+// Custom hook to track window width
+function useWindowWidth() {
+  const [width, setWidth] = useState(
+    typeof window !== "undefined" ? window.innerWidth : 1024
+  );
+  useEffect(() => {
+    const handleResize = () => setWidth(window.innerWidth);
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+  return width;
+}
 
-export const meta = (
-  <>
-    <meta
-      name="viewport"
-      content="width=device-width, initial-scale=1.0"
-    />
-    <meta
-      name="description"
-      content="World News is a news website that provides the latest news from around the world."
-    />
-    <meta
-      name="keywords"
-      content="News, World News, Latest News, Breaking News, News Website"
-    />
-    <meta name="author" content="World News" />
-  </>
-);
-
-export default function RootLayout({ children }) {
-
-  //States
-  const [theme, setTheme] = useState(false);
-
+function LayoutContent({ children }) {
+  const { theme } = useContext(ThemeContext);
+  const [showMenu, setShowMenu] = useState(false); // controls mobile side menu visibility
+  const [menuWidth, setMenuWidth] = useState(250); // initial width for the side menu
+  const windowWidth = useWindowWidth();
+  const isDesktop = windowWidth >= 768; // md breakpoint
 
   return (
-    <ThemeContext.Provider value={{ theme, setTheme }}>
-      <html lang="en" className={theme == true ? "dark" : ""}>
-        <body className="dark:bg-thirdColor bg-secondaryColor dark:text-secondaryColor ">
-          <Header/>
-          <main className=" mx-auto max-w-[90%] mb-7">
+    <html lang="en" className={`${theme ? "dark" : "light"}`}>
+      <body className="dark:bg-thirdColor bg-secondaryColor dark:text-secondaryColor">
+        {/* Pass the toggle function to Header for mobile */}
+        <Header onToggleMenu={() => setShowMenu((prev) => !prev)} />
+        <main className="relative flex">
+          {/* Desktop: Always visible side menu */}
+          {isDesktop && (
+            <div className="hidden md:block">
+              <SideMenu setVisible={setShowMenu} setMenuWidth={setMenuWidth} />
+            </div>
+          )}
+          {/* Mobile: Overlay side menu when toggled */}
+          {!isDesktop && showMenu && (
+            <div className="md:hidden absolute top-0 left-0 z-50">
+              <SideMenu setVisible={setShowMenu} setMenuWidth={setMenuWidth} />
+            </div>
+          )}
+          {/* Main Content */}
+          <div
+            className="flex-1 p-4 transition-all"
+            style={{
+              marginLeft: isDesktop ? `${menuWidth}px` : "0px",
+              transition: "margin-left 0.3s ease-in-out",
+            }}
+          >
             {children}
-          </main>
-          <Footer/>
-        </body>
-      </html>
-    </ThemeContext.Provider>
+          </div>
+        </main>
+        <Footer />
+      </body>
+    </html>
+  );
+}
+
+export default function Layout({ children }) {
+  return (
+    <ThemeProvider>
+      <LayoutContent>{children}</LayoutContent>
+    </ThemeProvider>
   );
 }

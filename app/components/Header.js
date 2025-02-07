@@ -1,121 +1,102 @@
-"use client"
+"use client";
 import Link from "next/link";
-import { Search } from "lucide-react";
+import { Search, Menu, Moon, Sun } from "lucide-react";
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
-import { Menu } from "lucide-react";
 import { Toggle } from "@/components/ui/toggle";
-import { Moon } from "lucide-react";
-import { Sun } from "lucide-react";
-import SideMenu from "./../components/SideMenu";
-import { useState } from "react";
-import { useContext } from "react";
-import { ThemeContext } from "../layout";
+import { useState, useContext } from "react";
+import { ThemeContext } from "../ThemeProvider";
+import { Globe } from "lucide-react";
 import Image from "next/image";
 
-export default function Header() {
+export default function Header({ onToggleMenu }) {
   const { theme, setTheme } = useContext(ThemeContext);
-  const [showMenu, setShowMenu] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
-
-  const toggleMenu = () => {
-    setShowMenu((prev) => !prev);
-  };
+  const [selectedLang, setSelectedLang] = useState("en");
 
   const handleSearch = () => {
     if (searchQuery.trim()) {
-      window.location.href = `/search/${encodeURIComponent(searchQuery.trim().toLowerCase())}`;
+      window.location.href = `/search/${encodeURIComponent(
+        searchQuery.trim().toLowerCase()
+      )}`;
     }
   };
 
-  const handleKeyPress = (event) => {
-    if (event.key === "Enter") {
-      handleSearch();
-    }
+  const handleKeyDown = (event) => {
+    if (event.key === "Enter") handleSearch();
+  };
+
+  const handleLangChange = (e) => {
+    setSelectedLang(e.target.value);
+    // You can add logic here to update the language globally if needed
   };
 
   return (
-    <>
-      <header className="flex flex-col px-[3%] w-full sticky top-0 z-50 bg-secondaryColor dark:bg-thirdColor max-md:px-1">
-        <div className="flex justify-between p-4 items-center text-maintextColor dark:text-secondaryColor">
-          <h1 className="font-bold text-3xl max-md:text-xl flex items-center justify-start">
-            <Image src="/images/i1.svg" alt="logo" width={50} height={50} className="dark:filter dark:invert"/>
-            &nbsp;
-            World
-            news
-          </h1>
-          <div className="flex justify-end items-center gap-4 max-md:gap-2">
-            <div className="max-md:scale-90 border-2 border-mainColor rounded-full p-1 flex items-center gap-1">
-              <Switch onClick={() => setTheme((prev) => !prev)} />
-              <Label className="flex items-center" htmlFor="Dark-Mode">
-                {!theme ? (
-                  <Moon className="w-4 h-4"/>
-                ) : (
-                  <Sun className="w-4 h-4"/>
-                )}
-              </Label>
-            </div>
-            <div className="hidden sm:flex gap-5">
-              <Link href="/login">
-                <button className="text-sm py-3 px-7 max-md:px-4 font-semibold dark:bg-secondaryColor text-secondaryColor dark:text-mainTextColor bg-thirdColor border rounded-full">
-                  Log in
-                </button>
-              </Link>
-              <Link href="/sign-up">
-                <button className="text-sm py-3 px-7 max-md:px-4 font-semibold border rounded-full bg-mainColor text-secondaryColor">
-                  Sign up
-                </button>
-              </Link>
-            </div>
-          </div>
-        </div>
-        <div className="bg-mainColor shadow-md rounded-full text-sm py-2 px-4 flex justify-around items-center gap-1 max-md:py-1 max-md:px-2">
-          <div className="text-secondaryColor flex max-md:hidden text-center w-3/5 justify-around items-center">
-            <Link href="/" className="nav_Link">
-              Home
-            </Link>
-            <Link href="/category/science" className="nav_Link">
-              Science
-            </Link>
-            <Link href="/category/technology" className="nav_Link">
-              Technology
-            </Link>
-            <Link href="/category/health" className="nav_Link">
-              Health
-            </Link>
-            <Link href="/category/sports" className="nav_Link">
-              Sports
-            </Link>
-            <Link href="/category/politics" className="nav_Link">
-              Politics
-            </Link>
-          </div>
-          <Toggle
-            className="flex rounded-3xl md:hidden cursor-pointer"
-            aria-label="Toggle nav bar"
-            onClick={toggleMenu}
-          >
-            <Menu className="scale-125" />
-          </Toggle>
+    <header className="sticky z-50 shadow-sm top-0 z-50 border-b border-grey-200 dark:border-gray-700 bg-secondaryColor dark:bg-thirdColor px-4 sm:px-[2%]">
+      <div className="grid grid-cols-[auto,_1fr,_auto] gap-5 items-center py-4 text-maintextColor dark:text-secondaryColor">
+        {/* Logo Group */}
+        <Link href="/" className="flex items-center gap-2">
+          <Image
+            src="/images/i1.svg"
+            alt="logo"
+            width={45}
+            height={45}
+            className="dark:filter dark:invert"
+          />
+          <span className="hidden font-bold text-xl sm:inline">World News</span>
+        </Link>
 
-          <div className="flex items-center w-2/5 max-md:w-full font-semibold gap-1">
-            <div className="relative flex items-center w-full">
-              <input
-                placeholder="Search for news..."
-                className="h-8 focus:outline-none w-full border-2 border-secondaryColor px-5 rounded-full text-thirdColor bg-secondaryColor"
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                onKeyPress={handleKeyPress}
-              />
-              <Search className="absolute right-2 w-5 h-5 text-mainColor cursor-pointer" onClick={handleSearch} />
-            </div>
-          </div>
+        {/* Search Group */}
+        <div className="relative w-full max-w-lg mx-auto">
+          <input
+            type="text"
+            placeholder="Search for news..."
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            onKeyDown={handleKeyDown}
+            className="w-full rounded-full border border-primary bg-transparent px-4 sm:px-5 h-8 sm:h-10 focus:outline-none focus:ring-2 focus:ring-primary text-primary dark:text-secondaryColor dark:bg-thirdColor"
+          />
+          <Search
+            onClick={handleSearch}
+            className="absolute right-2 top-1/2 transform -translate-y-1/2 w-7 h-7 hover:border cursor-pointer p-1 rounded-full text-primary transition-colors"
+          />
         </div>
-      </header>
-      {showMenu && (
-        <SideMenu setVisible={setShowMenu} />
-      )}
-    </>
+
+
+        {/* Control Group */}
+        <div className="flex items-center gap-4">
+          {/* Dark Mode Toggle */}
+          <div className="flex items-center gap-1 max-sm:scale-90 rounded-full border-2 border-mainColor p-1">
+            <Switch checked={theme} onCheckedChange={(checked) => setTheme(checked)} />
+            <Label htmlFor="Dark-Mode" className="flex items-center">
+              {theme ? <Sun className="w-4 h-4" /> : <Moon className="w-4 h-4" />}
+            </Label>
+          </div>
+
+          {/* Auth Buttons */}
+          <div className="hidden md:flex items-center gap-4">
+            <Link href="/login">
+              <button className="rounded-full border px-6 py-3 text-xs sm:text-sm font-semibold bg-thirdColor dark:bg-secondaryColor text-secondaryColor dark:text-mainTextColor">
+                Log in
+              </button>
+            </Link>
+            <Link href="/sign-up">
+              <button className="rounded-full border px-6 py-3 text-xs sm:text-sm font-semibold bg-mainColor text-secondaryColor">
+                Sign up
+              </button>
+            </Link>
+          </div>
+
+          {/* Sidebar Toggle Button (Mobile) */}
+          <Toggle
+            onClick={onToggleMenu}
+            className="md:hidden flex items-center cursor-pointer rounded border p-2"
+          >
+            <Menu className="w-5 h-5 text-mainColor scale-150" />
+          </Toggle>
+        </div>
+      </div>
+    </header>
   );
 }
 

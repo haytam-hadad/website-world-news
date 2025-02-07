@@ -5,7 +5,7 @@ export default function SignUpPage() {
   return (
     <div className="grid min-h-screen grid-cols-1 md:grid-cols-2">
       {/* Form Section */}
-      <div className="flex flex-col justify-center p-6 md:p-12">
+      <div className="flex flex-col justify-center p-5">
         <form className="flex flex-col space-y-5 max-w-sm mx-auto w-full">
           <h1 className="text-center text-4xl font-bold text-foreground mb-6">Sign up</h1>
           <label className="flex flex-col space-y-1">

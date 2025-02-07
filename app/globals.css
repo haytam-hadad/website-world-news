@@ -33,7 +33,7 @@
     --chart-5: 27 87% 67%;
     --radius: 0.5rem;
     
-    --mainColor: rgb(85, 128, 255);
+    --mainColor: royalblue;
     --secondaryColor: #fff;
     --thirdColor: #111;
     --mainTextColor: #000;
@@ -85,17 +85,10 @@ body{
   .separator{
     @apply text-[gray];
   }
-  .sidenav_Link{
-    @apply text-mainColor text-xl font-semibold p-4 w-[150vw] text-center transition-all hover:bg-mainColor hover:text-secondaryColor duration-300 ease-in-out hover:translate-x-2;
+  .title{
+    @apply text-2xl w-full border shadow-sm text-primary font-bold rounded-full bg-primary-foreground p-2 mb-5 text-center max-md:scale-90;
   }
-  
-}
-
-@keyframes rotate {
-  0% {
-    transform: rotate(0deg);
-  }
-  100% {
-    transform: rotate(360deg);
+  .side_menu_link{
+    @apply flex mb-2 items-center space-x-3 w-full text-left px-5 py-3 rounded-full hover:bg-primary hover:text-primary-foreground  ;
   }
 }

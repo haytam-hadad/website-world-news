@@ -33,11 +33,9 @@ const Search = async ({ params }) => {
   return (
     <div>
       {articles.length > 0 && (
-        <h2 className="text-2xl text-primary font-bold tracking-wide pl-10 py-2 rounded-full my-4 text-center md:text-left">
-          <span className="flex items-center justify-center">
+        <h2 className="title">
             Search Results for &nbsp; <u> {query}</u>
             <ChevronDown className="ml-2 inline-block" />
-          </span>
         </h2>
       )}
 

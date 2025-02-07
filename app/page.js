@@ -41,10 +41,8 @@ export default async function Home() {
       </div>
 
       {/* Articles Section */}
-      <h2 className="text-2xl text-primary font-bold tracking-wide pl-10 py-2 rounded-full my-4 text-center md:text-left">
-        <span className="flex items-center justify-center">
-          Latest News <ChevronDown className="ml-2 inline-block" />
-        </span>
+      <h2 className="title">
+      Latest News <ChevronDown className="ml-2 inline-block" />
       </h2>
 
       <main className="flex flex-wrap justify-center sm:justify-start md:justify-around gap-2 ">
