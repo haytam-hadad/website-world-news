@@ -40,7 +40,7 @@ const SideMenu = ({ setVisible, setMenuWidth }) => {
   return (
     <div
       ref={menuRef}
-      className="fixed shadow-sm mt-16 left-0 top-0 h-full bg-secondaryColor dark:bg-thirdColor p-4 rounded-lg z-40"
+      className="fixed select-none shadow-sm mt-16 left-0 top-0 h-full bg-secondaryColor dark:bg-thirdColor p-4 rounded-lg z-40"
       style={{ width: `${menuWidthState}px` }}
     >
       <Link href="/">
