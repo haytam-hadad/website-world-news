@@ -86,7 +86,7 @@ body{
     @apply text-[gray];
   }
   .title{
-    @apply text-2xl w-full border shadow-sm text-primary font-bold rounded-full bg-primary-foreground p-2 mb-5 text-center max-md:scale-90;
+    @apply text-2xl w-full border shadow-sm text-primary font-bold rounded-full bg-[#f1f1f1] dark:bg-[#222] p-2 mb-5 text-center max-md:scale-90;
   }
   .side_menu_link{
     @apply flex mb-2 items-center space-x-3 w-full text-left px-5 py-3 rounded-full hover:bg-primary hover:text-primary-foreground  ;
