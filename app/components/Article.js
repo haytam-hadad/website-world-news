@@ -2,19 +2,31 @@
 
 import Link from "next/link";
 import Image from "next/image";
-import { Clock3, ArrowUpRight } from "lucide-react";
+import { Clock3, ArrowUpRight, Share2, MessageCircle, MoreHorizontal } from "lucide-react";
+import { useState } from "react";
+import { ArrowBigUp, ArrowBigDown } from "lucide-react";
 
 const Article = ({ title, desc, imageUrl, author, publishedAt, category, url }) => {
-  const placeholder = "/images/image.jpg";
+  const [vote, setVote] = useState(null);
+
+  const handleUpvote = () => {
+    setVote(vote !== "upvote" ? "upvote" : null);
+  };
+
+  const handleDownvote = () => {
+    setVote(vote !== "downvote" ? "downvote" : null);
+  };
+
 
   const getTimeDifference = (publishedAt) => {
     if (!publishedAt) return "N/A";
+  
     const publishedDate = new Date(publishedAt);
     if (isNaN(publishedDate.getTime())) return "N/A";
-
+  
     const now = new Date();
     const diffInSeconds = Math.floor((now - publishedDate) / 1000);
-
+  
     if (diffInSeconds < 60) return "just now";
     if (diffInSeconds < 3600) return `${Math.floor(diffInSeconds / 60)} min ago`;
     if (diffInSeconds < 86400) return `${Math.floor(diffInSeconds / 3600)}h ago`;
@@ -22,77 +34,97 @@ const Article = ({ title, desc, imageUrl, author, publishedAt, category, url }) 
     if (diffInSeconds < 31536000) return `${Math.floor(diffInSeconds / 2592000)}mo ago`;
     return `${Math.floor(diffInSeconds / 31536000)}y ago`;
   };
+  
+
+  // Function to check if the URL is valid
+  const isValidUrl = (url) => {
+    try {
+      new URL(url); // If URL is valid, it won't throw an error
+      return true;
+    } catch (e) {
+      return false;
+    }
+  };
 
   return (
-    <article className="border bg-lightgrey dark:bg-darkgrey shadow-sm p-3 flex flex-col lg:flex-row gap-3 w-full max-w-6xl mx-auto rounded-xl overflow-hidden">
-      {/* Image Section */}
-      <div className="w-full lg:w-2/5 rounded-xl overflow-hidden flex-shrink-0">
-        <Image
-          className="w-full h-auto max-h-[250px] sm:max-h-[350px] lg:max-h-[400px] object-cover"
-          src={imageUrl || placeholder}
-          alt={title}
-          width={800}
-          height={400}
-        />
-      </div>
-
-      {/* Content Section */}
-      <div className="flex flex-col flex-1 p-3 space-y-3">
-        {/* Author & Timestamp */}
-        <header className="flex items-center justify-between p-2 bg-thirdColor text-sm text-secondaryColor dark:bg-secondaryColor dark:text-mainTextColor rounded-md">
-          <Link className="flex items-center min-w-0 space-x-2" href={url || "#"} target="_blank">
+    <article className="flex w-full m-1 flex-col lg:flex-row bg-lightgrey dark:bg-darkgrey border p-4 max-w-4xl mx-auto rounded-xl shadow-sm">
+      <div className="flex flex-col lg:flex-row items-center space-y-6 lg:space-y-0 lg:space-x-6 w-full">
+        {/* Only render image section if imageUrl is available */}
+        {imageUrl && (
+          <div className="w-full h-60 lg:h-[350px] relative rounded-xl overflow-hidden shadow-sm mb-6 lg:mb-0">
             <Image
-              className="rounded-full w-8 h-8 outline outline-2 outline-mainColor outline-offset-2"
-              src={imageUrl || placeholder}
-              alt={author}
-              width={40}
-              height={40}
+              className="w-full h-full object-cover rounded-xl"
+              src={imageUrl}
+              alt={title}
+              width={400}
+              height={300}
             />
-            <span className="truncate capitalize">{author}</span>
-            <span className="mx-2 hidden sm:inline">|</span>
-            <p className="text-gray-500 text-xs flex items-center">
-              {getTimeDifference(publishedAt)} <Clock3 className="ml-1 h-4 w-4" />
-            </p>
-          </Link>
+          </div>
+        )}
 
-          {/* Follow Button */}
-          <button
-            className="px-3 py-1 shadow-md outline outline-mainColor outline-2 bg-mainColor text-secondaryColor rounded-full"
-            onClick={(e) => {
-              const button = e.currentTarget;
-              button.classList.toggle("bg-mainColor");
-              button.classList.toggle("bg-transparent");
-              button.classList.toggle("text-secondaryColor");
-              button.classList.toggle("text-mainColor");
+        {/* Content Section */}
+        <div className="flex flex-col justify-between space-y-6 w-full">
+          <header className="flex items-center justify-between text-sm text-gray-500 dark:text-gray-400 mb-4">
+            <div className="flex items-center space-x-4">
+              {/* Use a default icon or placeholder for author if no image */}
+              <div className="rounded-full bg-gray-300 dark:bg-gray-700 w-12 h-12 flex items-center justify-center text-white font-bold">
+                {author ? author[0].toUpperCase() : "A"}
+              </div>
+              <div className="flex flex-col">
+                <span className="truncate capitalize text-gray-900 dark:text-gray-100 text-lg">{author}</span>
+              </div>
+            </div>
 
-              button.innerText = button.innerText === "Follow" ? "Unfollow" : "Follow";
-            }}
-          >
-            Follow
-          </button>
-        </header>
+            <span className="text-xs text-gray-500">{getTimeDifference(publishedAt)} <Clock3 className="ml-1 h-4 w-4" /></span>
+          </header>
 
-        {/* Title */}
-        <h1 className="font-serif font-semibold text-xl sm:text-2xl capitalize underline underline-offset-4">
-          {title}
-        </h1>
+          <h1 className="font-serif font-semibold text-2xl sm:text-3xl capitalize text-gray-900 dark:text-gray-100 mb-3">{title}</h1>
 
-        {/* Description */}
-        <p className="text-md line-clamp-4 sm:line-clamp-5">{desc || "No description available"}</p>
+          <p className="text-md text-gray-600 dark:text-gray-300 line-clamp-4 mb-6">{desc || "No description available"}</p>
 
-        {/* Footer Section */}
-        <footer className="flex items-center justify-between mt-2 gap-3">
-          <Link
-            className="flex text-sm items-center justify-center hover:underline w-full sm:w-auto text-center p-2 bg-mainColor text-secondaryColor rounded-full"
-            href={url || "#"}
-            target="_blank"
-          >
-            Continue reading <ArrowUpRight className="ml-1 w-5 h-5" />
-          </Link>
-          <p className="text-mainColor dark:text-secondaryColor cursor-pointer font-semibold capitalize text-md">
-            {category || "General"}
-          </p>
-        </footer>
+          <footer className="flex items-center justify-between space-x-6 mt-6 text-sm text-gray-500 dark:text-gray-400">
+            <div className="flex items-center space-x-4">
+              <div className="flex items-center space-x-1 bg-gray-100 dark:bg-gray-800 p-1 rounded-full cursor-pointer">
+                <div
+                  className={`p-1 rounded-full cursor-pointer ${vote === "upvote" ? "text-green-500" : "text-gray-500"}`}
+                  onClick={handleUpvote}
+                >
+                  <ArrowBigUp className="w-7 h-7 transition-transform transform hover:scale-110" />
+                </div>
+                <div className="h-5 w-0.5 bg-gray-400 dark:bg-gray-500" />
+                <div
+                  className={`p-1 rounded-full cursor-pointer ${vote === "downvote" ? "text-red-500" : "text-gray-500"}`}
+                  onClick={handleDownvote}
+                >
+                  <ArrowBigDown className="w-7 h-7 transition-transform transform hover:scale-110" />
+                </div>
+              </div>
+              <div className="bg-gray-100 dark:bg-gray-800 p-2 rounded-full cursor-pointer text-gray-500 hover:text-blue-500">
+                <MessageCircle className="w-5 h-5 transition-transform transform hover:scale-110" />
+              </div>
+              <div className="bg-gray-100 dark:bg-gray-800 p-2 rounded-full cursor-pointer text-gray-500 hover:text-blue-500">
+                <Share2 className="w-5 h-5 transition-transform transform hover:scale-110" />
+              </div>
+              <div className="bg-gray-100 dark:bg-gray-800 p-2 rounded-full cursor-pointer text-gray-500 hover:text-blue-500">
+                <MoreHorizontal className="w-5 h-5 transition-transform transform hover:scale-110" />
+              </div>
+            </div>
+
+            <div className="flex items-center space-x-6 cursor-pointer text-gray-500 hover:text-blue-500">
+              <p className="text-blue-500 cursor-pointer font-semibold capitalize text-md">{category || "General"}</p>
+            </div>
+          </footer>
+
+          <footer className="flex items-center justify-between mt-4 gap-3">
+            <Link
+              className="flex text-sm items-center justify-center hover:underline w-full sm:w-auto text-center p-3 bg-gradient-to-r from-blue-400 to-blue-600 text-white rounded-full shadow-md transition-all duration-200 ease-in-out transform hover:scale-105"
+              href={isValidUrl(url) ? url : "#"} // Only set the URL if it's valid
+              target="_blank"
+            >
+              Continue reading <ArrowUpRight className="ml-2 w-5 h-5" />
+            </Link>
+          </footer>
+        </div>
       </div>
     </article>
   );

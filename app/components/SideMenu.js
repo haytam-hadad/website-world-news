@@ -1,5 +1,5 @@
 import { useState, useRef } from "react";
-import { Home , Laptop, HeartPulse, Trophy, Landmark, ChartNoAxesCombined, ChevronUp, ChevronDown } from "lucide-react";
+import { Home , Laptop, HeartPulse, Trophy, Landmark, ChartNoAxesCombined, ChevronUp, ChevronDown, TestTube } from "lucide-react";
 import Link from "next/link";
 
 const menuItems = [
@@ -7,6 +7,7 @@ const menuItems = [
   { name: "Health", path: "/category/health", icon: <HeartPulse size={20} /> },
   { name: "Sports", path: "/category/sports", icon: <Trophy size={20} /> },
   { name: "Politics", path: "/category/politics", icon: <Landmark size={20} /> },
+  { name: "Science", path: "/category/science", icon: <TestTube size={20} /> },
 ];
 
 const SideMenu = ({ setVisible, setMenuWidth }) => {
@@ -78,7 +79,7 @@ const SideMenu = ({ setVisible, setMenuWidth }) => {
       </Link>
       <hr className="my-2 border-gray-300 dark:border-gray-700"/>
       <div>
-        <h2 className="text-md hover:underline px-10 font-medium my-3 flex items-center space-x-3 cursor-pointer opacity-75" onClick={() => setCategoriesVisible(!categoriesVisible)}>
+        <h2 className="text-md hover:underline px-10 font-medium my-2 flex items-center space-x-3 cursor-pointer opacity-70" onClick={() => setCategoriesVisible(!categoriesVisible)}>
           Categories&nbsp;
           {categoriesVisible ? <ChevronUp size={20} /> : <ChevronDown size={20} />}
         </h2>
