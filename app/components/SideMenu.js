@@ -23,7 +23,7 @@ const SideMenu = ({ setVisible, setMenuWidth }) => {
 
     const handleMouseMove = (moveEvent) => {
       const newWidth = startWidth + (moveEvent.clientX - startX);
-      if (newWidth > 200 && newWidth < 400) {
+      if (newWidth > 200 && newWidth < 500) {
         setMenuWidthState(newWidth);
         setMenuWidth(newWidth);
       }
