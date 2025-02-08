@@ -1,5 +1,5 @@
 import { useState, useRef } from "react";
-import { Home, Globe, Laptop, HeartPulse, Trophy, Landmark, ChartNoAxesCombined, ChevronUp, ChevronDown } from "lucide-react";
+import { Home , Laptop, HeartPulse, Trophy, Landmark, ChartNoAxesCombined, ChevronUp, ChevronDown } from "lucide-react";
 import Link from "next/link";
 
 const menuItems = [
@@ -22,7 +22,7 @@ const SideMenu = ({ setVisible, setMenuWidth }) => {
 
     const handleMouseMove = (moveEvent) => {
       const newWidth = startWidth + (moveEvent.clientX - startX);
-      if (newWidth > 150 && newWidth < 500) {
+      if (newWidth > 200 && newWidth < 400) {
         setMenuWidthState(newWidth);
         setMenuWidth(newWidth);
       }
@@ -40,9 +40,14 @@ const SideMenu = ({ setVisible, setMenuWidth }) => {
   return (
     <div
       ref={menuRef}
-      className="fixed select-none shadow-sm mt-16 left-0 top-0 h-full bg-secondaryColor dark:bg-thirdColor p-4 rounded-lg z-40"
+      className="fixed bg-lightgrey dark:bg-darkgrey select-none mt-[4.5rem] left-0 top-0 h-full p-4 z-40"
       style={{ width: `${menuWidthState}px` }}
-    >
+    > 
+      <Link className="flex md:hidden" href="/login">
+        <button className="side_menu_link font-bold border-2 border-mainColor rounded-md px-4 py-2 text-mainColor hover:bg-mainColor hover:text-white">
+          Log in
+        </button>
+      </Link>
       <Link href="/">
         <button
           onClick={() => {
@@ -96,9 +101,9 @@ const SideMenu = ({ setVisible, setMenuWidth }) => {
       </div>
       <div
         ref={resizeRef}
-        className="absolute top-0 right-0 h-full cursor-ew-resize bg-gray-300 dark:bg-gray-700"
+        className="absolute top-0 right-0 h-full cursor-ew-resize bg-gray-200 dark:bg-gray-700"
         onMouseDown={handleMouseDown}
-        style={{ width: "1px" }}
+        style={{ width: "2px" }}
       />
     </div>
   );

@@ -16,6 +16,8 @@ module.exports = {
   			background: 'hsl(var(--background))',
   			foreground: 'hsl(var(--foreground))',
   			mainFont: 'var(--mainFont)',
+  			lightgrey: 'var(--lightgrey)',
+  			darkgrey: 'var(--darkgrey)',
   			card: {
   				DEFAULT: 'hsl(var(--card))',
   				foreground: 'hsl(var(--card-foreground))'

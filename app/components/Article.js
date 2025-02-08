@@ -36,7 +36,7 @@ const Article = ({ title, desc, imageUrl, author, publishedAt, category, url }) 
   
 
   return (
-    <article className="border flex shadow-sm p-1 flex-col gap-2 min-w-[310px] w-full sm:w-[45%] md:w-[40%] lg:w-[30%] mx-auto rounded-2xl overflow-hidden group">
+    <article className="border bg-lightgrey dark:bg-darkgrey flex shadow-sm p-1 flex-col gap-2 min-w-[310px] w-full sm:w-[45%] md:w-[40%] lg:w-[30%] mx-auto rounded-2xl overflow-hidden group">
       <div className="rounded-xl overflow-hidden w-full h-fit">
         <Image
           className="w-full group-hover:brightness-105 max-h-50 object-cover max-h-[250px]"

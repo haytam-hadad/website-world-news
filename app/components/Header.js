@@ -32,8 +32,8 @@ export default function Header({ onToggleMenu }) {
   };
 
   return (
-    <header className="sticky select-none shadow-sm top-0 z-50 border-b border-grey-200 dark:border-gray-700 bg-secondaryColor dark:bg-thirdColor px-4 sm:px-[2%]">
-      <div className="grid grid-cols-[auto,_1fr,_auto] gap-5 items-center py-4 text-maintextColor dark:text-secondaryColor">
+    <header className="sticky bg-lightgrey dark:bg-darkgrey select-none top-0 z-50 border-b border-grey-200 dark:border-gray-700 px-4 sm:px-[2%]">
+      <div className="grid z-50 grid-cols-[auto,_1fr,_auto] gap-5 items-center py-4 text-maintextColor dark:text-secondaryColor">
         {/* Logo Group */}
         <Link href="/" className="flex items-center gap-2">
           <Image
@@ -47,14 +47,14 @@ export default function Header({ onToggleMenu }) {
         </Link>
 
         {/* Search Group */}
-        <div className="relative w-full max-w-lg mx-auto">
+        <div className="relative w-full max-w-lg mx-auto rounded-full border">
           <input
             type="text"
             placeholder="Search for news..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             onKeyDown={handleKeyDown}
-            className="w-full rounded-full border border-primary bg-transparent px-4 sm:px-5 h-8 sm:h-10 focus:outline-none focus:ring-2 focus:ring-primary text-primary dark:text-secondaryColor dark:bg-thirdColor"
+            className="w-full bg-transparent border focus:border-2  border-mainColor rounded-full px-4 sm:px-5 h-8 sm:h-10 focus:outline-none focus:ring-0 text-primary dark:text-secondaryColor"
           />
           <Search
             onClick={handleSearch}
