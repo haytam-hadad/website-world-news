@@ -22,7 +22,7 @@ const fetchArticlesByCategory = async (category) => {
 };
 
 const Category = async ({ params }) => {
-  const { category } = params;
+  const { category } = await params;
   const articles = await fetchArticlesByCategory(category);
 
   return (

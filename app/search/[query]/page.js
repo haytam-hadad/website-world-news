@@ -27,7 +27,7 @@ const fetchSearchResults = async (query) => {
 };
 
 const Search = async ({ params }) => {
-  const { query } = params;
+  const { query } = await params;
   const articles = await fetchSearchResults(query);
 
   return (

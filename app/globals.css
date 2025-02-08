@@ -37,7 +37,7 @@
     --secondaryColor: #fff;
     --thirdColor: #000;
     --mainTextColor: #000;
-    --lightgrey: #fafafa;
+    --lightgrey: #fbfbfb;
     --darkgrey: #0d1117;
   }
   .dark {
@@ -90,6 +90,6 @@ body{
     @apply text-2xl w-full border shadow-sm text-primary font-bold rounded-full bg-lightgrey dark:bg-darkgrey p-2 mb-5 text-center max-md:scale-90;
   }
   .side_menu_link{
-    @apply flex mb-2 items-center space-x-3 w-full text-left px-5 py-3 rounded-full hover:bg-primary hover:text-primary-foreground border ;
+    @apply flex mb-1 items-center space-x-3 w-full text-left px-5 py-3 rounded-full hover:bg-primary hover:text-primary-foreground ;
   }
 }

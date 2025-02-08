@@ -48,10 +48,10 @@ const Article = ({ title, desc, imageUrl, author, publishedAt, category, url }) 
 
   return (
     <article className="flex w-full m-1 flex-col lg:flex-row bg-lightgrey dark:bg-darkgrey border p-4 max-w-4xl mx-auto rounded-xl shadow-sm">
-      <div className="flex flex-col lg:flex-row items-center space-y-6 lg:space-y-0 lg:space-x-6 w-full">
+      <div className="flex flex-col  lg:flex-row items-center space-y-1 lg:space-y-0 lg:space-x-6 w-full">
         {/* Only render image section if imageUrl is available */}
         {imageUrl && (
-          <div className="w-full h-60 lg:h-[350px] relative rounded-xl overflow-hidden shadow-sm mb-6 lg:mb-0">
+          <div className="w-full border-mainColor h-60 lg:h-[350px] relative rounded-xl overflow-hidden mb-6 lg:mb-0">
             <Image
               className="w-full h-full object-cover rounded-xl"
               src={imageUrl}
@@ -63,33 +63,36 @@ const Article = ({ title, desc, imageUrl, author, publishedAt, category, url }) 
         )}
 
         {/* Content Section */}
-        <div className="flex flex-col justify-between space-y-6 w-full">
-          <header className="flex items-center justify-between text-sm text-gray-500 dark:text-gray-400 mb-4">
-            <div className="flex items-center space-x-4">
+        <div className="flex flex-col justify-between w-full">
+          <header className="flex items-center justify-between text-sm text-gray-500 dark:text-gray-400 mb-2">
+            <div className="flex items-center space-x-3">
               {/* Use a default icon or placeholder for author if no image */}
-              <div className="rounded-full bg-gray-300 dark:bg-gray-700 w-12 h-12 flex items-center justify-center text-white font-bold">
+              <div className="rounded-full border cursor-pointer border-mainColor bg-gray-300 dark:bg-gray-700 w-10 h-10 flex items-center justify-center text-white font-bold">
                 {author ? author[0].toUpperCase() : "A"}
               </div>
               <div className="flex flex-col">
-                <span className="truncate capitalize text-gray-900 dark:text-gray-100 text-lg">{author}</span>
+                <span className="truncate capitalize cursor-pointer hover:underline text-gray-900 dark:text-gray-100 text-lg">{author}</span>
               </div>
             </div>
 
-            <span className="text-xs text-gray-500">{getTimeDifference(publishedAt)} <Clock3 className="ml-1 h-4 w-4" /></span>
+            <span className="text-xs capitalize flex items-center text-gray-400">{getTimeDifference(publishedAt)} &nbsp; <Clock3 className="h-4 w-4 inline-block" /></span>
           </header>
 
           <h1 className="font-serif font-semibold text-2xl sm:text-3xl capitalize text-gray-900 dark:text-gray-100 mb-3">{title}</h1>
 
           <p className="text-md text-gray-600 dark:text-gray-300 line-clamp-4 mb-6">{desc || "No description available"}</p>
 
-          <footer className="flex items-center justify-between space-x-6 mt-6 text-sm text-gray-500 dark:text-gray-400">
+          <div className="flex items-center justify-between space-x-6 mt-6 text-sm text-gray-500 dark:text-gray-400">
             <div className="flex items-center space-x-4">
               <div className="flex items-center space-x-1 bg-gray-100 dark:bg-gray-800 p-1 rounded-full cursor-pointer">
                 <div
                   className={`p-1 rounded-full cursor-pointer ${vote === "upvote" ? "text-green-500" : "text-gray-500"}`}
                   onClick={handleUpvote}
                 >
-                  <ArrowBigUp className="w-7 h-7 transition-transform transform hover:scale-110" />
+                  <span className="flex items-center space-x-1">
+                    <ArrowBigUp className="w-7 h-7 transition-transform transform hover:scale-110" />
+                    <span>20</span>
+                  </span>
                 </div>
                 <div className="h-5 w-0.5 bg-gray-400 dark:bg-gray-500" />
                 <div
@@ -113,11 +116,11 @@ const Article = ({ title, desc, imageUrl, author, publishedAt, category, url }) 
             <div className="flex items-center space-x-6 cursor-pointer text-gray-500 hover:text-blue-500">
               <p className="text-blue-500 cursor-pointer font-semibold capitalize text-md">{category || "General"}</p>
             </div>
-          </footer>
+          </div>
 
           <footer className="flex items-center justify-between mt-4 gap-3">
             <Link
-              className="flex text-sm items-center justify-center hover:underline w-full sm:w-auto text-center p-3 bg-gradient-to-r from-blue-400 to-blue-600 text-white rounded-full shadow-md transition-all duration-200 ease-in-out transform hover:scale-105"
+              className="flex text-sm items-center justify-center hover:underline w-full sm:w-auto text-center p-2 px-3 bg-gradient-to-r from-blue-400 to-blue-600 text-white rounded-full shadow-sm"
               href={isValidUrl(url) ? url : "#"} // Only set the URL if it's valid
               target="_blank"
             >
