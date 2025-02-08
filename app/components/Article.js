@@ -51,7 +51,7 @@ const Article = ({ title, desc, imageUrl, author, publishedAt, category, url }) 
       <div className="flex flex-col  lg:flex-row items-center space-y-1 lg:space-y-0 lg:space-x-6 w-full">
         {/* Only render image section if imageUrl is available */}
         {imageUrl && (
-          <div className="w-full border-mainColor h-60 lg:h-[350px] relative rounded-xl overflow-hidden mb-6 lg:mb-0">
+          <div className="w-full border-mainColor h-60 md:max-w-[95%] lg:h-[350px] relative rounded-xl overflow-hidden mb-6 lg:mb-0">
             <Image
               className="w-full h-full object-cover rounded-xl"
               src={imageUrl}
