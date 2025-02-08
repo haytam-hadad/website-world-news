@@ -7,63 +7,57 @@ import { Clock3, ArrowUpRight } from "lucide-react";
 const Article = ({ title, desc, imageUrl, author, publishedAt, category, url }) => {
   const placeholder = "/images/image.jpg";
 
-  // Function to calculate the time difference
   const getTimeDifference = (publishedAt) => {
     if (!publishedAt) return "N/A";
-    
     const publishedDate = new Date(publishedAt);
-    
-    // Logging the date to debug
-    console.log('Published Date:', publishedDate);
-    
-    // Check if the date is valid
-    if (isNaN(publishedDate.getTime())) {
-      console.log('Invalid date:', publishedAt);
-      return "N/A"; // Return "N/A" for invalid dates
-    }
-  
+    if (isNaN(publishedDate.getTime())) return "N/A";
+
     const now = new Date();
     const diffInSeconds = Math.floor((now - publishedDate) / 1000);
-  
+
     if (diffInSeconds < 60) return "just now";
     if (diffInSeconds < 3600) return `${Math.floor(diffInSeconds / 60)} min ago`;
     if (diffInSeconds < 86400) return `${Math.floor(diffInSeconds / 3600)}h ago`;
     if (diffInSeconds < 2592000) return `${Math.floor(diffInSeconds / 86400)}d ago`;
     if (diffInSeconds < 31536000) return `${Math.floor(diffInSeconds / 2592000)}mo ago`;
-  
     return `${Math.floor(diffInSeconds / 31536000)}y ago`;
   };
-  
 
   return (
-    <article className="border bg-lightgrey dark:bg-darkgrey flex shadow-sm p-1 flex-col gap-2 min-w-[310px] w-full sm:w-[45%] md:w-[40%] lg:w-[30%] mx-auto rounded-2xl overflow-hidden group">
-      <div className="rounded-xl overflow-hidden w-full h-fit">
+    <article className="border bg-lightgrey dark:bg-darkgrey shadow-sm p-3 flex flex-col lg:flex-row gap-3 w-full max-w-6xl mx-auto rounded-xl overflow-hidden">
+      {/* Image Section */}
+      <div className="w-full lg:w-2/5 rounded-xl overflow-hidden flex-shrink-0">
         <Image
-          className="w-full group-hover:brightness-105 max-h-50 object-cover max-h-[250px]"
+          className="w-full h-auto max-h-[250px] sm:max-h-[350px] lg:max-h-[400px] object-cover"
           src={imageUrl || placeholder}
           alt={title}
-          width={400}
-          height={200}
+          width={800}
+          height={400}
         />
-        <div className="flex items-center justify-between bg-thirdColor p-2 text-sm text-secondaryColor dark:bg-secondaryColor dark:text-mainTextColor font-semibold">
-          <Link className="rounded-xl flex items-center" href={url || "#"} target="_blank">
-            <div className="flex items-center cursor-pointer hover:underline">
-              <Image
-                className="rounded-full w-7 h-7 ml-1 mr-3 outline outline-2 outline-mainColor outline-offset-2"
-                src={imageUrl || placeholder}
-                alt={author}
-                width={40}
-                height={40}
-              />
-              <span className="first-letter:capitalize">{author}</span>
-            </div>
-            <span className="separator mx-2">|</span>
-            <p className="text-[gray] flex items-center text-xs">
-              {getTimeDifference(publishedAt)} <Clock3 className="mx-1 h-4 w-3" />
+      </div>
+
+      {/* Content Section */}
+      <div className="flex flex-col flex-1 p-3 space-y-3">
+        {/* Author & Timestamp */}
+        <header className="flex items-center justify-between p-2 bg-thirdColor text-sm text-secondaryColor dark:bg-secondaryColor dark:text-mainTextColor rounded-md">
+          <Link className="flex items-center min-w-0 space-x-2" href={url || "#"} target="_blank">
+            <Image
+              className="rounded-full w-8 h-8 outline outline-2 outline-mainColor outline-offset-2"
+              src={imageUrl || placeholder}
+              alt={author}
+              width={40}
+              height={40}
+            />
+            <span className="truncate capitalize">{author}</span>
+            <span className="mx-2 hidden sm:inline">|</span>
+            <p className="text-gray-500 text-xs flex items-center">
+              {getTimeDifference(publishedAt)} <Clock3 className="ml-1 h-4 w-4" />
             </p>
           </Link>
+
+          {/* Follow Button */}
           <button
-            className="px-2 py-1 outline shadow-md outline-mainColor outline-2 transition-all bg-mainColor text-secondaryColor rounded-full duration-200 hover:scale-105"
+            className="px-3 py-1 shadow-md outline outline-mainColor outline-2 bg-mainColor text-secondaryColor rounded-full"
             onClick={(e) => {
               const button = e.currentTarget;
               button.classList.toggle("bg-mainColor");
@@ -76,27 +70,29 @@ const Article = ({ title, desc, imageUrl, author, publishedAt, category, url }) 
           >
             Follow
           </button>
-        </div>
-      </div>
+        </header>
 
-      <h1 className="font-bold font-serif underline underline-offset-4 text-2xl py-1 px-2 first-letter:capitalize">
-        {title}
-      </h1>
-      <p className="text-md p-2 px-3 flex-grow first-letter:capitalize line-clamp-5">
-        {desc || "No description available"}
-      </p>
-      <hr />
-      <div className="flex items-center justify-between mt-2">
-        <Link
-          className="flex text-sm items-center justify-center hover:underline w-1/2 min-w-fit text-center p-1 bg-mainColor text-secondaryColor rounded-full"
-          href={url || "#"}
-          target="_blank"
-        >
-          Continue reading <ArrowUpRight className="w-5 h-5" />
-        </Link>
-        <p className="text-mainColor dark:text-secondaryColor cursor-pointer font-semibold p-1 mx-1 capitalize text-md">
-          {category || "General"}
-        </p>
+        {/* Title */}
+        <h1 className="font-serif font-semibold text-xl sm:text-2xl capitalize underline underline-offset-4">
+          {title}
+        </h1>
+
+        {/* Description */}
+        <p className="text-md line-clamp-4 sm:line-clamp-5">{desc || "No description available"}</p>
+
+        {/* Footer Section */}
+        <footer className="flex items-center justify-between mt-2 gap-3">
+          <Link
+            className="flex text-sm items-center justify-center hover:underline w-full sm:w-auto text-center p-2 bg-mainColor text-secondaryColor rounded-full"
+            href={url || "#"}
+            target="_blank"
+          >
+            Continue reading <ArrowUpRight className="ml-1 w-5 h-5" />
+          </Link>
+          <p className="text-mainColor dark:text-secondaryColor cursor-pointer font-semibold capitalize text-md">
+            {category || "General"}
+          </p>
+        </footer>
       </div>
     </article>
   );

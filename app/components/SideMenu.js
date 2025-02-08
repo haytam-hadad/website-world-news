@@ -43,12 +43,7 @@ const SideMenu = ({ setVisible, setMenuWidth }) => {
       className="fixed bg-lightgrey dark:bg-darkgrey select-none mt-[4.5rem] left-0 top-0 h-full p-4 z-40"
       style={{ width: `${menuWidthState}px` }}
     > 
-      <Link className="flex md:hidden" href="/login">
-        <button className="side_menu_link font-bold border-2 border-mainColor rounded-md px-4 py-2 text-mainColor hover:bg-mainColor hover:text-white">
-          Log in
-        </button>
-      </Link>
-      <Link href="/">
+     <Link href="/">
         <button
           onClick={() => {
             setActivePath("/");
@@ -60,7 +55,13 @@ const SideMenu = ({ setVisible, setMenuWidth }) => {
           <Home size={20} />
           <span className="text-base font-medium">Home</span>
         </button>
+      </Link> 
+      <Link className="flex md:hidden" href="/login">
+        <button className="side_menu_link block w-full text-lg font-bold p-2 text-center border-2 border-mainColor rounded-xl  text-mainColor hover:bg-mainColor hover:text-white">
+          Log in
+        </button>
       </Link>
+
 
       <Link href="/trends">
         <button
