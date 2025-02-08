@@ -86,7 +86,7 @@ const Article = ({ title, desc, imageUrl, author, publishedAt, category, url }) 
             <div className="flex items-center space-x-4">
               <div className="flex items-center space-x-1 bg-gray-100 dark:bg-gray-800 p-1 rounded-full cursor-pointer">
                 <div
-                  className={`p-1 rounded-full cursor-pointer ${vote === "upvote" ? "text-green-500" : "text-gray-500"}`}
+                  className={`p-1 rounded-full cursor-pointer hover:text-mainColor ${vote === "upvote" ? "text-green-500" : "text-gray-500"}`}
                   onClick={handleUpvote}
                 >
                   <span className="flex items-center space-x-1">
@@ -96,7 +96,7 @@ const Article = ({ title, desc, imageUrl, author, publishedAt, category, url }) 
                 </div>
                 <div className="h-5 w-0.5 bg-gray-400 dark:bg-gray-500" />
                 <div
-                  className={`p-1 rounded-full cursor-pointer ${vote === "downvote" ? "text-red-500" : "text-gray-500"}`}
+                  className={`p-1 rounded-full cursor-pointer hover:text-mainColor ${vote === "downvote" ? "text-red-500" : "text-gray-500"}`}
                   onClick={handleDownvote}
                 >
                   <ArrowBigDown className="w-7 h-7 transition-transform transform hover:scale-110" />
