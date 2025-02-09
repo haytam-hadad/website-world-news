@@ -32,7 +32,7 @@ export default function Header({ onToggleMenu }) {
   };
 
   return (
-    <header className="sticky bg-lightgrey dark:bg-darkgrey select-none top-0 z-50 border-b-2 px-4 sm:px-[3%]">
+    <header className="sticky bg-lightgrey dark:bg-darkgrey select-none top-0 z-50 border-b-2 px-4 sm:px-[3%] gap-1">
       <div className="grid z-50 grid-cols-[auto,_1fr,_auto] gap-1 items-center py-4 text-maintextColor dark:text-secondaryColor">
         {/* Logo Group */}
         <Link href="/" className="flex items-center gap-2">
@@ -58,15 +58,15 @@ export default function Header({ onToggleMenu }) {
           />
           <Search
             onClick={handleSearch}
-            className="absolute right-2 top-1/2 transform -translate-y-1/2 w-7 h-7 hover:border cursor-pointer p-1 rounded-full text-primary transition-colors"
+            className="absolute hidden sm:flex right-2 top-1/2 transform -translate-y-1/2 w-7 h-7 hover:border cursor-pointer p-1 rounded-full text-primary transition-colors"
           />
         </div>
 
 
         {/* Control Group */}
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-1">
           {/* Dark Mode Toggle */}
-          <div className="flex items-center gap-1 max-sm:scale-75 rounded-full border-2 border-mainColor mx-1 p-[0.10rem]">
+          <div className="flex items-center gap-1 max-sm:scale-75 rounded-full border-2 border-mainColor p-[0.10rem]">
             <Switch checked={theme} onCheckedChange={(checked) => setTheme(checked)} />
             <Label htmlFor="Dark-Mode" className="flex items-center">
               {theme ? <Sun className="w-4 h-4" /> : <Moon className="w-4 h-4" />}
@@ -74,7 +74,7 @@ export default function Header({ onToggleMenu }) {
           </div>
 
           {/* Auth Buttons */}
-          <div className="hidden md:flex items-center gap-2">
+          <div className="hidden ml-2 md:flex items-center gap-2">
             <Link href="/login">
               <button className="rounded-full border px-6 py-3 text-xs sm:text-sm font-semibold bg-thirdColor dark:bg-secondaryColor text-secondaryColor dark:text-mainTextColor">
                 Log in
