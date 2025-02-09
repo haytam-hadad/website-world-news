@@ -89,9 +89,9 @@ export default function LoginPage() {
       </div>
 
       {/* Image Section */}
-      <div className="hidden md:flex items-center justify-center bg-gray-100 dark:bg-[#222] p-10">
+      <div className="hidden rounded-3xl  md:flex items-center justify-center bg-gray-100 dark:bg-[#222] p-10">
         <Image
-          src="/images/i2.svg"
+          src="/images/i1.svg"
           width={400}
           height={400}
           alt="Login Illustration"

@@ -1,5 +1,6 @@
 import Article from "./components/Article";
 import { ChevronDown } from "lucide-react";
+import Link from "next/link";
 
 const fetchArticles = async () => {
   try {
@@ -26,19 +27,25 @@ export default async function Home() {
 
   return (
     <>
-      <div className="bg-gradient-to-r shadow-lg from-mainColor to-purple-700 mt-5 py-12 px-6 rounded-lg m-1 mb-6">
-        <h1 className="text-3xl font-bold text-white mb-4 text-center sm:text-left lg:text-3xl xl:text-4xl">
-          Welcome to the World of News!
+      <div className="bg-gradient-to-r mb-5 from-mainColor to-blue-600 mt-5 py-12 px-8 sm:px-6 rounded-lg shadow-lg flex flex-col justify-center items-center text-center">
+        <h1 className="text-3xl font-extrabold text-white mb-4 sm:text-4xl xl:text-5xl leading-tight">
+          Welcome to Your News Feed
         </h1>
-        <div className="bg-white w-40 h-1 scale-75 rounded-md inline-block mb-2 p-1"></div>
-
-        <p className="text-lg text-white mb-4 text-center sm:text-left lg:text-lg xl:text-xl">
-          Stay updated with the latest news from around the globe. Explore, learn, and stay informed. Your source for the most reliable news!
+        <p className="text-lg text-white mb-6 sm:text-xl xl:text-2xl max-w-xl">
+          Discover, share, and engage with news from across the globe. Be the journalist, share your voice, and stay informed.
         </p>
-        <button className="border bg-white shadow-3lg text-purple-700 py-2 px-6 sm:px-4 rounded-lg font-semibold hover:bg-purple-500 hover:text-white transition w-full sm:w-auto">
-          Explore Latest News <ChevronDown className="inline-block ml-2" />
-        </button>
+        <div className="flex gap-4 flex-col sm:flex-row">
+          <button className="bg-white text-mainColor hover:bg-mainColor hover:text-white transition px-6 py-3 rounded-lg font-semibold shadow-md w-full sm:w-auto">
+            Explore Latest News <ChevronDown className="inline-block ml-2" />
+          </button>
+          <Link href="/login">
+            <button className="border border-white text-white hover:bg-white hover:text-mainColor transition px-6 py-3 rounded-lg font-semibold w-full sm:w-auto">
+              Log in to be part of the conversation
+            </button>
+          </Link>
+        </div>
       </div>
+
 
       {/* Articles Section */}
       <h2 className="title">

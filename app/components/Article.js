@@ -24,12 +24,16 @@ const Article = ({ title, desc, imageUrl, author, publishedAt, category, url }) 
 
   const getTimeDifference = (publishedAt) => {
     if (!publishedAt) return "N/A";
+    
     const publishedDate = new Date(publishedAt);
+    
+    // Check if the date is valid
     if (isNaN(publishedDate.getTime())) return "N/A";
-
+  
     const now = new Date();
     const diffInSeconds = Math.floor((now - publishedDate) / 1000);
-
+  
+    // Handle different time intervals
     if (diffInSeconds < 60) return "just now";
     if (diffInSeconds < 3600) return `${Math.floor(diffInSeconds / 60)} min ago`;
     if (diffInSeconds < 86400) return `${Math.floor(diffInSeconds / 3600)}h ago`;
@@ -91,9 +95,7 @@ const Article = ({ title, desc, imageUrl, author, publishedAt, category, url }) 
             <div className="flex items-center space-x-4">
               <div className="flex items-center space-x-1 bg-gray-100 dark:bg-gray-800 p-1 rounded-full cursor-pointer">
                 <div
-                  className={`p-1 rounded-full cursor-pointer hover:text-mainColor ${
-                    vote === "upvote" ? "text-green-500" : "text-gray-500"
-                  }`}
+                  className={`p-1 rounded-full cursor-pointer hover:text-mainColor ${vote === "upvote" ? "text-green-500" : "text-gray-500"}`}
                   onClick={handleUpvote}
                 >
                   <span className="flex items-center space-x-1">
@@ -103,9 +105,7 @@ const Article = ({ title, desc, imageUrl, author, publishedAt, category, url }) 
                 </div>
                 <div className="h-5 w-0.5 bg-gray-400 dark:bg-gray-500" />
                 <div
-                  className={`p-1 rounded-full cursor-pointer hover:text-mainColor ${
-                    vote === "downvote" ? "text-red-500" : "text-gray-500"
-                  }`}
+                  className={`p-1 rounded-full cursor-pointer hover:text-mainColor ${vote === "downvote" ? "text-red-500" : "text-gray-500"}`}
                   onClick={handleDownvote}
                 >
                   <ArrowBigDown className="w-7 h-7 transition-transform transform hover:scale-110" />
@@ -140,9 +140,7 @@ const Article = ({ title, desc, imageUrl, author, publishedAt, category, url }) 
             <button
               onClick={toggleSubscribe}
               className={`p-2 px-4 rounded-full shadow-sm text-sm font-medium transition-all ${
-                subscribed
-                  ? "bg-gray-800 text-white hover:bg-gray-700"
-                  : "bg-gray-300 text-gray-800 hover:bg-gray-400"
+                subscribed ? "bg-gray-800 text-white hover:bg-gray-700" : "bg-gray-300 text-gray-800 hover:bg-gray-400"
               }`}
             >
               {subscribed ? "Unsubscribe" : "Subscribe"}
