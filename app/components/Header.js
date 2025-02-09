@@ -33,7 +33,7 @@ export default function Header({ onToggleMenu }) {
 
   return (
     <header className="sticky bg-lightgrey dark:bg-darkgrey select-none top-0 z-50 border-b-2 px-4 sm:px-[3%]">
-      <div className="grid z-50 grid-cols-[auto,_1fr,_auto] gap-5 items-center py-4 text-maintextColor dark:text-secondaryColor">
+      <div className="grid z-50 grid-cols-[auto,_1fr,_auto] gap-1 items-center py-4 text-maintextColor dark:text-secondaryColor">
         {/* Logo Group */}
         <Link href="/" className="flex items-center gap-2">
           <Image
@@ -64,9 +64,9 @@ export default function Header({ onToggleMenu }) {
 
 
         {/* Control Group */}
-        <div className="flex items-center gap-4">
+        <div className="flex items-center gap-2">
           {/* Dark Mode Toggle */}
-          <div className="flex items-center gap-1 max-sm:scale-90 rounded-full border-2 border-mainColor p-1">
+          <div className="flex items-center gap-1 max-sm:scale-75 rounded-full border-2 border-mainColor mx-1 p-[0.10rem]">
             <Switch checked={theme} onCheckedChange={(checked) => setTheme(checked)} />
             <Label htmlFor="Dark-Mode" className="flex items-center">
               {theme ? <Sun className="w-4 h-4" /> : <Moon className="w-4 h-4" />}
@@ -74,7 +74,7 @@ export default function Header({ onToggleMenu }) {
           </div>
 
           {/* Auth Buttons */}
-          <div className="hidden md:flex items-center gap-4">
+          <div className="hidden md:flex items-center gap-2">
             <Link href="/login">
               <button className="rounded-full border px-6 py-3 text-xs sm:text-sm font-semibold bg-thirdColor dark:bg-secondaryColor text-secondaryColor dark:text-mainTextColor">
                 Log in
