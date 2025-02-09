@@ -20,7 +20,7 @@ export default function LoginPage() {
             <input
               id="email"
               type="email"
-              className="w-full rounded-lg border border-gray-300 px-4 py-2 text-sm text-foreground outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 dark:bg-[#222] bg-gray-100"
+              className="from_input"
               placeholder="Email address"
               required
             />
@@ -34,7 +34,7 @@ export default function LoginPage() {
             <input
               id="password"
               type="password"
-              className="w-full rounded-lg border border-gray-300 px-4 py-2 text-sm text-foreground outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 dark:bg-[#222] bg-gray-100"
+              className="from_input"
               placeholder="Password"
               required
             />
@@ -89,7 +89,7 @@ export default function LoginPage() {
       </div>
 
       {/* Image Section */}
-      <div className="hidden rounded-3xl  md:flex items-center justify-center bg-gray-100 dark:bg-[#222] p-10">
+      <div className="hidden rounded-3xl  md:flex items-center justify-center bg-lightgrey dark:bg-darkgrey shadow-sm p-5">
         <Image
           src="/images/i1.svg"
           width={400}
@@ -101,3 +101,4 @@ export default function LoginPage() {
     </div>
   );
 }
+

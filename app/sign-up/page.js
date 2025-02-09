@@ -15,7 +15,7 @@ export default function SignUpPage() {
             <span className="text-sm font-medium">Username</span>
             <input
               type="text"
-              className="w-full rounded-lg border border-gray-300 px-4 py-2 text-sm text-foreground outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 dark:bg-[#222] bg-gray-100"
+              className="from_input"
               placeholder="Username"
               required
             />
@@ -26,7 +26,7 @@ export default function SignUpPage() {
             <span className="text-sm font-medium">Email</span>
             <input
               type="email"
-              className="w-full rounded-lg border border-gray-300 px-4 py-2 text-sm text-foreground outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 dark:bg-[#222] bg-gray-100"
+              className="from_input"
               placeholder="Email"
               required
             />
@@ -37,7 +37,7 @@ export default function SignUpPage() {
             <span className="text-sm font-medium">Password</span>
             <input
               type="password"
-              className="w-full rounded-lg border border-gray-300 px-4 py-2 text-sm text-foreground outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 dark:bg-[#222] bg-gray-100"
+              className="from_input"
               placeholder="Password"
               required
             />
@@ -48,7 +48,7 @@ export default function SignUpPage() {
             <span className="text-sm font-medium">Confirm Password</span>
             <input
               type="password"
-              className="w-full rounded-lg border border-gray-300 px-4 py-2 text-sm text-foreground outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 dark:bg-[#222] bg-gray-100"
+              className="from_input"
               placeholder="Confirm Password"
               required
             />
@@ -93,7 +93,7 @@ export default function SignUpPage() {
       </div>
 
       {/* Image Section */}
-      <div className="hidden rounded-3xl md:flex items-center justify-center bg-gray-100 dark:bg-[#222] p-10">
+      <div className="hidden rounded-3xl  md:flex items-center justify-center bg-lightgrey dark:bg-darkgrey shadow-sm p-5">
         <Image
           src="/images/i1.svg"
           width={400}
@@ -105,3 +105,4 @@ export default function SignUpPage() {
     </div>
   );
 }
+

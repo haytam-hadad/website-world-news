@@ -54,7 +54,7 @@ export default function Header({ onToggleMenu }) {
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             onKeyDown={handleKeyDown}
-            className="w-full bg-[#eee] dark:bg-[#26262e] border-2 shadow-sm border-transparent focus:border-mainColor  rounded-full px-4 sm:px-5 h-8 sm:h-10 focus:outline-none focus:ring-0 text-primary dark:text-secondaryColor"
+            className="w-full bg-[alicblue] dark:bg-[#26262e] border border-gray-200 dark:border-gray-700 focus:border-mainColor  rounded-full px-4 sm:px-5 h-8 sm:h-10 focus:outline-none focus:ring-0 text-primary dark:text-secondaryColor"
           />
           <Search
             onClick={handleSearch}

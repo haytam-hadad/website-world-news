@@ -58,7 +58,7 @@ const SideMenu = ({ setVisible, setMenuWidth }) => {
         </button>
       </Link> 
       <Link className="flex md:hidden" href="/login">
-        <button className="side_menu_link block w-full my-3 hover:border-primary text-lg font-bold p-2 text-center border-2 border-mainColor rounded-xl  text-mainColor hover:bg-mainColor hover:text-white">
+        <button className="block w-full my-3 border-2 border-mainColor text-lg font-bold p-2 text-center rounded-xl  text-mainColor hover:bg-mainColor hover:text-white">
           Log in
         </button>
       </Link>

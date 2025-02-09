@@ -37,8 +37,8 @@
     --secondaryColor: #fff;
     --thirdColor: #00050e;
     --mainTextColor: #000;
-    --lightgrey: #fbfbfb;
-    --darkgrey: #0d1117;
+    --lightgrey: #fafafb;
+    --darkgrey: #0d1118;
   }
   .dark {
     --background: 0 0% 3.9%;
@@ -90,6 +90,9 @@ body{
     @apply text-2xl w-full border shadow-sm text-primary font-bold rounded-full bg-lightgrey dark:bg-darkgrey p-2 mb-5 text-center;
   }
   .side_menu_link{
-    @apply flex mb-1 items-center space-x-3 w-full text-left px-5 py-3 rounded-full hover:bg-primary hover:text-primary-foreground ;
+    @apply flex mb-1 items-center text-lg space-x-3 w-full text-left px-5 py-3 rounded-full hover:bg-primary hover:text-primary-foreground ;
   }
+  .from_input{
+    @apply w-full shadow-sm border-b border-mainColor rounded-lg px-4 py-2 text-sm text-foreground outline-none focus:ring-1 focus:ring-primary focus:ring-offset-2 bg-lightgrey dark:bg-darkgrey;
+    }
 }
