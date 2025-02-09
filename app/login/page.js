@@ -3,54 +3,75 @@ import Link from "next/link";
 
 export default function LoginPage() {
   return (
-    <div className="grid min-h-screen grid-cols-1 md:grid-cols-2">
+    <div className="grid min-h-screen grid-cols-1 md:grid-cols-[3fr_2fr]">
 
-      <div className="flex flex-col justify-center p-5">
-        <form className="flex flex-col space-y-5 max-w-sm mx-auto w-full">
+      {/* Login Form Section */}
+      <div className="flex flex-col justify-center px-8 md:px-16">
+        <form className="flex flex-col space-y-5 max-w-lg mx-auto w-full">
           <h1 className="text-center text-4xl font-bold text-foreground mb-6">
             Log in
           </h1>
-          <label className="flex flex-col space-y-1">
-            <span className="text-sm font-medium">Email</span>
+
+          {/* Email Input */}
+          <div className="flex flex-col">
+            <label htmlFor="email" className="text-sm font-medium">
+              Email
+            </label>
             <input
+              id="email"
               type="email"
               className="w-full rounded-lg border border-gray-300 px-4 py-2 text-sm text-foreground outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 dark:bg-[#222] bg-gray-100"
               placeholder="Email address"
+              required
             />
-          </label>
-          <label className="flex flex-col space-y-1">
-            <span className="text-sm font-medium">Password</span>
+          </div>
+
+          {/* Password Input */}
+          <div className="flex flex-col">
+            <label htmlFor="password" className="text-sm font-medium">
+              Password
+            </label>
             <input
+              id="password"
               type="password"
               className="w-full rounded-lg border border-gray-300 px-4 py-2 text-sm text-foreground outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 dark:bg-[#222] bg-gray-100"
               placeholder="Password"
+              required
             />
-          </label>
-          <span className="text-[12px] text-center font-medium text-muted-foreground">
-            Forgot your password?&nbsp;
+          </div>
+
+          {/* Forgot Password */}
+          <p className="text-[12px] text-center font-medium text-muted-foreground">
+            Forgot your password?{" "}
             <Link href="/forgot-password" className="text-primary underline hover:text-mainColor">
               Click here
             </Link>
-          </span>
-          <span className="text-sm mt-1 font-medium text-muted-foreground">
-            Don't have an account?&nbsp;
+          </p>
+
+          {/* Sign Up Link */}
+          <p className="text-sm font-medium text-muted-foreground">
+            Don't have an account?{" "}
             <Link href="/sign-up" className="text-primary underline hover:text-mainColor">
               Sign up
             </Link>
-          </span>
+          </p>
+
+          {/* Submit Button */}
           <button
             type="submit"
             className="w-full dark:bg-mainColor rounded-lg bg-primary px-4 py-2 text-primary-foreground font-medium transition-all hover:bg-opacity-90 focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2"
           >
             Log in
           </button>
+
+          {/* Divider */}
           <div className="relative flex items-center">
             <div className="flex-grow border-t border-gray-300"></div>
-            <span className="mx-2 text-sm font-medium text-muted-foreground">
-              OR
-            </span>
+            <span className="mx-2 text-sm font-medium text-muted-foreground">OR</span>
             <div className="flex-grow border-t border-gray-300"></div>
           </div>
+
+          {/* Google Sign-in Button */}
           <button
             type="button"
             className="flex items-center justify-center w-full rounded-lg border px-4 py-2 font-medium bg-white shadow-md hover:shadow-lg transition-all focus:ring-2 focus:ring-[#4285F4] focus:ring-offset-2 text-black"
