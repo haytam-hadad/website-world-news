@@ -51,7 +51,7 @@ const Article = ({ title, desc, imageUrl, author, publishedAt, category, url }) 
       <div className="flex flex-col  lg:flex-row items-center space-y-1 lg:space-y-0 lg:space-x-6 w-full">
         {/* Only render image section if imageUrl is available */}
         {imageUrl && (
-          <div className="w-full border-mainColor h-60 md:max-w-[95%] lg:h-[350px] relative rounded-xl overflow-hidden mb-6 lg:mb-0">
+          <div className="w-full border-mainColor h-60 md:max-w-[95%] lg:h-[350px] relative rounded-xl overflow-hidden mb-2 lg:mb-0">
             <Image
               className="w-full h-full object-cover rounded-xl"
               src={imageUrl}
@@ -64,10 +64,10 @@ const Article = ({ title, desc, imageUrl, author, publishedAt, category, url }) 
 
         {/* Content Section */}
         <div className="flex flex-col justify-between w-full">
-          <header className="flex items-center justify-between text-sm text-gray-500 dark:text-gray-400 mb-2">
-            <div className="flex items-center space-x-3">
+          <header className="flex items-center justify-between text-sm text-gray-500 dark:text-gray-400 mb-2 p-1">
+            <div className="flex items-center space-x-2">
               {/* Use a default icon or placeholder for author if no image */}
-              <div className="rounded-full border cursor-pointer border-mainColor bg-gray-300 dark:bg-gray-700 w-10 h-10 flex items-center justify-center text-white font-bold">
+              <div className="rounded-full cursor-pointer border-mainColor bg-gray-300 dark:bg-gray-700 w-10 h-10 flex items-center justify-center text-white font-bold">
                 {author ? author[0].toUpperCase() : "A"}
               </div>
               <div className="flex flex-col">

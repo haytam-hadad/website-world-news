@@ -79,7 +79,7 @@ const SideMenu = ({ setVisible, setMenuWidth }) => {
       </Link>
       <hr className="my-2 border-gray-300 dark:border-gray-700"/>
       <div>
-        <h2 className="text-md hover:underline px-10 font-medium my-1 flex items-center space-x-3 cursor-pointer opacity-60" onClick={() => setCategoriesVisible(!categoriesVisible)}>
+        <h2 className="text-md hover:opacity-100 px-10 font-medium m-1 flex items-center cursor-pointer opacity-60" onClick={() => setCategoriesVisible(!categoriesVisible)}>
           Categories&nbsp;
           {categoriesVisible ? <ChevronUp size={20} /> : <ChevronDown size={20} />}
         </h2>
