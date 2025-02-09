@@ -8,6 +8,7 @@ import { ArrowBigUp, ArrowBigDown } from "lucide-react";
 
 const Article = ({ title, desc, imageUrl, author, publishedAt, category, url }) => {
   const [vote, setVote] = useState(null);
+  const [subscribed, setSubscribed] = useState(false); // Follow state
 
   const handleUpvote = () => {
     setVote(vote !== "upvote" ? "upvote" : null);
@@ -17,16 +18,18 @@ const Article = ({ title, desc, imageUrl, author, publishedAt, category, url }) 
     setVote(vote !== "downvote" ? "downvote" : null);
   };
 
+  const toggleSubscribe = () => {
+    setSubscribed(!subscribed);
+  };
 
   const getTimeDifference = (publishedAt) => {
     if (!publishedAt) return "N/A";
-  
     const publishedDate = new Date(publishedAt);
     if (isNaN(publishedDate.getTime())) return "N/A";
-  
+
     const now = new Date();
     const diffInSeconds = Math.floor((now - publishedDate) / 1000);
-  
+
     if (diffInSeconds < 60) return "just now";
     if (diffInSeconds < 3600) return `${Math.floor(diffInSeconds / 60)} min ago`;
     if (diffInSeconds < 86400) return `${Math.floor(diffInSeconds / 3600)}h ago`;
@@ -34,12 +37,10 @@ const Article = ({ title, desc, imageUrl, author, publishedAt, category, url }) 
     if (diffInSeconds < 31536000) return `${Math.floor(diffInSeconds / 2592000)}mo ago`;
     return `${Math.floor(diffInSeconds / 31536000)}y ago`;
   };
-  
 
-  // Function to check if the URL is valid
   const isValidUrl = (url) => {
     try {
-      new URL(url); // If URL is valid, it won't throw an error
+      new URL(url);
       return true;
     } catch (e) {
       return false;
@@ -48,8 +49,7 @@ const Article = ({ title, desc, imageUrl, author, publishedAt, category, url }) 
 
   return (
     <article className="flex w-full m-1 flex-col lg:flex-row bg-lightgrey dark:bg-darkgrey border p-4 max-w-4xl mx-auto rounded-xl shadow-sm">
-      <div className="flex flex-col  lg:flex-row items-center space-y-1 lg:space-y-0 lg:space-x-6 w-full">
-        {/* Only render image section if imageUrl is available */}
+      <div className="flex flex-col lg:flex-row items-center space-y-1 lg:space-y-0 lg:space-x-6 w-full">
         {imageUrl && (
           <div className="w-full border-mainColor h-60 md:max-w-[95%] lg:h-[350px] relative rounded-xl overflow-hidden mb-2 lg:mb-0">
             <Image
@@ -62,31 +62,38 @@ const Article = ({ title, desc, imageUrl, author, publishedAt, category, url }) 
           </div>
         )}
 
-        {/* Content Section */}
         <div className="flex flex-col justify-between w-full">
           <header className="flex items-center justify-between text-sm text-gray-500 dark:text-gray-400 mb-2 p-1">
             <div className="flex items-center space-x-2">
-              {/* Use a default icon or placeholder for author if no image */}
               <div className="rounded-full cursor-pointer border-mainColor bg-gray-300 dark:bg-gray-700 w-10 h-10 flex items-center justify-center text-white font-bold">
                 {author ? author[0].toUpperCase() : "A"}
               </div>
               <div className="flex flex-col">
-                <span className="truncate capitalize cursor-pointer hover:underline text-gray-900 dark:text-gray-100 text-lg">{author}</span>
+                <span className="truncate capitalize cursor-pointer hover:underline text-gray-900 dark:text-gray-100 text-lg">
+                  {author}
+                </span>
               </div>
             </div>
 
-            <span className="text-xs capitalize flex items-center text-gray-400">{getTimeDifference(publishedAt)} &nbsp; <Clock3 className="h-4 w-4 inline-block" /></span>
+            <span className="text-xs capitalize flex items-center text-gray-400">
+              {getTimeDifference(publishedAt)} &nbsp;
+              <Clock3 className="h-4 w-4 inline-block" />
+            </span>
           </header>
 
-          <h1 className="font-serif font-semibold text-2xl sm:text-3xl capitalize text-gray-900 dark:text-gray-100 mb-3">{title}</h1>
+          <h1 className="font-serif font-semibold text-2xl sm:text-2xl capitalize text-gray-900 dark:text-gray-100 mb-3">
+            {title}
+          </h1>
 
-          <p className="text-md text-gray-600 dark:text-gray-300 line-clamp-4 mb-6">{desc || "No description available"}</p>
+          <p className="text-md text-gray-600 dark:text-gray-300 line-clamp-4 mb-4">{desc || "No description available"}</p>
 
-          <div className="flex items-center justify-between space-x-6 mt-6 text-sm text-gray-500 dark:text-gray-400">
+          <div className="flex items-center justify-between space-x-6 mt-2 text-sm text-gray-500 dark:text-gray-400">
             <div className="flex items-center space-x-4">
               <div className="flex items-center space-x-1 bg-gray-100 dark:bg-gray-800 p-1 rounded-full cursor-pointer">
                 <div
-                  className={`p-1 rounded-full cursor-pointer hover:text-mainColor ${vote === "upvote" ? "text-green-500" : "text-gray-500"}`}
+                  className={`p-1 rounded-full cursor-pointer hover:text-mainColor ${
+                    vote === "upvote" ? "text-green-500" : "text-gray-500"
+                  }`}
                   onClick={handleUpvote}
                 >
                   <span className="flex items-center space-x-1">
@@ -96,7 +103,9 @@ const Article = ({ title, desc, imageUrl, author, publishedAt, category, url }) 
                 </div>
                 <div className="h-5 w-0.5 bg-gray-400 dark:bg-gray-500" />
                 <div
-                  className={`p-1 rounded-full cursor-pointer hover:text-mainColor ${vote === "downvote" ? "text-red-500" : "text-gray-500"}`}
+                  className={`p-1 rounded-full cursor-pointer hover:text-mainColor ${
+                    vote === "downvote" ? "text-red-500" : "text-gray-500"
+                  }`}
                   onClick={handleDownvote}
                 >
                   <ArrowBigDown className="w-7 h-7 transition-transform transform hover:scale-110" />
@@ -121,11 +130,23 @@ const Article = ({ title, desc, imageUrl, author, publishedAt, category, url }) 
           <footer className="flex items-center justify-between mt-4 gap-3">
             <Link
               className="flex text-sm items-center justify-center hover:underline w-full sm:w-auto text-center p-2 px-3 bg-gradient-to-r from-blue-400 to-blue-600 text-white rounded-full shadow-sm"
-              href={isValidUrl(url) ? url : "#"} // Only set the URL if it's valid
+              href={isValidUrl(url) ? url : "#"}
               target="_blank"
             >
               Continue reading <ArrowUpRight className="ml-2 w-5 h-5" />
             </Link>
+
+            {/* Subscribe/Unsubscribe Button */}
+            <button
+              onClick={toggleSubscribe}
+              className={`p-2 px-4 rounded-full shadow-sm text-sm font-medium transition-all ${
+                subscribed
+                  ? "bg-gray-800 text-white hover:bg-gray-700"
+                  : "bg-gray-300 text-gray-800 hover:bg-gray-400"
+              }`}
+            >
+              {subscribed ? "Unsubscribe" : "Subscribe"}
+            </button>
           </footer>
         </div>
       </div>
