@@ -27,19 +27,19 @@ export default async function Home() {
 
   return (
     <>
-      <div className="bg-gradient-to-r mb-5 from-mainColor via-mainColor to-[skyblue] mt-5 py-12 px-8 sm:px-6 rounded-lg flex flex-col justify-center items-center text-center">
-        <h1 className="text-3xl font-extrabold text-white mb-4 sm:text-4xl xl:text-5xl leading-tight">
+      <div className="bg-gradient-to-r from-mainColor via-mainColor to-[skyblue] my-3 py-12 px-8 sm:px-6 rounded-lg flex flex-col justify-center items-center text-center">
+        <h1 className="text-2xl font-extrabold text-white mb-4 sm:text-3xl xl:text-4xl leading-tight">
           Welcome to Your News Feed
         </h1>
         <p className="text-lg text-white mb-6 sm:text-xl xl:text-2xl max-w-xl">
           Discover, share, and engage with news from across the globe. Be the journalist, share your voice, and stay informed.
         </p>
         <div className="flex gap-4 flex-col sm:flex-row">
-          <button className="bg-white text-mainColor hover:bg-mainColor hover:text-white transition-all px-6 py-3 rounded-lg font-semibold shadow-lg w-full sm:w-auto">
+          <button className="bg-white text-mainColor cursor-default transition-all px-6 py-3 rounded-lg font-semibold shadow-lg w-full sm:w-auto">
             Explore Latest News <ChevronDown className="inline-block ml-2" />
           </button>
           <Link href="/login">
-            <button className="border-2 border-white text-white hover:bg-white hover:text-mainColor transition-all px-6 py-3 rounded-lg font-semibold w-full sm:w-auto">
+            <button className="border-2 shadow-lg border-white text-white hover:bg-white hover:text-mainColor transition-all px-6 py-3 rounded-lg font-semibold w-full sm:w-auto">
               Log in to be part of the conversation
             </button>
           </Link>
