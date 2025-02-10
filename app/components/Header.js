@@ -32,8 +32,8 @@ export default function Header({ onToggleMenu }) {
   };
 
   return (
-    <header className="sticky bg-lightgrey dark:bg-darkgrey select-none top-0 z-50 border-b-2 px-4 sm:px-[2%] ">
-      <div className="grid z-50 grid-cols-[auto,_1fr,_auto] items-center py-3 text-maintextColor dark:text-secondaryColor gap-3">
+    <header className="sticky bg-lightgrey dark:bg-darkgrey select-none top-0 z-50 border-b-2 px-5 max-sm:px-2 ">
+      <div className="grid z-50 grid-cols-[auto,_1fr,_auto] items-center py-3 text-maintextColor dark:text-secondaryColor gap-2">
         
         {/* Logo Group */}
         <Link href="/" className="flex items-center gap-2">
@@ -55,11 +55,11 @@ export default function Header({ onToggleMenu }) {
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             onKeyDown={handleKeyDown}
-            className="w-full bg-[alicblue] dark:bg-[#26262e] border-2 border-gray-200 dark:border-gray-700 focus:border-mainColor  rounded-full px-4 sm:px-5 h-9 sm:h-10 focus:outline-none focus:ring-0 text-primary dark:text-secondaryColor"
+            className="w-full bg-[alicblue] dark:bg-[#26262e] border shadow-sm border-gray-200 dark:border-gray-700 focus:border-mainColor  rounded-full px-4 sm:px-5 h-9 sm:h-10 focus:outline-none focus:ring-0 text-primary dark:text-secondaryColor"
           />
           <Search
             onClick={handleSearch}
-            className="absolute hidden sm:flex right-1 top-1/2 transform -translate-y-1/2 w-7 h-7 hover:border cursor-pointer p-1 rounded-full text-primary transition-colors"
+            className="absolute hidden sm:flex right-1 top-1/2 transform -translate-y-1/2 w-7 h-7 hover:border cursor-pointer p-1 rounded-full text-primary"
           />
         </div>
 
@@ -71,7 +71,6 @@ export default function Header({ onToggleMenu }) {
             <Switch
               checked={theme}
               onCheckedChange={(checked) => setTheme(checked)}
-              className="mr-1"
             />
             <Label htmlFor="Dark-Mode" className="flex items-center cursor-pointer">
               {theme ? (
@@ -99,7 +98,7 @@ export default function Header({ onToggleMenu }) {
           {/* Sidebar Toggle Button (Mobile) */}
           <Toggle
               onClick={onToggleMenu}
-              className="md:hidden flex items-center cursor-pointer rounded-full border p-2 "
+              className="md:hidden shadow-sm flex items-center cursor-pointer rounded-full border p-2 "
           >
             <Menu className="w-7 h-7 scale-150" />
           </Toggle>
