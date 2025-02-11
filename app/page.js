@@ -71,7 +71,7 @@ export default async function Home() {
 
             return (
               <Article
-                key={_id || Math.random().toString(36)}
+                key={_id}
                 title={title}
                 desc={content}
                 imageUrl={imageUrl}
