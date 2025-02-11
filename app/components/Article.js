@@ -22,11 +22,11 @@ const Article = ({ title, desc, imageUrl, author, publishedAt, category, url }) 
     setSubscribed(!subscribed);
   };
 
-  const getTimeDifference = (publishedAt) => {
+  const calculateTimeAgo = (publishedAt) => {
     if (!publishedAt) return "N/A";
-    
+  
     const publishedDate = new Date(publishedAt);
-    
+  
     // Check if the date is valid
     if (isNaN(publishedDate.getTime())) return "N/A";
   
@@ -40,19 +40,11 @@ const Article = ({ title, desc, imageUrl, author, publishedAt, category, url }) 
     if (diffInSeconds < 2592000) return `${Math.floor(diffInSeconds / 86400)}d ago`;
     if (diffInSeconds < 31536000) return `${Math.floor(diffInSeconds / 2592000)}mo ago`;
     return `${Math.floor(diffInSeconds / 31536000)}y ago`;
-  };
+  };  
 
-  const isValidUrl = (url) => {
-    try {
-      new URL(url);
-      return true;
-    } catch (e) {
-      return false;
-    }
-  };
 
   return (
-    <Link href={isValidUrl(url) ? url : "#"} className="flex hover:border-blue-300 dark:hover:border-blue-950 cursor-pointer w-full m-1 flex-col lg:flex-row bg-lightgrey dark:bg-darkgrey border p-4 max-w-4xl mx-auto rounded-xl shadow-sm">
+    <Link href={ url ? url : "#"} className="flex hover:border-blue-300 dark:hover:border-blue-950 cursor-pointer w-full m-1 flex-col lg:flex-row bg-lightgrey dark:bg-darkgrey border p-4 max-w-4xl mx-auto rounded-xl shadow-sm">
       <div className="flex flex-col lg:flex-row items-center space-y-1 lg:space-y-0 lg:space-x-6 w-full">
         {imageUrl && (
           <div className="w-full border-mainColor h-60 md:max-w-[95%] lg:h-[350px] relative rounded-xl overflow-hidden mb-2 lg:mb-0">
@@ -80,7 +72,7 @@ const Article = ({ title, desc, imageUrl, author, publishedAt, category, url }) 
             </div>
             
             <span className="text-xs capitalize flex items-center text-gray-400">
-              {getTimeDifference(publishedAt)} &nbsp;
+              {calculateTimeAgo(publishedAt)} &nbsp;
               <Clock3 className="h-4 w-4 inline-block" />
             </span>
 

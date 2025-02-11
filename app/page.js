@@ -78,7 +78,7 @@ export default async function Home() {
                 author={author}
                 publishedAt={publishedAt && !isNaN(new Date(publishedAt)) ? new Date(publishedAt).toLocaleString() : "N/A"}
                 category={category}
-                url={url}
+                url={"/post/"+_id}
               />
             );
           })
