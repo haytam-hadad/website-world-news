@@ -106,6 +106,7 @@ const SideMenu = ({ setVisible, setMenuWidth }) => {
         onMouseDown={handleMouseDown}
         style={{ width: "2px" }}
       />
+      <div className="h-10"></div>
     </div>
   );
 };

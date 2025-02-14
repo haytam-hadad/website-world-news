@@ -34,13 +34,13 @@ function LayoutContent({ children }) {
         <main className="relative flex">
           {/* Desktop: Always visible side menu */}
           {isDesktop && (
-            <div className="hidden md:block">
+            <div className="hidden md:block overflow-y-auto">
               <SideMenu setVisible={setShowMenu} setMenuWidth={setMenuWidth} />
             </div>
           )}
           {/* Mobile: Overlay side menu when toggled */}
           {!isDesktop && showMenu && (
-            <div className="md:hidden absolute top-0 left-0 z-50">
+            <div className="md:hidden absolute top-0 left-0 z-50 overflow-y-auto">
               <SideMenu setVisible={setShowMenu} setMenuWidth={setMenuWidth} />
             </div>
           )}
