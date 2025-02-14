@@ -54,6 +54,16 @@ export default function SignUpPage() {
             />
           </label>
 
+          {/* Birthdate Input */}
+          <label className="flex flex-col space-y-1">
+            <span className="text-sm font-medium">Birthdate</span>
+            <input
+              type="date"
+              className="from_input"
+              required
+            />
+          </label>
+
           {/* Login Link */}
           <span className="text-sm font-medium text-muted-foreground">
             Already have an account? &nbsp;

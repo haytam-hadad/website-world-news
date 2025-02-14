@@ -46,10 +46,9 @@ function LayoutContent({ children }) {
           )}
           {/* Main Content */}
           <div
-            className="flex-1 p-4 transition-all  overflow-y-hidden"
+            className="flex-1 p-3 overflow-y-hidden"
             style={{
               marginLeft: isDesktop ? `${menuWidth}px` : "0px",
-              transition: "margin-left 0.3s ease-in-out",
             }}
           >
             {children}

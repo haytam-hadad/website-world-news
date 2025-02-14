@@ -76,7 +76,7 @@ export default async function Home() {
                 desc={content}
                 imageUrl={imageUrl}
                 author={author}
-                publishedAt={publishedAt && !isNaN(new Date(publishedAt)) ? new Date(publishedAt).toLocaleString() : "N/A"}
+                publishedAt={publishedAt}
                 category={category}
                 url={"/post/"+_id}
               />

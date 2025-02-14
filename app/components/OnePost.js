@@ -61,7 +61,7 @@ const SinglePost = ({ post }) => {
 
   return (
     <>
-      <div className="flex flex-col w-full max-w-4xl mx-auto bg-lightgrey dark:bg-darkgrey border p-4 rounded-xl shadow-sm">
+      <div className="flex flex-col w-full shadow-sm max-w-4xl mx-auto bg-lightgrey dark:bg-darkgrey border p-4 rounded-xl">
         {/* Header Section */}
         <header className="flex items-center justify-between text-sm text-gray-500 dark:text-gray-400 mb-4">
           <div className="flex items-center space-x-2">
@@ -91,7 +91,7 @@ const SinglePost = ({ post }) => {
         </header>
 
         {/* Title */}
-        <h1 className="font-serif font-semibold text-2xl sm:text-3xl text-gray-900 dark:text-gray-100 mb-4">
+        <h1 className="font-serif font-semibold text-3xl sm:text-4xl text-gray-900 dark:text-gray-100 p-2 my-5 underline">
           {post.title || "No Title Available"}
         </h1>
 
@@ -157,7 +157,7 @@ const SinglePost = ({ post }) => {
       </div>
 
       {/* Comment Section */}
-      <div className="flex mt-3 flex-col w-full max-w-4xl mx-auto bg-lightgrey dark:bg-darkgrey border p-4 rounded-xl shadow-sm">
+      <div className="flex mt-4 flex-col w-full max-w-4xl mx-auto bg-lightgrey dark:bg-darkgrey border p-4 rounded-xl shadow-sm">
         <h2 className="text-xl font-semibold text-gray-900 dark:text-gray-100">
           Comments
         </h2>
