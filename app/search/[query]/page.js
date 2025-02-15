@@ -1,11 +1,6 @@
 import Article from "@/app/components/Article";
 import { ChevronDown } from "lucide-react";
 
-export const metadata = {
-  title: "Search for News",
-  description: "Search for news articles",
-};
-
 const fetchSearchResults = async (query) => {
   try {
     if (!query) return [];
@@ -18,7 +13,6 @@ const fetchSearchResults = async (query) => {
     }
 
     const articles = await res.json();
-    console.log('Search results:', articles); // Debug log
     return Array.isArray(articles) ? articles : [];
   } catch (error) {
     console.error("Error fetching search results:", error);
@@ -32,24 +26,17 @@ const Search = async ({ params }) => {
 
   return (
     <div>
-      {articles.length > 0 ? (
+      {articles.length > 0 && (
         <h2 className="title">
           Search Results for &nbsp; <u>{query}</u>
           <ChevronDown className="ml-2 inline-block" />
         </h2>
-      ) : (
-        <div className="no_articles_container">
-          <h1 className="no_articles">
-            No results found for &quot;<b>{query}</b>&quot;
-          </h1>
-        </div>
       )}
-
-<main className="flex flex-wrap justify-center sm:justify-start md:justify-around gap-2">
+      <main className="flex flex-wrap justify-center sm:justify-start md:justify-around gap-2">
         {articles.length === 0 ? (
           <div className="no_articles_container">
             <h1 className="no_articles">
-              No articles in this category &quot;<b>{category}</b>&quot; available
+              No results found for &quot;<b>{query}</b>&quot;
             </h1>
           </div>
         ) : (
@@ -85,3 +72,4 @@ const Search = async ({ params }) => {
 };
 
 export default Search;
+

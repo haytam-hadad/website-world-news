@@ -14,16 +14,13 @@ export default function Header({ onToggleMenu }) {
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedLang, setSelectedLang] = useState("en");
 
-  const handleSearch = () => {
+  const handleSearch = (e) => {
+    e.preventDefault();
     if (searchQuery.trim()) {
       window.location.href = `/search/${encodeURIComponent(
         searchQuery.trim().toLowerCase()
       )}`;
     }
-  };
-
-  const handleKeyDown = (event) => {
-    if (event.key === "Enter") handleSearch();
   };
 
   const handleLangChange = (e) => {
@@ -48,20 +45,19 @@ export default function Header({ onToggleMenu }) {
         </Link>
 
         {/* Search Group */}
-        <div className="relative w-full max-w-lg mx-auto rounded-full border">
+        <form onSubmit={handleSearch} className="relative w-full max-w-lg mx-auto rounded-full border">
           <input
             type="text"
             placeholder="Search for news..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            onKeyDown={handleKeyDown}
             className="w-full bg-[alicblue] dark:bg-[#26262e] border shadow-sm border-gray-200 dark:border-gray-700 focus:border-mainColor  rounded-full px-4 sm:px-5 h-9 sm:h-10 focus:outline-none focus:ring-0 text-primary dark:text-secondaryColor"
           />
           <Search
             onClick={handleSearch}
             className="absolute hidden sm:flex right-1 top-1/2 transform -translate-y-1/2 w-7 h-7 hover:border cursor-pointer p-1 rounded-full text-primary"
           />
-        </div>
+        </form>
 
 
         {/* Control Group */}

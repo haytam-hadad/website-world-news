@@ -164,7 +164,7 @@ const SinglePost = ({ post }) => {
         <div className="mt-6 flex items-center">
           <input
             type="text"
-            className="flex-1 dark:bg-slate-950 px-4 py-2 border rounded-lg text-gray-700 dark:text-gray-300"
+            className="flex-1 dark:bg-slate-950 px-4 py-2 border border-mainColor rounded-lg text-gray-700 dark:text-gray-300"
             value={newComment}
             onChange={(e) => setNewComment(e.target.value)}
             placeholder="Add a comment..."
