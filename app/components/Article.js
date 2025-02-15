@@ -44,7 +44,7 @@ const Article = ({ title, desc, imageUrl, author, publishedAt, category, url }) 
 
 
   return (
-    <Link href={ url ? url : "#"} className="flex hover:border-blue-300 dark:hover:border-blue-950 cursor-pointer w-full m-1 flex-col lg:flex-row bg-lightgrey dark:bg-darkgrey border p-4 max-w-4xl mx-auto rounded-xl shadow-sm">
+    <Link href={ url ? url : "#"} className="flex hover:border-blue-300 dark:hover:border-blue-950 cursor-pointer w-full flex-col lg:flex-row bg-lightgrey dark:bg-darkgrey border p-4 max-w-4xl mx-auto rounded-xl shadow-sm">
       <div className="flex flex-col lg:flex-row items-center space-y-1 lg:space-y-0 lg:space-x-6 w-full">
         {imageUrl && (
           <div className="w-full border-mainColor h-60 md:max-w-[95%] lg:h-[350px] relative rounded-xl overflow-hidden mb-2 lg:mb-0">

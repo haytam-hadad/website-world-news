@@ -61,7 +61,7 @@ const SinglePost = ({ post }) => {
 
   return (
     <>
-      <div className="flex flex-col w-full shadow-sm max-w-4xl mx-auto bg-lightgrey dark:bg-darkgrey border p-4 rounded-xl">
+      <div className="flex flex-col w-full shadow-sm max-w-4xl mx-auto bg-lightgrey dark:bg-darkgrey border p-3 rounded-xl">
         {/* Header Section */}
         <header className="flex rounded-full items-center justify-between text-sm text-gray-500 dark:text-gray-400 mb-4">
           <div className="flex items-center space-x-2">

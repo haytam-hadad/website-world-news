@@ -46,7 +46,7 @@ function LayoutContent({ children }) {
           )}
           {/* Main Content */}
           <div
-            className="flex-1 p-3 overflow-y-hidden"
+            className="flex-1 p-2 overflow-y-hidden"
             style={{
               marginLeft: isDesktop ? `${menuWidth}px` : "0px",
             }}
