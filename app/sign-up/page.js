@@ -13,20 +13,31 @@ export default function SignUpPage() {
     birthdate: '',
   });
   const [message, setMessage] = useState(null);
-  const [error, setError] = useState(null);
+  const [errors, setErrors] = useState({});
   const [loading, setLoading] = useState(false);
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
-    setError(null);
+    setErrors({});
     setMessage(null);
+  };
+
+  const validateForm = () => {
+    const newErrors = {};
+    if (!formData.username.trim()) newErrors.username = "Username is required.";
+    if (!formData.email.trim()) newErrors.email = "Email is required.";
+    if (!formData.password) newErrors.password = "Password is required.";
+    if (formData.password !== formData.confirmPassword) newErrors.confirmPassword = "Passwords do not match.";
+    if (!formData.birthdate) newErrors.birthdate = "Birthdate is required.";
+    return newErrors;
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if (formData.password !== formData.confirmPassword) {
-      setError("Passwords do not match.");
+    const formErrors = validateForm();
+    if (Object.keys(formErrors).length > 0) {
+      setErrors(formErrors);
       return;
     }
 
@@ -47,7 +58,7 @@ export default function SignUpPage() {
 
       if (!response.ok) {
         const errorData = await response.json().catch(() => null);
-        setError(errorData?.message || 'Signup failed.');
+        setErrors({ api: errorData?.message || 'Signup failed.' });
         return;
       }
 
@@ -56,7 +67,6 @@ export default function SignUpPage() {
 
       setMessage("Signup successful! 🎉");
 
-      // Reset form with a slight delay to prevent immediate rerender issues
       setTimeout(() => {
         setFormData({
           username: '',
@@ -66,13 +76,12 @@ export default function SignUpPage() {
           birthdate: '',
         });
 
-        // Redirect to login page after successful signup
-        window.location.href = '/login';  // Redirect to login page
+        window.location.href = '/login';
       }, 200);
 
     } catch (err) {
       console.error('Error during signup:', err);
-      setError('An unexpected error occurred. Please try again.');
+      setErrors({ api: 'An unexpected error occurred. Please try again.' });
     } finally {
       setLoading(false);
     }
@@ -95,6 +104,7 @@ export default function SignUpPage() {
               required
               aria-label="Username"
             />
+            {errors.username && <span className="text-red-500 text-sm">{errors.username}</span>}
           </label>
           <label className="flex flex-col space-y-1">
             <span className="text-sm font-medium">Email</span>
@@ -108,6 +118,7 @@ export default function SignUpPage() {
               required
               aria-label="Email"
             />
+            {errors.email && <span className="text-red-500 text-sm">{errors.email}</span>}
           </label>
           <label className="flex flex-col space-y-1">
             <span className="text-sm font-medium">Password</span>
@@ -121,6 +132,7 @@ export default function SignUpPage() {
               required
               aria-label="Password"
             />
+            {errors.password && <span className="text-red-500 text-sm">{errors.password}</span>}
           </label>
           <label className="flex flex-col space-y-1">
             <span className="text-sm font-medium">Confirm Password</span>
@@ -134,6 +146,7 @@ export default function SignUpPage() {
               required
               aria-label="Confirm Password"
             />
+            {errors.confirmPassword && <span className="text-red-500 text-sm">{errors.confirmPassword}</span>}
           </label>
           <label className="flex flex-col space-y-1">
             <span className="text-sm font-medium">Birthdate</span>
@@ -146,11 +159,12 @@ export default function SignUpPage() {
               required
               aria-label="Birthdate"
             />
+            {errors.birthdate && <span className="text-red-500 text-sm">{errors.birthdate}</span>}
           </label>
           {message && <div className="success">{message}</div>}
-          {error && (
+          {errors.api && (
             <div className="error mt-4 p-4 bg-red-100 text-red-700 border border-red-300 rounded-lg shadow-sm">
-              {error}
+              {errors.api}
             </div>
           )}
           <button

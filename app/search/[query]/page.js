@@ -36,7 +36,7 @@ const Search = async ({ params }) => {
         {articles.length === 0 ? (
           <div className="no_articles_container">
             <h1 className="no_articles">
-              No results found for &quot;<b>{query}</b>&quot;
+              No results found for &quot;{query}&quot;;
             </h1>
           </div>
         ) : (
