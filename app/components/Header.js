@@ -1,6 +1,6 @@
 "use client";
 import Link from "next/link";
-import { Search, Menu, Moon, Sun } from "lucide-react";
+import { Search, Menu, Moon, Sun, Bell } from "lucide-react";
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
 import { Toggle } from "@/components/ui/toggle";
@@ -10,7 +10,7 @@ import { Globe } from "lucide-react";
 import Image from "next/image";
 
 export default function Header({ onToggleMenu }) {
-  const { theme, setTheme } = useContext(ThemeContext);
+  const { theme, setTheme, user, setUser } = useContext(ThemeContext);
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedLang, setSelectedLang] = useState("en");
 
@@ -28,10 +28,13 @@ export default function Header({ onToggleMenu }) {
     // You can add logic here to update the language globally if needed
   };
 
+  const handleLogout = () => {
+    setUser(null);
+  };
+
   return (
-    <header className="sticky bg-lightgrey dark:bg-darkgrey select-none top-0 z-50 border-b-2 px-5 max-sm:px-2 ">
+    <header className="sticky bg-lightgrey dark:bg-darkgrey select-none top-0 z-50 border-b-2 px-5 max-sm:px-2">
       <div className="grid z-50 grid-cols-[auto,_1fr,_auto] items-center py-3 text-maintextColor dark:text-secondaryColor gap-2">
-        
         {/* Logo Group */}
         <Link href="/" className="flex items-center gap-2">
           <Image
@@ -59,7 +62,6 @@ export default function Header({ onToggleMenu }) {
           />
         </form>
 
-
         {/* Control Group */}
         <div className="flex items-center gap-1">
           {/* Dark Mode Toggle */}
@@ -77,31 +79,51 @@ export default function Header({ onToggleMenu }) {
             </Label>
           </div>
 
-          {/* Auth Buttons */}
-          <div className="hidden ml-2 md:flex items-center gap-2">
-            <Link href="/login">
-              <button className="rounded-full border px-6 py-3 text-xs sm:text-sm font-semibold bg-thirdColor dark:bg-secondaryColor text-secondaryColor dark:text-mainTextColor">
-                Log in
+          {user ? (
+            <div className="flex items-center gap-2 relative sm:ml-3 group">
+              <div className="w-8 h-8 rounded-full bg-blue-500 text-white flex items-center justify-center">
+                {user.username.charAt(0).toUpperCase()}
+              </div>
+              <span className="font-medium hidden md:inline">{user.username}</span>
+              <button
+                className="px-4 py-2 bg-red-500 text-white rounded absolute top-full mt-2 opacity-0 group-hover:opacity-100 transition-opacity"
+                onClick={handleLogout}
+              >
+                Log out
               </button>
-            </Link>
-            <Link href="/sign-up">
-              <button className="rounded-full border px-6 py-3 text-xs sm:text-sm font-semibold bg-mainColor text-secondaryColor">
-                Sign up
-              </button>
-            </Link>
-          </div>
+              
+              {/* Notification Icon */}
+              <div className="relative font-medium hidden md:inline">
+                <button className="relative p-1 rounded-full hover:bg-gray-200 dark:hover:bg-gray-700">
+                  <Bell className="w-6 h-6 text-gray-600 dark:text-gray-300" />
+                  <span className="absolute top-0 right-0 inline-block w-2 h-2 bg-red-600 rounded-full"></span>
+                </button>
+              </div>
+            </div>
+          ) : (
+            <div className="hidden ml-2 md:flex items-center gap-2">
+              <Link href="/login">
+                <button className="rounded-full border px-6 py-3 text-xs sm:text-sm font-semibold bg-thirdColor dark:bg-secondaryColor text-secondaryColor dark:text-mainTextColor">
+                  Log in
+                </button>
+              </Link>
+              <Link href="/sign-up">
+                <button className="rounded-full border px-6 py-3 text-xs sm:text-sm font-semibold bg-mainColor text-secondaryColor">
+                  Sign up
+                </button>
+              </Link>
+            </div>
+          )}
 
           {/* Sidebar Toggle Button (Mobile) */}
           <Toggle
-              onClick={onToggleMenu}
-              className="md:hidden shadow-sm flex items-center cursor-pointer rounded-full border p-2 "
+            onClick={onToggleMenu}
+            className="md:hidden shadow-sm flex items-center cursor-pointer rounded-full border p-2 "
           >
             <Menu className="w-7 h-7 scale-150" />
           </Toggle>
-
         </div>
       </div>
     </header>
   );
 }
-

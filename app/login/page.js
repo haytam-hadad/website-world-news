@@ -1,10 +1,12 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useContext } from "react";
 import Image from "next/image";
 import Link from "next/link";
+import { ThemeContext } from "../ThemeProvider";
 
 export default function LoginPage() {
+  const { user, setUser } = useContext(ThemeContext);
   const [username, setUsername] = useState(""); // Change from email to username
   const [password, setPassword] = useState("");
   const [error, setError] = useState(null);
@@ -12,24 +14,28 @@ export default function LoginPage() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-  
+
     setLoading(true);
     setError(null);
-  
+
     const loginData = {
       username: username.trim(), // Send username instead of email
       password: password.trim(),
     };
-  
+
+    console.log("Login data:", loginData);
+
     try {
-      const response = await fetch("/api/auth", {
+      const response = await fetch("http://localhost:5000/api/auth", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify(loginData),
       });
-  
+
+      console.log("Response status:", response.status);
+
       // Check if response is okay
       if (!response.ok) {
         const errorData = await response.json();
@@ -37,13 +43,16 @@ export default function LoginPage() {
         setError(errorData?.message || "Login failed. Please try again.");
         return;
       }
-  
+
       // Handle successful login
       const user = await response.json();
       console.log("User logged in:", user);
-  
+
+      // Save user data to global state
+      setUser(user);
+
       // Redirect to dashboard or another page
-      window.location.href = "/dashboard"; 
+      window.location.href = "/"; 
     } catch (err) {
       console.error("Error during login:", err);
       setError("An unexpected error occurred. Please try again.");
@@ -51,7 +60,22 @@ export default function LoginPage() {
       setLoading(false);
     }
   };
-  
+
+  if (user) {
+    return (
+      <div className="flex flex-col items-center justify-center min-h-screen">
+        <h1 className="text-4xl font-bold">Welcome, {user.username}!</h1>
+        <button
+          className="mt-4 px-4 py-2 bg-red-500 text-white rounded"
+          onClick={() => {
+            setUser(null);
+          }}
+        >
+          Log out
+        </button>
+      </div>
+    );
+  }
 
   return (
     <div className="grid min-h-screen grid-cols-1 md:grid-cols-[3fr_2fr]">

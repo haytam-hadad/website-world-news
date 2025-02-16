@@ -1,28 +1,29 @@
-// import Profile from "@/app/components/Profile";
-// const fetchUser = async (username) => {
-//   try {
-//     const apiUrl = `http://localhost:5000/api/user/${username}`;
-//     const res = await fetch(apiUrl, { cache: "no-store" });
-//     if (!res.ok) {
-//       throw new Error(`Failed to fetch user: ${res.status} ${res.statusText}`);
-//     }
-//     const user = await res.json();
-//     return user || null;
-//   } catch (error) {
-//     console.error("Error fetching user:", error);
-//     return null;
-//   }
-// };
+import React from 'react';
 
-// export default async function ProfilePage({ params }) {
-//   const { username } = await params;
-//   const user = await fetchUser(username);
+const Profile = ({ params }) => {
+    const user = params.username;
+    return (
+        <div>
+            <h1>{user}s Profile</h1>
+            <div>
+                <h2>About Me</h2>
+                <p>This is a brief description about {user}.</p>
+            </div>
+            <div>
+                <h2>Contact Information</h2>
+                <p>Email: {user}@example.com</p>
+                <p>Phone: (123) 456-7890</p>
+            </div>
+            <div>
+                <h2>Recent Activities</h2>
+                <ul>
+                    <li>Posted a new article</li>
+                    <li>Commented on a post</li>
+                    <li>Liked a comment</li>
+                </ul>
+            </div>
+        </div>
+    );
+};
 
-//   if (!user) {
-//     return <p className="text-center text-red-500 text-xl font-bold">Error: User not found</p>;
-//   }
-
-//   return (
-//       <Profile user={user} />
-//   );
-// }
+export default Profile;

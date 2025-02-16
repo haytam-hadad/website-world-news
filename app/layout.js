@@ -20,7 +20,7 @@ function useWindowWidth() {
 }
 
 function LayoutContent({ children }) {
-  const { theme } = useContext(ThemeContext);
+  const { theme, user } = useContext(ThemeContext);
   const [showMenu, setShowMenu] = useState(false); // controls mobile side menu visibility
   const [menuWidth, setMenuWidth] = useState(250); // initial width for the side menu
   const windowWidth = useWindowWidth();
