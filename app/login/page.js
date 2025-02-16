@@ -1,27 +1,82 @@
+"use client";
+
+import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 
 export default function LoginPage() {
+  const [username, setUsername] = useState(""); // Change from email to username
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState(null);
+  const [loading, setLoading] = useState(false);
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+  
+    setLoading(true);
+    setError(null);
+  
+    const loginData = {
+      username: username.trim(), // Send username instead of email
+      password: password.trim(),
+    };
+  
+    try {
+      const response = await fetch("/api/auth", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(loginData),
+      });
+  
+      // Check if response is okay
+      if (!response.ok) {
+        const errorData = await response.json();
+        console.error("Error response:", errorData);
+        setError(errorData?.message || "Login failed. Please try again.");
+        return;
+      }
+  
+      // Handle successful login
+      const user = await response.json();
+      console.log("User logged in:", user);
+  
+      // Redirect to dashboard or another page
+      window.location.href = "/dashboard"; 
+    } catch (err) {
+      console.error("Error during login:", err);
+      setError("An unexpected error occurred. Please try again.");
+    } finally {
+      setLoading(false);
+    }
+  };
+  
+
   return (
     <div className="grid min-h-screen grid-cols-1 md:grid-cols-[3fr_2fr]">
-
       {/* Login Form Section */}
       <div className="flex flex-col justify-center px-8 md:px-16">
-        <form className="flex flex-col space-y-5 max-w-lg mx-auto w-full">
+        <form
+          className="flex flex-col space-y-5 max-w-lg mx-auto w-full"
+          onSubmit={handleSubmit}
+        >
           <h1 className="text-center text-4xl font-bold text-foreground mb-6">
             Log in
           </h1>
 
-          {/* Email Input */}
+          {/* Username Input */}
           <div className="flex flex-col">
-            <label htmlFor="email" className="text-sm font-medium">
-              Email
+            <label htmlFor="username" className="text-sm font-medium">
+              Username
             </label>
             <input
-              id="email"
-              type="email"
-              className="from_input"
-              placeholder="Email address"
+              id="username"
+              type="text" // Changed from email to text for username
+              className="form_input"
+              placeholder="Username"
+              value={username} // Bind to username state
+              onChange={(e) => setUsername(e.target.value)} // Update username state
               required
             />
           </div>
@@ -34,8 +89,10 @@ export default function LoginPage() {
             <input
               id="password"
               type="password"
-              className="from_input"
+              className="form_input"
               placeholder="Password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
               required
             />
           </div>
@@ -43,7 +100,10 @@ export default function LoginPage() {
           {/* Forgot Password */}
           <p className="text-[12px] text-center font-medium text-muted-foreground">
             Forgot your password?{" "}
-            <Link href="/forgot-password" className="text-primary underline hover:text-mainColor">
+            <Link
+              href="/forgot-password"
+              className="text-primary underline hover:text-mainColor"
+            >
               Click here
             </Link>
           </p>
@@ -51,23 +111,36 @@ export default function LoginPage() {
           {/* Sign Up Link */}
           <p className="text-sm font-medium text-muted-foreground">
             Don&apos;t have an account? &nbsp;
-            <Link href="/sign-up" className="text-primary underline hover:text-mainColor">
+            <Link
+              href="/sign-up"
+              className="text-primary underline hover:text-mainColor"
+            >
               Sign up
             </Link>
           </p>
+
+          {/* Error Message */}
+          {error && (
+            <div className="error mt-4 p-4 bg-red-100 text-red-700 border border-red-300 rounded-lg shadow-sm">
+              {error}
+            </div>
+          )}
 
           {/* Submit Button */}
           <button
             type="submit"
             className="w-full dark:bg-mainColor rounded-lg bg-primary px-4 py-2 text-primary-foreground font-medium transition-all hover:bg-opacity-90 focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2"
+            disabled={loading}
           >
-            Log in
+            {loading ? "Logging in..." : "Log in"}
           </button>
 
           {/* Divider */}
           <div className="relative flex items-center">
             <div className="flex-grow border-t border-gray-300"></div>
-            <span className="mx-2 text-sm font-medium text-muted-foreground">OR</span>
+            <span className="mx-2 text-sm font-medium text-muted-foreground">
+              OR
+            </span>
             <div className="flex-grow border-t border-gray-300"></div>
           </div>
 
@@ -101,4 +174,3 @@ export default function LoginPage() {
     </div>
   );
 }
-
