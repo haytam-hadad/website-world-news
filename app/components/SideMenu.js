@@ -1,6 +1,12 @@
+"use client";
+
 import { useState, useRef } from "react";
-import { Home , Laptop, HeartPulse, Trophy, Landmark, ChartNoAxesCombined, ChevronUp, ChevronDown, TestTube } from "lucide-react";
+import { Home, Laptop, HeartPulse, Trophy, Landmark, ChartNoAxesCombined, ChevronUp, ChevronDown, TestTube } from "lucide-react";
 import Link from "next/link";
+import Image from "next/image";
+import { Clock3, ArrowUpRight, Share2, MessageCircle, MoreHorizontal, Flag } from "lucide-react";
+import { ArrowBigUp, ArrowBigDown } from "lucide-react";
+import { motion } from "framer-motion";
 
 const menuItems = [
   { name: "Technology", path: "/category/technology", icon: <Laptop size={20} /> },
@@ -39,24 +45,28 @@ const SideMenu = ({ setVisible, setMenuWidth }) => {
   };
 
   return (
-    <div
+    <motion.div
       ref={menuRef}
       className="fixed bg-lightgrey dark:bg-darkgrey select-none mt-[4.5rem] left-0 top-0 h-full p-4 z-40"
       style={{ width: `${menuWidthState}px` }}
-    > 
-     <Link href="/">
+      initial={{ x: -menuWidthState }}
+      animate={{ x: 0 }}
+      exit={{ x: -menuWidthState }}
+      transition={{ duration: 0.25 }}
+    >
+      <Link href="/">
         <button
           onClick={() => {
             setActivePath("/");
             setVisible(false);
           }}
           className={`side_menu_link ${activePath === "/" ? "bg-mainColor text-white" : "text-primary"
-          }`}
+            }`}
         >
           <Home size={20} />
           <span className="text-base font-medium">Home</span>
         </button>
-      </Link> 
+      </Link>
       <Link className="flex md:hidden" href="/login">
         <button className="block w-full my-3 border-2 border-mainColor text-lg font-bold p-2 text-center rounded-xl  text-mainColor hover:bg-mainColor hover:text-white">
           Log in
@@ -69,14 +79,14 @@ const SideMenu = ({ setVisible, setMenuWidth }) => {
             setActivePath("/trends");
             setVisible(false);
           }}
-          className={`side_menu_link ${ activePath === "/trends" ? "bg-mainColor text-white" : "text-primary"
-          }`}
+          className={`side_menu_link ${activePath === "/trends" ? "bg-mainColor text-white" : "text-primary"
+            }`}
         >
           <ChartNoAxesCombined size={20} />
           <span className="text-base font-medium">Trends</span>
         </button>
       </Link>
-      <hr className="my-2 border-gray-300 dark:border-gray-700"/>
+      <hr className="my-2 border-gray-300 dark:border-gray-700" />
       <div>
         <h2 className="text-md hover:opacity-100 px-10 font-medium m-1 flex items-center cursor-pointer opacity-60" onClick={() => setCategoriesVisible(!categoriesVisible)}>
           Categories&nbsp;
@@ -90,8 +100,8 @@ const SideMenu = ({ setVisible, setMenuWidth }) => {
                   setActivePath(path);
                   setVisible(false);
                 }}
-                className={`side_menu_link ${ activePath === path ? "bg-mainColor text-white" : "text-primary"
-                }`}
+                className={`side_menu_link ${activePath === path ? "bg-mainColor text-white" : "text-primary"
+                  }`}
               >
                 {icon}
                 <span className="text-base font-medium">{name}</span>
@@ -107,9 +117,8 @@ const SideMenu = ({ setVisible, setMenuWidth }) => {
         style={{ width: "2px" }}
       />
       <div className="h-10"></div>
-    </div>
+    </motion.div>
   );
 };
 
 export default SideMenu;
-

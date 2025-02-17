@@ -2,9 +2,10 @@
 
 import Link from "next/link";
 import Image from "next/image";
-import { Clock3, ArrowUpRight, Share2, MessageCircle, MoreHorizontal , Flag } from "lucide-react";
+import { Clock3, ArrowUpRight, Share2, MessageCircle, MoreHorizontal, Flag } from "lucide-react";
 import { useState } from "react";
 import { ArrowBigUp, ArrowBigDown } from "lucide-react";
+import { motion } from "framer-motion";
 
 const Article = ({ title, desc, imageUrl, author, publishedAt, category, url }) => {
   const [vote, setVote] = useState(null);
@@ -42,98 +43,104 @@ const Article = ({ title, desc, imageUrl, author, publishedAt, category, url }) 
     return `${Math.floor(diffInSeconds / 31536000)}y ago`;
   };  
 
-
   return (
-    <Link href={ url ? url : "#"} className="flex hover:border-blue-300 dark:hover:border-blue-950 cursor-pointer w-full flex-col lg:flex-row bg-lightgrey dark:bg-darkgrey border p-4 max-w-4xl mx-auto rounded-xl shadow-sm">
-      <div className="flex flex-col lg:flex-row items-center space-y-1 lg:space-y-0 lg:space-x-6 w-full">
-        {imageUrl && (
-          <div className="w-full border-mainColor h-60 md:max-w-[95%] lg:h-[350px] relative rounded-xl overflow-hidden mb-2 lg:mb-0">
-            <Image
-              className="w-full h-full object-cover rounded-xl"
-              src={imageUrl}
-              alt={title}
-              width={400}
-              height={300}
-            />
-          </div>
-        )}
-
-        <div className="flex flex-col justify-between w-full">
-          <header className="flex items-center justify-between text-sm text-gray-500 dark:text-gray-400 mb-2 p-1">
-            <div className="flex items-center space-x-2">
-              <div className="rounded-full cursor-pointer border-mainColor bg-gray-300 dark:bg-gray-700 w-10 h-10 flex items-center justify-center text-white font-bold">
-                {author ? author[0].toUpperCase() : "U"}
-              </div>
-              <div className="flex flex-col">
-                <span className="truncate capitalize cursor-pointer hover:underline text-gray-900 dark:text-gray-100 text-lg">
-                  {author}
-                </span>
-              </div>
+    <motion.div
+      initial={{ opacity: 0, y: 15 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.4 }}
+      className="w-full my-2"
+    >
+      <Link href={url ? url : "#"} className="flex hover:border-blue-300 dark:hover:border-blue-950 cursor-pointer w-full flex-col lg:flex-row bg-lightgrey dark:bg-darkgrey border p-4 max-w-4xl mx-auto rounded-xl shadow-sm">
+        <div className="flex flex-col lg:flex-row items-center space-y-1 lg:space-y-0 lg:space-x-6 w-full">
+          {imageUrl && (
+            <div className="w-full border-mainColor h-60 md:max-w-[95%] lg:h-[350px] relative rounded-xl overflow-hidden mb-2 lg:mb-0">
+              <Image
+                className="w-full h-full object-cover rounded-xl"
+                src={imageUrl}
+                alt={title}
+                width={400}
+                height={300}
+              />
             </div>
-            
-            <span className="text-xs capitalize flex items-center text-gray-400">
-              {calculateTimeAgo(publishedAt)} &nbsp;
-              <Clock3 className="h-4 w-4 inline-block" />
-            </span>
+          )}
 
-            {/* Subscribe/Unsubscribe Button */}
-            <button
-              onClick={(e) => { e.preventDefault(); toggleSubscribe(); }}
-              className={`p-2 px-4 rounded-full shadow-sm text-sm font-medium transition-all ${
-                subscribed ? "bg-gray-800 text-white hover:bg-gray-700" : "bg-gray-300 text-gray-800 hover:bg-gray-400"
-              }`}
-            >
-              {subscribed ? "Unsubscribe" : "Subscribe"}
-            </button>
-          </header>
-
-          <h1 className="font-serif font-semibold text-2xl sm:text-2xl capitalize text-gray-900 dark:text-gray-100 mb-3">
-            {title}
-          </h1>
-
-          <p className="text-md text-gray-600 dark:text-gray-300 line-clamp-4 mb-4">{desc || "No description available"}</p>
-
-          <div className="flex items-center justify-between space-x-6 mt-2 text-sm text-gray-500 dark:text-gray-400">
-            <div className="flex items-center space-x-4">
-              <div className="flex items-center space-x-1 bg-gray-100 dark:bg-gray-800 p-1 rounded-full cursor-pointer">
-                <div
-                  className={`p-1 rounded-full cursor-pointer hover:text-mainColor ${vote === "upvote" ? "text-green-500" : "text-gray-500"}`}
-                  onClick={(e) => { e.preventDefault(); handleUpvote(); }}
-                >
-                  <span className="flex items-center space-x-1">
-                    <ArrowBigUp className="w-7 h-7 transition-transform transform hover:scale-110" />
-                    <span>20</span>
+          <div className="flex flex-col justify-between w-full">
+            <header className="flex items-center justify-between text-sm text-gray-500 dark:text-gray-400 mb-2 p-1">
+              <div className="flex items-center space-x-2">
+                <div className="rounded-full cursor-pointer border-mainColor bg-gray-300 dark:bg-gray-700 w-10 h-10 flex items-center justify-center text-white font-bold">
+                  {author ? author[0].toUpperCase() : "U"}
+                </div>
+                <div className="flex flex-col">
+                  <span className="truncate capitalize cursor-pointer hover:underline text-gray-900 dark:text-gray-100 text-lg">
+                    {author}
                   </span>
                 </div>
-                <div className="h-5 w-0.5 bg-gray-400 dark:bg-gray-500" />
-                <div
-                  className={`p-1 rounded-full cursor-pointer hover:text-mainColor ${vote === "downvote" ? "text-red-500" : "text-gray-500"}`}
-                  onClick={(e) => { e.preventDefault(); handleDownvote(); }}
-                >
-                  <ArrowBigDown className="w-7 h-7 transition-transform transform hover:scale-110" />
+              </div>
+              
+              <span className="text-xs capitalize flex items-center text-gray-400">
+                {calculateTimeAgo(publishedAt)} &nbsp;
+                <Clock3 className="h-4 w-4 inline-block" />
+              </span>
+
+              {/* Subscribe/Unsubscribe Button */}
+              <button
+                onClick={(e) => { e.preventDefault(); toggleSubscribe(); }}
+                className={`p-2 px-4 rounded-full shadow-sm text-sm font-medium transition-all ${
+                  subscribed ? "bg-gray-800 text-white hover:bg-gray-700" : "bg-gray-300 text-gray-800 hover:bg-gray-400"
+                }`}
+              >
+                {subscribed ? "Unsubscribe" : "Subscribe"}
+              </button>
+            </header>
+
+            <h1 className="font-serif font-semibold text-2xl sm:text-2xl capitalize text-gray-900 dark:text-gray-100 mb-3">
+              {title}
+            </h1>
+
+            <p className="text-md text-gray-600 dark:text-gray-300 line-clamp-4 mb-4">{desc || "No description available"}</p>
+
+            <div className="flex items-center justify-between space-x-6 mt-2 text-sm text-gray-500 dark:text-gray-400">
+              <div className="flex items-center space-x-4">
+                <div className="flex items-center space-x-1 bg-gray-100 dark:bg-gray-800 p-1 rounded-full cursor-pointer">
+                  <div
+                    className={`p-1 rounded-full cursor-pointer hover:text-mainColor ${vote === "upvote" ? "text-green-500" : "text-gray-500"}`}
+                    onClick={(e) => { e.preventDefault(); handleUpvote(); }}
+                  >
+                    <span className="flex items-center space-x-1">
+                      <ArrowBigUp className="w-7 h-7 transition-transform transform hover:scale-110" />
+                      <span>20</span>
+                    </span>
+                  </div>
+                  <div className="h-5 w-0.5 bg-gray-400 dark:bg-gray-500" />
+                  <div
+                    className={`p-1 rounded-full cursor-pointer hover:text-mainColor ${vote === "downvote" ? "text-red-500" : "text-gray-500"}`}
+                    onClick={(e) => { e.preventDefault(); handleDownvote(); }}
+                  >
+                    <ArrowBigDown className="w-7 h-7 transition-transform transform hover:scale-110" />
+                  </div>
+                </div>
+                <div className="bg-gray-100 dark:bg-gray-800 p-2 rounded-full cursor-pointer text-gray-500 hover:text-blue-500">
+                  <MessageCircle className="w-5 h-5 transition-transform transform hover:scale-110" />
+                </div>
+                <div className="bg-gray-100 dark:bg-gray-800 p-2 rounded-full cursor-pointer text-gray-500 hover:text-blue-500">
+                  <Share2 className="w-5 h-5 transition-transform transform hover:scale-110" />
+                </div>
+                <div className="bg-gray-100 dark:bg-gray-800 p-2 rounded-full cursor-pointer text-gray-500 hover:text-blue-500">
+                  <Flag className="w-5 h-5 transition-transform transform hover:scale-110" />
+                </div>
+                <div className="bg-gray-100 dark:bg-gray-800 p-2 rounded-full cursor-pointer text-gray-500 hover:text-blue-500">
+                  <MoreHorizontal className="w-5 h-5 transition-transform transform hover:scale-110" />
                 </div>
               </div>
-              <div className="bg-gray-100 dark:bg-gray-800 p-2 rounded-full cursor-pointer text-gray-500 hover:text-blue-500">
-                <MessageCircle className="w-5 h-5 transition-transform transform hover:scale-110" />
-              </div>
-              <div className="bg-gray-100 dark:bg-gray-800 p-2 rounded-full cursor-pointer text-gray-500 hover:text-blue-500">
-                <Share2 className="w-5 h-5 transition-transform transform hover:scale-110" />
-              </div>
-              <div className="bg-gray-100 dark:bg-gray-800 p-2 rounded-full cursor-pointer text-gray-500 hover:text-blue-500">
-                <Flag className="w-5 h-5 transition-transform transform hover:scale-110" />
-              </div>
-              <div className="bg-gray-100 dark:bg-gray-800 p-2 rounded-full cursor-pointer text-gray-500 hover:text-blue-500">
-                <MoreHorizontal className="w-5 h-5 transition-transform transform hover:scale-110" />
-              </div>
-            </div>
 
-            <div className="flex items-center space-x-6 cursor-pointer text-gray-500 hover:text-blue-500">
-              <p className="text-blue-500 cursor-pointer font-semibold capitalize text-md p-1">{category || "General"}</p>
+              <div className="flex items-center space-x-6 cursor-pointer text-gray-500 hover:text-blue-500">
+                <p className="text-blue-500 cursor-pointer font-semibold capitalize text-md p-1">{category || "General"}</p>
+              </div>
             </div>
           </div>
         </div>
-      </div>
-    </Link>
+      </Link>
+    </motion.div>
   );
 };
 
