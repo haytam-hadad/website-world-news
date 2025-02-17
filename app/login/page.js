@@ -3,6 +3,7 @@
 import { useState, useContext } from "react";
 import Image from "next/image";
 import Link from "next/link";
+import Cookies from "js-cookie"; // Import js-cookie
 import { ThemeContext } from "../ThemeProvider";
 
 export default function LoginPage() {
@@ -11,6 +12,11 @@ export default function LoginPage() {
   const [password, setPassword] = useState("");
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
+
+  if (user) {
+    window.location.href = `/profile/${user.username}`;
+    return null;
+  }
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -51,6 +57,9 @@ export default function LoginPage() {
       // Save user data to global state
       setUser(user);
 
+      // Store user data in a cookie
+      Cookies.set("user", JSON.stringify(user), { expires: 7 });
+
       // Redirect to dashboard or another page
       window.location.href = "/"; 
     } catch (err) {
@@ -60,22 +69,6 @@ export default function LoginPage() {
       setLoading(false);
     }
   };
-
-  if (user) {
-    return (
-      <div className="flex flex-col items-center justify-center min-h-screen">
-        <h1 className="text-4xl font-bold">Welcome, {user.username}!</h1>
-        <button
-          className="mt-4 px-4 py-2 bg-red-500 text-white rounded"
-          onClick={() => {
-            setUser(null);
-          }}
-        >
-          Log out
-        </button>
-      </div>
-    );
-  }
 
   return (
     <div className="grid min-h-screen grid-cols-1 md:grid-cols-[3fr_2fr]">

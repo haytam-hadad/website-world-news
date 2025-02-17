@@ -3,7 +3,7 @@
 import { useState, useRef } from "react";
 import { Home, Laptop, HeartPulse, Trophy, Landmark, ChartNoAxesCombined, ChevronUp, ChevronDown, TestTube } from "lucide-react";
 import Link from "next/link";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 
 const menuItems = [
   { name: "Technology", path: "/category/technology", icon: <Laptop size={20} /> },
@@ -88,28 +88,36 @@ const SideMenu = ({ setVisible, setMenuWidth }) => {
         <h2
           className="text-md hover:opacity-100 px-10 font-medium m-1 flex items-center cursor-pointer opacity-60"
           onClick={() => setCategoriesVisible(!categoriesVisible)}
-          aria-expanded={categoriesVisible}
         >
           Categories&nbsp;
           {categoriesVisible ? <ChevronUp size={20} /> : <ChevronDown size={20} />}
         </h2>
-        {categoriesVisible && (
-          menuItems.map(({ name, path, icon }) => (
-            <Link key={path} href={path}>
-              <button
-                onClick={() => {
-                  setActivePath(path);
-                  setVisible(false);
-                }}
-                className={`side_menu_link ${activePath === path ? "bg-mainColor text-white" : "text-primary"}`}
-                aria-label={name}
-              >
-                {icon}
-                <span className="text-base font-medium">{name}</span>
-              </button>
-            </Link>
-          ))
-        )}
+        <AnimatePresence>
+          {categoriesVisible && (
+            <motion.div
+              initial={{ opacity: 0, height: 0 }}
+              animate={{ opacity: 1, height: "auto" }}
+              exit={{ opacity: 0, height: 0 }}
+              transition={{ duration: 0.3 }}
+            >
+              {menuItems.map(({ name, path, icon }) => (
+                <Link key={path} href={path}>
+                  <button
+                    onClick={() => {
+                      setActivePath(path);
+                      setVisible(false);
+                    }}
+                    className={`side_menu_link ${activePath === path ? "bg-mainColor text-white" : "text-primary"}`}
+                    aria-label={name}
+                  >
+                    {icon}
+                    <span className="text-base font-medium">{name}</span>
+                  </button>
+                </Link>
+              ))}
+            </motion.div>
+          )}
+        </AnimatePresence>
       </div>
       <div
         ref={resizeRef}
