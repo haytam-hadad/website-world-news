@@ -34,7 +34,7 @@ export default function Header({ onToggleMenu }) {
 
   return (
     <header className="sticky bg-lightgrey dark:bg-darkgrey select-none top-0 z-50 border-b-2 px-5 max-sm:px-2">
-      <div className="grid z-50 grid-cols-[auto,_1fr,_auto] items-center py-3 text-maintextColor dark:text-secondaryColor gap-2">
+      <div className="grid z-50 grid-cols-[auto,_1fr,_auto] items-center py-3 text-maintextColor dark:text-secondaryColor gap-1">
         {/* Logo Group */}
         <Link href="/" className="flex items-center gap-2">
           <Image
@@ -92,7 +92,7 @@ export default function Header({ onToggleMenu }) {
                   </button>
                   <div className="absolute right-0 mt-1 w-48 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-md shadow-lg py-1 z-20 hidden group-hover:block">
                     <button
-                    className="block w-full text-red-800 dark:text-red-200 text-left px-3 py-2 hover:bg-gray-100 dark:hover:bg-gray-700"
+                    className="block w-full text-red-800 dark:text-red-500 text-left px-3 py-2 hover:bg-gray-100 dark:hover:bg-gray-700"
                     onClick={handleLogout}
                     >
                     Log out

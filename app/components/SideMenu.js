@@ -3,9 +3,6 @@
 import { useState, useRef } from "react";
 import { Home, Laptop, HeartPulse, Trophy, Landmark, ChartNoAxesCombined, ChevronUp, ChevronDown, TestTube } from "lucide-react";
 import Link from "next/link";
-import Image from "next/image";
-import { Clock3, ArrowUpRight, Share2, MessageCircle, MoreHorizontal, Flag } from "lucide-react";
-import { ArrowBigUp, ArrowBigDown } from "lucide-react";
 import { motion } from "framer-motion";
 
 const menuItems = [
@@ -60,15 +57,15 @@ const SideMenu = ({ setVisible, setMenuWidth }) => {
             setActivePath("/");
             setVisible(false);
           }}
-          className={`side_menu_link ${activePath === "/" ? "bg-mainColor text-white" : "text-primary"
-            }`}
+          className={`side_menu_link ${activePath === "/" ? "bg-mainColor text-white" : "text-primary"}`}
+          aria-label="Home"
         >
           <Home size={20} />
           <span className="text-base font-medium">Home</span>
         </button>
       </Link>
       <Link className="flex md:hidden" href="/login">
-        <button className="block w-full my-3 border-2 border-mainColor text-lg font-bold p-2 text-center rounded-xl  text-mainColor hover:bg-mainColor hover:text-white">
+        <button className="block w-full my-3 border-2 border-mainColor text-lg font-bold p-2 text-center rounded-xl text-mainColor hover:bg-mainColor hover:text-white">
           Log in
         </button>
       </Link>
@@ -79,8 +76,8 @@ const SideMenu = ({ setVisible, setMenuWidth }) => {
             setActivePath("/trends");
             setVisible(false);
           }}
-          className={`side_menu_link ${activePath === "/trends" ? "bg-mainColor text-white" : "text-primary"
-            }`}
+          className={`side_menu_link ${activePath === "/trends" ? "bg-mainColor text-white" : "text-primary"}`}
+          aria-label="Trends"
         >
           <ChartNoAxesCombined size={20} />
           <span className="text-base font-medium">Trends</span>
@@ -88,7 +85,11 @@ const SideMenu = ({ setVisible, setMenuWidth }) => {
       </Link>
       <hr className="my-2 border-gray-300 dark:border-gray-700" />
       <div>
-        <h2 className="text-md hover:opacity-100 px-10 font-medium m-1 flex items-center cursor-pointer opacity-60" onClick={() => setCategoriesVisible(!categoriesVisible)}>
+        <h2
+          className="text-md hover:opacity-100 px-10 font-medium m-1 flex items-center cursor-pointer opacity-60"
+          onClick={() => setCategoriesVisible(!categoriesVisible)}
+          aria-expanded={categoriesVisible}
+        >
           Categories&nbsp;
           {categoriesVisible ? <ChevronUp size={20} /> : <ChevronDown size={20} />}
         </h2>
@@ -100,8 +101,8 @@ const SideMenu = ({ setVisible, setMenuWidth }) => {
                   setActivePath(path);
                   setVisible(false);
                 }}
-                className={`side_menu_link ${activePath === path ? "bg-mainColor text-white" : "text-primary"
-                  }`}
+                className={`side_menu_link ${activePath === path ? "bg-mainColor text-white" : "text-primary"}`}
+                aria-label={name}
               >
                 {icon}
                 <span className="text-base font-medium">{name}</span>
