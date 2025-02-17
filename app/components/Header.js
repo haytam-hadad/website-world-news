@@ -6,7 +6,6 @@ import { Switch } from "@/components/ui/switch";
 import { Toggle } from "@/components/ui/toggle";
 import { useState, useContext } from "react";
 import { ThemeContext } from "../ThemeProvider";
-import Cookies from "js-cookie";
 import Image from "next/image";
 
 export default function Header({ onToggleMenu }) {
@@ -24,7 +23,6 @@ export default function Header({ onToggleMenu }) {
 
   const handleLogout = () => {
     setUser(null);
-    Cookies.remove("token");
   };
 
   return (
@@ -85,9 +83,9 @@ export default function Header({ onToggleMenu }) {
                   <Bell className="w-6 h-6 text-gray-600 dark:text-gray-300" />
                   <span className="absolute top-0 right-0 inline-block w-2 h-2 bg-red-600 rounded-full"></span>
                 </button>
-                <div className="absolute right-0 mt-1 w-48 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-md shadow-lg py-1 z-20 hidden group-hover:block">
+                <div className="absolute right-0 w-40 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-md shadow-lg py-1 z-20 hidden group-hover:block">
                   <button
-                    className="block w-full text-red-800 dark:text-red-500 text-left px-3 py-2 hover:bg-gray-100 dark:hover:bg-gray-700"
+                    className="block w-full text-red-800 dark:text-red-500 text-left px-3 p-2 hover:bg-gray-100 dark:hover:bg-gray-700"
                     onClick={handleLogout}
                   >
                     Log out

@@ -1,6 +1,8 @@
 "use client";
 
 import Image from "next/image";
+import Link from "next/link";
+
 import {
   Clock3,
   Share2,
@@ -69,9 +71,9 @@ const SinglePost = ({ post }) => {
               {post.author ? post.author.charAt(0) : "U"}
             </div>
             <div className="flex flex-col">
-              <span className="text-lg text-gray-900 dark:text-gray-100 font-semibold">
-                {post.author || "Unknown"}
-              </span>
+              <Link href={`/profile/${post.author}`} className=" font-semibold truncate capitalize cursor-pointer hover:underline text-gray-900 dark:text-gray-100 text-lg">
+              {post.author || "Unknown"}
+              </Link>
             </div>
           </div>
           <span className="text-xs flex items-center text-gray-400">

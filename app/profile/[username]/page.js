@@ -1,36 +1,33 @@
-import Profile from "@/app/components/Profile";
+import Profile from "../../components/Profile";
 
-const fetchUserProfile = async (username) => {
-    try {
-        const response = await fetch("http://localhost:5000/api/userprofile", {
-            method: "GET",
-            headers: {
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify(`"username" : ${username }`),
-            cache: "no-store", // Ensures fresh data every request (disable caching)
-        });
+const fetchSessionUser = async (username) => {
+  try {
+    const apiUrl = `http://localhost:5000/api/userprofile?username=${username}`;
+    const res = await fetch(apiUrl);
 
-        if (!response.ok) {
-            throw new Error("Failed to fetch user profile");
-        }
-
-        return await response.json();
-    } catch (error) {
-        console.error("Error fetching user profile:", error);
-        return null;
+    if (!res.ok) {
+      throw new Error(`Failed to fetch user profile: ${res.status} ${res.statusText}`);
     }
+
+    const user = await res.json();
+    return user || null;
+  } catch (error) {
+    console.error("Error fetching session user:", error);
+    return null;
+  }
 };
 
-const ProfilePage = async ({ params }) => {
-    const { username } = params;
-    const userProfile = await fetchUserProfile(username);
+export default async function ProfilePage({ params }) {
+  const { username } = params;
+  const userData = await fetchSessionUser(username);
 
-    return (
-        <div>
-            {userProfile ? <Profile user={userProfile} /> : <p>User not found</p>}
-        </div>
-    );
-};
+  if (!userData) {
+    return <p className="text-center text-red-500 text-xl font-bold">Error: User not found</p>;
+  }
 
-export default ProfilePage;
+  return (
+    <>
+      <Profile userData={userData} />
+    </>
+  );
+}

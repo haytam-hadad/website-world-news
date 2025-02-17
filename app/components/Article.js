@@ -67,13 +67,13 @@ const Article = ({ title, desc, imageUrl, author, publishedAt, category, url }) 
           <div className="flex flex-col justify-between w-full">
             <header className="flex items-center justify-between text-sm text-gray-500 dark:text-gray-400 mb-2 p-1">
               <div className="flex items-center space-x-2">
-                <div className="rounded-full cursor-pointer border-mainColor bg-gray-300 dark:bg-gray-700 w-10 h-10 flex items-center justify-center text-white font-bold">
+                <Link href={`/profile/${author}`} className="rounded-full cursor-pointer border-mainColor bg-gray-300 dark:bg-gray-700 w-10 h-10 flex items-center justify-center text-white font-bold">
                   {author ? author[0].toUpperCase() : "U"}
-                </div>
+                </Link>
                 <div className="flex flex-col">
-                  <span className="truncate capitalize cursor-pointer hover:underline text-gray-900 dark:text-gray-100 text-lg">
+                  <Link href={`/profile/${author}`} className="truncate capitalize cursor-pointer hover:underline text-gray-900 dark:text-gray-100 text-lg">
                     {author}
-                  </span>
+                  </Link>
                 </div>
               </div>
               
@@ -128,6 +128,7 @@ const Article = ({ title, desc, imageUrl, author, publishedAt, category, url }) 
                 <div className="bg-gray-100 dark:bg-gray-800 p-2 rounded-full cursor-pointer text-gray-500 hover:text-blue-500">
                   <Flag className="w-5 h-5 transition-transform transform hover:scale-110" />
                 </div>
+                <div className="bg-gray-100 dark:bg-gray-800 p-2 rounded-full cursor-pointer text-gray-500 hover:text-blue-500"></div>
                 <div className="bg-gray-100 dark:bg-gray-800 p-2 rounded-full cursor-pointer text-gray-500 hover:text-blue-500">
                   <MoreHorizontal className="w-5 h-5 transition-transform transform hover:scale-110" />
                 </div>

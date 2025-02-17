@@ -3,12 +3,11 @@
 import { useState, useContext } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import Cookies from "js-cookie"; // Import js-cookie
 import { ThemeContext } from "../ThemeProvider";
 
 export default function LoginPage() {
   const { user, setUser } = useContext(ThemeContext);
-  const [username, setUsername] = useState(""); // Change from email to username
+  const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
@@ -25,7 +24,7 @@ export default function LoginPage() {
     setError(null);
 
     const loginData = {
-      username: username.trim(), // Send username instead of email
+      username: username.trim(),
       password: password.trim(),
     };
 
@@ -42,7 +41,6 @@ export default function LoginPage() {
 
       console.log("Response status:", response.status);
 
-      // Check if response is okay
       if (!response.ok) {
         const errorData = await response.json();
         console.error("Error response:", errorData);
@@ -50,18 +48,12 @@ export default function LoginPage() {
         return;
       }
 
-      // Handle successful login
       const user = await response.json();
       console.log("User logged in:", user);
 
-      // Save user data to global state
       setUser(user);
 
-      // Store user data in a cookie
-      Cookies.set("user", JSON.stringify(user), { expires: 7 });
-
-      // Redirect to dashboard or another page
-      window.location.href = "/"; 
+      window.location.href = "/";
     } catch (err) {
       console.error("Error during login:", err);
       setError("An unexpected error occurred. Please try again.");
@@ -72,7 +64,6 @@ export default function LoginPage() {
 
   return (
     <div className="grid min-h-screen grid-cols-1 md:grid-cols-[3fr_2fr]">
-      {/* Login Form Section */}
       <div className="flex flex-col justify-center px-8 md:px-16">
         <form
           className="flex flex-col space-y-5 max-w-lg mx-auto w-full"
@@ -82,23 +73,21 @@ export default function LoginPage() {
             Log in
           </h1>
 
-          {/* Username Input */}
           <div className="flex flex-col">
             <label htmlFor="username" className="text-sm font-medium">
               Username
             </label>
             <input
               id="username"
-              type="text" // Changed from email to text for username
+              type="text"
               className="form_input"
               placeholder="Username"
-              value={username} // Bind to username state
-              onChange={(e) => setUsername(e.target.value)} // Update username state
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
               required
             />
           </div>
 
-          {/* Password Input */}
           <div className="flex flex-col">
             <label htmlFor="password" className="text-sm font-medium">
               Password
@@ -114,7 +103,6 @@ export default function LoginPage() {
             />
           </div>
 
-          {/* Forgot Password */}
           <p className="text-[12px] text-center font-medium text-muted-foreground">
             Forgot your password?{" "}
             <Link
@@ -125,7 +113,6 @@ export default function LoginPage() {
             </Link>
           </p>
 
-          {/* Sign Up Link */}
           <p className="text-sm font-medium text-muted-foreground">
             Don&apos;t have an account? &nbsp;
             <Link
@@ -136,14 +123,12 @@ export default function LoginPage() {
             </Link>
           </p>
 
-          {/* Error Message */}
           {error && (
             <div className="error mt-4 p-4 bg-red-100 text-red-700 border border-red-300 rounded-lg shadow-sm">
               {error}
             </div>
           )}
 
-          {/* Submit Button */}
           <button
             type="submit"
             className="w-full dark:bg-mainColor rounded-lg bg-primary px-4 py-2 text-primary-foreground font-medium transition-all hover:bg-opacity-90 focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2"
@@ -152,7 +137,6 @@ export default function LoginPage() {
             {loading ? "Logging in..." : "Log in"}
           </button>
 
-          {/* Divider */}
           <div className="relative flex items-center">
             <div className="flex-grow border-t border-gray-300"></div>
             <span className="mx-2 text-sm font-medium text-muted-foreground">
@@ -161,7 +145,6 @@ export default function LoginPage() {
             <div className="flex-grow border-t border-gray-300"></div>
           </div>
 
-          {/* Google Sign-in Button */}
           <button
             type="button"
             className="flex items-center justify-center w-full rounded-lg border px-4 py-2 font-medium bg-white shadow-md hover:shadow-lg transition-all focus:ring-2 focus:ring-[#4285F4] focus:ring-offset-2 text-black"
@@ -178,8 +161,8 @@ export default function LoginPage() {
         </form>
       </div>
 
-      {/* Image Section */}
-      <div className="hidden rounded-3xl  md:flex items-center justify-center bg-lightgrey dark:bg-darkgrey shadow-sm p-5">
+      <div>
+      <div className="hidden rounded-3xl md:flex items-center justify-center bg-lightgrey dark:bg-darkgrey shadow-sm p-5">
         <Image
           src="/images/i1.svg"
           width={400}
@@ -189,5 +172,6 @@ export default function LoginPage() {
         />
       </div>
     </div>
+  </div>
   );
 }
