@@ -48,7 +48,7 @@ const Article = ({ title, desc, imageUrl, author, publishedAt, category, url }) 
       initial={{ opacity: 0, y: 15 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.3 }}
-      className="w-full my-1"
+      className="w-full my-2"
     >
       <Link href={url ? url : "#"} className="flex hover:border-blue-300 dark:hover:border-blue-950 cursor-pointer w-full flex-col lg:flex-row bg-lightgrey dark:bg-darkgrey border p-4 mx-auto rounded-xl shadow-sm">
         <div className="flex flex-col lg:flex-row items-center space-y-1 lg:space-y-0 lg:space-x-6 w-full">
