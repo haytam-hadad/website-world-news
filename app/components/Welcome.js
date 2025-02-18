@@ -37,7 +37,7 @@ const Welcome = () => {
                 className="flex gap-4 flex-col sm:flex-row"
                 initial={{ opacity: 0, y: -20 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 1, delay: 1 }}
+                transition={{ duration: 1, delay: 0.8 }}
             >
                 <button className="bg-white text-mainColor cursor-default transition-all px-5 py-3 rounded-lg font-semibold shadow-lg w-full sm:w-auto">
                     Explore Latest News 

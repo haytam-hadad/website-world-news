@@ -73,11 +73,13 @@ export default function Header({ onToggleMenu }) {
           </div>
 
           {user ? (
+            <Link href={`/profile/${user.username}`} >
             <div className="flex items-center gap-2 relative sm:ml-3 group">
-              <div className="w-8 h-8 rounded-full bg-blue-500 text-white flex items-center justify-center">
+              
+              <div className="w-8 h-8 rounded-full  bg-blue-500 text-white flex items-center justify-center">
                 {user.username.charAt(0).toUpperCase()}
               </div>
-              <span className="font-medium hidden md:inline">{user.username}</span>
+              <span className="font-medium hidden md:inline hover:underline">{user.username}</span>
               <div className="relative">
                 <button className="relative p-1 rounded-full hover:bg-gray-200 dark:hover:bg-gray-700">
                   <Bell className="w-6 h-6 text-gray-600 dark:text-gray-300" />
@@ -92,7 +94,8 @@ export default function Header({ onToggleMenu }) {
                   </button>
                 </div>
               </div>
-            </div>
+            </div>   
+          </Link>
           ) : (
             <div className="hidden ml-2 md:flex items-center gap-2">
               <Link href="/login">

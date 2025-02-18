@@ -128,7 +128,6 @@ const Article = ({ title, desc, imageUrl, author, publishedAt, category, url }) 
                 <div className="bg-gray-100 dark:bg-gray-800 p-2 rounded-full cursor-pointer text-gray-500 hover:text-blue-500">
                   <Flag className="w-5 h-5 transition-transform transform hover:scale-110" />
                 </div>
-                <div className="bg-gray-100 dark:bg-gray-800 p-2 rounded-full cursor-pointer text-gray-500 hover:text-blue-500"></div>
                 <div className="bg-gray-100 dark:bg-gray-800 p-2 rounded-full cursor-pointer text-gray-500 hover:text-blue-500">
                   <MoreHorizontal className="w-5 h-5 transition-transform transform hover:scale-110" />
                 </div>
