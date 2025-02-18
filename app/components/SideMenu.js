@@ -1,7 +1,8 @@
 "use client";
 
-import { useState, useRef } from "react";
-import { Home, Laptop, HeartPulse, Trophy, Landmark, ChartNoAxesCombined, ChevronUp, ChevronDown, TestTube } from "lucide-react";
+import { useState, useContext , useRef } from "react";
+import { ThemeContext } from "../ThemeProvider";
+import { Home , Laptop, HeartPulse, Trophy, Landmark, ChartNoAxesCombined, ChevronUp, ChevronDown, TestTube , CirclePlus  } from "lucide-react";
 import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
 
@@ -17,6 +18,7 @@ const SideMenu = ({ setVisible, setMenuWidth }) => {
   const [activePath, setActivePath] = useState("/");
   const [menuWidthState, setMenuWidthState] = useState(250);
   const [categoriesVisible, setCategoriesVisible] = useState(true);
+  const { user } = useContext(ThemeContext);
   const menuRef = useRef(null);
   const resizeRef = useRef(null);
 
@@ -56,23 +58,40 @@ const SideMenu = ({ setVisible, setMenuWidth }) => {
           onClick={() => {
             setActivePath("/");
             setVisible(false);
-          }}
-          className={`side_menu_link ${activePath === "/" ? "bg-mainColor text-white" : "text-primary"}`}
-          aria-label="Home"
-        >
-          <Home size={20} />
-          <span className="text-base font-medium">Home</span>
-        </button>
-      </Link>
-      <Link className="flex md:hidden" href="/login">
-        <button className="block w-full my-3 border-2 border-mainColor text-lg font-bold p-2 text-center rounded-xl text-mainColor hover:bg-mainColor hover:text-white">
-          Log in
-        </button>
-      </Link>
+            }}
+            className={`side_menu_link ${activePath === "/" ? "bg-mainColor text-white" : "text-primary"}`}
+            aria-label="Home"
+          >
+            <Home size={20} />
+            <span className="text-base font-medium">Home</span>
+          </button>
+          </Link>
 
-      <Link href="/trends">
-        <button
-          onClick={() => {
+          {user && (
+            <Link href="/addpost">
+              <button
+                onClick={() => {
+                setActivePath("/");
+                setVisible(false);
+                }}
+                className={`flex mb-1 items-center text-lg space-x-3 w-full text-left px-5 py-3 text-primary rounded-full shadow-md border border-primary`}
+                aria-label="add post"
+              >
+                <CirclePlus size={20} />
+                <span className="text-base font-medium">Post </span>
+              </button>
+            </Link>
+          )}
+
+          <Link className="flex md:hidden" href="/login">
+          <button className="block w-full my-3 border-2 border-mainColor text-lg font-bold p-2 text-center rounded-xl text-mainColor hover:bg-mainColor hover:text-white">
+            Log in
+          </button>
+          </Link>
+          
+          <Link href="/trends">
+          <button
+            onClick={() => {
             setActivePath("/trends");
             setVisible(false);
           }}

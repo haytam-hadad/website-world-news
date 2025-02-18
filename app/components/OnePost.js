@@ -71,7 +71,7 @@ const SinglePost = ({ post }) => {
               {post.author ? post.author.charAt(0) : "U"}
             </div>
             <div className="flex flex-col">
-              <Link href={`/profile/${post.author}`} className=" font-semibold truncate capitalize cursor-pointer hover:underline text-gray-900 dark:text-gray-100 text-lg">
+            <Link href={post.author ? `/profile/${post.author}` : "#"} className=" font-semibold truncate capitalize cursor-pointer hover:underline text-gray-900 dark:text-gray-100 text-lg">
               {post.author || "Unknown"}
               </Link>
             </div>
