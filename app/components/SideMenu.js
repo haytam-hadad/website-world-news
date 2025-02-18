@@ -74,7 +74,7 @@ const SideMenu = ({ setVisible, setMenuWidth }) => {
                 setActivePath("/");
                 setVisible(false);
                 }}
-                className={`flex mb-1 items-center text-lg space-x-3 w-full text-left px-5 py-3 text-primary rounded-full shadow-md border border-primary`}
+                className={`flex mb-1 items-center text-lg space-x-3 w-full text-left px-5 py-3 text-primary rounded-full border border-primary`}
                 aria-label="add post"
               >
                 <CirclePlus size={20} />
