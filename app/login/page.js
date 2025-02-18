@@ -161,17 +161,15 @@ export default function LoginPage() {
         </form>
       </div>
 
-      <div>
       <div className="hidden rounded-3xl md:flex items-center justify-center bg-lightgrey dark:bg-darkgrey shadow-sm p-5">
         <Image
           src="/images/i1.svg"
           width={400}
           height={400}
-          alt="Login Illustration"
+          alt="Sign Up Illustration"
           className="w-[80%] max-w-sm object-contain dark:filter dark:invert opacity-60"
         />
       </div>
     </div>
-  </div>
   );
 }
