@@ -90,10 +90,11 @@ const SinglePost = ({ post }) => {
           >
             {subscribed ? "Unsubscribe" : "Subscribe"}
           </button>
-        </header>
           
+        </header>
+         <hr/> 
         {/* Title */}
-        <h1 className="font-serif font-semibold text-3xl sm:text-4xl text-gray-900 dark:text-gray-100 p-2 my-5 underline">
+        <h1 className="font-serif font-semibold text-2xl md:text-3xl lg:text-4xl text-gray-900 dark:text-gray-100 p-2 m-4 sm:m-5 underline underline-offset-4">
           {post.title || "No Title Available"}
         </h1>
 

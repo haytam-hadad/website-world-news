@@ -16,7 +16,7 @@ const Welcome = () => {
             transition={{ duration: 1 }}
         >
             <motion.h1
-                className="text-2xl font-extrabold text-white mb-4 sm:text-3xl xl:text-4xl leading-tight"
+                className="text-2xl font-bold text-white mb-4 sm:text-3xl xl:text-4xl leading-tight"
                 initial={{ opacity: 0, y: -20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 1, delay: 0.1 }}

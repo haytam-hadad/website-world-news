@@ -32,8 +32,9 @@
     --chart-4: 43 74% 66%;
     --chart-5: 27 87% 67%;
     --radius: 0.5rem;
-    
-    --mainColor: #1f6feb;
+
+    /* royalblue */
+    --mainColor: #4271ff;
     --secondaryColor: #fff;
     --thirdColor: #00050e;
     --mainTextColor: #000;

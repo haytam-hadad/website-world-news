@@ -48,13 +48,13 @@ const Profile = ({ userData }) => {
 
       <div className="bg-lightgrey border dark:bg-darkgrey shadow-sm mb-3 rounded-2xl">
         {/* Header Section */}
-        <header className="flex flex-col md:flex-row md:items-center md:justify-between bg-gradient-to-r from-blue-500 to-indigo-500 p-3 py-2 rounded-2xl shadow-md mb-3">
-          <div className="flex items-center space-x-4 mb-4 md:mb-0">
+        <header className="flex flex-col md:flex-row md:items-center md:justify-between bg-gradient-to-r from-mainColor to-[skyblue] p-3 lg:px-5 rounded-2xl mb-1">
+          <div className="flex items-center space-x-4 mb-3 md:mb-0">
             <div className="w-14 h-14 max-md:w-12 max-md:h-12 rounded-full bg-primary flex items-center justify-center text-primary-foreground capitalize font-semibold text-xl sm:text-xl md:text-2xl lg:text-3xl shadow-md">
               {userData.username.charAt(0)}
             </div>
             <div className="text-white">
-              <h1 className="text-xl sm:text-xl md:text-xl lg:text-2xl font-bold">
+              <h1 className="text-lg sm:text-lg md:text-xl lg:text-xl font-bold">
                 {userData.username || "Unknown"}
               </h1>
               <p className="text-sm sm:text-base md:text-base lg:text-lg opacity-80">
@@ -64,7 +64,7 @@ const Profile = ({ userData }) => {
           </div>
            {user && user._id == userData._id ? (
             <button
-              className="flex gap-1 items-center bg-white text-blue-600 px-5 py-3 rounded-full shadow-md font-semibold hover:bg-gray-100 transition"
+              className="flex gap-1 items-center bg-white text-mainColor px-5 py-3 rounded-full shadow-md font-semibold hover:bg-gray-100 transition"
             >
               <Edit/>
               Update Info
@@ -75,7 +75,7 @@ const Profile = ({ userData }) => {
                 e.preventDefault();
                 toggleSubscribe();
               }}
-              className="flex items-center bg-white text-blue-600 px-5 py-3 rounded-full shadow-md font-semibold hover:bg-gray-100 transition"
+              className="flex items-center bg-white text-mainColor px-5 py-3 rounded-full shadow-md font-semibold hover:bg-gray-100 transition"
             >
               <Bell className="mr-2" />
               {subscribed ? "Unsubscribe" : "Subscribe"}
@@ -84,34 +84,28 @@ const Profile = ({ userData }) => {
         </header>
 
         {/* User Info Section */}
-        <section className="p-6">
-          <div className="flex items-center mb-4">
-            <Mail className="text-blue-500 mr-3" />
-            <span className="text-base sm:text-base md:text-base lg:text-xl font-semibold text-primary">
-              Email:
-            </span>
-            <span className="ml-2 text-primary">{userData.email}</span>
-          </div>
-          <div className="mb-4">
-            <span className="text-base sm:text-base md:text-base lg:text-xl font-semibold text-primary">
-              Joined :
-            </span>
-            <span className="ml-2 text-primary">
-              {new Date(userData.createdAt).toLocaleDateString()}
-            </span>
-          </div>
-          <div>
-            <span className="text-base sm:text-base md:text-base lg:text-xl font-semibold text-primary">
-              Bio:
-            </span>
-            <span className="ml-2 text-primary">
-              {userData.bio || "No bio available for this user"}
-            </span>
+        <section className="p-6 bg-lightgrey dark:bg-darkgrey rounded-2xl">
+          <div className="space-y-4">
+            <div className="flex items-center">
+              <Mail className="text-mainColor mr-3" />
+              <span className="text-base font-semibold text-primary">Email:</span>
+              <span className="ml-2 text-primary">{userData.email}</span>
+            </div>
+            <div className="flex items-center">
+              <span className="text-base font-semibold text-primary">Joined:</span>
+              <span className="ml-2 text-primary">
+                {new Date(userData.createdAt).toLocaleDateString()}
+              </span>
+            </div>
+            <div className="flex items-start">
+              <span className="text-base font-semibold text-primary">Bio:</span>
+              <span className="ml-2 text-primary">
+                {userData.bio || "No bio available for this user"}
+              </span>
+            </div>
           </div>
         </section>
-      </div>
-
-      {/* Articles Section */}
+        </div>
       <section>
         <h2 className="title">Articles</h2>
         <div className="">

@@ -93,13 +93,13 @@ const Article = ({ title, desc, imageUrl, author, publishedAt, category, url }) 
                   {subscribed ? "Unsubscribe" : "Subscribe"}
                 </button>
               </header>
-
-              <h1 className="font-serif font-semibold text-2xl sm:text-2xl capitalize text-gray-900 dark:text-gray-100 mb-3">
+              <hr className="mx-5"/>
+              <h1 className="font-serif font-semibold text-2xl text-primary underline underline-offset-4 sm:text-2xl mx-1 my-5 capitalize text-gray-900">
                 {title}
               </h1>
 
               <p className="text-md text-gray-600 dark:text-gray-300 line-clamp-4 mb-4">{desc || "No description available"}</p>
-
+              <hr className="mx-5"/>
               <div className="flex items-center justify-between space-x-6 mt-2 text-sm text-gray-500 dark:text-gray-400">
                 <div className="flex items-center space-x-4">
                   <div className="flex items-center space-x-1 bg-gray-100 dark:bg-gray-800 p-1 rounded-full cursor-pointer">
