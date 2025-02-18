@@ -65,13 +65,13 @@ const SinglePost = ({ post }) => {
     <>
       <div className="flex flex-col w-full shadow-sm max-w-4xl mx-auto bg-lightgrey dark:bg-darkgrey border p-3 rounded-xl">
         {/* Header Section */}
-        <header className="flex rounded-full items-center justify-between text-sm text-gray-500 dark:text-gray-400 mb-4">
-          <div className="flex items-center space-x-2">
-            <div className="rounded-full border-mainColor bg-gray-300 dark:bg-gray-700 w-10 h-10 flex items-center justify-center text-white font-bold">
+        <header className="flex rounded-full items-center justify-between text-sm text-gray-500 dark:text-gray-400 p-1 mb-3">
+          <div className="flex items-center space-x-3">
+            <div className="rounded-full border-mainColor bg-gray-400 dark:bg-gray-600 w-11 h-11  flex items-center justify-center text-lg capitalize font-semibold text-white">
               {post.author ? post.author.charAt(0) : "U"}
             </div>
             <div className="flex flex-col">
-            <Link href={post.author ? `/profile/${post.author}` : "#"} className=" font-semibold truncate capitalize cursor-pointer hover:underline text-gray-900 dark:text-gray-100 text-lg">
+            <Link href={post.author ? `/profile/${post.author}` : "#"} className=" font-semibold truncate capitalize cursor-pointer hover:underline text-gray-900 dark:text-gray-100 text-xl">
               {post.author || "Unknown"}
               </Link>
             </div>
