@@ -11,7 +11,7 @@ const Welcome = () => {
     return (
         <motion.div
             className="bg-gradient-to-r from-mainColor via-mainColor to-[skyblue] my-3 py-12 px-8 sm:px-6 rounded-lg flex flex-col justify-center items-center text-center"
-            initial={{ opacity: 0 }}
+            initial={{ opacity: 0.1 }}
             animate={{ opacity: 1 }}
             transition={{ duration: 1 }}
         >
