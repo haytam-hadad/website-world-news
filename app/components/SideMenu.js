@@ -2,7 +2,7 @@
 
 import { useState, useContext , useRef } from "react";
 import { ThemeContext } from "../ThemeProvider";
-import { Home , Laptop, HeartPulse, Trophy, Landmark, ChartNoAxesCombined, ChevronUp, ChevronDown, TestTube , CirclePlus  } from "lucide-react";
+import { Home , Laptop, HeartPulse, Trophy, Landmark, ChartNoAxesCombined, ChevronUp, ChevronDown, TestTube , SquarePlus } from "lucide-react";
 import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
 
@@ -74,11 +74,11 @@ const SideMenu = ({ setVisible, setMenuWidth }) => {
                 setActivePath("/");
                 setVisible(false);
                 }}
-                className={`flex mb-1 items-center text-lg space-x-3 w-full text-left px-5 py-3 text-mainColor rounded-full hover:bg-primary`}
+                className={`flex mb-1 space-x-3 font-bold items-center text-lg w-full text-left px-5 py-3 text-mainColor rounded-full hover:bg-primary`}
                 aria-label="add post"
               >
-                <CirclePlus size={20} />
-                <span className="text-base font-medium">Post </span>
+                <SquarePlus   size={20} className="scale-125 " />
+                <span className="text-base font-bold">Post </span>
               </button>
             </Link>
           )}
