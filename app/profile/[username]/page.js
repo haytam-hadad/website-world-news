@@ -2,7 +2,7 @@ import Profile from "../../components/Profile";
 
 const fetchSessionUser = async (username) => {
   try {
-    const apiUrl = `http://localhost:5000/api/userprofile?username=${username}`;
+    const apiUrl = `${process.env.NEXT_PUBLIC_API_URL}/userprofile?username=${username}`;
     const res = await fetch(apiUrl);
 
     if (!res.ok) {

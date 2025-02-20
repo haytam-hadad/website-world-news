@@ -1,7 +1,7 @@
 import OnePost from "@/app/components/OnePost";
 const fetchArticle = async (id) => {
   try {
-    const apiUrl = `http://localhost:5000/api/news/${id}`;
+    const apiUrl = `${process.env.NEXT_PUBLIC_API_URL}/news/${id}`;
     const res = await fetch(apiUrl, { cache: "no-store" });
     if (!res.ok) {
       throw new Error(`Failed to fetch article: ${res.status} ${res.statusText}`);

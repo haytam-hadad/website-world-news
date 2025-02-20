@@ -31,7 +31,7 @@ export default function LoginPage() {
     console.log("Login data:", loginData);
 
     try {
-      const response = await fetch("http://localhost:5000/api/auth", {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/auth`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

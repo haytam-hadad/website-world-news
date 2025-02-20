@@ -3,7 +3,7 @@ import { ChevronDown } from "lucide-react";
 
 const fetchArticlesByCategory = async (category) => {
   try {
-    const apiUrl = `http://localhost:5000/api/news/category/${category}`;
+    const apiUrl = `${process.env.NEXT_PUBLIC_API_URL}/news/category/${category}`;
 
     if (!apiUrl) throw new Error("API URL is not defined in environment variables");
 

@@ -5,7 +5,7 @@ const fetchSearchResults = async (query) => {
   try {
     if (!query) return [];
 
-    const apiUrl = `http://localhost:5000/api/news/search/${encodeURIComponent(query)}`;
+    const apiUrl = `${process.env.NEXT_PUBLIC_API_URL}/news/search/${encodeURIComponent(query)}`;
     const res = await fetch(apiUrl, { cache: "no-store" });
 
     if (!res.ok) {
