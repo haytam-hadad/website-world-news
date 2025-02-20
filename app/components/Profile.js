@@ -18,7 +18,7 @@ const Profile = ({ userData }) => {
     const fetchArticles = async (username) => {
       try {
         const response = await fetch(
-          `http://localhost:5000/api/articles/${username}`
+          `${process.env.NEXT_PUBLIC_API_URL}/articles/${username}`
         );
         if (!response.ok) throw new Error("Failed to fetch articles");
         const data = await response.json();
