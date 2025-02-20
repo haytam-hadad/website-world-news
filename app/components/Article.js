@@ -68,11 +68,11 @@ const Article = ({ title, desc, imageUrl, author, publishedAt, category, url }) 
             <div className="flex flex-col justify-between w-full">
               <header className="flex items-center justify-between text-sm text-gray-500 dark:text-gray-400 mb-2 p-1">
                 <div className="flex items-center space-x-2">
-                  <Link href={`/profile/${author}`} className="rounded-full cursor-pointer border-mainColor bg-gray-400 dark:bg-gray-800 w-10 h-10 flex items-center justify-center text-white font-bold">
+                  <Link href={`/profile/${author}`} className="rounded-full text-lg cursor-pointer border-mainColor bg-gray-300 dark:bg-gray-700 w-10 h-10 flex items-center justify-center text-white font-semibold">
                     {author ? author[0].toUpperCase() : "U"}
                   </Link>
                   <div className="flex flex-col">
-                    <Link href={`/profile/${author}`} className="truncate capitalize cursor-pointer hover:underline text-gray-900 dark:text-gray-100 text-lg">
+                    <Link href={`/profile/${author}`} className="truncate max-sm:text-sm font-semibold capitalize cursor-pointer hover:underline text-gray-900 dark:text-gray-100 text-lg">
                       {author}
                     </Link>
                   </div>
@@ -86,7 +86,7 @@ const Article = ({ title, desc, imageUrl, author, publishedAt, category, url }) 
                 {/* Subscribe/Unsubscribe Button */}
                 <button
                   onClick={(e) => { e.preventDefault(); toggleSubscribe(); }}
-                  className={`p-2 px-4 rounded-full shadow-sm text-sm font-medium transition-all ${
+                  className={`p-2 px-4 max-sm:p-1 max-sm:px-3 rounded-full shadow-sm text-sm font-medium transition-all ${
                     subscribed ? "bg-gray-800 text-white hover:bg-gray-700" : "bg-gray-300 text-gray-800 hover:bg-gray-400"
                   }`}
                 >
