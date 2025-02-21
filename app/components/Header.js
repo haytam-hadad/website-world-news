@@ -55,14 +55,14 @@ export default function Header({ onToggleMenu }) {
           />
           <Search
             onClick={handleSearch}
-            className="absolute hidden sm:flex right-1 top-1/2 transform -translate-y-1/2 w-7 h-7 hover:border cursor-pointer p-1 rounded-full text-primary"
+            className="absolute flex right-1 top-1/2 transform -translate-y-1/2 w-7 h-7 hover:border cursor-pointer p-1 rounded-full text-primary"
           />
         </form>
 
         {/* Control Group */}
         <div className="flex items-center gap-1">
           {/* Dark Mode Toggle */}
-          <div className="flex items-center gap-1 rounded-full mr-1 border-mainColor max-sm:scale-90">
+          <div className="hidden sm:flex items-center gap-1 rounded-full mr-1 border-mainColor max-sm:scale-90">
             <Switch
               checked={theme}
               onCheckedChange={(checked) => setTheme(checked)}

@@ -5,6 +5,10 @@ import { ThemeContext } from "../ThemeProvider";
 import { Home , Laptop, HeartPulse, Trophy, Landmark, ChartNoAxesCombined, ChevronUp, ChevronDown, TestTube , SquarePlus } from "lucide-react";
 import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
+import { Sun, Moon } from "lucide-react";
+import { Switch } from "@/components/ui/switch";
+import { Label } from "@/components/ui/label";
+
 
 const menuItems = [
   { name: "Technology", path: "/category/technology", icon: <Laptop size={20} /> },
@@ -18,7 +22,7 @@ const SideMenu = ({ setVisible, setMenuWidth }) => {
   const [activePath, setActivePath] = useState("/");
   const [menuWidthState, setMenuWidthState] = useState(250);
   const [categoriesVisible, setCategoriesVisible] = useState(true);
-  const { user } = useContext(ThemeContext);
+  const { theme, setTheme, user } = useContext(ThemeContext);
   const menuRef = useRef(null);
   const resizeRef = useRef(null);
 
@@ -46,13 +50,30 @@ const SideMenu = ({ setVisible, setMenuWidth }) => {
   return (
     <motion.div
       ref={menuRef}
-      className="fixed bg-lightgrey dark:bg-darkgrey select-none mt-[4.5rem] left-0 top-0 h-full p-4 z-40"
+      className="fixed bg-lightgrey dark:bg-darkgrey select-none mt-[4.4rem] left-0 top-0 h-full p-4 z-40"
       style={{ width: `${menuWidthState}px` }}
       initial={{ x: -menuWidthState }}
       animate={{ x: 0 }}
       exit={{ x: -menuWidthState }}
       transition={{ duration: 0.25 }}
     >
+      <div>
+        <button
+          onClick={() => setTheme(!theme)}
+          className="side_menu_link border sm:hidden"
+          aria-label="Toggle Dark Mode"
+        > 
+          <div className="flex items-center gap-3">
+            <Label>Theme : </Label>
+            {theme ? (
+              <Sun className="w-5 h-5 opacity-90" />
+            ) : (
+              <Moon className="w-5 h-5 opacity-90" />
+            )}
+          </div>
+        </button>
+      </div>
+
       <Link href="/">
         <button
           onClick={() => {
