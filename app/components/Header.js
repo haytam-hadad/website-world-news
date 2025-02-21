@@ -90,15 +90,21 @@ export default function Header({ onToggleMenu }) {
               {dropdownOpen && (
                 <div className="absolute right-0 w-40 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-md shadow-lg py-1 z-20">
                   <Link href={`/profile/${user.username}`}>
-                    <button className="flex items-center w-full text-left px-3 p-2 hover:bg-gray-100 dark:hover:bg-gray-700">
-                     <User className="mx-1"/>  Profile
+                    <button
+                      className="flex items-center w-full text-left px-3 p-2 hover:bg-gray-100 dark:hover:bg-gray-700"
+                      onClick={() => setDropdownOpen(false)}
+                    >
+                      <User className="mx-1"/>  Profile
                     </button>
                   </Link>
                   <button
                     className="flex w-full text-red-800 dark:text-red-500 text-left px-3 p-2 hover:bg-gray-100 dark:hover:bg-gray-700"
-                    onClick={handleLogout}
+                    onClick={() => {
+                      setDropdownOpen(false);
+                      handleLogout();
+                    }}
                   >
-                   <LogOut className="mx-1"/>  Log out
+                    <LogOut className="mx-1"/>  Log out
                   </button>
                 </div>
               )}
