@@ -34,25 +34,25 @@ function LayoutContent({ children }) {
     <html lang="en" className={`${theme ? "dark" : "light"}`}>
       <body className="dark:bg-thirdColor bg-secondaryColor dark:text-secondaryColor">
         <Header onToggleMenu={() => setShowMenu((prev) => !prev)} />
-        <main className="relative flex">
+        <main className="relative flex overflow-hidden">
+          {/* Side Menu */}
           {isDesktop && (
-            <div className="hidden md:block overflow-y-auto">
-              <SideMenu setVisible={setShowMenu} setMenuWidth={setMenuWidth} />
+            <div className=" w-[250px]">
+              <SideMenu setVisible={setShowMenu} />
             </div>
           )}
+
+          {/* Mobile Side Menu (Overlay) */}
           {!isDesktop && showMenu && (
-            <div className="md:hidden absolute top-0 left-0 z-50 overflow-y-auto">
-              <SideMenu setVisible={setShowMenu} setMenuWidth={setMenuWidth} />
+            <div className="md:hidden relative">
+              <SideMenu setVisible={setShowMenu} />
             </div>
           )}
-          <div
-            className="flex-1 p-2 overflow-y-hidden"
-            style={{ marginLeft: isDesktop ? `${menuWidth}px` : "0px" }}
-          >
-            {children}
-          </div>
+
+          {/* Content Area */}
+          <div className="flex-1 p-4 overflow-y-auto">{children}</div>
         </main>
-        <GoUp/>
+        <GoUp />
         <Footer />
       </body>
     </html>
