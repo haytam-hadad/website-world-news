@@ -64,7 +64,7 @@ export default function LoginPage() {
 
   return (
     <div className="grid min-h-screen grid-cols-1 md:grid-cols-[3fr_2fr]">
-      <div className="flex flex-col justify-center px-8 md:px-16">
+      <div className="flex flex-col justify-center px-8">
         <form
           className="flex flex-col space-y-5 max-w-lg mx-auto w-full"
           onSubmit={handleSubmit}

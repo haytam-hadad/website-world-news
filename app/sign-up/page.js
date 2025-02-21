@@ -89,7 +89,7 @@ export default function SignUpPage() {
 
   return (
     <div className="grid min-h-screen grid-cols-1 md:grid-cols-[3fr_2fr]">
-      <div className="flex mt-12 flex-col justify-center px-8 md:px-16">
+      <div className="flex mt-10 flex-col justify-center px-8">
         <form className="flex flex-col space-y-5 max-w-lg mx-auto w-full" onSubmit={handleSubmit}>
           <h1 className="text-center text-4xl font-bold text-foreground mb-6">Sign up</h1>
           <label className="flex flex-col space-y-1">

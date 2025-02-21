@@ -1,6 +1,6 @@
 "use client";
 import Link from "next/link";
-import { Search, Menu, Moon, Sun, Bell } from "lucide-react";
+import { Search, Menu, Moon, Sun, User, LogOut} from "lucide-react";
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
 import { Toggle } from "@/components/ui/toggle";
@@ -10,6 +10,7 @@ import Image from "next/image";
 
 export default function Header({ onToggleMenu }) {
   const { theme, setTheme, user, setUser } = useContext(ThemeContext);
+  const [dropdownOpen, setDropdownOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
 
   const handleSearch = (e) => {
@@ -41,7 +42,10 @@ export default function Header({ onToggleMenu }) {
         </Link>
 
         {/* Search Group */}
-        <form onSubmit={handleSearch} className="relative w-full max-w-lg mx-auto rounded-full border">
+        <form
+          onSubmit={handleSearch}
+          className="relative w-full max-w-lg mx-auto rounded-full border"
+        >
           <input
             type="text"
             placeholder="Search for news..."
@@ -58,7 +62,7 @@ export default function Header({ onToggleMenu }) {
         {/* Control Group */}
         <div className="flex items-center gap-1">
           {/* Dark Mode Toggle */}
-          <div className="flex items-center gap-1 p-1 rounded-full border-2 border-mainColor max-sm:scale-90">
+          <div className="flex items-center gap-1 rounded-full mr-1 border-mainColor max-sm:scale-90">
             <Switch
               checked={theme}
               onCheckedChange={(checked) => setTheme(checked)}
@@ -73,29 +77,32 @@ export default function Header({ onToggleMenu }) {
           </div>
 
           {user ? (
-            <Link href={`/profile/${user.username}`} >
-            <div className="flex items-center gap-1 relative py-1 px-2 sm:ml-1  rounded-full  group">
-              
-              <div className="w-8 h-8 rounded-full  bg-mainColor text-bold text-white flex items-center justify-center">
-                {user.username.charAt(0).toUpperCase()}
-              </div>
-              <span className="font-medium hidden md:inline capitalize hover:underline">{user.username}</span>
-              <div className="relative">
-                <button className="relative flex items-center p-1 rounded-full hover:bg-gray-200 dark:hover:bg-gray-700">
-                  <Bell className="w-5 h-5 text-gray-600 dark:text-gray-300" />
-                  <span className="absolute top-0 right-0 inline-block w-2 h-2 bg-red-600 rounded-full"></span>
-                </button>
-                <div className="absolute right-0 w-40 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-md shadow-lg py-1 z-20 hidden group-hover:block">
+            <div className="relative">
+              <button
+                className="flex items-center gap-1 rounded-full group p-1"
+                onClick={() => setDropdownOpen(!dropdownOpen)}
+              >
+                <div className="w-8 h-8 rounded-full  bg-mainColor text-bold text-white flex items-center justify-center">
+                  {user.username.charAt(0).toUpperCase()}
+                </div>
+                <span className="font-medium hidden md:inline capitalize hover:underline">{user.username}</span>
+              </button>
+              {dropdownOpen && (
+                <div className="absolute right-0 w-40 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-md shadow-lg py-1 z-20">
+                  <Link href={`/profile/${user.username}`}>
+                    <button className="flex items-center w-full text-left px-3 p-2 hover:bg-gray-100 dark:hover:bg-gray-700">
+                     <User className="mx-1"/>  Profile
+                    </button>
+                  </Link>
                   <button
-                    className="block w-full text-red-800 dark:text-red-500 text-left px-3 p-2 hover:bg-gray-100 dark:hover:bg-gray-700"
+                    className="flex w-full text-red-800 dark:text-red-500 text-left px-3 p-2 hover:bg-gray-100 dark:hover:bg-gray-700"
                     onClick={handleLogout}
                   >
-                    Log out
+                   <LogOut className="mx-1"/>  Log out
                   </button>
                 </div>
-              </div>
-            </div>   
-          </Link>
+              )}
+            </div>
           ) : (
             <div className="hidden ml-2 md:flex items-center gap-2">
               <Link href="/login">
@@ -123,3 +130,4 @@ export default function Header({ onToggleMenu }) {
     </header>
   );
 }
+
