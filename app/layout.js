@@ -2,6 +2,7 @@
 import "./globals.css";
 import Header from "./components/Header";
 import Footer from "./components/Footer";
+import { GoUp } from "./components/GoUp";
 import SideMenu from "./components/SideMenu";
 import { ThemeProvider, ThemeContext } from "./ThemeProvider";
 import { useState, useContext, useEffect, useCallback } from "react";
@@ -51,6 +52,7 @@ function LayoutContent({ children }) {
             {children}
           </div>
         </main>
+        <GoUp/>
         <Footer />
       </body>
     </html>

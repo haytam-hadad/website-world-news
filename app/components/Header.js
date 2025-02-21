@@ -79,7 +79,7 @@ export default function Header({ onToggleMenu }) {
           {user ? (
             <div className="relative">
               <button
-                className="flex items-center gap-1 rounded-full group p-1"
+                className="flex items-center gap-2 rounded-full group p-1"
                 onClick={() => setDropdownOpen(!dropdownOpen)}
               >
                 <div className="w-8 h-8 rounded-full  bg-mainColor text-bold text-white flex items-center justify-center">
