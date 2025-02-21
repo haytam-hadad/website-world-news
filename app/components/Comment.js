@@ -18,10 +18,10 @@ const Comment = ({ user, text, timeAgo, onReport, onReply }) => {
         </header>
 
         {/* Comment Text */}
-        <p className="text-md text-gray-600 dark:text-gray-300 line-clamp-4 mb-4">{text}</p>
+        <p className="text-md text-gray-600 dark:text-gray-300 line-clamp-4 mb-2">{text}</p>
 
         {/* Comment Actions */}
-        <div className="flex items-center justify-between space-x-6 mt-2 text-sm text-gray-500 dark:text-gray-400">
+        <div className="flex items-center justify-between space-x-4 mt-2 text-sm text-gray-500 dark:text-gray-400">
           <div className="flex items-center space-x-4">
             <button
               onClick={onReport}

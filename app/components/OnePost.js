@@ -71,7 +71,7 @@ const SinglePost = ({ post }) => {
               {post.author ? post.author.charAt(0) : "U"}
             </div>
             <div className="flex flex-col">
-            <Link href={post.author ? `/profile/${post.author}` : "#"} className=" font-semibold truncate capitalize cursor-pointer hover:underline text-gray-900 dark:text-gray-100 text-xl">
+            <Link href={post.author ? `/profile/${post.author}` : "#"} className=" font-semibold truncate capitalize cursor-pointer hover:underline text-gray-900 dark:text-gray-100 text-lg sm:text-xl">
               {post.author || "Unknown"}
               </Link>
             </div>
@@ -116,8 +116,8 @@ const SinglePost = ({ post }) => {
         <hr className="m-2" />
 
         {/* Interaction Section */}
-        <div className="flex items-center px-1 justify-between space-x-6 my-1 text-sm text-gray-500 dark:text-gray-400">
-          <div className="flex items-center space-x-4">
+        <div className="flex items-center px-1 justify-between space-x-3 my-1 text-sm text-gray-500 dark:text-gray-400">
+          <div className="flex items-center space-x-3">
             <div className="flex items-center bg-gray-100 dark:bg-gray-800 p-1 rounded-full cursor-pointer">
               <div
                 className={`p-1 rounded-full cursor-pointer hover:text-mainColor ${
@@ -149,10 +149,10 @@ const SinglePost = ({ post }) => {
             <div className="bg-gray-100 dark:bg-gray-800 p-2 rounded-full cursor-pointer text-gray-500 hover:text-blue-500">
               <MoreHorizontal className="w-5 h-5 transition-transform transform hover:scale-110" />
             </div>
+            <Link href={`/category/${post.category}`} className="flex items-center cursor-pointer text-md text-gray-500 hover:text-blue-500">
+              <p className="text-blue-500 cursor-pointer font-semibold capitalize text-md p-1 px-3 transition duration-300 hover:border border hover:border-mainColor rounded-full"> {post.category || "General"}</p>
+            </Link>
           </div>
-          <Link href={`/category/${post.category}`} className="flex items-center space-x-4 cursor-pointer text-lg text-gray-500 hover:text-blue-500">
-              <p className="text-blue-500 cursor-pointer font-semibold capitalize text-md p-1 px-3 transition duration-300 hover:border border hover:border-mainColor rounded-full">{post.category || "General"}</p>
-          </Link>
         </div>
       </div>
 
@@ -162,23 +162,23 @@ const SinglePost = ({ post }) => {
           Comments
         </h2>
         
-        <div className="mt-6 flex items-center">
+        <div className="mt-4 flex items-center w-full sm:flex-row flex-col sm:space-x-2 space-y-2 sm:space-y-1">
           <input
             type="text"
-            className="flex-1 dark:bg-slate-950 px-4 py-2 border border-mainColor rounded-lg text-gray-700 dark:text-gray-300"
+            className="dark:bg-slate-950 w-full px-4 py-2 border border-mainColor rounded-lg text-gray-700 dark:text-gray-300 flex-1 sm:w-auto"
             value={newComment}
             onChange={(e) => setNewComment(e.target.value)}
             placeholder="Add a comment..."
           />
           <button
             onClick={handleAddComment}
-            className="ml-2 bg-blue-500 text-white p-2 rounded-lg"
+            className="bg-blue-500 text-white p-2 rounded-lg sm:w-auto w-full"
           >
             Add Comment
           </button>
         </div>
 
-        <div className="mt-3 space-y-4">
+        <div className="mt-3 space-y-3">
           {comments.length > 0 ? (
             comments.map((comment) => (
               <Comment
