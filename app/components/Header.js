@@ -27,7 +27,7 @@ export default function Header({ onToggleMenu }) {
   };
 
   return (
-    <header className="sticky bg-lightgrey dark:bg-darkgrey select-none top-0 z-50 border-b-2 px-5 max-sm:px-2">
+    <header className="sticky bg-lightgrey dark:bg-darkgrey select-none top-0 z-50 border-b-2 px-6 max-sm:px-3">
       <div className="grid z-50 grid-cols-[auto,_1fr,_auto] items-center py-3 text-maintextColor dark:text-secondaryColor gap-1">
         {/* Logo Group */}
         <Link href="/" className="flex items-center gap-2">
@@ -51,7 +51,7 @@ export default function Header({ onToggleMenu }) {
             placeholder="Search for news..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full bg-[alicblue] dark:bg-[#26262e] border shadow-sm border-gray-200 dark:border-gray-700 focus:border-mainColor  rounded-full px-4 sm:px-5 h-9 sm:h-10 focus:outline-none focus:ring-0 text-primary dark:text-secondaryColor"
+            className="w-full bg-[alicblue] dark:bg-[#26262e] border border-mainColor shadow-sm focus:border-2 rounded-full px-4 sm:px-5 h-9 md:h-10 focus:outline-none focus:ring-0 text-primary dark:text-secondaryColor"
           />
           <Search
             onClick={handleSearch}
@@ -60,9 +60,9 @@ export default function Header({ onToggleMenu }) {
         </form>
 
         {/* Control Group */}
-        <div className="flex items-center gap-1">
+        <div className="flex items-center gap-2">
           {/* Dark Mode Toggle */}
-          <div className="hidden sm:flex items-center gap-1 rounded-full mr-1 border-mainColor max-sm:scale-90">
+          <div className="hidden sm:flex items-center gap-1 rounded-full p-1 max-sm:scale-90">
             <Switch
               checked={theme}
               onCheckedChange={(checked) => setTheme(checked)}
@@ -77,15 +77,15 @@ export default function Header({ onToggleMenu }) {
           </div>
 
           {user ? (
-            <div className="relative">
+            <div className="relative rounded-full">
               <button
-                className="flex items-center gap-2 rounded-full group p-1"
+                className="flex items-center gap-1 rounded-full group p-1"
                 onClick={() => setDropdownOpen(!dropdownOpen)}
               >
-                <div className="w-8 h-8 rounded-full  bg-mainColor text-bold text-white flex items-center justify-center">
+                <div className="w-8 h-8 rounded-full bg-mainColor text-bold text-white flex items-center justify-center">
                   {user.username.charAt(0).toUpperCase()}
                 </div>
-                <span className="font-medium hidden md:inline capitalize hover:underline">{user.username}</span>
+                <span className="font-semibold  hidden p-1 md:inline capitalize hover:underline">{user.username}</span>
               </button>
               {dropdownOpen && (
                 <div className="absolute right-0 w-40 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-md shadow-lg py-1 z-20">
