@@ -104,12 +104,14 @@ const SideMenu = ({ setVisible, setMenuWidth }) => {
             </Link>
           )}
 
-          <Link className="flex md:hidden" href="/login">
-          <button className="block w-full my-3 border-2 border-mainColor text-lg font-bold p-2 text-center rounded-xl text-mainColor hover:bg-mainColor hover:text-white">
-            Log in
-          </button>
-          </Link>
-          
+          {!user && (
+            <Link className="flex md:hidden" href="/login">
+              <button className="block w-full my-3 border-2 border-mainColor text-lg font-bold p-2 text-center rounded-xl text-mainColor hover:bg-mainColor hover:text-white">
+                Log in
+              </button>
+            </Link>
+          )}
+        
           <Link href="/trends">
           <button
             onClick={() => {

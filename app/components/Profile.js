@@ -54,7 +54,7 @@ const Profile = ({ userData }) => {
               {userData.username.charAt(0)}
             </div>
             <div className="text-white">
-              <h1 className="text-lg sm:text-lg md:text-xl lg:text-xl font-bold">
+              <h1 className="text-lg capitalize sm:text-lg md:text-xl lg:text-xl font-bold">
                 {userData.username || "Unknown"}
               </h1>
               <p className="text-sm sm:text-base md:text-base lg:text-lg opacity-80">
