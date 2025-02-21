@@ -62,8 +62,8 @@ const SinglePost = ({ post }) => {
   };
 
   return (
-    <>
-      <div className="flex flex-col w-full shadow-sm max-w-4xl mx-auto bg-lightgrey dark:bg-darkgrey border p-3 rounded-xl">
+    <div className="flex flex-col items-center justify-center w-full p-1">
+      <div className="flex flex-col w-full shadow-sm mx-auto bg-lightgrey dark:bg-darkgrey border p-2 rounded-xl">
         {/* Header Section */}
         <header className="flex rounded-full items-center justify-between text-sm text-gray-500 dark:text-gray-400 p-1 mb-3">
           <div className="flex items-center space-x-3">
@@ -157,12 +157,12 @@ const SinglePost = ({ post }) => {
       </div>
 
       {/* Comment Section */}
-      <div className="flex mt-4 flex-col w-full max-w-4xl mx-auto bg-lightgrey dark:bg-darkgrey border p-4 rounded-xl shadow-sm">
+      <div className="flex mt-4 flex-col w-full mx-auto bg-lightgrey dark:bg-darkgrey border p-3 rounded-xl shadow-sm">
         <h2 className="text-xl font-semibold text-gray-900 dark:text-gray-100">
           Comments
         </h2>
         
-        <div className="mt-4 flex items-center w-full sm:flex-row flex-col sm:space-x-2 space-y-2 sm:space-y-1">
+        <div className="mt-4 flex items-center w-full sm:flex-row flex-col sm:space-x-2 space-y-2">
           <input
             type="text"
             className="dark:bg-slate-950 w-full px-4 py-2 border border-mainColor rounded-lg text-gray-700 dark:text-gray-300 flex-1 sm:w-auto"
@@ -172,7 +172,7 @@ const SinglePost = ({ post }) => {
           />
           <button
             onClick={handleAddComment}
-            className="bg-blue-500 text-white p-2 rounded-lg sm:w-auto w-full"
+            className="bg-mainColor text-white p-2 rounded-lg sm:w-auto w-full"
           >
             Add Comment
           </button>
@@ -194,7 +194,7 @@ const SinglePost = ({ post }) => {
           )}
         </div>
       </div>
-    </>
+    </div>
   );
 };
 
