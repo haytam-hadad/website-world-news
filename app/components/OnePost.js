@@ -67,11 +67,11 @@ const SinglePost = ({ post }) => {
         {/* Header Section */}
         <header className="flex rounded-full items-center justify-between text-sm text-gray-500 dark:text-gray-400 p-1 mb-3">
           <div className="flex items-center space-x-3">
-            <div className="rounded-full border-mainColor bg-gray-400 dark:bg-gray-600 w-11 h-11  flex items-center justify-center text-lg capitalize font-semibold text-white">
+            <div className="rounded-full border-mainColor bg-gray-400 dark:bg-gray-600 w-9 h-9 sm:w-11 sm:h-11  flex items-center justify-center text-lg capitalize font-semibold text-white">
               {post.author ? post.author.charAt(0) : "U"}
             </div>
             <div className="flex flex-col">
-            <Link href={post.author ? `/profile/${post.author}` : "#"} className=" font-semibold truncate capitalize cursor-pointer hover:underline text-gray-900 dark:text-gray-100 text-lg sm:text-xl">
+            <Link href={post.author ? `/profile/${post.author}` : "#"} className=" font-semibold truncate capitalize cursor-pointer hover:underline text-gray-900 dark:text-gray-100 text-md md:text-xl">
               {post.author || "Unknown"}
               </Link>
             </div>
@@ -82,7 +82,7 @@ const SinglePost = ({ post }) => {
           </span>
           <button
             onClick={toggleSubscribe}
-            className={`p-2 px-4 rounded-full shadow-sm text-sm font-medium transition-all ${
+            className={`py-2 px-4 max-sm:px-2 rounded-full shadow-sm text-sm font-medium transition-all ${
               subscribed
                 ? "bg-gray-800 text-white hover:bg-gray-700"
                 : "bg-gray-300 text-gray-800 hover:bg-gray-400"
