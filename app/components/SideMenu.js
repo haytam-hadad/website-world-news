@@ -12,7 +12,7 @@ import {
   ChevronUp,
   ChevronDown,
   TestTube,
-  SquarePlus,
+  Plus,
 } from "lucide-react";
 import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
@@ -82,13 +82,13 @@ const SideMenu = ({ setVisible }) => {
       </Link>
 
       {user && (
-        <Link href="/post/add">
+        <Link href="/add">
           <button
             onClick={() => setVisible(false)}
             className="side_menu_link text-mainColor"
           >
-            <SquarePlus size={20} />
-            <span className="text-base font-bold">Post</span>
+            <Plus size={20} />
+            <span className="text-base font-medium">POST</span>
           </button>
         </Link>
       )}

@@ -1,7 +1,7 @@
 "use client";
 import { useState, useContext } from "react";
 import { useRouter } from "next/navigation";
-import { ThemeContext } from "../../ThemeProvider";
+import { ThemeContext } from "../ThemeProvider";
 import Image from "next/image";
 
 export default function AddPostPage() {
