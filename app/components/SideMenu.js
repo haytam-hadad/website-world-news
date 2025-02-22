@@ -82,7 +82,7 @@ const SideMenu = ({ setVisible }) => {
       </Link>
 
       {user && (
-        <Link href="/addpost">
+        <Link href="/post/add">
           <button
             onClick={() => setVisible(false)}
             className="side_menu_link text-mainColor"
@@ -91,6 +91,21 @@ const SideMenu = ({ setVisible }) => {
             <span className="text-base font-bold">Post</span>
           </button>
         </Link>
+      )}
+
+    {!user && (
+      <Link href="/trends">
+      <button
+        onClick={() => {
+          setActivePath("/trends");
+          setVisible(false);
+        }}
+        className={`flex sm:hidden mb-1 text-lg space-x-3 justify-center items-center text-center w-full p-3 rounded-2xl border-2 border-mainColor text-mainColor `}
+        aria-label="Trends"
+      >
+        <span className="text-base font-medium">Log in</span>
+      </button>
+    </Link>
       )}
 
       <Link href="/trends">
