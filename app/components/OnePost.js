@@ -66,7 +66,7 @@ const SinglePost = ({ post }) => {
       <div className="flex flex-col w-full shadow-sm mx-auto bg-lightgrey dark:bg-darkgrey border p-2 rounded-xl">
         {/* Header Section */}
         <header className="flex rounded-full items-center justify-between text-sm text-gray-500 dark:text-gray-400 p-1 mb-3">
-          <div className="flex items-center space-x-3">
+          <div className="flex items-center space-x-2">
             <div className="rounded-full border-mainColor bg-gray-400 dark:bg-gray-600 w-9 h-9 sm:w-11 sm:h-11  flex items-center justify-center text-lg capitalize font-semibold text-white">
               {post.author ? post.author.charAt(0) : "U"}
             </div>
