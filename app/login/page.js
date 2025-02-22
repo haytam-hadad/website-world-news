@@ -48,7 +48,7 @@ export default function LoginPage() {
     }
   };
 
-  const handleGoogleLogin = () => {
+  /* const handleGoogleLogin = () => {
     setLoading(true);
     setError(null);
 
@@ -65,6 +65,10 @@ export default function LoginPage() {
         router.reload();
       }
     }, 1000);
+  }; */
+  
+  const handleGoogleLogin = () => {
+    window.location.href = `${process.env.NEXT_PUBLIC_API_URL}/auth/google`;
   };
 
   return (
