@@ -34,7 +34,7 @@ function LayoutContent({ children }) {
     <html lang="en" className={`${theme ? "dark" : "light"}`}>
       <body className="dark:bg-thirdColor bg-secondaryColor dark:text-secondaryColor">
         <Header onToggleMenu={() => setShowMenu((prev) => !prev)} />
-        <main className="relative md:p-1 flex">
+        <main className="relative flex">
           {/* Side Menu */}
           {isDesktop && (
             <div className=" w-[250px]">
@@ -50,7 +50,7 @@ function LayoutContent({ children }) {
           )}
 
           {/* Content Area */}
-          <div className="flex-1 p-4 overflow-y-auto">{children}</div>
+          <div className="flex-1 p-2">{children}</div>
         </main>
         <GoUp />
         <Footer />
