@@ -86,7 +86,7 @@ body{
     @apply text-[gray];
   }
   .title {
-    @apply text-2xl md:text-3xl my-5 font-extrabold text-center;
+    @apply text-2xl md:text-3xl my-5 font-bold text-center;
   }
   .side_menu_link{
     @apply flex mb-1 items-center text-lg space-x-3 w-full text-left px-5 py-3 rounded-full hover:bg-primary hover:text-primary-foreground ;

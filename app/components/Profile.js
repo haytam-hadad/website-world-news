@@ -1,6 +1,6 @@
 "use client";
 import { useContext, useEffect, useState } from "react";
-import { Mail, Bell , Edit } from "lucide-react";
+import { Bell, Edit, Star ,Mail } from "lucide-react";
 import Article from "./Article";
 import Image from "next/image";
 import { ThemeContext } from "../ThemeProvider";
@@ -48,9 +48,9 @@ const Profile = ({ userData }) => {
 
       <div className="bg-lightgrey border dark:bg-darkgrey shadow-sm mb-3 rounded-2xl">
         {/* Header Section */}
-        <header className="flex flex-col lg:flex-row lg:items-center lg:justify-between bg-gradient-to-r from-mainColor gap-1 to-[skyblue] p-3 lg:px-5 rounded-2xl mb-1">
+        <header className="flex flex-col lg:flex-row lg:items-center lg:justify-between bg-gradient-to-r from-mainColor to-[skyblue] p-3 lg:px-5 rounded-2xl mb-1">
           <div className="flex items-center space-x-4 mb-3 md:mb-0">
-            <div className="w-14 h-14 max-md:w-12 max-md:h-12 rounded-full bg-primary flex items-center justify-center text-primary-foreground capitalize font-semibold text-xl sm:text-xl md:text-2xl lg:text-3xl shadow-md">
+            <div className="w-14 h-14 max-md:w-12 max-md:h-12 rounded-full bg-primary-foreground flex items-center justify-center text-primary capitalize font-semibold text-xl sm:text-xl md:text-2xl lg:text-3xl shadow-md">
               {userData.username.charAt(0)}
             </div>
             <div className="text-white">
@@ -62,11 +62,9 @@ const Profile = ({ userData }) => {
               </p>
             </div>
           </div>
-           {user && user._id == userData._id ? (
-            <button
-              className="flex gap-1 items-center bg-white text-mainColor px-5 py-3 rounded-full shadow-md font-semibold hover:bg-gray-100 transition"
-            >
-              <Edit/>
+          {user && user._id == userData._id ? (
+            <button className="flex gap-1 items-center bg-white text-mainColor px-5 py-3 rounded-full shadow-md font-semibold hover:bg-gray-100 transition">
+              <Edit />
               Update Info
             </button>
           ) : (
@@ -86,29 +84,30 @@ const Profile = ({ userData }) => {
         {/* User Info Section */}
         <section className="p-6 bg-lightgrey dark:bg-darkgrey rounded-2xl">
           <div className="space-y-4">
-            <div className="flex items-center">
+            <div className="flex items-center pb-3">
               <Mail className="text-mainColor mr-3" />
-              <span className="text-base font-semibold text-primary">Email:</span>
-              <span className="ml-2 text-primary">{userData.email}</span>
+              <p className="text-base font-semibold text-primary">
+                Email: {userData.email}
+              </p>
             </div>
-            <div className="flex items-center">
-              <span className="text-base font-semibold text-primary">Joined:</span>
-              <span className="ml-2 text-primary">
-                {new Date(userData.createdAt).toLocaleDateString()}
-              </span>
+            <div className="flex items-center py-3">
+              <Star className="text-mainColor mr-3" />
+              <p className="text-base font-semibold text-primary">
+                Joined: {new Date(userData.createdAt).toLocaleDateString()}
+              </p>
             </div>
-            <div className="flex items-start">
-              <span className="text-base font-semibold text-primary">Bio:</span>
-              <span className="ml-2 text-primary">
+            <div className="flex items-start py-3">
+              <p className="text-base font-semibold text-primary">Bio:</p>
+              <p className="ml-2 text-primary">
                 {userData.bio || "No bio available for this user"}
-              </span>
+              </p>
             </div>
           </div>
         </section>
-        </div>
-      <section>
+      </div>
+      <section className="mt-5">
         <h2 className="title">Articles</h2>
-        <div className="">
+        <div className="space-y-5">
           {articles.length === 0 ? (
             <p className="text-gray-500">No articles available.</p>
           ) : (
@@ -145,3 +144,4 @@ const Profile = ({ userData }) => {
 };
 
 export default Profile;
+
