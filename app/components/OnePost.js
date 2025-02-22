@@ -54,10 +54,14 @@ const SinglePost = ({ post }) => {
     const now = new Date();
     const diffInSeconds = Math.floor((now - publishedDate) / 1000);
     if (diffInSeconds < 60) return "just now";
-    if (diffInSeconds < 3600) return `${Math.floor(diffInSeconds / 60)} min ago`;
-    if (diffInSeconds < 86400) return `${Math.floor(diffInSeconds / 3600)}h ago`;
-    if (diffInSeconds < 2592000) return `${Math.floor(diffInSeconds / 86400)}d ago`;
-    if (diffInSeconds < 31536000) return `${Math.floor(diffInSeconds / 2592000)}mo ago`;
+    if (diffInSeconds < 3600)
+      return `${Math.floor(diffInSeconds / 60)} min ago`;
+    if (diffInSeconds < 86400)
+      return `${Math.floor(diffInSeconds / 3600)}h ago`;
+    if (diffInSeconds < 2592000)
+      return `${Math.floor(diffInSeconds / 86400)}d ago`;
+    if (diffInSeconds < 31536000)
+      return `${Math.floor(diffInSeconds / 2592000)}mo ago`;
     return `${Math.floor(diffInSeconds / 31536000)}y ago`;
   };
 
@@ -71,8 +75,11 @@ const SinglePost = ({ post }) => {
               {post.author ? post.author.charAt(0) : "U"}
             </div>
             <div className="flex flex-col">
-            <Link href={post.author ? `/profile/${post.author}` : "#"} className=" font-semibold truncate capitalize cursor-pointer hover:underline text-gray-900 dark:text-gray-100 text-md md:text-xl">
-              {post.author || "Unknown"}
+              <Link
+                href={post.author ? `/profile/${post.author}` : "#"}
+                className=" font-semibold truncate capitalize cursor-pointer hover:underline text-gray-900 dark:text-gray-100 text-md md:text-xl"
+              >
+                {post.author || "Unknown"}
               </Link>
             </div>
           </div>
@@ -90,9 +97,8 @@ const SinglePost = ({ post }) => {
           >
             {subscribed ? "Unsubscribe" : "Subscribe"}
           </button>
-          
         </header>
-         <hr/> 
+        <hr />
         {/* Title */}
         <h1 className="font-serif font-semibold text-2xl md:text-3xl lg:text-4xl text-gray-900 dark:text-gray-100 p-2 mx-1 my-5 underline underline-offset-4">
           {post.title || "No Title Available"}
@@ -116,41 +122,50 @@ const SinglePost = ({ post }) => {
         <hr className="m-2" />
 
         {/* Interaction Section */}
-        <div className="flex items-center px-1 justify-between space-x-3 my-1 text-sm text-gray-500 dark:text-gray-400">
-          <div className="flex items-center space-x-3">
-            <div className="flex items-center bg-gray-100 dark:bg-gray-800 p-1 rounded-full cursor-pointer">
-              <div
-                className={`p-1 rounded-full cursor-pointer hover:text-mainColor ${
-                  vote === "upvote" ? "text-green-600" : "text-gray-500"
-                }`}
-                onClick={handleUpvote}
-              >
-                <ArrowBigUp className="w-7 h-7 transition-transform transform hover:scale-110" />
+        <div className="flex items-center justify-between space-x-3 my-1 text-sm text-gray-500 dark:text-gray-400">
+          <div className="flex items-center">
+            <div className="flex items-center justify-between gap-2">
+              <div className="flex items-center bg-gray-100 dark:bg-gray-800 p-1 rounded-full cursor-pointer">
+                <div
+                  className={`p-1 rounded-full cursor-pointer hover:text-mainColor ${
+                    vote === "upvote" ? "text-green-600" : "text-gray-500"
+                  }`}
+                  onClick={handleUpvote}
+                >
+                  <ArrowBigUp className="w-7 h-7 transition-transform transform hover:scale-110" />
+                </div>
+                <div className="h-5 w-0.5 bg-gray-400 dark:bg-gray-500 mx-2" />
+                <div
+                  className={`p-1 rounded-full cursor-pointer hover:text-mainColor ${
+                    vote === "downvote" ? "text-red-500" : "text-gray-500"
+                  }`}
+                  onClick={handleDownvote}
+                >
+                  <ArrowBigDown className="w-7 h-7 transition-transform transform hover:scale-110" />
+                </div>
               </div>
-              <div className="h-5 w-0.5 bg-gray-400 dark:bg-gray-500 mx-2" />
-              <div
-                className={`p-1 rounded-full cursor-pointer hover:text-mainColor ${
-                  vote === "downvote" ? "text-red-500" : "text-gray-500"
-                }`}
-                onClick={handleDownvote}
-              >
-                <ArrowBigDown className="w-7 h-7 transition-transform transform hover:scale-110" />
+              <div className="bg-gray-100 dark:bg-gray-800 p-2 rounded-full cursor-pointer text-gray-500 hover:text-blue-500">
+                <MessageCircle className="w-5 h-5 transition-transform transform hover:scale-110" />
+              </div>
+              <div className="bg-gray-100 dark:bg-gray-800 p-2 rounded-full cursor-pointer text-gray-500 hover:text-blue-500">
+                <Share2 className="w-5 h-5 transition-transform transform hover:scale-110" />
+              </div>
+              <div className="bg-gray-100 dark:bg-gray-800 p-2 rounded-full cursor-pointer text-gray-500 hover:text-blue-500">
+                <Flag className="w-5 h-5 transition-transform transform hover:scale-110" />
+              </div>
+              <div className="bg-gray-100 dark:bg-gray-800 p-2 rounded-full cursor-pointer text-gray-500 hover:text-blue-500">
+                <MoreHorizontal className="w-5 h-5 transition-transform transform hover:scale-110" />
               </div>
             </div>
-            <div className="bg-gray-100 dark:bg-gray-800 p-2 rounded-full cursor-pointer text-gray-500 hover:text-blue-500">
-              <MessageCircle className="w-5 h-5 transition-transform transform hover:scale-110" />
-            </div>
-            <div className="bg-gray-100 dark:bg-gray-800 p-2 rounded-full cursor-pointer text-gray-500 hover:text-blue-500">
-              <Share2 className="w-5 h-5 transition-transform transform hover:scale-110" />
-            </div>
-            <div className="bg-gray-100 dark:bg-gray-800 p-2 rounded-full cursor-pointer text-gray-500 hover:text-blue-500">
-              <Flag className="w-5 h-5 transition-transform transform hover:scale-110" />
-            </div>
-            <div className="bg-gray-100 dark:bg-gray-800 p-2 rounded-full cursor-pointer text-gray-500 hover:text-blue-500">
-              <MoreHorizontal className="w-5 h-5 transition-transform transform hover:scale-110" />
-            </div>
-            <Link href={`/category/${post.category}`} className="flex items-center cursor-pointer text-md text-gray-500 hover:text-blue-500">
-              <p className="text-blue-500 cursor-pointer font-semibold capitalize text-md p-1 px-3 transition duration-300 hover:border border hover:border-mainColor rounded-full"> {post.category || "General"}</p>
+          </div>
+          <div className="flex items-center justify-end">
+            <Link
+              href={`/category/${post.category}`}
+              className="flex items-center cursor-pointer text-gray-500 hover:text-blue-500"
+            >
+              <p className="text-blue-500 cursor-pointer font-semibold capitalize text-sm sm:text-lg p-1 px-3 transition duration-300 hover:border border border-transparent hover:border-mainColor rounded-full">
+                {post.category || "General"}
+              </p>
             </Link>
           </div>
         </div>
@@ -161,7 +176,7 @@ const SinglePost = ({ post }) => {
         <h2 className="text-xl font-semibold text-gray-900 dark:text-gray-100">
           Comments
         </h2>
-        
+
         <div className="mt-4 flex items-center w-full sm:flex-row flex-col sm:space-x-2 space-y-2">
           <input
             type="text"
