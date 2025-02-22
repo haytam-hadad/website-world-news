@@ -62,6 +62,48 @@ export default function LoginPage() {
     }
   };
 
+  const handleGoogleLogin = async () => {
+    setLoading(true);
+    setError(null);
+
+    try {
+      const googleLoginWindow = window.open(
+        `${process.env.NEXT_PUBLIC_API_URL}/auth/google`,
+        "google-login",
+        "width=500,height=600"
+      );
+
+      const checkWindowClosed = setInterval(async () => {
+        if (googleLoginWindow.closed) {
+          clearInterval(checkWindowClosed);
+
+          try {
+            const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/auth/status`, {
+              credentials: "include",
+            });
+            const data = await res.json();
+            
+            if (data.user) {
+              setUser(data.user);
+              window.location.href = "/";
+            } else {
+              setError("Google login failed. Please try again.");
+            }
+          } catch (err) {
+            console.error("Error checking auth status:", err);
+            setError("An error occurred. Please try again.");
+          } finally {
+            setLoading(false);
+          }
+        }
+      }, 1000);
+    } catch (err) {
+      console.error("Error during Google login:", err);
+      setError("An unexpected error occurred. Please try again.");
+      setLoading(false);
+    }
+  };
+
   return (
     <div className="grid min-h-screen grid-cols-1 md:grid-cols-[3fr_2fr]">
       <div className="flex flex-col justify-center px-8">
@@ -148,6 +190,7 @@ export default function LoginPage() {
           <button
             type="button"
             className="flex items-center justify-center w-full rounded-lg border px-4 py-2 font-medium bg-white shadow-md hover:shadow-lg transition-all focus:ring-2 focus:ring-[#4285F4] focus:ring-offset-2 text-black"
+            onClick={handleGoogleLogin}
           >
             <Image
               src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg"
@@ -173,3 +216,4 @@ export default function LoginPage() {
     </div>
   );
 }
+
