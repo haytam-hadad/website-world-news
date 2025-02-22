@@ -1,6 +1,6 @@
 "use client";
 import Link from "next/link";
-import { Search, Menu, Moon, Sun, User, LogOut} from "lucide-react";
+import { Search, Menu, Moon, Sun, User, LogOut } from "lucide-react";
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
 import { Toggle } from "@/components/ui/toggle";
@@ -24,6 +24,7 @@ export default function Header({ onToggleMenu }) {
 
   const handleLogout = () => {
     setUser(null);
+    window.location.href = "/";
   };
 
   return (
@@ -101,7 +102,8 @@ export default function Header({ onToggleMenu }) {
                     className="flex w-full text-red-800 dark:text-red-500 text-left px-3 p-2 hover:bg-gray-100 dark:hover:bg-gray-700"
                     onClick={() => {
                       setDropdownOpen(false);
-                      handleLogout();
+                      setUser(null);
+                      window.location.href = "/";
                     }}
                   >
                     <LogOut className="mx-1"/>  Log out
