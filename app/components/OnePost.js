@@ -122,7 +122,7 @@ const SinglePost = ({ post }) => {
         <hr className="m-2" />
 
         {/* Interaction Section */}
-        <div className="flex items-center justify-between space-x-3 my-1 text-sm text-gray-500 dark:text-gray-400">
+        <div className="flex items-center flex-wrap gap-y-3 justify-between space-x-3 my-1 text-sm text-gray-500 dark:text-gray-400">
           <div className="flex items-center">
             <div className="flex items-center justify-between gap-2">
               <div className="flex items-center bg-gray-100 dark:bg-gray-800 p-1 rounded-full cursor-pointer">
@@ -163,7 +163,7 @@ const SinglePost = ({ post }) => {
               href={`/category/${post.category}`}
               className="flex items-center cursor-pointer text-gray-500 hover:text-blue-500"
             >
-              <p className="text-blue-500 cursor-pointer font-semibold capitalize text-sm sm:text-lg p-1 px-3 transition duration-300 hover:border border border-transparent hover:border-mainColor rounded-full">
+              <p className="text-blue-500 cursor-pointer font-semibold capitalize text-sm sm:text-lg px-4 py-2 transition duration-300 hover:border border border-transparent hover:border-mainColor rounded-full">
                 {post.category || "General"}
               </p>
             </Link>
