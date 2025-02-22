@@ -48,7 +48,7 @@ const Profile = ({ userData }) => {
 
       <div className="bg-lightgrey border dark:bg-darkgrey shadow-sm mb-3 rounded-2xl">
         {/* Header Section */}
-        <header className="flex flex-col md:flex-row md:items-center md:justify-between bg-gradient-to-r from-mainColor to-[skyblue] p-3 lg:px-5 rounded-2xl mb-1">
+        <header className="flex flex-col lg:flex-row lg:items-center lg:justify-between bg-gradient-to-r from-mainColor gap-1 to-[skyblue] p-3 lg:px-5 rounded-2xl mb-1">
           <div className="flex items-center space-x-4 mb-3 md:mb-0">
             <div className="w-14 h-14 max-md:w-12 max-md:h-12 rounded-full bg-primary flex items-center justify-center text-primary-foreground capitalize font-semibold text-xl sm:text-xl md:text-2xl lg:text-3xl shadow-md">
               {userData.username.charAt(0)}

@@ -114,10 +114,10 @@ const SideMenu = ({ setVisible }) => {
       <hr className="my-2 border-gray-300 dark:border-gray-700" />
       <div>
         <h2
-          className="text-md px-10 font-medium cursor-pointer opacity-60"
+          className="text-md flex items-center gap-1 justify-center font-medium cursor-pointer opacity-75"
           onClick={() => setCategoriesVisible(!categoriesVisible)}
         >
-          Categories{" "}
+          Categories
           {categoriesVisible ? (
             <ChevronUp size={20} />
           ) : (
