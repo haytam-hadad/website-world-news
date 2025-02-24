@@ -88,7 +88,7 @@ const SideMenu = ({ setVisible }) => {
             className="side_menu_link text-mainColor"
           >
             <Plus size={20} />
-            <span className="text-base font-medium">POST</span>
+            <span className="text-base font-semibold">POST</span>
           </button>
         </Link>
       )}

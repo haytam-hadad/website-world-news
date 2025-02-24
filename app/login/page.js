@@ -47,33 +47,36 @@ export default function LoginPage() {
       setLoading(false);
     }
   };
-
-  /* const handleGoogleLogin = () => {
+  
+  const handleGoogleLogin = async () => {
     setLoading(true);
     setError(null);
 
-    const googleLoginWindow = window.open(
-      `${process.env.NEXT_PUBLIC_API_URL}/auth/google`,
-      "_blank",
-      "width=500,height=600"
-    );
+    try {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/auth/google`, {
+        method: "GET",
+        credentials: "include",
+      });
 
-    const checkPopup = setInterval(() => {
-      if (!googleLoginWindow || googleLoginWindow.closed) {
-        clearInterval(checkPopup);
-        setLoading(false);
-        router.reload();
+      if (!response.ok) {
+        const errorData = await response.json();
+        setError(errorData?.message || "Login failed. Please try again.");
+        return;
       }
-    }, 1000);
-  }; */
-  
-  const handleGoogleLogin = () => {
-    window.location.href = `${process.env.NEXT_PUBLIC_API_URL}/auth/google`;
+
+      const userData = await response.json();
+      setUser(userData);
+      router.push("/");
+    } catch (err) {
+      setError("An unexpected error occurred. Please try again.");
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
     <div className="grid min-h-screen grid-cols-1 md:grid-cols-[3fr_2fr]">
-      <div className="flex flex-col justify-center px-8">
+      <div className="flex flex-col justify-center px-3">
         <form className="flex flex-col space-y-5 max-w-lg mx-auto w-full" onSubmit={handleSubmit}>
           <h1 className="text-center text-4xl font-bold text-foreground mb-6">Log in</h1>
 

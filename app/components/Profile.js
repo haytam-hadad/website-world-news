@@ -60,6 +60,9 @@ const Profile = ({ userData }) => {
               <p className="text-sm sm:text-base md:text-base lg:text-lg opacity-80">
                 {userData.email}
               </p>
+              <p className="text-sm sm:text-base md:text-base lg:text-lg opacity-80 font-semibold">
+                Trust Rating: {userData.trustRating || "N/A"}
+              </p>
             </div>
           </div>
           {user && user._id == userData._id ? (
