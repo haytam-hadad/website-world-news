@@ -51,34 +51,27 @@ export default function LoginPage() {
     }
   };
 
-  const handleGoogleLogin = () => {
+  const handleGoogleLogin = async () => {
     setLoading(true);
     setError(null);
 
-    // Fetch the user session
-    fetch(`${process.env.NEXT_PUBLIC_API_URL}/auth/google`)
-      .then((response) => {
-        if (!response.ok) {
-          return response.json().then((errorData) => {
-            throw new Error(
-              errorData?.message || "Login failed. Please try again."
-            );
-          });
-        }
-        return response.json();
-      })
-      .then((userData) => {
-        setUser(userData);
-        router.push("/");
-      })
-      .catch((err) => {
-        setError(
-          err.message || "An unexpected error occurred. Please try again."
-        );
-      })
-      .finally(() => {
-        setLoading(false);
-      });
+    try {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/auth/google`);
+      
+      if (!response.ok) {
+        const errorData = await response.json();
+        setError(errorData?.message || "Login failed. Please try again.");
+        return;
+      }
+
+      const userData = await response.json();
+      setUser(userData);
+      router.push(`/profile/${userData.username}`);
+    } catch (err) {
+      setError(err.message || "An unexpected error occurred. Please try again.");
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
