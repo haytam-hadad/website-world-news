@@ -10,7 +10,7 @@ export default function SignUpPage() {
     firstName: '',
     lastName: '',
     email: '',
-    phoneNumber: '',
+    phone: '',
     password: '',
     confirmPassword: '',
     birthdate: '',
@@ -20,7 +20,7 @@ export default function SignUpPage() {
   const [loading, setLoading] = useState(false);
 
   const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
+    setFormData({ ...formData, [e.target.name]: e.target.value.toLowerCase() });
     setErrors({});
     setMessage(null);
   };
@@ -30,7 +30,7 @@ export default function SignUpPage() {
     if (!formData.firstName.trim()) newErrors.firstName = "First name is required.";
     if (!formData.lastName.trim()) newErrors.lastName = "Last name is required.";
     if (!formData.email.trim()) newErrors.email = "Email is required.";
-    if (!formData.phoneNumber.trim()) newErrors.phoneNumber = "Phone number is required.";
+    if (!formData.phone.trim()) newErrors.phone = "Phone number is required.";
     if (!formData.password) newErrors.password = "Password is required.";
     if (formData.password && formData.password.length < 8) newErrors.password = "Password must be at least 8 characters.";
     if (formData.password !== formData.confirmPassword) newErrors.confirmPassword = "Passwords do not match.";
@@ -54,7 +54,7 @@ export default function SignUpPage() {
         lastName: formData.lastName.trim(),
         username: `${formData.firstName.trim()}.${formData.lastName.trim()}`,
         email: formData.email.trim(),
-        phoneNumber: formData.phoneNumber.trim(),
+        phone: formData.phone.trim(),
         password: formData.password,
         birthdate: formData.birthdate,
       };
@@ -85,7 +85,7 @@ export default function SignUpPage() {
           firstName: '',
           lastName: '',
           email: '',
-          phoneNumber: '',
+          phone: '',
           password: '',
           confirmPassword: '',
           birthdate: '',
@@ -119,8 +119,8 @@ export default function SignUpPage() {
           </label>
           <label className="flex flex-col space-y-1">
             <span className="text-sm font-medium">Phone Number</span>
-            <input type="tel" className="form_input" name="phoneNumber" placeholder="Phone Number" value={formData.phoneNumber} onChange={handleChange} required aria-label="Phone Number" />
-            {errors.phoneNumber && <span className="text-red-500 text-sm">{errors.phoneNumber}</span>}
+            <input type="tel" className="form_input" name="phone" placeholder="Phone Number" value={formData.phone} onChange={handleChange} required aria-label="Phone Number" />
+            {errors.phone && <span className="text-red-500 text-sm">{errors.phone}</span>}
           </label>
           <label className="flex flex-col space-y-1">
             <span className="text-sm font-medium">Email</span>
@@ -231,3 +231,4 @@ export default function SignUpPage() {
     </div>
   );
 }
+
