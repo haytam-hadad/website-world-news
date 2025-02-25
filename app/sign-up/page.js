@@ -1,13 +1,16 @@
 "use client";
-
 import Image from 'next/image';
 import Link from 'next/link';
 import { useState } from 'react';
+import { useRouter } from 'next/navigation';
 
 export default function SignUpPage() {
+  const router = useRouter();
   const [formData, setFormData] = useState({
-    username: '',
+    firstName: '',
+    lastName: '',
     email: '',
+    phoneNumber: '',
     password: '',
     confirmPassword: '',
     birthdate: '',
@@ -24,9 +27,12 @@ export default function SignUpPage() {
 
   const validateForm = () => {
     const newErrors = {};
-    if (!formData.username.trim()) newErrors.username = "Username is required.";
+    if (!formData.firstName.trim()) newErrors.firstName = "First name is required.";
+    if (!formData.lastName.trim()) newErrors.lastName = "Last name is required.";
     if (!formData.email.trim()) newErrors.email = "Email is required.";
+    if (!formData.phoneNumber.trim()) newErrors.phoneNumber = "Phone number is required.";
     if (!formData.password) newErrors.password = "Password is required.";
+    if (formData.password && formData.password.length < 8) newErrors.password = "Password must be at least 8 characters.";
     if (formData.password !== formData.confirmPassword) newErrors.confirmPassword = "Passwords do not match.";
     if (!formData.birthdate) newErrors.birthdate = "Birthdate is required.";
     return newErrors;
@@ -44,39 +50,48 @@ export default function SignUpPage() {
     setLoading(true);
     try {
       const formDataToSend = {
-        username: formData.username.trim(),
+        firstName: formData.firstName.trim(),
+        lastName: formData.lastName.trim(),
+        username: `${formData.firstName.trim()}.${formData.lastName.trim()}`,
         email: formData.email.trim(),
+        phoneNumber: formData.phoneNumber.trim(),
         password: formData.password,
         birthdate: formData.birthdate,
       };
 
+      console.info("Sending Sign Up Data:", formDataToSend);
+
       const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/signup`, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: {
+          'Content-Type': 'application/json',
+        },
         body: JSON.stringify(formDataToSend),
       });
 
+      const data = await response.json().catch(() => null);
+
       if (!response.ok) {
-        const errorData = await response.json().catch(() => null);
-        setErrors({ api: errorData?.message || 'Signup failed.' });
+        setErrors({ api: data?.message || 'Signup failed.' });
         return;
       }
 
-      const data = await response.json();
       console.log("Signup Response:", data);
 
-      setMessage("Signup successful! 🎉");
+      setMessage("Signup successful!");
 
       setTimeout(() => {
         setFormData({
-          username: '',
+          firstName: '',
+          lastName: '',
           email: '',
+          phoneNumber: '',
           password: '',
           confirmPassword: '',
           birthdate: '',
         });
 
-        window.location.href = '/login';
+        router.push('/login');
       }, 200);
 
     } catch (err) {
@@ -93,18 +108,19 @@ export default function SignUpPage() {
         <form className="flex flex-col space-y-5 max-w-lg mx-auto w-full" onSubmit={handleSubmit}>
           <h1 className="text-center text-4xl font-bold text-foreground mb-6">Sign up</h1>
           <label className="flex flex-col space-y-1">
-            <span className="text-sm font-medium">Username</span>
-            <input
-              type="text"
-              className="form_input"
-              placeholder="Username"
-              name="username"
-              value={formData.username}
-              onChange={handleChange}
-              required
-              aria-label="Username"
-            />
-            {errors.username && <span className="text-red-500 text-sm">{errors.username}</span>}
+            <span className="text-sm font-medium">First Name</span>
+            <input type="text" className="form_input" name="firstName" placeholder="First Name" value={formData.firstName} onChange={handleChange} required aria-label="First Name" />
+            {errors.firstName && <span className="text-red-500 text-sm">{errors.firstName}</span>}
+          </label>
+          <label className="flex flex-col space-y-1">
+            <span className="text-sm font-medium">Last Name</span>
+            <input type="text" className="form_input" name="lastName" placeholder="Last Name" value={formData.lastName} onChange={handleChange} required aria-label="Last Name" />
+            {errors.lastName && <span className="text-red-500 text-sm">{errors.lastName}</span>}
+          </label>
+          <label className="flex flex-col space-y-1">
+            <span className="text-sm font-medium">Phone Number</span>
+            <input type="tel" className="form_input" name="phoneNumber" placeholder="Phone Number" value={formData.phoneNumber} onChange={handleChange} required aria-label="Phone Number" />
+            {errors.phoneNumber && <span className="text-red-500 text-sm">{errors.phoneNumber}</span>}
           </label>
           <label className="flex flex-col space-y-1">
             <span className="text-sm font-medium">Email</span>
@@ -154,6 +170,7 @@ export default function SignUpPage() {
               type="date"
               className="form_input"
               name="birthdate"
+              placeholder="Birthdate"
               value={formData.birthdate}
               onChange={handleChange}
               required
@@ -161,7 +178,7 @@ export default function SignUpPage() {
             />
             {errors.birthdate && <span className="text-red-500 text-sm">{errors.birthdate}</span>}
           </label>
-          {message && <div className="success">{message}</div>}
+          {message && <div className="text-green-500 text-sm">{message}</div>}
           {errors.api && (
             <div className="error mt-4 p-4 bg-red-100 text-red-700 border border-red-300 rounded-lg shadow-sm">
               {errors.api}
