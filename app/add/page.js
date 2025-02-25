@@ -31,7 +31,6 @@ export default function AddPostPage() {
       category,
       image: imageType === "url" ? imageUrl : imageFile,
       sources,
-      credit: user?.username || "Anonymous",
     };
     const response = await fetch("/api/posts", {
       method: "POST",
