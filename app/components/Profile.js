@@ -37,7 +37,7 @@ const Profile = ({ userData }) => {
     <div className="container mx-auto p-3 max-md:p-0">
       {/*Image Banner Section */}
       {user && user._id == userData._id ? (
-        <div className="relative w-full outline outline-mainColor sm:h-36 h-28 mb-3 overflow-hidden rounded-xl bg-gradient-to-r from-mainColor to-[#3498db48] flex items-center justify-center">
+        <div className="relative w-full sm:h-36 h-28 mb-3 overflow-hidden rounded-xl bg-gradient-to-r from-mainColor to-[#3498db48] flex items-center justify-center">
           <button
             type="button"
             className="flex gap-1 bg-primary-foreground text-primary px-5 py-3 font-semibold rounded-full hover:bg-primary-foreground/90 shadow-lg"
