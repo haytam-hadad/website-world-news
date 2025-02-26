@@ -13,7 +13,7 @@ import {
 } from "lucide-react";
 import { useState } from "react";
 import { ArrowBigUp, ArrowBigDown } from "lucide-react";
-import Comment from "../components/Comment"; // Import the Comment component
+import Comment from "../components/Comment";
 
 const SinglePost = ({ post }) => {
   const [vote, setVote] = useState(null);
@@ -37,10 +37,10 @@ const SinglePost = ({ post }) => {
     if (newComment.trim() !== "") {
       const newCommentObj = {
         id: Date.now(),
-        user: "User Name", // Replace with actual user data
+        user: "User Name",
         text: newComment,
-        timeAgo: "Just now", // Ideally, format timestamps properly
-        avatar: "U", // Replace with user's initial or avatar image
+        timeAgo: "Just now",
+        avatar: "U",
       };
       setComments([...comments, newCommentObj]);
       setNewComment("");
@@ -67,17 +67,16 @@ const SinglePost = ({ post }) => {
 
   return (
     <div className="flex flex-col items-center justify-center w-full p-1">
-      <div className="flex flex-col w-full shadow-sm mx-auto bg-lightgrey dark:bg-darkgrey border p-2 rounded-xl">
-        {/* Header Section */}
+      <div className="flex flex-col w-full shadow-sm mx-auto bg-white dark:bg-darkgrey border p-3 rounded-xl">
         <header className="flex rounded-full items-center justify-between text-sm text-gray-500 dark:text-gray-400 p-1 mb-3">
           <div className="flex items-center space-x-2">
-            <div className="rounded-full border-mainColor bg-gray-400 dark:bg-gray-600 w-9 h-9 sm:w-11 sm:h-11  flex items-center justify-center text-lg capitalize font-semibold text-white">
+            <div className="rounded-full border-mainColor bg-gray-300 dark:bg-gray-600 w-9 h-9 sm:w-11 sm:h-11 flex items-center justify-center text-lg capitalize font-semibold text-white">
               {post.author ? post.author.charAt(0) : "U"}
             </div>
             <div className="flex flex-col">
               <Link
                 href={post.author ? `/profile/${post.author}` : "#"}
-                className=" font-semibold truncate capitalize cursor-pointer hover:underline text-gray-900 dark:text-gray-100 text-md md:text-xl"
+                className="font-semibold truncate capitalize cursor-pointer hover:underline text-gray-900 dark:text-gray-100 text-md md:text-xl"
               >
                 {post.author || "Unknown"}
               </Link>
@@ -88,23 +87,21 @@ const SinglePost = ({ post }) => {
             <Clock3 className="h-4 w-4 inline-block" />
           </span>
           <button
-            onClick={toggleSubscribe}
-            className={`py-2 px-4 max-sm:px-2 rounded-full shadow-sm text-sm font-medium transition-all ${
-              subscribed
-                ? "bg-gray-800 text-white hover:bg-gray-700"
-                : "bg-gray-300 text-gray-800 hover:bg-gray-400"
+            onClick={(e) => {
+              e.preventDefault();
+              toggleSubscribe();
+            }}
+            className={`p-2 px-4 max-sm:p-1 max-sm:px-3 rounded-full font-bold shadow-md text-sm transition-all ${
+              subscribed ? "bg-secondaryColor text-black" : "bg-mainColor text-secondaryColor"
             }`}
           >
             {subscribed ? "Unsubscribe" : "Subscribe"}
           </button>
         </header>
         <hr />
-        {/* Title */}
         <h1 className="font-serif font-semibold text-2xl md:text-3xl lg:text-4xl text-gray-900 dark:text-gray-100 p-2 mx-1 my-5 underline underline-offset-4">
           {post.title || "No Title Available"}
         </h1>
-
-        {/* Image */}
         {post.imageUrl && post.imageUrl !== "" && (
           <div className="w-full h-60 lg:h-96 relative rounded-xl overflow-hidden mb-4">
             <Image
@@ -115,13 +112,10 @@ const SinglePost = ({ post }) => {
             />
           </div>
         )}
-        {/* Description */}
         <p className="text-xl max-sm:text-lg p-1 text-gray-600 dark:text-gray-300 mb-6 leading-relaxed">
           {post.content || "No content available"}
         </p>
         <hr className="m-2" />
-
-        {/* Interaction Section */}
         <div className="flex items-center flex-wrap gap-y-3 justify-between space-x-3 my-1 text-sm text-gray-500 dark:text-gray-400">
           <div className="flex items-center">
             <div className="flex items-center justify-between gap-2">
@@ -163,36 +157,32 @@ const SinglePost = ({ post }) => {
               href={`/category/${post.category}`}
               className="flex items-center cursor-pointer text-gray-500 hover:text-blue-500"
             >
-              <p className="text-blue-500 cursor-pointer font-semibold capitalize text-sm sm:text-lg px-4 py-2 transition duration-300 hover:border border border-transparent hover:border-mainColor rounded-full">
+              <p className="text-blue-500 cursor-pointer font-semibold capitalize text-sm sm:text-lg px-4 py-1 transition duration-300 hover:border border border-transparent hover:border-mainColor rounded-full">
                 {post.category || "General"}
               </p>
             </Link>
           </div>
         </div>
       </div>
-
-      {/* Comment Section */}
-      <div className="flex mt-4 flex-col w-full mx-auto bg-lightgrey dark:bg-darkgrey border p-3 rounded-xl shadow-sm">
+      <div className="flex mt-4 flex-col w-full mx-auto bg-white dark:bg-darkgrey border p-3 rounded-xl shadow-sm">
         <h2 className="text-xl font-semibold text-gray-900 dark:text-gray-100">
           Comments
         </h2>
-
-        <div className="mt-4 flex items-center w-full sm:flex-row flex-col sm:space-x-2 space-y-2">
+        <div className="mt-4 flex items-center flex-col w-full sm:flex-row space-x-2 space-y-1">
           <input
             type="text"
-            className="dark:bg-slate-950 w-full px-4 py-2 border border-mainColor rounded-lg text-gray-700 dark:text-gray-300 flex-1 sm:w-auto"
+            className="dark:bg-slate-950 w-full px-4 py-2 border border-mainColor rounded-lg text-gray-700 dark:text-gray-300"
             value={newComment}
             onChange={(e) => setNewComment(e.target.value)}
             placeholder="Add a comment..."
           />
           <button
             onClick={handleAddComment}
-            className="bg-mainColor text-white p-2 rounded-lg sm:w-auto w-full"
+            className="bg-mainColor block w-full sm:w-1/2 justify-center text-white p-2 rounded-lg "
           >
             Add Comment
           </button>
         </div>
-
         <div className="mt-3 space-y-3">
           {comments.length > 0 ? (
             comments.map((comment) => (
@@ -214,3 +204,4 @@ const SinglePost = ({ post }) => {
 };
 
 export default SinglePost;
+

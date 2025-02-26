@@ -9,7 +9,6 @@ import { motion } from "framer-motion";
 
 const Article = ({ title, desc, imageUrl, author, publishedAt, category, url }) => {
   const [vote, setVote] = useState(null);
-  const [subscribed, setSubscribed] = useState(false); // Follow state
 
   const handleUpvote = () => {
     setVote(vote !== "upvote" ? "upvote" : null);
@@ -17,10 +16,6 @@ const Article = ({ title, desc, imageUrl, author, publishedAt, category, url }) 
 
   const handleDownvote = () => {
     setVote(vote !== "downvote" ? "downvote" : null);
-  };
-
-  const toggleSubscribe = () => {
-    setSubscribed(!subscribed);
   };
 
   const calculateTimeAgo = (publishedAt) => {
@@ -51,7 +46,7 @@ const Article = ({ title, desc, imageUrl, author, publishedAt, category, url }) 
       className="w-full my-2"
     >
       <div>
-        <Link href={url ? url : "#"} className="flex hover:border-blue-300 dark:hover:border-blue-950 cursor-pointer w-full flex-col lg:flex-row bg-lightgrey dark:bg-darkgrey border p-2 md:p-4 mx-auto rounded-xl shadow-sm">
+        <Link href={url ? url : "#"} className="flex hover:shadow-md cursor-pointer w-full flex-col lg:flex-row bg-white dark:bg-darkgrey border p-2 md:p-4 mx-auto rounded-xl shadow-sm">
           <div className="flex flex-col lg:flex-row items-center space-y-1 lg:space-y-1 lg:space-x-3 w-full">
             {imageUrl && (
               <div className="w-full border-mainColor h-60 md:max-w-[95%] lg:h-[350px] relative rounded-xl overflow-hidden mb-2 lg:mb-0">
@@ -68,7 +63,7 @@ const Article = ({ title, desc, imageUrl, author, publishedAt, category, url }) 
             <div className="flex flex-col justify-between w-full">
               <header className="flex items-center justify-between text-sm text-gray-500 dark:text-gray-400 mb-2 p-1">
                 <div className="flex items-center space-x-2">
-                  <Link href={`/profile/${author}`} className="rounded-full text-lg cursor-pointer border-mainColor bg-gray-400 dark:bg-gray-700 w-10 h-10 flex items-center justify-center text-white font-semibold">
+                  <Link href={`/profile/${author}`} className="rounded-full text-lg cursor-pointer border-mainColor bg-gray-300 dark:bg-gray-700 w-10 h-10 flex items-center justify-center text-white font-semibold">
                     {author ? author[0].toUpperCase() : "U"}
                   </Link>
                   <div className="flex flex-col">
@@ -82,16 +77,6 @@ const Article = ({ title, desc, imageUrl, author, publishedAt, category, url }) 
                   {calculateTimeAgo(publishedAt)} &nbsp;
                   <Clock3 className="h-4 w-4 inline-block" />
                 </span>
-
-                {/* Subscribe/Unsubscribe Button */}
-                <button
-                  onClick={(e) => { e.preventDefault(); toggleSubscribe(); }}
-                  className={`p-2 px-4 max-sm:p-1 max-sm:px-3 rounded-full shadow-sm text-sm font-medium transition-all ${
-                    subscribed ? "bg-gray-800 text-white hover:bg-gray-700" : "bg-gray-300 text-gray-800 hover:bg-gray-400"
-                  }`}
-                >
-                  {subscribed ? "Unsubscribe" : "Subscribe"}
-                </button>
               </header>
 
               <h1 className="font-serif font-semibold text-2xl text-primary underline underline-offset-4 sm:text-2xl mx-1 my-4 capitalize text-gray-900">

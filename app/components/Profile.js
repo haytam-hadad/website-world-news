@@ -1,6 +1,6 @@
 "use client";
 import { useContext, useEffect, useState } from "react";
-import { Bell, Edit, Star ,Mail } from "lucide-react";
+import { Bell, Edit, Star, Mail, Plus } from "lucide-react";
 import Article from "./Article";
 import Image from "next/image";
 import { ThemeContext } from "../ThemeProvider";
@@ -36,19 +36,23 @@ const Profile = ({ userData }) => {
   return (
     <div className="container mx-auto p-3 max-md:p-0">
       {/*Image Banner Section */}
-      <div className="relative w-full h-48 mb-3 overflow-hidden rounded-2xl shadow-lg">
-        <Image
-          src="/images/image.jpg"
-          alt="Banner"
-          width={1200}
-          height={400}
-          className="w-full h-full object-cover transform hover:scale-105 transition duration-500 ease-in-out"
-        />
-      </div>
+      {user && user._id == userData._id ? (
+        <div className="relative w-full outline outline-mainColor sm:h-36 h-28 mb-3 overflow-hidden rounded-xl bg-gradient-to-r from-mainColor to-[#3498db48] flex items-center justify-center">
+          <button
+            type="button"
+            className="flex gap-1 bg-primary-foreground text-primary px-5 py-3 font-semibold rounded-full hover:bg-primary-foreground/90 shadow-lg"
+          >
+            <Plus /> Add Banner
+          </button>
+        </div>
+      ) : (
+        <div className="relative w-full h-5 opacity-0 mb-3 overflow-hidden rounded-xl bg-gradient-to-r from-mainColor to-[#3498db1d] flex items-center justify-center">
+        </div>
+      )}
 
-      <div className="bg-lightgrey border dark:bg-darkgrey shadow-sm mb-3 rounded-2xl">
+      <div className="bg-white border dark:bg-darkgrey shadow-sm mb-3 rounded-2xl">
         {/* Header Section */}
-        <header className="flex flex-col lg:flex-row lg:items-center lg:justify-between bg-gradient-to-r from-mainColor to-[skyblue] p-3 lg:px-5 rounded-2xl mb-1">
+        <header className="flex flex-col lg:flex-row lg:items-center lg:justify-between bg-gradient-to-r from-mainColor to-[skyblue] p-3 lg:px-5 rounded-2xl mb-1 gap-1">
           <div className="flex items-center space-x-4 mb-3 md:mb-0">
             <div className="w-14 h-14 max-md:w-12 max-md:h-12 rounded-full bg-primary-foreground flex items-center justify-center text-primary capitalize font-semibold text-xl sm:text-xl md:text-2xl lg:text-3xl shadow-md">
               {userData.displayname?.charAt(0) || "U"}
@@ -57,16 +61,13 @@ const Profile = ({ userData }) => {
               <h1 className="text-lg capitalize sm:text-lg md:text-xl lg:text-xl font-bold">
                 {userData.displayname || "Unknown"}
               </h1>
-              <p className="text-sm sm:text-base md:text-base lg:text-lg opacity-80">
-                {userData.email}
-              </p>
-              <p className="text-sm sm:text-base md:text-base lg:text-lg opacity-80 font-semibold">
-                Trust Rating: {userData.trustRating || "N/A"}
+              <p className="text-sm md:text-md opacity-70 font-semibold">
+                 {"@"+userData.username || "N/A" }
               </p>
             </div>
           </div>
           {user && user._id == userData._id ? (
-            <button className="flex gap-1 items-center bg-white text-mainColor px-5 py-3 rounded-full shadow-md font-semibold hover:bg-gray-100 transition">
+            <button className="flex gap-1 items-center font-bold bg-white text-mainColor px-4 py-3 rounded-full shadow-md hover:bg-gray-100 transition">
               <Edit />
               Update Info
             </button>
@@ -76,16 +77,17 @@ const Profile = ({ userData }) => {
                 e.preventDefault();
                 toggleSubscribe();
               }}
-              className="flex items-center bg-white text-mainColor px-5 py-3 rounded-full shadow-md font-semibold hover:bg-gray-100 transition"
+              className={`p-2 px-4 max-sm:p-2 outline outline-offset-2 outline-2 bg-mainColor outline-white max-sm:px-3 rounded-full font-bold text-sm transition-all ${
+                subscribed ? "bg-secondaryColor text-black" : "text-secondaryColor"
+              }`}
             >
-              <Bell className="mr-2" />
               {subscribed ? "Unsubscribe" : "Subscribe"}
             </button>
           )}
         </header>
 
         {/* User Info Section */}
-        <section className="p-6 bg-lightgrey dark:bg-darkgrey rounded-2xl">
+        <section className="p-6 bg-white dark:bg-darkgrey rounded-2xl">
           <div className="space-y-4">
             <div className="flex items-center pb-3">
               <Mail className="text-mainColor mr-3" />

@@ -50,7 +50,7 @@ function LayoutContent({ children }) {
           )}
 
           {/* Content Area */}
-          <div className="flex-1 p-2 overflow-y-hidden">{children}</div>
+          <div className="flex-1 p-1 md:p-3 overflow-y-hidden bg-lightgrey dark:bg-thirdColor ">{children}</div>
         </main>
         <GoUp />
         <Footer />

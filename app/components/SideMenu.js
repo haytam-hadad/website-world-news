@@ -42,7 +42,7 @@ const SideMenu = ({ setVisible }) => {
 
   return (
     <motion.div
-      className="bg-lightgrey border-r dark:bg-darkgrey select-none p-4 z-40 w-[250px] h-full fixed top-16 overflow-y-auto left-0"
+      className="bg-white border-r dark:bg-darkgrey select-none p-4 z-40 w-[250px] h-full fixed top-16 overflow-y-auto left-0"
       initial={{ x: -250 }}
       animate={{ x: 0 }}
       exit={{ x: -250 }}
