@@ -50,6 +50,7 @@ export default function SignUpPage() {
     setLoading(true);
     try {
       const formDataToSend = {
+        displayName: `${formData.firstName.trim()} ${formData.lastName.trim()}`,
         firstName: formData.firstName.trim(),
         lastName: formData.lastName.trim(),
         username: `${formData.firstName.trim()}.${formData.lastName.trim()}`,
