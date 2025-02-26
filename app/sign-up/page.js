@@ -1,4 +1,5 @@
 "use client";
+
 import Image from 'next/image';
 import Link from 'next/link';
 import { useState } from 'react';
@@ -50,10 +51,8 @@ export default function SignUpPage() {
     setLoading(true);
     try {
       const formDataToSend = {
-        displayName: `${formData.firstName.trim()} ${formData.lastName.trim()}`,
-        firstName: formData.firstName.trim(),
-        lastName: formData.lastName.trim(),
         username: `${formData.firstName.trim()}.${formData.lastName.trim()}`,
+        displayname: `${formData.firstName.trim()} ${formData.lastName.trim()}`,
         email: formData.email.trim(),
         phone: formData.phone.trim(),
         password: formData.password,
@@ -232,4 +231,5 @@ export default function SignUpPage() {
     </div>
   );
 }
+
 

@@ -84,9 +84,9 @@ export default function Header({ onToggleMenu }) {
                 onClick={() => setDropdownOpen(!dropdownOpen)}
               >
                 <div className="w-8 h-8 rounded-full bg-mainColor text-bold text-white flex items-center justify-center">
-                  {user.username.charAt(0).toUpperCase()}
+                  {user.displayname.charAt(0).toUpperCase()}
                 </div>
-                <span className="font-semibold  hidden p-1 md:inline capitalize hover:underline">{user.username}</span>
+                <span className="font-semibold  hidden p-1 md:inline capitalize hover:underline">{user.displayname}</span>
               </button>
               {dropdownOpen && (
                 <div className="absolute right-0 w-40 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-md shadow-lg py-1 z-20">

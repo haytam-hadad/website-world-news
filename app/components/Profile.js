@@ -51,11 +51,11 @@ const Profile = ({ userData }) => {
         <header className="flex flex-col lg:flex-row lg:items-center lg:justify-between bg-gradient-to-r from-mainColor to-[skyblue] p-3 lg:px-5 rounded-2xl mb-1">
           <div className="flex items-center space-x-4 mb-3 md:mb-0">
             <div className="w-14 h-14 max-md:w-12 max-md:h-12 rounded-full bg-primary-foreground flex items-center justify-center text-primary capitalize font-semibold text-xl sm:text-xl md:text-2xl lg:text-3xl shadow-md">
-              {userData.username.charAt(0)}
+              {userData.displayname?.charAt(0) || "U"}
             </div>
             <div className="text-white">
               <h1 className="text-lg capitalize sm:text-lg md:text-xl lg:text-xl font-bold">
-                {userData.username || "Unknown"}
+                {userData.displayname || "Unknown"}
               </h1>
               <p className="text-sm sm:text-base md:text-base lg:text-lg opacity-80">
                 {userData.email}
