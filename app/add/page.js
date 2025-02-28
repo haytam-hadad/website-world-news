@@ -77,15 +77,15 @@ export default function AddPostPage() {
     <div className="max-w-3xl mx-auto p-1 sm:p-4 mt-2 rounded-lg">
       <div className="flex items-center space-x-2 mb-5">
         <div className="w-10 h-10 rounded-full text-lg bg-mainColor text-bold text-white flex items-center justify-center">
-          {user.username.charAt(0).toUpperCase()}
+          {user.displayname.charAt(0).toUpperCase() || "U"}
         </div>
         <div>
           <h2 className="text-lg font-semibold text-primary">
-            {user?.username || "User"}
+            {user?.displayname || "User"}           <p className="text-gray-500 dark:text-gray-400 text-sm">
+              @{user?.username}
+            </p>
           </h2>
-          <p className="text-gray-500 dark:text-gray-400 text-sm">
-            Trust Rating: {user?.trustRating}
-          </p>
+
         </div>
       </div>
       <form onSubmit={handleSubmit} className="space-y-4">
@@ -254,13 +254,13 @@ export default function AddPostPage() {
                 </button>
               </div>
             ))}
-            <br/>
+            <br />
             <button
               type="button"
               onClick={handleAddSource}
               className="text-secondaryColor bg-mainColor flex items-center px-2 py-1 rounded-md"
             >
-              Add other source <Plus/>
+              Add other source <Plus />
             </button>
           </div>
         </div>

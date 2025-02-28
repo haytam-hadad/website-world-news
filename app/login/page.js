@@ -174,7 +174,7 @@ export default function LoginPage() {
         </form>
       </div>
 
-      <div className="hidden rounded-3xl md:flex items-center justify-center bg-lightgrey dark:bg-darkgrey shadow-sm p-5">
+      <div className="hidden rounded-3xl md:flex items-center justify-center bg-secondaryColor dark:bg-darkgrey shadow-sm p-5">
         <Image
           src="/images/i1.svg"
           width={400}

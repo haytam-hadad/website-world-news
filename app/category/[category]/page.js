@@ -41,28 +41,11 @@ const Category = async ({ params }) => {
             </h1>
           </div>
         ) : (
-          articles.map((article) => {
-            const {
-              _id,
-              title = "No title available",
-              content = "No content available",
-              imageUrl = "/images/default.jpg",
-              author = "Unknown",
-              publishedAt,
-              category = "General",
-              url = "#",
-            } = article || {};
-
+          articles.map((article , i) => {
             return (
               <Article
-                key={_id || Math.random().toString(36)}
-                title={title}
-                desc={content}
-                imageUrl={imageUrl}
-                author={author}
-                publishedAt={publishedAt}
-                category={category}
-                url={"/post/"+_id}
+                key={i}
+                articleData={article}
               />
             );
           })

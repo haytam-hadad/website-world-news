@@ -7,7 +7,9 @@ import { useState } from "react";
 import { ArrowBigUp, ArrowBigDown } from "lucide-react";
 import { motion } from "framer-motion";
 
-const Article = ({ title, desc, imageUrl, author, publishedAt, category, url }) => {
+const Article = ( {articleData} ) => {
+  const { _id, title, content, imageUrl, author, publishedAt, category } = articleData;
+  let url = `/post/${_id}`;
   const [vote, setVote] = useState(null);
 
   const handleUpvote = () => {
@@ -20,15 +22,15 @@ const Article = ({ title, desc, imageUrl, author, publishedAt, category, url }) 
 
   const calculateTimeAgo = (publishedAt) => {
     if (!publishedAt) return "N/A";
-  
+
     const publishedDate = new Date(publishedAt);
-  
+
     // Check if the date is valid
     if (isNaN(publishedDate.getTime())) return "N/A";
-  
+
     const now = new Date();
     const diffInSeconds = Math.floor((now - publishedDate) / 1000);
-  
+
     // Handle different time intervals
     if (diffInSeconds < 60) return "just now";
     if (diffInSeconds < 3600) return `${Math.floor(diffInSeconds / 60)} min ago`;
@@ -83,7 +85,7 @@ const Article = ({ title, desc, imageUrl, author, publishedAt, category, url }) 
                 {title}
               </h1>
 
-              <p className="text-md text-gray-600 dark:text-gray-300 line-clamp-4 mb-4">{desc || "No description available"}</p>
+              <p className="text-md text-gray-600 dark:text-gray-300 line-clamp-4 mb-4">{content || "No content available"}</p>
               <hr className="mx-5"/>
               <div className="flex items-center justify-between space-x-6 mt-2 text-sm text-gray-500 dark:text-gray-400">
                 <div className="flex items-center space-x-4">

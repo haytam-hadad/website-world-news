@@ -10,26 +10,20 @@ const ErrorPage = ({ message }) => {
   if (!isVisible) return null;
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen bg-primary-foreground ">
-      <div className="bg-primary-foreground p-8">
+    <div className="flex flex-col items-center justify-center min-h-screen bg-white dark:bg-thirdColor">
+      <div className="flex items-center justify-center flex-col">
         <div className="flex items-center gap-2 justify-center">
-          <CircleX className="h-12 w-12" /> {/* Add error icon from lucide */}
           <h2 className="text-5xl font-bold text-primary">Error</h2>          
+          <CircleX className="h-10 w-10" /> {/* Add error icon from lucide */}
         </div>
 
-        <p className="mt-4 text-lg text-primary">{message}</p>
+        <p className="text-lg text-primary">{message}</p>
         <div className="mt-8">
           <Link href="/">
-            <span className="text-mainColor hover:text-blue-700">
+            <span className="text-mainColor font-bold border-2 p-2 px-4 rounded-full border-mainColor text-center hover:text-blue-700">
               Go back home
             </span>
           </Link>
-          <button
-            className="ml-4 text-red-500 hover:text-red-700"
-            onClick={() => setIsVisible(false)}
-          >
-            Close
-          </button>
         </div>
       </div>
     </div>
