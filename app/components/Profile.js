@@ -4,6 +4,7 @@ import { Bell, Edit, Star, Mail, Plus } from "lucide-react";
 import Article from "./Article";
 import Image from "next/image";
 import { ThemeContext } from "../ThemeProvider";
+import Link from "next/link";
 
 const Profile = ({ userData }) => {
   const [articles, setArticles] = useState([]);
@@ -67,10 +68,11 @@ const Profile = ({ userData }) => {
             </div>
           </div>
           {user && user._id == userData._id ? (
-            <button className="flex gap-1 items-center font-bold bg-white text-mainColor px-4 py-3 rounded-full shadow-md hover:bg-gray-100 transition">
-              <Edit />
-              Update Info
-            </button>
+            <Link href="/dashboard" className="flex gap-1 items-center font-bold bg-white text-mainColor px-4 py-3 rounded-full shadow-md hover:bg-gray-100 transition">
+                <Edit />
+                Update Info
+              
+            </Link>
           ) : (
             <button
               onClick={(e) => {
