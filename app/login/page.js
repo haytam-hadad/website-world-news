@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
 import { ThemeContext } from "../ThemeProvider";
+import { motion } from "framer-motion";
 
 export default function LoginPage() {
   const { user, setUser } = useContext(ThemeContext);
@@ -75,13 +76,13 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="grid min-h-screen grid-cols-1 md:grid-cols-[3fr_2fr]">
+    <div className="grid min-h-screen grid-cols-1 lg:grid-cols-[3fr_2fr] overflow-x-hidden">
       <div className="flex flex-col justify-center px-3">
         <form
           className="flex flex-col space-y-5 max-w-lg mx-auto w-full"
           onSubmit={handleSubmit}
         >
-          <h1 className="text-center text-4xl font-bold text-foreground mb-6">
+          <h1 className="text-center text-4xl p-1 font-medium text-foreground mb-6">
             Log in
           </h1>
 
@@ -129,7 +130,7 @@ export default function LoginPage() {
             Don&apos;t have an account?{" "}
             <Link
               href="/sign-up"
-              className="text-primary underline hover:text-mainColor"
+              className="text-primary underline hover:text-mainColor "
             >
               Sign up
             </Link>
@@ -174,15 +175,26 @@ export default function LoginPage() {
         </form>
       </div>
 
-      <div className="hidden rounded-3xl md:flex items-center justify-center bg-secondaryColor dark:bg-darkgrey shadow-sm p-5">
-        <Image
-          src="/images/i1.svg"
-          width={400}
-          height={400}
-          alt="Sign Up Illustration"
-          className="w-[80%] max-w-sm object-contain dark:filter dark:invert opacity-60"
-        />
-      </div>
+  <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ duration: 0.5 }}
+        className="hidden lg:flex items-center justify-center p-5 rounded-3xl "
+      >
+        <motion.div
+          initial={{ rotate: 0 }}
+          animate={{ rotate: 360 }}
+          transition={{ duration: 200, repeat: Infinity, ease: "linear" }}
+        >
+          <Image
+            src="/images/i1.svg"
+            width={400}
+            height={400}
+            alt="Sign Up Illustration"
+            className="w-[90%] max-w-sm m-auto object-contain dark:filter dark:invert opacity-80"
+          />
+        </motion.div>
+      </motion.div>
     </div>
   );
 }
