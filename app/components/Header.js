@@ -8,11 +8,45 @@ import { useState, useContext } from "react";
 import { ThemeContext } from "../ThemeProvider";
 import Image from "next/image";
 
+
 export default function Header({ onToggleMenu }) {
-  const { theme, setTheme, user, setUser } = useContext(ThemeContext);
+  const { theme, setTheme, user , setUser } = useContext(ThemeContext);
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
 
+
+  const logout = async () => {
+    if (!user) {
+      console.log('User is not logged in');
+      return;
+    }; // Ensure user is defined
+    try {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/auth/logout`, {
+        method: "POST",
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        credentials: 'include' // Include session information in the request
+      });
+  
+      if (response.status === 200) {
+        console.log('Logout successful');
+        setUser(null);
+        window.location.href = "/";
+      } else if (response.status === 401) {
+        console.log('User is not logged in');
+      } else if (response.status === 400) {
+        console.log('An error occurred during logout');
+      } else {
+        console.log('Unexpected response', response.status);
+      }
+    } catch (error) {
+      console.error('Error during logout', error);
+    }
+    setUser(null);
+    window.location.href = "/";
+  };
+  
   const handleSearch = (e) => {
     e.preventDefault();
     if (searchQuery.trim()) {
@@ -20,11 +54,6 @@ export default function Header({ onToggleMenu }) {
         searchQuery.trim().toLowerCase()
       )}`;
     }
-  };
-
-  const handleLogout = () => {
-    setUser(null);
-    window.location.href = "/";
   };
 
   return (
@@ -100,11 +129,7 @@ export default function Header({ onToggleMenu }) {
                   </Link>
                   <button
                     className="flex w-full text-red-800 dark:text-red-500 text-left px-3 p-2 hover:bg-gray-100 dark:hover:bg-gray-700"
-                    onClick={() => {
-                      setDropdownOpen(false);
-                      setUser(null);
-                      window.location.href = "/";
-                    }}
+                    onClick={logout}
                   >
                     <LogOut className="mx-1"/>  Log out
                   </button>
