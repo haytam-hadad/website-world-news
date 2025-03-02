@@ -11,15 +11,17 @@ import {
   Flag,
   PlusCircle,
 } from "lucide-react";
-import { useState } from "react";
+import { useState , useContext } from "react";
 import { ArrowBigUp, ArrowBigDown } from "lucide-react";
 import Comment from "../components/Comment";
+import { ThemeContext } from "../ThemeProvider";
 
 const SinglePost = ({ post }) => {
   const [vote, setVote] = useState(null);
   const [subscribed, setSubscribed] = useState(false);
   const [comments, setComments] = useState(post.comments || []);
   const [newComment, setNewComment] = useState("");
+  const { user } = useContext(ThemeContext);
 
   const handleUpvote = () => {
     setVote(vote !== "upvote" ? "upvote" : null);
@@ -37,7 +39,8 @@ const SinglePost = ({ post }) => {
     if (newComment.trim() !== "") {
       const newCommentObj = {
         id: Date.now(),
-        user: "User Name",
+        userProfilename: user.displayname,
+        username : user.username ,
         text: newComment,
         timeAgo: "Just now",
         avatar: "U",
@@ -188,7 +191,8 @@ const SinglePost = ({ post }) => {
             comments.map((comment) => (
               <Comment
                 key={comment.id}
-                user={comment.user}
+                userProfilename={comment.userProfilename}
+                username={comment.username}
                 text={comment.text}
                 timeAgo={comment.timeAgo}
                 avatar={comment.avatar}
