@@ -21,7 +21,7 @@ const Welcome = () => {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 1, delay: 0.1 }}
             >
-                {user ? `Welcome back, ${user.username}` : 'Welcome to Your News Feed'}
+                {user ? `Welcome back, ${user.displayname}` : 'Welcome to Your News Feed'}
             </motion.h1>
             <motion.p
                 className="text-lg text-white mb-6 sm:text-xl xl:text-2xl max-w-xl"

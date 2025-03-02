@@ -68,7 +68,7 @@ const Profile = ({ userData }) => {
             </div>
           </div>
           {user && user._id == userData._id ? (
-            <Link href="/dashboard" className="flex gap-1 items-center font-bold bg-white text-mainColor px-4 py-3 rounded-full shadow-md hover:bg-gray-100 transition">
+            <Link href="/update-info" className="flex gap-1 items-center font-bold bg-white text-mainColor px-4 py-3 rounded-full shadow-md hover:bg-gray-100 transition">
                 <Edit />
                 Update Info
               

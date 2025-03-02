@@ -1,7 +1,7 @@
 "use client";
 import { useState, useEffect, useContext } from "react";
 import { Edit } from "lucide-react";
-import { ThemeContext } from "../ThemeProvider";
+import { ThemeContext } from "../../ThemeProvider";
 
 const UserDashboard = () => {
   const { user, setUser } = useContext(ThemeContext);
