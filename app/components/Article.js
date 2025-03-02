@@ -70,7 +70,7 @@ const Article = ( {articleData} ) => {
                   </Link>
                   <div className="flex flex-col">
                     <Link href={`/profile/${author}`} className="truncate max-sm:text-sm font-semibold capitalize cursor-pointer hover:underline text-gray-900 dark:text-gray-100 text-lg">
-                      {author}
+                      {author || "Unknown"}
                     </Link>
                   </div>
                 </div>

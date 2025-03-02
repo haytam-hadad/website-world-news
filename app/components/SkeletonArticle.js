@@ -4,7 +4,7 @@ import { Clock3, ArrowBigUp, ArrowBigDown, Share2, MessageCircle, MoreHorizontal
 
 const ArticleSkeleton = () => {
   return (
-    <article className="flex mb-3 w-full my-1 flex-col lg:flex-row bg-lightgrey dark:bg-darkgrey border p-3 mx-auto rounded-xl shadow-sm animate-pulse">
+    <article className="flex mb-3 w-full my-1 flex-col lg:flex-row bg-white dark:bg-darkgrey border p-3 mx-auto rounded-xl shadow-sm animate-pulse">
       <div className="flex flex-col lg:flex-row items-center space-y-1 lg:space-y-0 lg:space-x-6 w-full">
         {/* Image Skeleton */}
         <div className="w-full border-mainColor h-60 md:max-w-[95%] lg:h-[350px] relative rounded-xl overflow-hidden mb-2 lg:mb-0 bg-gray-300 dark:bg-gray-700 animate-pulse"></div>
