@@ -1,6 +1,6 @@
-import Article from "./components/Article";
+import Article from "../components/Article";
 import { ChevronDown } from "lucide-react";
-import Welcome from "./components/Welcome";
+import Welcome from "../components/Welcome";
 import Link from "next/link";
 
 

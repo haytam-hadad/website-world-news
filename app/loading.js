@@ -1,11 +1,16 @@
-import SkeletonArticle from "./components/SkeletonArticle";
+import Image from "next/image";
 
 export default function Loading() {
   return (
-    <div className="container mx-auto p-1">
-      <h2 className="text-xl font-semibold mb-3 p-1 opacity-50">Loading articles...</h2>
-      <SkeletonArticle/>
-      <SkeletonArticle/>
+    <div className="bg-primary-foreground min-h-screen flex items-center justify-center">
+      <Image
+        src="/images/i1.svg"
+        alt="Loading..."
+        width={70}
+        height={70}
+        className="animate-spin"
+      />
     </div>
   );
 }
+

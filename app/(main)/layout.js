@@ -1,10 +1,9 @@
 "use client";
-
 import "../globals.css";
-import HeaderDash from "../components/HeaderDash";
+import Header from "../components/Header";
 import Footer from "../components/Footer";
 import { GoUp } from "../components/GoUp";
-import SideMenuDashboard from "../components/SideMenuDashboard";
+import SideMenu from "../components/SideMenu";
 import { ThemeProvider, ThemeContext } from "../ThemeProvider";
 import { useState, useContext, useEffect, useCallback } from "react";
 
@@ -27,39 +26,41 @@ function useWindowWidth() {
 function LayoutContent({ children }) {
   const { theme } = useContext(ThemeContext);
   const [showMenu, setShowMenu] = useState(false);
+  const [menuWidth, setMenuWidth] = useState(250);
   const windowWidth = useWindowWidth();
   const isDesktop = windowWidth >= 768;
 
   return (
     <>
-        <HeaderDash onToggleMenu={() => setShowMenu((prev) => !prev)} />
+        <Header onToggleMenu={() => setShowMenu((prev) => !prev)} />
         <main className="relative flex">
           {/* Side Menu */}
           {isDesktop && (
-            <div className="w-[250px]">
-              <SideMenuDashboard setVisible={setShowMenu} />
+            <div className=" w-[250px]">
+              <SideMenu setVisible={setShowMenu} />
             </div>
           )}
+
           {/* Mobile Side Menu (Overlay) */}
           {!isDesktop && showMenu && (
             <div className="md:hidden relative">
-              <SideMenuDashboard setVisible={setShowMenu} />
+              <SideMenu setVisible={setShowMenu} />
             </div>
           )}
+
           {/* Content Area */}
           <div className="flex-1 p-1 md:p-3 overflow-y-hidden bg-lightgrey dark:bg-thirdColor ">{children}</div>
         </main>
         <GoUp />
         <Footer />
-    </>
+        </>
   );
 }
 
-export default function DashboardLayout({ children }) {
+export default function MainLayout({ children }) {
   return (
     <ThemeProvider>
       <LayoutContent>{children}</LayoutContent>
     </ThemeProvider>
   );
 }
-

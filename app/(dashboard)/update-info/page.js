@@ -10,7 +10,7 @@ const UserDashboard = () => {
 
   useEffect(() => {
     if (!user) return;
-
+    
     const fetchUserData = async () => {
       try {
         const apiUrl = `${process.env.NEXT_PUBLIC_API_URL}/userprofile?username=${user.username}`;

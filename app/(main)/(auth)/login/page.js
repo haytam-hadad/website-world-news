@@ -4,7 +4,7 @@ import { useState, useContext, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
-import { ThemeContext } from "../../ThemeProvider";
+import { ThemeContext } from "../../../ThemeProvider";
 import { motion } from "framer-motion";
 
 export default function LoginPage() {
@@ -16,8 +16,8 @@ export default function LoginPage() {
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    if (user) {
-      router.push(`/profile/${user.username}`);
+    if (!user) {
+      router.push(`/`);
     }
   }, [user, router]);
 
@@ -67,7 +67,7 @@ export default function LoginPage() {
 
       const userData = await response.json();
       setUser(userData);
-      router.push(`/profile/${userData.username}`);
+      router.push(`/`);
     } catch (err) {
       setError(err.message || "An unexpected error occurred. Please try again.");
     } finally {

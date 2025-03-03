@@ -19,9 +19,9 @@ const Profile = ({ userData }) => {
     const fetchArticles = async (username) => {
       try {
         const response = await fetch(
-          `${process.env.NEXT_PUBLIC_API_URL}/articles/${username}`
+          `${process.env.NEXT_PUBLIC_API_URL}/articles?username=${username}`
         );
-        if (!response.ok) throw new Error("Failed to fetch articles");
+        if (!response.ok) throw new Error(`Failed to fetch articles: ${response.status} ${response.statusText}`);
         const data = await response.json();
         setArticles(data);
       } catch (err) {
@@ -32,12 +32,12 @@ const Profile = ({ userData }) => {
     if (userData) {
       fetchArticles(userData.username);
     }
-  }, [userData]);
+  }, []);
 
   return (
     <div className="container mx-auto p-3 max-md:p-0">
       {/*Image Banner Section */}
-      {user && user._id == userData._id ? (
+      {user && user._id === userData._id ? (
         <div className="relative w-full sm:h-36 h-28 mb-3 overflow-hidden rounded-xl bg-gradient-to-r from-mainColor to-[#3498db48] flex items-center justify-center">
           <button
             type="button"
@@ -67,7 +67,7 @@ const Profile = ({ userData }) => {
               </p>
             </div>
           </div>
-          {user && user._id == userData._id ? (
+          {user && user._id === userData._id ? (
             <Link href="/update-info" className="flex gap-1 items-center font-bold bg-white text-mainColor px-4 py-3 rounded-full shadow-md hover:bg-gray-100 transition">
                 <Edit />
                 Update Info
@@ -115,35 +115,22 @@ const Profile = ({ userData }) => {
       <section className="mt-5">
         <h2 className="title">Articles</h2>
         <div className="space-y-5">
-          {articles.length === 0 ? (
-            <p className="text-gray-500">No articles available.</p>
-          ) : (
-            articles.map((article) => {
-              const {
-                _id,
-                title = "No title available",
-                content = "No content available",
-                imageUrl = "/images/image.jpg",
-                author = "Unknown",
-                publishedAt,
-                category = "General",
-                url = "#",
-              } = article || {};
-
-              return (
-                <Article
-                  key={_id}
-                  title={title}
-                  desc={content}
-                  imageUrl={imageUrl}
-                  author={author}
-                  publishedAt={publishedAt}
-                  category={category}
-                  url={`/post/${_id}`}
-                />
-              );
-            })
-          )}
+        {articles.length === 0 ? (
+          <div className="no_articles_container">
+            <h1 className="no_articles">
+              No articles available
+            </h1>
+          </div>
+        ) : (
+          articles.map((article , i) => {
+            return (
+              <Article
+                key={i}
+                articleData={article}
+              />
+            );
+          })
+        )}
         </div>
       </section>
     </div>

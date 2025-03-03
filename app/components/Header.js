@@ -8,18 +8,16 @@ import { useState, useContext } from "react";
 import { ThemeContext } from "../ThemeProvider";
 import Image from "next/image";
 
-
 export default function Header({ onToggleMenu }) {
-  const { theme, setTheme, user , setUser } = useContext(ThemeContext);
+  const { theme, setTheme, user, setUser } = useContext(ThemeContext);
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
-
 
   const logout = async () => {
     if (!user) {
       console.log('User is not logged in');
       return;
-    }; // Ensure user is defined
+    }
     try {
       const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/auth/logout`, {
         method: "POST",
@@ -28,7 +26,7 @@ export default function Header({ onToggleMenu }) {
         },
         credentials: 'include' // Include session information in the request
       });
-  
+
       if (response.status === 200) {
         console.log('Logout successful');
         setUser(null);
@@ -46,7 +44,7 @@ export default function Header({ onToggleMenu }) {
     setUser(null);
     window.location.href = "/";
   };
-  
+
   const handleSearch = (e) => {
     e.preventDefault();
     if (searchQuery.trim()) {
@@ -81,7 +79,7 @@ export default function Header({ onToggleMenu }) {
             placeholder="Search for news..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full bg-[alicblue] dark:bg-[#26262e] border border-mainColor shadow-sm focus:border-2 rounded-full px-4 sm:px-5 h-9 md:h-10 focus:outline-none focus:ring-0 text-primary dark:text-secondaryColor"
+            className="w-full bg-[aliceblue] dark:bg-[#26262e] border border-mainColor shadow-sm focus:border-2 rounded-full px-4 sm:px-5 h-9 md:h-10 focus:outline-none focus:ring-0 text-primary dark:text-secondaryColor"
           />
           <Search
             onClick={handleSearch}
@@ -99,9 +97,9 @@ export default function Header({ onToggleMenu }) {
             />
             <Label htmlFor="Dark-Mode" className="flex items-center cursor-pointer">
               {theme ? (
-                <Sun className="w-5 h-5 opacity-90 "/>
+                <Sun className="w-5 h-5 opacity-90" />
               ) : (
-                <Moon className="w-5 h-5 opacity-90 "/>
+                <Moon className="w-5 h-5 opacity-90" />
               )}
             </Label>
           </div>
@@ -115,7 +113,7 @@ export default function Header({ onToggleMenu }) {
                 <div className="w-8 h-8 rounded-full bg-mainColor text-bold text-white flex items-center justify-center">
                   {user.displayname.charAt(0).toUpperCase()}
                 </div>
-                <span className="font-semibold  hidden p-1 md:inline capitalize hover:underline">{user.displayname}</span>
+                <span className="font-semibold hidden p-1 md:inline capitalize hover:underline">{user.displayname}</span>
               </button>
               {dropdownOpen && (
                 <div className="absolute right-0 w-40 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-md shadow-lg py-1 z-20">
@@ -124,7 +122,7 @@ export default function Header({ onToggleMenu }) {
                       className="flex items-center w-full text-left px-3 p-2 hover:bg-gray-100 dark:hover:bg-gray-700"
                       onClick={() => setDropdownOpen(false)}
                     >
-                      <User className="mx-1"/>  Profile
+                      <User className="mx-1" /> Profile
                     </button>
                   </Link>
                   <Link href={`/update-info`}>
@@ -132,14 +130,14 @@ export default function Header({ onToggleMenu }) {
                       className="flex items-center w-full text-left px-3 p-2 hover:bg-gray-100 dark:hover:bg-gray-700"
                       onClick={() => setDropdownOpen(false)}
                     >
-                      <LayoutDashboard className="mx-1"/>  Dashboard
+                      <LayoutDashboard className="mx-1" /> Dashboard
                     </button>
                   </Link>
                   <button
                     className="flex w-full text-red-800 dark:text-red-500 text-left px-3 p-2 hover:bg-gray-100 dark:hover:bg-gray-700"
                     onClick={logout}
                   >
-                    <LogOut className="mx-1"/>  Log out
+                    <LogOut className="mx-1" /> Log out
                   </button>
                 </div>
               )}
@@ -162,7 +160,7 @@ export default function Header({ onToggleMenu }) {
           {/* Sidebar Toggle Button (Mobile) */}
           <Toggle
             onClick={onToggleMenu}
-            className="md:hidden shadow-sm flex items-center cursor-pointer rounded-full border p-2 "
+            className="md:hidden shadow-sm flex items-center cursor-pointer rounded-full border p-2"
           >
             <Menu className="w-7 h-7 scale-150" />
           </Toggle>
