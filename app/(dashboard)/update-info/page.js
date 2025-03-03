@@ -33,7 +33,6 @@ const UserDashboard = () => {
 
   return (
     <div className="max-w-4xl border mx-auto p-1 sm:p-3 rounded-lg">
-      <h1 className="text-2xl font-bold text-center bg-mainColor text-white p-3 mb-4 rounded-xl">Dashboard</h1>
       <div className="flex p-2 bg-white dark:bg-darkgrey rounded-xl border mb-3 text-center flex-col justify-center items-center space-y-1 md:space-y-0 md:flex-row md:space-x-3">
         <div className="w-14 h-14 font-semibold rounded-full text-2xl bg-mainColor text-bold text-white flex items-center justify-center">
           {user.displayname.charAt(0).toUpperCase() || "U"}

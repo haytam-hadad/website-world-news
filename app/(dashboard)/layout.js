@@ -1,6 +1,6 @@
 "use client";
 import "../globals.css";
-import Header from "../components/Header";
+import HeaderDash from "../components/HeaderDash";
 import Footer from "../components/Footer";
 import { GoUp } from "../components/GoUp";
 import SideMenuDashboard from "../components/SideMenuDashboard";
@@ -33,7 +33,7 @@ function LayoutContent({ children }) {
   return (
     <html lang="en" className={`${theme ? "dark" : "light"}`}>
       <body className="dark:bg-thirdColor bg-secondaryColor dark:text-secondaryColor">
-        <Header onToggleMenu={() => setShowMenu((prev) => !prev)} />
+        <HeaderDash onToggleMenu={() => setShowMenu((prev) => !prev)} />
         <main className="relative flex">
           {/* Side Menu */}
           {isDesktop && (

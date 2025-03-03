@@ -1,6 +1,6 @@
 "use client";
 import Link from "next/link";
-import { Search, Menu, Moon, Sun, User, LogOut, LayoutDashboard } from "lucide-react";
+import { Menu, Moon, Sun, User, LogOut } from "lucide-react";
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
 import { Toggle } from "@/components/ui/toggle";
@@ -11,9 +11,6 @@ import Image from "next/image";
 
 export default function Header({ onToggleMenu }) {
   const { theme, setTheme, user , setUser } = useContext(ThemeContext);
-  const [dropdownOpen, setDropdownOpen] = useState(false);
-  const [searchQuery, setSearchQuery] = useState("");
-
 
   const logout = async () => {
     if (!user) {
@@ -47,18 +44,9 @@ export default function Header({ onToggleMenu }) {
     window.location.href = "/";
   };
   
-  const handleSearch = (e) => {
-    e.preventDefault();
-    if (searchQuery.trim()) {
-      window.location.href = `/search/${encodeURIComponent(
-        searchQuery.trim().toLowerCase()
-      )}`;
-    }
-  };
-
   return (
     <header className="sticky bg-white dark:bg-darkgrey select-none top-0 z-50 border-b px-6 max-sm:px-3">
-      <div className="grid z-50 grid-cols-[auto,_1fr,_auto] items-center py-3 text-maintextColor dark:text-secondaryColor gap-1">
+      <div className="z-50 flex justify-between items-center py-3 text-maintextColor dark:text-secondaryColor gap-1">
         {/* Logo Group */}
         <Link href="/" className="flex items-center gap-2">
           <Image
@@ -68,26 +56,9 @@ export default function Header({ onToggleMenu }) {
             height={45}
             className="dark:filter dark:invert"
           />
-          <span className="hidden font-bold text-xl sm:inline">World News</span>
+          <span className="font-bold text-xl ">World News</span>
+          <span className="text-mainColor font-bold text-md">/ Dashboard </span>
         </Link>
-
-        {/* Search Group */}
-        <form
-          onSubmit={handleSearch}
-          className="relative w-full max-w-lg mx-auto rounded-full border"
-        >
-          <input
-            type="text"
-            placeholder="Search for news..."
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full bg-[alicblue] dark:bg-[#26262e] border border-mainColor shadow-sm focus:border-2 rounded-full px-4 sm:px-5 h-9 md:h-10 focus:outline-none focus:ring-0 text-primary dark:text-secondaryColor"
-          />
-          <Search
-            onClick={handleSearch}
-            className="absolute flex right-1 top-1/2 transform -translate-y-1/2 w-7 h-7 hover:border cursor-pointer p-1 rounded-full text-primary"
-          />
-        </form>
 
         {/* Control Group */}
         <div className="flex items-center gap-2">
@@ -125,14 +96,6 @@ export default function Header({ onToggleMenu }) {
                       onClick={() => setDropdownOpen(false)}
                     >
                       <User className="mx-1"/>  Profile
-                    </button>
-                  </Link>
-                  <Link href={`/update-info`}>
-                    <button
-                      className="flex items-center w-full text-left px-3 p-2 hover:bg-gray-100 dark:hover:bg-gray-700"
-                      onClick={() => setDropdownOpen(false)}
-                    >
-                      <LayoutDashboard className="mx-1"/>  Dashboard
                     </button>
                   </Link>
                   <button

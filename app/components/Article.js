@@ -81,7 +81,7 @@ const Article = ( {articleData} ) => {
                 </span>
               </header>
 
-              <h1 className="font-serif font-semibold text-2xl text-primary capitalize mx-1 my-4 underline underline-offset-4 decoration-mainColor">
+              <h1 className="font-serif font-semibold text-2xl text-primary capitalize mx-1 my-4 hover:underline underline-offset-4 ">
                 {title}
               </h1>
 

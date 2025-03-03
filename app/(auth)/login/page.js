@@ -4,7 +4,7 @@ import { useState, useContext, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
-import { ThemeContext } from "../ThemeProvider";
+import { ThemeContext } from "../../ThemeProvider";
 import { motion } from "framer-motion";
 
 export default function LoginPage() {
