@@ -36,7 +36,7 @@ function LayoutContent({ children }) {
 
   return (
     <>
-      <header className="sticky bg-white dark:bg-darkgrey select-none top-0 z-50 px-10 max-sm:px-5">
+      <header className="sticky bg-white dark:bg-black select-none top-0 z-50 px-10 max-sm:px-5">
         <div className="flex justify-between items-center py-3 text-maintextColor dark:text-secondaryColor">
           <Link href="/" className="flex items-center gap-2">
             <Image

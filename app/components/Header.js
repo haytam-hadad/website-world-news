@@ -79,7 +79,7 @@ export default function Header({ onToggleMenu }) {
             placeholder="Search for news..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full bg-[aliceblue] dark:bg-[#26262e] border border-mainColor shadow-sm focus:border-2 rounded-full px-4 sm:px-5 h-9 md:h-10 focus:outline-none focus:ring-0 text-primary dark:text-secondaryColor"
+            className="w-full bg-white dark:bg-[#26262e] border border-mainColor shadow-sm focus:border-2 rounded-full px-4 sm:px-5 h-9 md:h-10 focus:outline-none focus:ring-0 text-primary dark:text-secondaryColor"
           />
           <Search
             onClick={handleSearch}

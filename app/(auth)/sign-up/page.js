@@ -110,10 +110,10 @@ export default function SignUpPage() {
   };
 
   return (
-    <div className="grid min-h-screen grid-cols-1 lg:grid-cols-[3fr_2fr] overflow-x-hidden">
-      <div className="flex mt-10 flex-col justify-center px-3">
+    <div className="grid min-h-screen grid-cols-1 lg:grid-cols-[4fr_2fr] overflow-x-hidden">
+      <div className="flex mt-5 flex-col justify-center">
         <form
-          className="flex flex-col space-y-5 max-w-lg mx-auto w-full"
+          className="flex flex-col space-y-3 p-5 sm:p-10 rounded-xl dark:bg-black border shadow-md bg-secondaryColor max-w-xl mx-auto w-full"
           onSubmit={handleSubmit}
         >
           <h1 className="text-center text-4xl p-1 font-bold text-foreground mb-6">
@@ -296,7 +296,7 @@ export default function SignUpPage() {
             width={400}
             height={400}
             alt="Sign Up Illustration"
-            className="w-[90%] max-w-sm m-auto object-contain dark:filter dark:invert opacity-80"
+            className="max-w-sm m-auto object-contain dark:filter dark:invert opacity-85"
           />
         </motion.div>
       </motion.div>
