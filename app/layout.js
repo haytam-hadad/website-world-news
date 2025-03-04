@@ -1,13 +1,15 @@
 "use client";
+import Footer from "./components/Footer";
 import "./globals.css";
 import { ThemeProvider } from "./ThemeProvider";
 
 export default function Layout({ children }) {
   return (
     <html lang="en">
-      <body className="bg-primary-foreground" >
+      <body className="bg-secondaryColor dark:bg-thirdColor" >
         <ThemeProvider>
-          {children}
+            {children} 
+          <Footer/>
         </ThemeProvider>
       </body>
     </html>

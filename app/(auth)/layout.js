@@ -2,8 +2,8 @@
 import { useState, useContext } from "react";
 import { ThemeContext } from "../ThemeProvider";
 import Link from "next/link";
-import Footer from "../components/Footer";
 import { ArrowLeft } from "lucide-react";
+
 
 function LayoutContent({ children }) {
   const { theme, setTheme, user, setUser } = useContext(ThemeContext);
@@ -47,7 +47,6 @@ function LayoutContent({ children }) {
           {children}
         </div>
       </main>
-      <Footer />
     </div>
   );
 }

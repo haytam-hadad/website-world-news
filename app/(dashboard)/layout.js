@@ -3,7 +3,7 @@ import { useState, useEffect, useContext } from "react";
 import { ThemeContext } from "../ThemeProvider";
 import HeaderDash from "../components/HeaderDash";
 import SideMenuDashboard from "../components/SideMenuDashboard";
-import Footer from "../components/Footer";
+
 
 function useWindowWidth() {
   const [width, setWidth] = useState(() => (typeof window !== "undefined" ? window.innerWidth : 1024));
@@ -46,7 +46,6 @@ function LayoutContent({ children }) {
           {children}
         </div>
       </main>
-      <Footer />
     </>
   );
 }

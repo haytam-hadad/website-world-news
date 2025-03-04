@@ -1,7 +1,6 @@
 "use client";
 import "../globals.css";
 import Header from "../components/Header";
-import Footer from "../components/Footer";
 import { GoUp } from "../components/GoUp";
 import SideMenu from "../components/SideMenu";
 import { ThemeContext } from "../ThemeProvider";
@@ -48,12 +47,11 @@ function LayoutContent({ children }) {
         )}
 
         {/* Content Area */}
-        <div className="flex-1 p-1 md:p-3 overflow-y-hidden bg-lightgrey dark:bg-thirdColor">
+        <div className="flex-1 p-1 md:p-3 h-full overflow-y-hidden bg-lightgrey dark:bg-thirdColor">
           {children}
         </div>
       </main>
       <GoUp />
-      <Footer />
     </>
   );
 }
