@@ -6,9 +6,9 @@ export default function Loading() {
       <Image
         src="/images/i1.svg"
         alt="Loading..."
-        width={70}
-        height={70}
-        className="animate-spin dark:filter dark:invert opacity-80"
+        width={75}
+        height={75}
+        className="animate-spin dark:filter dark:invert"
       />
     </div>
   );

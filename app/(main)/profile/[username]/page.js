@@ -18,7 +18,7 @@ const fetchSessionUser = async (username) => {
 };
 
 export default async function ProfilePage({ params }) {
-  const { username } = params;
+  const { username } = await params;
   const userData = await fetchSessionUser(username);
 
   if (!userData) {
