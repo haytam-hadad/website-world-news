@@ -94,9 +94,9 @@ body{
   .side_menu_link_dashboard{
     @apply flex mb-1 border-b-2 border-transparent my-1 transition-all duration-100 rounded-lg hover:border-b-primary-foreground items-center text-lg space-x-2 w-full text-left px-5 py-3 hover:bg-primary text-secondaryColor hover:text-primary-foreground ;
   }
-  .form_input{
-    @apply focus:outline-none shadow-sm w-full border border-b-2 border-b-mainColor rounded-md p-3 text-sm text-foreground outline-none focus:ring-1 focus:ring-primary focus:ring-offset-2 bg-white dark:bg-darkgrey;
-    }
+  .form_input {
+    @apply w-full p-3 text-sm rounded-md bg-gray-100 border-l-4 border-mainColor ring-offset-background focus-visible:right-1 focus-visible:ring-ring focus-visible:ring-offset-2 dark:bg-darkgrey dark:text-foreground;
+  }
   .main_btn {
     @apply w-full bg-mainColor text-lg hover:bg-primary rounded-lg p-3 text-primary-foreground font-semibold hover:opacity-95 shadow-sm ;
   }

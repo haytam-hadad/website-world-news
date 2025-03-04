@@ -76,10 +76,10 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="grid min-h-screen grid-cols-1 lg:grid-cols-[4fr_2fr] overflow-x-hidden">
+    <div className="grid min-h-screen grid-cols-1 lg:grid-cols-[3fr_1fr] overflow-x-hidden">
       <div className="flex flex-col justify-center">
         <form
-          className="flex flex-col space-y-3 p-5 sm:p-10 rounded-xl dark:bg-black border shadow-sm bg-secondaryColor max-w-xl mx-auto w-full"
+          className="flex flex-col space-y-3 p-5 sm:p-10 rounded-xl dark:bg-black border shadow-xl bg-secondaryColor max-w-xl mx-auto w-full"
           onSubmit={handleSubmit}
         >
           <h1 className="text-center text-4xl p-1 font-bold text-foreground mb-6">
@@ -127,7 +127,7 @@ export default function LoginPage() {
           </p>
 
           <p className="text-sm font-medium text-muted-foreground">
-            Don't have an account?
+            Don&apos;t have an account?
             <Link
               href="/sign-up"
               className="text-primary underline hover:text-mainColor "

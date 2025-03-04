@@ -33,13 +33,13 @@ function LayoutContent({ children }) {
 
   return (
     <div className="bg-[url('/images/D2.png')] dark:bg-[url('/images/D1.png')] bg-no-repeat bg-bottom bg-cover">
-      <div className="sticky top-0 z-30 p-6">
+      <div className="sticky top-0 z-30  p-2 sm:p-4">
         <button
           onClick={() => window.history.back()}
-          className="rounded-full bg-primary-foreground text-primary-foreground text-md z-30 border p-3 px-4 font-bold text-gray-800 shadow-md dark:bg-gray-800 dark:text-white flex items-center"
+          className="rounded-full text-primary bg-primary-foreground hover:bg-mainColor hover:text-secondaryColor text-md z-30 border p-3 px-4 font-bold text-gray-800 shadow-md dark:bg-gray-800 dark:text-white flex items-center"
         >
           <ArrowLeft className="h-5 w-5 text-primary"/>
-          <span className="ml-3 text-primary">Go Back</span>
+          <span className="mx-3">Go Back</span>
         </button>
       </div>
       <main className="relative flex">

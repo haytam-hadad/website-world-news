@@ -8,6 +8,11 @@ import { Plus, Trash2 } from "lucide-react";
 export default function AddPostPage() {
   const router = useRouter();
   const { user } = useContext(ThemeContext);
+
+  if (!user) {
+    router.push("/login");
+  }
+
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
   const [category, setCategory] = useState("");
@@ -77,7 +82,7 @@ export default function AddPostPage() {
     <div className="max-w-3xl mx-auto p-1 sm:p-4 mt-2 rounded-lg">
       <div className="flex items-center space-x-2 mb-5">
         <div className="w-10 h-10 rounded-full text-lg bg-mainColor text-bold text-white flex items-center justify-center">
-          {user.displayname.charAt(0).toUpperCase() || "U"}
+          {user?.displayname.charAt(0).toUpperCase() || "U"}
         </div>
         <div>
           <h2 className="text-lg font-semibold text-primary">
@@ -149,7 +154,7 @@ export default function AddPostPage() {
         {errors.category && (
           <p className="text-red-600 dark:text-red-400">{errors.category}</p>
         )}
-        <div className="bg-lightgrey border dark:bg-darkgrey p-4 rounded-lg">
+        <div className="border shadow-sm p-4 rounded-lg">
           <label
             htmlFor="imageType"
             className="block text-primary font-medium mb-2"
@@ -205,7 +210,7 @@ export default function AddPostPage() {
           )}
         </div>
 
-        <div className="bg-lightgrey border dark:bg-darkgrey p-4 rounded-lg">
+        <div className="border shadow-sm p-4 rounded-lg">
           <label
             htmlFor="sources"
             className="block text-primary font-medium mb-2"
