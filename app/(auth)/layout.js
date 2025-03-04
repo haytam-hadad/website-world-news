@@ -1,11 +1,7 @@
 "use client";
-import Link from "next/link";
-import { Menu, Moon, Sun, User, LogOut } from "lucide-react";
-import { Label } from "@/components/ui/label";
-import { Switch } from "@/components/ui/switch";
 import { useState, useContext } from "react";
-import { ThemeContext } from "../ThemeProvider"; // No extra ThemeProvider
-import Image from "next/image";
+import { ThemeContext } from "../ThemeProvider";
+import Link from "next/link";
 import Footer from "../components/Footer";
 
 function LayoutContent({ children }) {
@@ -35,75 +31,40 @@ function LayoutContent({ children }) {
   };
 
   return (
-    <>
-      <header className="sticky bg-white dark:bg-black select-none top-0 z-50 px-10 max-sm:px-5">
-        <div className="flex justify-between items-center py-3 text-maintextColor dark:text-secondaryColor">
-          <Link href="/" className="flex items-center gap-2">
-            <Image
-              src="/images/i1.svg"
-              alt="logo"
-              width={50}
-              height={50}
-              className="dark:filter dark:invert"
+    <div className="bg-[url('/images/D2.png')] dark:bg-[url('/images/D1.png')] bg-no-repeat bg-bottom bg-cover">
+      <div className="sticky top-0 z-30 p-5">
+        <button
+          onClick={() => window.history.back()}
+          className="rounded-full bg-primary-foreground text-primary-foreground text-md z-30 border p-3 px-4 font-bold text-gray-800 shadow-md dark:bg-gray-800 dark:text-white flex items-center"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            className="h-4 w-4"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth={2}
+              d="M15 19l-7-7 7-7"
             />
-            <span className="font-bold text-2xl">World News</span>
-          </Link>
-
-          <div className="flex items-center gap-2">
-            {/* Dark Mode Toggle */}
-            <div className="flex items-center gap-1 rounded-full p-1">
-              <Switch checked={theme} onCheckedChange={(checked) => setTheme(checked)}/>
-              <Label htmlFor="Dark-Mode" className="cursor-pointer">
-                {theme ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}
-              </Label>
-            </div>
-
-            {/* User Dropdown */}
-            {user && (
-              <div className="relative">
-                <button
-                  className="flex items-center gap-1 rounded-full p-1"
-                  onClick={() => setDropdownOpen(!dropdownOpen)}
-                >
-                  <div className="w-8 h-8 rounded-full bg-mainColor text-white flex items-center justify-center">
-                    {user.displayname.charAt(0).toUpperCase()}
-                  </div>
-                  <span className="hidden md:inline capitalize hover:underline">
-                    {user.displayname}
-                  </span>
-                </button>
-
-                {dropdownOpen && (
-                  <div className="absolute right-0 w-40 bg-white dark:bg-gray-800 border rounded-md shadow-lg py-1">
-                    <Link href={`/profile/${user.username}`}>
-                      <button className="flex w-full px-3 py-2 hover:bg-gray-100 dark:hover:bg-gray-700">
-                        <User className="mr-1" /> Profile
-                      </button>
-                    </Link>
-                    <button
-                      className="flex w-full text-red-800 dark:text-red-500 px-3 py-2 hover:bg-gray-100 dark:hover:bg-gray-700"
-                      onClick={logout}
-                    >
-                      <LogOut className="mr-1" /> Log out
-                    </button>
-                  </div>
-                )}
-              </div>
-            )}
-          </div>
-        </div>
-      </header>
-
+          </svg>
+          <span className="ml-3">Go Back</span>
+        </button>
+      </div>
       <main className="relative flex">
-        <div className="flex-1 p-1 md:p-3 bg-[url('/images/D2.png')] dark:bg-[url('/images/D1.png')] bg-no-repeat bg-left-bottom bg-cover">
+        <div className="flex-1 p-1">
           {children}
         </div>
       </main>
       <Footer />
-    </>
+    </div>
   );
 }
 
 export default function MainLayout({ children }) {
-  return <LayoutContent>{children}</LayoutContent>; // No extra ThemeProvider
+  return <LayoutContent>{children}</LayoutContent>;
 }
+
