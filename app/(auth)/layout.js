@@ -95,7 +95,7 @@ function LayoutContent({ children }) {
       </header>
 
       <main className="relative flex">
-        <div className="flex-1 p-1 md:p-3 bg-[url('/images/D2.png')] dark:bg-[url('/images/D1.png')] bg-no-repeat bg-cover">
+        <div className="flex-1 p-1 md:p-3 bg-[url('/images/D2.png')] dark:bg-[url('/images/D1.png')] bg-no-repeat bg-left-bottom bg-cover">
           {children}
         </div>
       </main>

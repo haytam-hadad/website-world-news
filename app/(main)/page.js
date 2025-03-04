@@ -29,7 +29,7 @@ export default async function Home() {
   const articles = await fetchArticles();
 
   return (
-    <>
+    <div>
       <Welcome/>
 
       {/* Articles Section */}
@@ -55,7 +55,7 @@ export default async function Home() {
           })
         )}
       </main>
-    </>
+    </div>
   );
 }
 
