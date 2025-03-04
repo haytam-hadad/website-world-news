@@ -34,6 +34,7 @@ export default function LoginPage() {
           username: username.trim(),
           password: password.trim(),
         }),
+        credentials: "include", // Send cookies with the request
       });
 
       if (!response.ok) {
@@ -57,7 +58,9 @@ export default function LoginPage() {
     setError(null);
 
     try {
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/auth/google`);
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/auth/google`, {
+        credentials: "include", // Send cookies with the request
+      });
       
       if (!response.ok) {
         const errorData = await response.json();
