@@ -127,7 +127,7 @@ const SideMenu = ({ setVisible }) => {
       <hr className="my-2 border-gray-300 dark:border-gray-700" />
       <div>
         <h2
-          className="text-md flex items-center gap-1 justify-center font-medium cursor-pointer opacity-75"
+          className="text-md flex items-center gap-1 justify-center text-mainColor font-medium cursor-pointer opacity-85"
           onClick={() => setCategoriesVisible(!categoriesVisible)}
         >
           Categories

@@ -8,7 +8,7 @@ export default function Loading() {
         alt="Loading..."
         width={70}
         height={70}
-        className="animate-spin"
+        className="animate-spin dark:filter dark:invert opacity-80"
       />
     </div>
   );

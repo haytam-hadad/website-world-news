@@ -116,7 +116,7 @@ export default function SignUpPage() {
           className="flex flex-col space-y-5 max-w-lg mx-auto w-full"
           onSubmit={handleSubmit}
         >
-          <h1 className="text-center text-4xl p-1 font-medium text-foreground mb-6">
+          <h1 className="text-center text-4xl p-1 font-bold text-foreground mb-6">
             Sign up
           </h1>
           <label className="flex flex-col space-y-1">
@@ -241,9 +241,7 @@ export default function SignUpPage() {
           )}
           <button
             type="submit"
-            className={`w-full dark:bg-mainColor rounded-lg bg-primary px-4 py-2 text-primary-foreground font-medium transition-all hover:bg-opacity-90 focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 ${
-              loading ? "opacity-70 cursor-not-allowed" : ""
-            }`}
+            className="main_btn"
             disabled={loading}
           >
             {loading ? "Signing up..." : "Sign up"}
@@ -260,16 +258,16 @@ export default function SignUpPage() {
           </span>
 
           <div className="relative flex items-center">
-            <div className="flex-grow border-t border-gray-300"></div>
+            <div className="flex-grow border-t border-gray-600"></div>
             <span className="mx-2 text-sm font-medium text-muted-foreground">
               OR
             </span>
-            <div className="flex-grow border-t border-gray-300"></div>
+            <div className="flex-grow border-t border-gray-600"></div>
           </div>
 
           <button
             type="button"
-            className="flex items-center justify-center w-full rounded-lg border px-4 py-2 font-medium bg-white shadow-md hover:shadow-lg transition-all focus:ring-2 focus:ring-[#4285F4] focus:ring-offset-2 text-black"
+            className="flex items-center justify-center w-full rounded-lg shadow-sm border border-darkgrey px-4 py-3  font-medium bg-white hover:shadow-lg transition-all focus:ring-2 focus:ring-[#4285F4] focus:ring-offset-2 text-black"
           >
             <Image
               src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg"

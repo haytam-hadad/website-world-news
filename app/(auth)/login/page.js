@@ -4,7 +4,7 @@ import { useState, useContext, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
-import { ThemeContext } from "../../../ThemeProvider";
+import { ThemeContext } from "../../ThemeProvider";
 import { motion } from "framer-motion";
 
 export default function LoginPage() {
@@ -16,7 +16,7 @@ export default function LoginPage() {
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    if (!user) {
+    if (user) {
       router.push(`/`);
     }
   }, [user, router]);
@@ -82,7 +82,7 @@ export default function LoginPage() {
           className="flex flex-col space-y-5 max-w-lg mx-auto w-full"
           onSubmit={handleSubmit}
         >
-          <h1 className="text-center text-4xl p-1 font-medium text-foreground mb-6">
+          <h1 className="text-center text-4xl p-1 font-bold text-foreground mb-6">
             Log in
           </h1>
 
@@ -117,7 +117,7 @@ export default function LoginPage() {
           </div>
 
           <p className="text-[12px] text-center font-medium text-muted-foreground">
-            Forgot your password?{" "}
+            Forgot your password?
             <Link
               href="/forgot-password"
               className="text-primary underline hover:text-mainColor"
@@ -127,7 +127,7 @@ export default function LoginPage() {
           </p>
 
           <p className="text-sm font-medium text-muted-foreground">
-            Don&apos;t have an account?{" "}
+            Don&apos;t have an account?
             <Link
               href="/sign-up"
               className="text-primary underline hover:text-mainColor "
@@ -144,23 +144,23 @@ export default function LoginPage() {
 
           <button
             type="submit"
-            className="w-full dark:bg-mainColor rounded-lg bg-primary px-4 py-2 text-primary-foreground font-medium transition-all hover:bg-opacity-90 focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2"
+            className="main_btn"
             disabled={loading}
           >
             {loading ? "Logging in..." : "Log in"}
           </button>
 
           <div className="relative flex items-center">
-            <div className="flex-grow border-t border-gray-300"></div>
+            <div className="flex-grow border-t border-gray-600"></div>
             <span className="mx-2 text-sm font-medium text-muted-foreground">
               OR
             </span>
-            <div className="flex-grow border-t border-gray-300"></div>
+            <div className="flex-grow border-t border-gray-600"></div>
           </div>
 
           <button
             type="button"
-            className="flex items-center justify-center w-full rounded-lg border px-4 py-2 font-medium bg-white shadow-md hover:shadow-lg transition-all focus:ring-2 focus:ring-[#4285F4] focus:ring-offset-2 text-black"
+            className="flex items-center justify-center w-full rounded-lg shadow-sm border border-darkgrey px-4 py-3  font-medium bg-white hover:shadow-lg transition-all focus:ring-2 focus:ring-[#4285F4] focus:ring-offset-2 text-black"
             onClick={handleGoogleLogin}
           >
             <Image

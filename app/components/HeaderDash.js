@@ -10,7 +10,7 @@ import Image from "next/image";
 
 
 export default function Header({ onToggleMenu }) {
-  const { theme, setTheme, user , setUser } = useContext(ThemeContext);
+  const { theme, setTheme, user, setUser } = useContext(ThemeContext);
 
   const logout = async () => {
     if (!user) {
@@ -81,31 +81,13 @@ export default function Header({ onToggleMenu }) {
             <div className="relative rounded-full">
               <button
                 className="flex items-center gap-1 rounded-full group p-1"
-                onClick={() => setDropdownOpen(!dropdownOpen)}
+                onClick={logout}
               >
                 <div className="w-8 h-8 rounded-full bg-mainColor text-bold text-white flex items-center justify-center">
                   {user.displayname.charAt(0).toUpperCase()}
                 </div>
                 <span className="font-semibold  hidden p-1 md:inline capitalize hover:underline">{user.displayname}</span>
               </button>
-              {dropdownOpen && (
-                <div className="absolute right-0 w-40 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-md shadow-lg py-1 z-20">
-                  <Link href={`/profile/${user.username}`}>
-                    <button
-                      className="flex items-center w-full text-left px-3 p-2 hover:bg-gray-100 dark:hover:bg-gray-700"
-                      onClick={() => setDropdownOpen(false)}
-                    >
-                      <User className="mx-1"/>  Profile
-                    </button>
-                  </Link>
-                  <button
-                    className="flex w-full text-red-800 dark:text-red-500 text-left px-3 p-2 hover:bg-gray-100 dark:hover:bg-gray-700"
-                    onClick={logout}
-                  >
-                    <LogOut className="mx-1"/>  Log out
-                  </button>
-                </div>
-              )}
             </div>
           ) : (
             <div className="hidden ml-2 md:flex items-center gap-2">

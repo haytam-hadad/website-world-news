@@ -39,7 +39,7 @@ const UserDashboard = () => {
         </div>
         <div>
           <h2 className="text-lg p-1 font-semibold text-primary">
-            {user?.displayname || "User"}{" "}
+            {user?.displayname || "User"}
             <p className="text-gray-500 dark:text-gray-400 text-sm">
               @{user?.username}
             </p>
@@ -99,4 +99,5 @@ const UserDashboard = () => {
 };
 
 export default UserDashboard;
+
 
