@@ -21,7 +21,10 @@ const Profile = ({ userData }) => {
         const response = await fetch(
           `${process.env.NEXT_PUBLIC_API_URL}/articles?username=${username}`
         );
-        if (!response.ok) throw new Error(`Failed to fetch articles: ${response.status} ${response.statusText}`);
+        if (!response.ok) {
+          if (response.status === 404) return;
+          throw new Error(`Failed to fetch articles: ${response.status} ${response.statusText}`);
+        }
         const data = await response.json();
         setArticles(data);
       } catch (err) {

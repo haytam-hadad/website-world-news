@@ -55,7 +55,7 @@ export default function Header({ onToggleMenu }) {
   };
 
   return (
-    <header className="sticky bg-white dark:bg-darkgrey select-none top-0 z-50 border-b px-6 max-sm:px-3">
+    <header className="sticky bg-white dark:bg-darkgrey select-none top-0 z-50 border-b py-1 px-6 max-sm:px-3">
       <div className="grid z-50 grid-cols-[auto,_1fr,_auto] items-center py-3 text-maintextColor dark:text-secondaryColor gap-1">
         {/* Logo Group */}
         <Link href="/" className="flex items-center gap-2">
