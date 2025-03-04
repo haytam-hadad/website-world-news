@@ -34,11 +34,9 @@ const Search = async ({ params }) => {
       )}
       <main className="flex flex-wrap justify-center sm:justify-start md:justify-around gap-2">
         {articles.length === 0 ? (
-          <div className="no_articles_container">
-            <h1 className="no_articles text-primary">
+            <h1 className="text-primary p-1">
               No results found for &quot;{query}&quot;;
             </h1>
-          </div>
         ) : (
           articles.map((article) => {
             const {

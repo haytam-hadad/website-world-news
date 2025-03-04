@@ -119,11 +119,9 @@ const Profile = ({ userData }) => {
         <h2 className="title">Articles</h2>
         <div className="space-y-5">
         {articles.length === 0 ? (
-          <div className="no_articles_container">
-            <h1 className="no_articles">
+            <h1 className="text-primary">
               No articles available
             </h1>
-          </div>
         ) : (
           articles.map((article , i) => {
             return (

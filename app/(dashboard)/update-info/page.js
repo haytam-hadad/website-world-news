@@ -32,9 +32,9 @@ const UserDashboard = () => {
   if (!userData) return <p>Error loading user data.</p>;
 
   return (
-    <div className="max-w-4xl border mx-auto p-1 sm:p-3 rounded-lg">
-      <div className="flex p-2 bg-white dark:bg-darkgrey rounded-xl border mb-3 text-center flex-col justify-center items-center space-y-1 md:space-y-0 md:flex-row md:space-x-3">
-        <div className="w-14 h-14 font-semibold rounded-full text-2xl bg-mainColor text-bold text-white flex items-center justify-center">
+    <div className="max-w-4xl p-2 mx-auto">
+      <div className="flex p-3 bg-white shadow-sm dark:bg-darkgrey rounded-xl border mb-3 text-center justify-center items-center flex-col space-x-2">
+        <div className="w-14 h-14 font-semibold rounded-full text-3xl bg-mainColor text-bold text-white flex items-center justify-center">
           {user.displayname.charAt(0).toUpperCase() || "U"}
         </div>
         <div>

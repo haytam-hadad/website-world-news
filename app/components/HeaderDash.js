@@ -45,7 +45,7 @@ export default function Header({ onToggleMenu }) {
   };
   
   return (
-    <header className="sticky bg-white dark:bg-darkgrey select-none top-0 z-50 border-b py-1 px-10 max-sm:px-3">
+    <header className="sticky border-b bg-white dark:bg-darkgrey select-none top-0 z-50 py-1 px-10 max-sm:px-3">
       <div className="z-50 flex justify-between items-center py-3 text-maintextColor dark:text-secondaryColor gap-1">
         {/* Logo Group */}
         <Link href="/" className="flex items-center gap-2">
@@ -57,7 +57,7 @@ export default function Header({ onToggleMenu }) {
             className="dark:filter dark:invert"
           />
           <span className="font-bold text-xl ">World News</span>
-          <span className="text-mainColor font-bold text-md">/ Home </span>
+          <span className="text-mainColor font-bold text-md">/ Dashboard </span>
         </Link>
 
         {/* Control Group */}
