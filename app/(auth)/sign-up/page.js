@@ -120,7 +120,7 @@ export default function SignUpPage() {
             Sign up
           </h1>
           <label className="flex flex-col space-y-1">
-            <span className="text-sm font-medium">First Name</span>
+            <span className="text-sm font-medium text-primary">First Name</span>
             <input
               type="text"
               className="form_input"
@@ -136,7 +136,7 @@ export default function SignUpPage() {
             )}
           </label>
           <label className="flex flex-col space-y-1">
-            <span className="text-sm font-medium">Last Name</span>
+            <span className="text-sm font-medium text-primary">Last Name</span>
             <input
               type="text"
               className="form_input"
@@ -152,7 +152,7 @@ export default function SignUpPage() {
             )}
           </label>
           <label className="flex flex-col space-y-1">
-            <span className="text-sm font-medium">Phone Number</span>
+            <span className="text-sm font-medium text-primary">Phone Number</span>
             <input
               type="tel"
               className="form_input"
@@ -168,7 +168,7 @@ export default function SignUpPage() {
             )}
           </label>
           <label className="flex flex-col space-y-1">
-            <span className="text-sm font-medium">Email</span>
+            <span className="text-sm font-medium text-primary">Email</span>
             <input
               type="email"
               className="form_input"
@@ -184,7 +184,7 @@ export default function SignUpPage() {
             )}
           </label>
           <label className="flex flex-col space-y-1">
-            <span className="text-sm font-medium">Password</span>
+            <span className="text-sm font-medium text-primary">Password</span>
             <input
               type="password"
               className="form_input"
@@ -200,7 +200,7 @@ export default function SignUpPage() {
             )}
           </label>
           <label className="flex flex-col space-y-1">
-            <span className="text-sm font-medium">Confirm Password</span>
+            <span className="text-sm font-medium text-primary">Confirm Password</span>
             <input
               type="password"
               className="form_input"
@@ -218,7 +218,7 @@ export default function SignUpPage() {
             )}
           </label>
           <label className="flex flex-col space-y-1">
-            <span className="text-sm font-medium">Birthdate</span>
+            <span className="text-sm font-medium text-primary">Birthdate</span>
             <input
               type="date"
               className="form_input"

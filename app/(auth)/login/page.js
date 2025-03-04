@@ -87,7 +87,7 @@ export default function LoginPage() {
           </h1>
 
           <div className="flex flex-col">
-            <label htmlFor="username" className="text-sm font-medium">
+            <label htmlFor="username" className="text-sm font-medium text-primary">
               Username
             </label>
             <input
@@ -102,7 +102,7 @@ export default function LoginPage() {
           </div>
 
           <div className="flex flex-col">
-            <label htmlFor="password" className="text-sm font-medium">
+            <label htmlFor="password" className="text-sm font-medium text-primary">
               Password
             </label>
             <input
@@ -127,7 +127,7 @@ export default function LoginPage() {
           </p>
 
           <p className="text-sm font-medium text-muted-foreground">
-            Don&apos;t have an account?
+            Don't have an account?
             <Link
               href="/sign-up"
               className="text-primary underline hover:text-mainColor "
@@ -198,3 +198,4 @@ export default function LoginPage() {
     </div>
   );
 }
+
