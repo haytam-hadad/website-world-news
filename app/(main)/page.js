@@ -38,7 +38,7 @@ export default async function Home() {
       <main className="flex flex-wrap justify-center sm:justify-start md:justify-around gap-2 ">
       {articles.length === 0 ? (
             <h1 className="text-primary p-2">
-              No articles in this category &quot;<b>{category}</b>&quot; available
+              No articles in this category available
             </h1>
         ) : (
           articles.map((article , i) => {

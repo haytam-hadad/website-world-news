@@ -37,13 +37,14 @@ export default function AddPostPage() {
       image: imageType === "url" ? imageUrl : imageFile,
       sources,
     };
-    const response = await fetch("/api/posts", {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/news/newpost`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(data),
+      credentials: "include",
     });
     if (response.status === 201) {
-      router.push("/");
+      console.log("Post created successfully");
     } else {
       const data = await response.json();
       setErrors(data.errors);
@@ -90,7 +91,6 @@ export default function AddPostPage() {
               @{user?.username}
             </p>
           </h2>
-
         </div>
       </div>
       <form onSubmit={handleSubmit} className="space-y-4">

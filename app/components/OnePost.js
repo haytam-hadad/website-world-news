@@ -167,45 +167,46 @@ const SinglePost = ({ post }) => {
           </div>
         </div>
       </div>
-      <div className="flex mt-4 flex-col w-full mx-auto bg-white dark:bg-darkgrey border p-3 rounded-xl shadow-sm">
-        <h2 className="text-xl font-semibold text-gray-900 dark:text-gray-100">
-          Comments
-        </h2>
-        <div className="mt-4 flex items-center flex-col w-full sm:flex-row space-x-2 space-y-1">
-          <input
-            type="text"
-            className="dark:bg-slate-950 w-full px-4 py-2 border border-mainColor rounded-lg text-gray-700 dark:text-gray-300"
-            value={newComment}
-            onChange={(e) => setNewComment(e.target.value)}
-            placeholder="Add a comment..."
-          />
-          <button
-            onClick={handleAddComment}
-            className="bg-mainColor block w-full sm:w-1/2 justify-center text-white p-2 rounded-lg "
-          >
-            Add Comment
-          </button>
-        </div>
-        <div className="mt-3 space-y-3">
-          {comments.length > 0 ? (
-            comments.map((comment) => (
-              <Comment
-                key={comment.id}
-                userProfilename={comment.userProfilename}
-                username={comment.username}
-                text={comment.text}
-                timeAgo={comment.timeAgo}
-                avatar={comment.avatar}
-              />
-            ))
-          ) : (
-            <p className="text-gray-500">No comments yet</p>
-          )}
+      {user && (
+        <div className="flex mt-4 flex-col w-full mx-auto bg-white dark:bg-darkgrey border p-3 rounded-xl shadow-sm">
+          <h2 className="text-xl font-semibold text-gray-900 dark:text-gray-100">
+            Comments
+          </h2>
+          <div className="mt-4 flex items-center flex-col w-full sm:flex-row space-x-2 space-y-1">
+            <input
+              type="text"
+              className="dark:bg-slate-950 w-full px-4 py-2 border border-mainColor rounded-lg text-gray-700 dark:text-gray-300"
+              value={newComment}
+              onChange={(e) => setNewComment(e.target.value)}
+              placeholder="Add a comment..."
+            />
+            <button
+              onClick={handleAddComment}
+              className="bg-mainColor block w-full sm:w-1/2 justify-center text-white p-2 rounded-lg "
+            >
+              Add Comment
+            </button>
+          </div>
+          <div className="mt-3 space-y-3">
+            {comments.length > 0 ? (
+              comments.map((comment) => (
+                <Comment
+                  key={comment.id}
+                  userProfilename={comment.userProfilename}
+                  username={comment.username}
+                  text={comment.text}
+                  timeAgo={comment.timeAgo}
+                  avatar={comment.avatar}
+                />
+              ))
+            ) : (
+              <p className="text-gray-500">No comments yet</p>
+            )}
         </div>
       </div>
+      )}
     </div>
   );
 };
 
 export default SinglePost;
-
