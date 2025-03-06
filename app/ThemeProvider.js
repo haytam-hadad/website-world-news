@@ -9,15 +9,20 @@ export function ThemeProvider({ children }) {
   const [isMounted, setIsMounted] = useState(false); // Ensure client-side loading
 
   useEffect(() => {
-    if (typeof window !== "undefined") {
-      const savedTheme = localStorage.getItem("theme") === "true";
-      setThemeState(savedTheme);
-      setIsMounted(true);
+    const initializeTheme = async () => {
+      if (typeof window !== "undefined") {
+        const savedTheme = localStorage.getItem("theme") === "true";
+        setThemeState(savedTheme);
+        setIsMounted(true);
+        
+        // Apply theme class to <html> on initial load
+        document.documentElement.classList.toggle("dark", savedTheme);
+      }
+    };
 
-      // Apply theme class to <html> on initial load
-      document.documentElement.classList.toggle("dark", savedTheme);
-    }
+    initializeTheme();
   }, []);
+
 
   const setTheme = (newTheme) => {
     setThemeState(newTheme);
@@ -33,3 +38,4 @@ export function ThemeProvider({ children }) {
     </ThemeContext.Provider>
   );
 }
+

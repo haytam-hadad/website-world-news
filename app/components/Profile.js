@@ -87,7 +87,7 @@ const Profile = ({ userData }) => {
         <div className="absolute -bottom-12 left-6 sm:left-8">
           <div className="relative">
             <div className="w-24 h-24 sm:w-28 sm:h-28 rounded-full bg-white p-1 shadow-md">
-              <div className="w-full h-full rounded-full bg-gradient-to-br from-mainColor to-sky-500 flex items-center justify-center text-white font-bold text-3xl">
+              <div className="w-full h-full rounded-full bg-mainColor to-sky-500 flex items-center justify-center text-white font-bold text-3xl">
                 {userData.displayname?.charAt(0).toUpperCase() || "U"}
               </div>
             </div>
@@ -194,7 +194,7 @@ const Profile = ({ userData }) => {
               </div>
             </div>
 
-            <div className="bg-gray-50 dark:bg-gray-750 border-t border-gray-200 dark:border-gray-700 px-5 py-3">
+            <div className="bg-gray-50 dark:bg-gray-900 border-t border-gray-200 dark:border-gray-700 px-5 py-3">
               <div className="flex justify-between">
                 <div className="text-center">
                   <div className="font-semibold text-gray-900 dark:text-white">{articles.length}</div>

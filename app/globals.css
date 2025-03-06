@@ -37,10 +37,10 @@
     /* royalblue */
     --mainColor: #4271ff;
     --secondaryColor: #fff;
-    --thirdColor: #00050e;
+    --thirdColor: #121122;
     --mainTextColor: #000;
     --lightgrey: #fafafa;
-    --darkgrey: #10141d;
+    --darkgrey: #112;
   }
   .dark {
     --background: 0 0% 3.9%;

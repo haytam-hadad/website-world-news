@@ -7,43 +7,18 @@ import { ArrowLeft } from "lucide-react";
 
 function LayoutContent({ children }) {
   const { theme, setTheme, user, setUser } = useContext(ThemeContext);
-  const [dropdownOpen, setDropdownOpen] = useState(false);
-
-  const logout = async () => {
-    if (!user) return console.log("User is not logged in");
-
-    try {
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/auth/logout`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        credentials: "include",
-      });
-
-      if (response.status === 200) {
-        console.log("Logout successful");
-        setUser(null);
-        window.location.href = "/";
-      } else {
-        console.log("Logout failed", response.status);
-      }
-    } catch (error) {
-      console.error("Error during logout", error);
-    }
-  };
 
   return (
-    <div className="bg-[url('/images/D2.png')] dark:bg-[url('/images/D1.png')] bg-no-repeat bg-bottom bg-cover">
-      <div className="sticky top-0 z-30  p-2 sm:p-4">
-        <button
-          onClick={() => window.history.back()}
-          className="rounded-full text-primary bg-primary-foreground hover:bg-mainColor hover:text-secondaryColor text-md z-30 border p-3 px-4 font-bold text-gray-800 shadow-md dark:bg-gray-800 dark:text-white flex items-center"
-        >
-          <ArrowLeft className="h-5 w-5 text-primary"/>
-          <span className="mx-3">Go Back</span>
-        </button>
-      </div>
+    <div>
+      <button
+        onClick={() => window.history.back()}
+        className="fixed top-4 left-4 rounded-full text-secondaryColor bg-secondary-foreground hover:bg-mainColor hover:text-secondaryColor text-md z-30 border p-3 px-4 font-bold shadow-md dark:bg-gray-800 dark:text-white flex items-center"
+      >
+        <ArrowLeft className="h-5 w-5 text-secondaryColor"/>
+        <span className="mx-3">Go Back</span>
+      </button>
       <main className="relative flex">
-        <div className="flex-1 p-1">
+        <div className="flex-1">
           {children}
         </div>
       </main>
