@@ -5,24 +5,36 @@ export const ThemeContext = createContext();
 
 export function ThemeProvider({ children }) {
   const [theme, setThemeState] = useState(false);
-  const [user, setUser] = useState(null); // User data only in state
-  const [isMounted, setIsMounted] = useState(false); // Ensure client-side loading
+  const [user, setUser] = useState(null);
 
   useEffect(() => {
     const initializeTheme = async () => {
       if (typeof window !== "undefined") {
         const savedTheme = localStorage.getItem("theme") === "true";
         setThemeState(savedTheme);
-        setIsMounted(true);
         
         // Apply theme class to <html> on initial load
         document.documentElement.classList.toggle("dark", savedTheme);
       }
     };
-
     initializeTheme();
   }, []);
 
+  useEffect(() => {
+    const fetchUser = async () => {
+      try {
+        const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/auth/status`, { credentials: "include" });
+        const userData = await res.json();
+        if (res.ok) {
+          setUser(userData);
+        }
+      } catch (error) {
+        // Ignore errors
+      }
+    };
+
+    fetchUser();
+  }, []);
 
   const setTheme = (newTheme) => {
     setThemeState(newTheme);
@@ -34,7 +46,7 @@ export function ThemeProvider({ children }) {
 
   return (
     <ThemeContext.Provider value={{ theme, setTheme, user, setUser }}>
-      {isMounted ? children : null} {/* Prevents hydration mismatch */}
+      {children}
     </ThemeContext.Provider>
   );
 }

@@ -72,7 +72,7 @@ const Profile = ({ userData }) => {
   return (
     <div className="max-w-5xl mx-auto px-4 py-6">
       {/* Banner Section */}
-      <div className="relative w-full h-48 sm:h-64 rounded-xl overflow-hidden mb-16 bg-gradient-to-r from-mainColor to-sky-400">
+      <div className="relative w-full h-40 sm:h-52 rounded-xl mb-16 bg-gradient-to-r from-mainColor to-sky-400">
         {isOwnProfile && (
           <button
             type="button"
@@ -84,10 +84,10 @@ const Profile = ({ userData }) => {
         )}
 
         {/* Profile Avatar - Positioned to overlap banner and content */}
-        <div className="absolute -bottom-12 left-6 sm:left-8">
+        <div className="absolute z-20 -bottom-12 left-6 sm:left-8">
           <div className="relative">
             <div className="w-24 h-24 sm:w-28 sm:h-28 rounded-full bg-white p-1 shadow-md">
-              <div className="w-full h-full rounded-full bg-mainColor to-sky-500 flex items-center justify-center text-white font-bold text-3xl">
+              <div className="w-full h-full rounded-full bg-mainColor shadow-md flex items-center justify-center text-white font-bold text-4xl">
                 {userData.displayname?.charAt(0).toUpperCase() || "U"}
               </div>
             </div>
@@ -145,7 +145,7 @@ const Profile = ({ userData }) => {
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-6">
         {/* Left Column - User Info */}
         <div className="md:col-span-1">
-          <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden">
+          <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700">
             <div className="p-5">
               <h2 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">About</h2>
 

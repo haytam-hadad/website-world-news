@@ -92,7 +92,7 @@ const Article = ({ articleData }) => {
               </div>
 
               <span className="text-xs text-gray-500 dark:text-gray-400 flex items-center">
-                <Clock className="h-3.5 w-3.5 mr-1" />
+                <Clock className="h-5 w-5 mr-1" />
                 {calculateTimeAgo(publishedAt)}
               </span>
             </header>
@@ -122,8 +122,8 @@ const Article = ({ articleData }) => {
                       onClick={handleUpvote}
                       aria-label="Upvote"
                     >
-                      <ArrowBigUp className="w-5 h-5" />
-                      <span className="text-xs font-medium">20</span>
+                      <ArrowBigUp className="w-6 h-6" />
+                      <span className="text-sm font-medium">20</span>
                     </button>
 
                     <div className="h-5 w-px bg-gray-300 dark:bg-gray-600" />
@@ -137,7 +137,7 @@ const Article = ({ articleData }) => {
                       onClick={handleDownvote}
                       aria-label="Downvote"
                     >
-                      <ArrowBigDown className="w-5 h-5" />
+                      <ArrowBigDown className="w-6 h-6" />
                     </button>
                   </div>
 
@@ -148,7 +148,7 @@ const Article = ({ articleData }) => {
                       onClick={(e) => e.stopPropagation()}
                       aria-label="Comment"
                     >
-                      <MessageCircle className="w-4 h-4" />
+                      <MessageCircle className="w-5 h-5" />
                     </button>
 
                     <button
@@ -156,7 +156,7 @@ const Article = ({ articleData }) => {
                       onClick={(e) => e.stopPropagation()}
                       aria-label="Share"
                     >
-                      <Share2 className="w-4 h-4" />
+                      <Share2 className="w-5 h-5" />
                     </button>
 
                     <button
@@ -164,7 +164,7 @@ const Article = ({ articleData }) => {
                       onClick={(e) => e.stopPropagation()}
                       aria-label="Report"
                     >
-                      <Flag className="w-4 h-4" />
+                      <Flag className="w-5 h-5" />
                     </button>
 
                     <button
@@ -172,7 +172,7 @@ const Article = ({ articleData }) => {
                       onClick={(e) => e.stopPropagation()}
                       aria-label="More options"
                     >
-                      <MoreHorizontal className="w-4 h-4" />
+                      <MoreHorizontal className="w-5 h-5" />
                     </button>
                   </div>
                 </div>

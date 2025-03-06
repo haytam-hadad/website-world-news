@@ -102,7 +102,7 @@ const SinglePost = ({ post }) => {
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5 }}
-        className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl shadow-sm overflow-hidden mb-6"
+        className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl shadow-sm mb-6"
       >
         {/* Author and metadata header */}
         <div className="p-4 sm:p-6 border-b border-gray-200 dark:border-gray-700">
@@ -157,7 +157,7 @@ const SinglePost = ({ post }) => {
           </h1>
 
           {post.imageUrl && post.imageUrl !== "" && (
-            <div className="relative w-full aspect-video mb-6 rounded-lg overflow-hidden">
+            <div className="relative w-full aspect-video mb-6 rounded-lg">
               <Image
                 src={post.imageUrl || "/placeholder.svg"}
                 alt={post.title || "Post image"}
@@ -313,7 +313,7 @@ const SinglePost = ({ post }) => {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, delay: 0.2 }}
-          className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl shadow-sm overflow-hidden"
+          className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl shadow-sm"
         >
           <div className="p-4 sm:p-6">
             <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-4">Comments ({comments.length})</h2>
