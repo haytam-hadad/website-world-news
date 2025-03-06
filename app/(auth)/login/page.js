@@ -1,30 +1,31 @@
-"use client";
+"use client"
 
-import { useState, useContext, useEffect } from "react";
-import { useRouter } from "next/navigation";
-import Image from "next/image";
-import Link from "next/link";
-import { ThemeContext } from "../../ThemeProvider";
-import { motion } from "framer-motion";
+import { useState, useContext, useEffect } from "react"
+import { useRouter } from "next/navigation"
+import Image from "next/image"
+import Link from "next/link"
+import { ThemeContext } from "../../ThemeProvider"
+import { motion } from "framer-motion"
+import { Loader2 } from "lucide-react"
 
 export default function LoginPage() {
-  const { user, setUser } = useContext(ThemeContext);
-  const router = useRouter();
-  const [username, setUsername] = useState("");
-  const [password, setPassword] = useState("");
-  const [error, setError] = useState(null);
-  const [loading, setLoading] = useState(false);
+  const { user, setUser } = useContext(ThemeContext)
+  const router = useRouter()
+  const [username, setUsername] = useState("")
+  const [password, setPassword] = useState("")
+  const [error, setError] = useState(null)
+  const [loading, setLoading] = useState(false)
 
   useEffect(() => {
     if (user) {
-      router.push(`/`);
+      router.push(`/`)
     }
-  }, [user, router]);
+  }, [user, router])
 
   const handleSubmit = async (e) => {
-    e.preventDefault();
-    setLoading(true);
-    setError(null);
+    e.preventDefault()
+    setLoading(true)
+    setError(null)
 
     try {
       const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/auth`, {
@@ -35,170 +36,275 @@ export default function LoginPage() {
           password: password.trim(),
         }),
         credentials: "include", // Send cookies with the request
-      });
+      })
 
       if (!response.ok) {
-        const errorData = await response.json();
-        setError(errorData?.message || "Login failed. Please try again.");
-        return;
+        const errorData = await response.json()
+        setError(errorData?.message || "Login failed. Please try again.")
+        return
       }
 
-      const userData = await response.json();
-      setUser(userData);
-      router.push("/");
+      const userData = await response.json()
+      setUser(userData)
+      router.push("/")
     } catch (err) {
-      setError("An unexpected error occurred. Please try again.");
+      setError("An unexpected error occurred. Please try again.")
     } finally {
-      setLoading(false);
+      setLoading(false)
     }
-  };
+  }
 
   const handleGoogleLogin = async () => {
-    setLoading(true);
-    setError(null);
+    setLoading(true)
+    setError(null)
 
     try {
       const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/auth/google`, {
         credentials: "include", // Send cookies with the request
-      });
-      
+      })
+
       if (!response.ok) {
-        const errorData = await response.json();
-        setError(errorData?.message || "Login failed. Please try again.");
-        return;
+        const errorData = await response.json()
+        setError(errorData?.message || "Login failed. Please try again.")
+        return
       }
 
-      const userData = await response.json();
-      setUser(userData);
-      router.push(`/`);
+      const userData = await response.json()
+      setUser(userData)
+      router.push(`/`)
     } catch (err) {
-      setError(err.message || "An unexpected error occurred. Please try again.");
+      setError(err.message || "An unexpected error occurred. Please try again.")
     } finally {
-      setLoading(false);
+      setLoading(false)
     }
-  };
+  }
 
   return (
-    <div className="grid min-h-screen grid-cols-1 lg:grid-cols-[3fr_1fr] overflow-x-hidden">
-      <div className="flex flex-col justify-center">
-        <form
-          className="flex flex-col space-y-3 p-5 sm:p-10 rounded-xl dark:bg-black border shadow-xl bg-secondaryColor max-w-xl mx-auto w-full"
-          onSubmit={handleSubmit}
+    <div className="min-h-screen grid grid-cols-1 lg:grid-cols-2 bg-gray-50 dark:bg-gray-900">
+      {/* Form Section */}
+      <div className="flex items-center justify-center px-4 py-10 sm:px-6 lg:px-8">
+        <motion.div
+          className="w-full max-w-md space-y-8"
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5 }}
         >
-          <h1 className="text-center text-4xl p-1 font-bold text-foreground mb-6">
-            Log in
-          </h1>
-
-          <div className="flex flex-col">
-            <label htmlFor="username" className="text-sm font-medium text-primary">
-              Username
-            </label>
-            <input
-              id="username"
-              type="text"
-              className="form_input"
-              placeholder="Username"
-              value={username}
-              onChange={(e) => setUsername(e.target.value)}
-              required
-            />
-          </div>
-
-          <div className="flex flex-col">
-            <label htmlFor="password" className="text-sm font-medium text-primary">
-              Password
-            </label>
-            <input
-              id="password"
-              type="password"
-              className="form_input"
-              placeholder="Password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              required
-            />
-          </div>
-
-          <p className="text-[12px] text-center font-medium text-muted-foreground">
-            Forgot your password?
-            <Link
-              href="/forgot-password"
-              className="text-primary underline hover:text-mainColor"
+          <div className="text-center">
+            <motion.div
+              className="flex justify-center"
+              initial={{ scale: 0.8, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              transition={{ duration: 0.5, delay: 0.1 }}
             >
-              Click here
-            </Link>
-          </p>
+              <Image src="/images/i1.svg" width={60} height={60} alt="Logo" className="dark:filter dark:invert" />
+            </motion.div>
+            <motion.h2
+              className="mt-6 text-3xl font-bold tracking-tight text-gray-900 dark:text-white"
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: 0.2 }}
+            >
+              Welcome back
+            </motion.h2>
+            <motion.p
+              className="mt-2 text-sm text-gray-600 dark:text-gray-400"
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: 0.3 }}
+            >
+              Sign in to your account to continue
+            </motion.p>
+          </div>
 
-          <p className="text-sm font-medium text-muted-foreground">
-            Don&apos;t have an account?
+          <motion.div
+            className="mt-8 bg-white dark:bg-gray-800 py-8 px-6 shadow-lg rounded-xl border border-gray-200 dark:border-gray-700"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.4 }}
+          >
+            <form className="space-y-6" onSubmit={handleSubmit}>
+              <div>
+                <label htmlFor="username" className="block text-sm font-medium text-gray-700 dark:text-gray-300">
+                  Username
+                </label>
+                <div className="mt-1">
+                  <input
+                    id="username"
+                    name="username"
+                    type="text"
+                    required
+                    value={username}
+                    onChange={(e) => setUsername(e.target.value)}
+                    className="block w-full appearance-none rounded-lg border border-gray-300 dark:border-gray-600 px-3 py-2.5 placeholder-gray-400 shadow-sm focus:border-mainColor focus:outline-none focus:ring-mainColor sm:text-sm bg-white dark:bg-gray-700 dark:text-white transition-colors duration-200"
+                    placeholder="Enter your username"
+                  />
+                </div>
+              </div>
+
+              <div>
+                <label htmlFor="password" className="block text-sm font-medium text-gray-700 dark:text-gray-300">
+                  Password
+                </label>
+                <div className="mt-1">
+                  <input
+                    id="password"
+                    name="password"
+                    type="password"
+                    required
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    className="block w-full appearance-none rounded-lg border border-gray-300 dark:border-gray-600 px-3 py-2.5 placeholder-gray-400 shadow-sm focus:border-mainColor focus:outline-none focus:ring-mainColor sm:text-sm bg-white dark:bg-gray-700 dark:text-white transition-colors duration-200"
+                    placeholder="Enter your password"
+                  />
+                </div>
+              </div>
+
+              <div className="flex items-center justify-between">
+                <div className="text-sm">
+                  <Link
+                    href="/forgot-password"
+                    className="font-medium text-mainColor hover:text-mainColor/80 transition-colors duration-200"
+                  >
+                    Forgot your password?
+                  </Link>
+                </div>
+              </div>
+
+              {error && (
+                <motion.div
+                  className="p-3 text-sm bg-red-50 dark:bg-red-900/30 border border-red-200 dark:border-red-800 text-red-600 dark:text-red-400 rounded-lg"
+                  initial={{ opacity: 0, height: 0 }}
+                  animate={{ opacity: 1, height: "auto" }}
+                  transition={{ duration: 0.3 }}
+                >
+                  {error}
+                </motion.div>
+              )}
+
+              <div>
+                <button
+                  type="submit"
+                  disabled={loading}
+                  className="group relative flex w-full justify-center rounded-lg border border-transparent bg-mainColor py-3 px-4 text-sm font-medium text-white hover:bg-mainColor/90 focus:outline-none focus:ring-2 focus:ring-mainColor focus:ring-offset-2 transition-colors duration-200 disabled:opacity-70"
+                >
+                  {loading ? (
+                    <span className="flex items-center">
+                      <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                      Signing in...
+                    </span>
+                  ) : (
+                    "Sign in"
+                  )}
+                </button>
+              </div>
+            </form>
+
+            <div className="mt-6">
+              <div className="relative">
+                <div className="absolute inset-0 flex items-center">
+                  <div className="w-full border-t border-gray-300 dark:border-gray-600"></div>
+                </div>
+                <div className="relative flex justify-center text-sm">
+                  <span className="bg-white dark:bg-gray-800 px-2 text-gray-500 dark:text-gray-400">
+                    Or continue with
+                  </span>
+                </div>
+              </div>
+
+              <div className="mt-6">
+                <button
+                  onClick={handleGoogleLogin}
+                  disabled={loading}
+                  className="w-full flex items-center justify-center gap-3 bg-white dark:bg-gray-700 text-gray-800 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-600 font-medium rounded-lg px-4 py-3 border border-gray-300 dark:border-gray-600 transition-colors duration-200 disabled:opacity-70"
+                >
+                  <Image
+                    src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg"
+                    width={20}
+                    height={20}
+                    alt="Google logo"
+                  />
+                  Sign in with Google
+                </button>
+              </div>
+            </div>
+          </motion.div>
+
+          <motion.p
+            className="mt-4 text-center text-sm text-gray-600 dark:text-gray-400"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.5, delay: 0.6 }}
+          >
+            Don't have an account?{" "}
             <Link
               href="/sign-up"
-              className="text-primary underline hover:text-mainColor "
+              className="font-medium text-mainColor hover:text-mainColor/80 transition-colors duration-200"
             >
-              Sign up
+              Sign up now
             </Link>
-          </p>
-
-          {error && (
-            <div className="error mt-4 p-4 bg-red-100 text-red-700 border border-red-300 rounded-lg shadow-sm">
-              {error}
-            </div>
-          )}
-
-          <button
-            type="submit"
-            className="main_btn"
-            disabled={loading}
-          >
-            {loading ? "Logging in..." : "Log in"}
-          </button>
-
-          <div className="relative flex items-center">
-            <div className="flex-grow border-t border-gray-600"></div>
-            <span className="mx-2 text-sm font-medium text-muted-foreground">
-              OR
-            </span>
-            <div className="flex-grow border-t border-gray-600"></div>
-          </div>
-
-          <button
-            type="button"
-            className="flex items-center justify-center w-full rounded-lg shadow-sm border border-darkgrey px-4 py-3  font-medium bg-white hover:shadow-lg transition-all focus:ring-2 focus:ring-[#4285F4] focus:ring-offset-2 text-black"
-            onClick={handleGoogleLogin}
-          >
-            <Image
-              src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg"
-              width={24}
-              height={24}
-              alt="Google logo"
-              className="mr-2"
-            />
-            Sign in with Google
-          </button>
-        </form>
+          </motion.p>
+        </motion.div>
       </div>
 
-  <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ duration: 0.5 }}
-        className="hidden lg:flex items-center justify-center p-5 rounded-3xl "
-      >
-        <motion.div
-          initial={{ rotate: 0 }}
-          animate={{ rotate: 360 }}
-          transition={{ duration: 200, repeat: Infinity, ease: "linear" }}
-        >
-          <Image
-            src="/images/i1.svg"
-            width={400}
-            height={400}
-            alt="Sign Up Illustration"
-            className=" max-w-sm m-auto scale-110 object-contain dark:filter dark:invert opacity-90"
-          />
-        </motion.div>
-      </motion.div>
+      {/* Image Section */}
+      <div className="hidden lg:block relative">
+        <div className="absolute inset-0 bg-gradient-to-r from-mainColor to-sky-500 opacity-90"></div>
+        <div className="absolute inset-0 flex flex-col items-center justify-center p-12">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, delay: 0.5 }}
+            className="text-center text-white max-w-md"
+          >
+            <h2 className="text-3xl font-bold mb-6">Stay Connected with the World</h2>
+            <p className="text-lg mb-8 text-white/90">
+              Access the latest news, share your thoughts, and join the global conversation.
+            </p>
+          </motion.div>
+
+          <motion.div
+            initial={{ opacity: 0, scale: 0.8 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.8, delay: 0.7 }}
+            className="relative w-full max-w-md aspect-square"
+          >
+            <motion.div
+              animate={{
+                rotate: 360,
+                transition: { duration: 120, repeat: Number.POSITIVE_INFINITY, ease: "linear" },
+              }}
+              className="absolute inset-0 flex items-center justify-center"
+            >
+              <Image
+                src="/images/i1.svg"
+                width={300}
+                height={300}
+                alt="Logo Animation"
+                className="filter invert opacity-80"
+              />
+            </motion.div>
+
+            {/* Decorative elements */}
+            <motion.div
+              className="absolute top-1/4 left-1/4 w-16 h-16 rounded-full bg-white/20 blur-md"
+              animate={{
+                y: [0, 15, 0],
+                opacity: [0.5, 0.8, 0.5],
+              }}
+              transition={{ duration: 6, repeat: Number.POSITIVE_INFINITY }}
+            />
+            <motion.div
+              className="absolute bottom-1/3 right-1/4 w-24 h-24 rounded-full bg-sky-300/30 blur-md"
+              animate={{
+                y: [0, -20, 0],
+                opacity: [0.3, 0.6, 0.3],
+              }}
+              transition={{ duration: 8, repeat: Number.POSITIVE_INFINITY, delay: 1 }}
+            />
+          </motion.div>
+        </div>
+      </div>
     </div>
-  );
+  )
 }
 

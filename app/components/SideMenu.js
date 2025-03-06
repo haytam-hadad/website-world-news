@@ -1,25 +1,25 @@
-"use client";
+"use client"
 
-import { useState, useContext } from "react";
-import { ThemeContext } from "../ThemeProvider";
+import { useState, useContext } from "react"
+import { ThemeContext } from "../ThemeProvider"
 import {
   Home,
   Laptop,
   HeartPulse,
   Trophy,
   Landmark,
-  ChartNoAxesCombined,
+  BarChartIcon as ChartNoAxesCombined,
   ChevronUp,
   ChevronDown,
   TestTube,
   Plus,
   Sun,
   Moon,
-} from "lucide-react";
-import Link from "next/link";
-import { motion, AnimatePresence } from "framer-motion";
-import { Label } from "@/components/ui/label";
-import { usePathname } from "next/navigation";
+} from "lucide-react"
+import Link from "next/link"
+import { motion, AnimatePresence } from "framer-motion"
+import { Label } from "@/components/ui/label"
+import { usePathname } from "next/navigation"
 
 const menuItems = [
   {
@@ -35,137 +35,143 @@ const menuItems = [
     icon: <Landmark size={20} />,
   },
   { name: "Science", path: "/category/science", icon: <TestTube size={20} /> },
-];
+]
 
 const SideMenu = ({ setVisible }) => {
-  const [categoriesVisible, setCategoriesVisible] = useState(true);
-  const { theme, setTheme, user } = useContext(ThemeContext);
-  const activePath = usePathname();
-
-
-  console.log("Active Path:", activePath); // Debugging line
+  const [categoriesVisible, setCategoriesVisible] = useState(true)
+  const { theme, setTheme, user } = useContext(ThemeContext)
+  const activePath = usePathname()
 
   return (
     <motion.div
-      className="bg-white border-r dark:bg-darkgrey select-none p-4 z-40 w-[250px] h-full fixed top-16 overflow-y-auto left-0"
+      className="bg-white z-30 dark:bg-gray-800 border-r border-gray-200 dark:border-gray-700 w-[250px] h-screen fixed top-0 pt-16 overflow-y-auto left-0 shadow-md"
       initial={{ x: -250 }}
       animate={{ x: 0 }}
       exit={{ x: -250 }}
-      transition={{ duration: 0.25 }}
+      transition={{ duration: 0.25, ease: "easeInOut" }}
     >
-      <div>
+      <div className="flex flex-col p-4 space-y-3">
+        {/* Theme Toggle */}
         <button
           onClick={() => setTheme(!theme)}
-          className="side_menu_link border bg-primary sm:hidden"
+          className="flex items-center justify-between p-3 rounded-lg transition-colors duration-200 hover:bg-gray-100 dark:hover:bg-gray-700 border border-gray-200 dark:border-gray-700 sm:hidden"
           aria-label="Toggle Dark Mode"
         >
-          <div className="flex items-center text-primary-foreground gap-3">
-            <Label>Theme:</Label>
-            {theme ? (
-              <Sun className="w-5 h-5 opacity-90" />
-            ) : (
-              <Moon className="w-5 h-5 opacity-90" />
-            )}
+          <div className="flex items-center gap-3 font-medium">
+            <Label className="text-gray-700 dark:text-gray-300">Theme</Label>
+            {theme ? <Sun className="w-5 h-5 text-amber-500" /> : <Moon className="w-5 h-5 text-indigo-400" />}
           </div>
         </button>
-      </div>
 
-      <Link href="/">
-        <button
-          onClick={() => setVisible(false)}
-          className={`side_menu_link ${
-            activePath === "/" ? "bg-mainColor text-white" : "text-primary"
-          }`}
-          aria-label="Home"
-        >
-          <Home size={20} />
-          <span className="text-base font-medium">Home</span>
-        </button>
-      </Link>
-
-      {user && (
-        <Link href="/add">
+        {/* Home Link */}
+        <Link href="/" className="block">
           <button
             onClick={() => setVisible(false)}
-            className={`side_menu_link ${
-              activePath === "/add" ? "bg-mainColor text-white" : "text-mainColor"
+            className={`flex items-center w-full p-3 rounded-lg transition-colors duration-200 ${
+              activePath === "/"
+                ? "bg-mainColor text-white font-medium"
+                : "text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700"
             }`}
+            aria-label="Home"
           >
-            <Plus size={20} />
-            <span className="text-base font-semibold">POST</span>
+            <Home size={20} className="mr-3" />
+            <span className="text-base">Home</span>
           </button>
         </Link>
-      )}
 
-      {!user && (
-        <Link href="/trends">
+        {/* Post Button (for logged in users) */}
+        {user && (
+          <Link href="/add" className="block">
+            <button
+              onClick={() => setVisible(false)}
+              className={`flex items-center w-full p-3 rounded-lg transition-colors duration-200 ${
+                activePath === "/add"
+                  ? "bg-mainColor text-white font-medium"
+                  : "bg-white dark:bg-gray-800 text-mainColor border-2 border-mainColor hover:bg-mainColor/10"
+              }`}
+            >
+              <Plus size={20} className="mr-3" />
+              <span className="text-base font-semibold">POST</span>
+            </button>
+          </Link>
+        )}
+
+        {/* Login Button (for guests) */}
+        {!user && (
+          <Link href="/trends" className="block sm:hidden">
+            <button
+              onClick={() => setVisible(false)}
+              className="flex items-center justify-center w-full p-3 rounded-lg transition-colors duration-200 bg-mainColor text-white font-medium hover:bg-mainColor/90"
+              aria-label="Log in"
+            >
+              <span className="text-base">Log in</span>
+            </button>
+          </Link>
+        )}
+
+        {/* Trends Link */}
+        <Link href="/trends" className="block">
           <button
             onClick={() => setVisible(false)}
-            className={`flex sm:hidden mb-1 text-lg space-x-3 justify-center items-center text-center w-full p-3 rounded-2xl border-2 border-mainColor ${
-              activePath === "/trends" ? "bg-mainColor text-white" : "text-mainColor"
+            className={`flex items-center w-full p-3 rounded-lg transition-colors duration-200 ${
+              activePath === "/trends"
+                ? "bg-mainColor text-white font-medium"
+                : "text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700"
             }`}
-            aria-label="Log in"
+            aria-label="Trends"
           >
-            <span className="text-base font-medium">Log in</span>
+            <ChartNoAxesCombined size={20} className="mr-3" />
+            <span className="text-base">Trends</span>
           </button>
         </Link>
-      )}
 
-      <Link href="/trends">
-        <button
-          onClick={() => setVisible(false)}
-          className={`side_menu_link ${
-            activePath === "/trends" ? "bg-mainColor text-white" : "text-primary"
-          }`}
-          aria-label="Trends"
-        >
-          <ChartNoAxesCombined size={20} />
-          <span className="text-base font-medium">Trends</span>
-        </button>
-      </Link>
+        {/* Divider */}
+        <hr className="border-gray-200 dark:border-gray-700" />
 
-      <hr className="my-2 border-gray-300 dark:border-gray-700" />
-      <div>
-        <h2
-          className="text-md flex items-center gap-1 justify-center text-mainColor font-medium cursor-pointer opacity-85"
-          onClick={() => setCategoriesVisible(!categoriesVisible)}
-        >
-          Categories
-          {categoriesVisible ? (
-            <ChevronUp size={20} />
-          ) : (
-            <ChevronDown size={20} />
-          )}
-        </h2>
-        <AnimatePresence initial={false}>
-          {categoriesVisible &&
-            menuItems.map(({ name, path, icon }) => (
+        {/* Categories Section */}
+        <div className="space-y-2">
+          <button
+            className="flex items-center justify-between w-full p-2 text-mainColor font-medium hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors duration-200"
+            onClick={() => setCategoriesVisible(!categoriesVisible)}
+          >
+            <span>Categories</span>
+            {categoriesVisible ? <ChevronUp size={18} /> : <ChevronDown size={18} />}
+          </button>
+
+          <AnimatePresence initial={false}>
+            {categoriesVisible && (
               <motion.div
-                key={path}
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                exit={{ opacity: 0 }}
+                initial={{ height: 0, opacity: 0 }}
+                animate={{ height: "auto", opacity: 1 }}
+                exit={{ height: 0, opacity: 0 }}
                 transition={{ duration: 0.2 }}
+                className="overflow-hidden"
               >
-                <Link href={path}>
-                  <button
-                    onClick={() => setVisible(false)}
-                    className={`side_menu_link ${
-                      activePath === path ? "bg-mainColor text-white" : "text-primary"
-                    }`}
-                  >
-                    {icon}
-                    <span className="text-base font-medium">{name}</span>
-                  </button>
-                </Link>
-                {console.log("Menu Item Path:", path)} {/* Debugging line */}
+                <div className="flex flex-col space-y-1 pl-2">
+                  {menuItems.map(({ name, path, icon }) => (
+                    <Link key={path} href={path} className="block">
+                      <button
+                        onClick={() => setVisible(false)}
+                        className={`flex items-center w-full p-2.5 rounded-lg transition-colors duration-200 ${
+                          activePath === path
+                            ? "bg-mainColor text-white font-medium"
+                            : "text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700"
+                        }`}
+                      >
+                        <span className="mr-3">{icon}</span>
+                        <span className="text-base">{name}</span>
+                      </button>
+                    </Link>
+                  ))}
+                </div>
               </motion.div>
-            ))}
-        </AnimatePresence>
+            )}
+          </AnimatePresence>
+        </div>
       </div>
     </motion.div>
-  );
-};
+  )
+}
 
-export default SideMenu;
+export default SideMenu
 

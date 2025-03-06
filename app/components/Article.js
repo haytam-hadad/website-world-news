@@ -1,142 +1,200 @@
-"use client";
+"use client"
 
-import { useRouter } from "next/navigation";
-import Image from "next/image";
-import { Clock3, ArrowUpRight, Share2, MessageCircle, MoreHorizontal, Flag } from "lucide-react";
-import { useState } from "react";
-import { ArrowBigUp, ArrowBigDown } from "lucide-react";
-import { motion } from "framer-motion";
+import { useRouter } from "next/navigation"
+import Image from "next/image"
+import { Clock, Share2, MessageCircle, MoreHorizontal, Flag } from "lucide-react"
+import { useState } from "react"
+import { ArrowBigUp, ArrowBigDown } from "lucide-react"
+import { motion } from "framer-motion"
 
-const Article = ( {articleData} ) => {
-  const { _id, title, content, imageUrl, author, publishedAt, category } = articleData;
-  const [vote, setVote] = useState(null);
+const Article = ({ articleData }) => {
+  const { _id, title, content, imageUrl, author, publishedAt, category } = articleData
+  const [vote, setVote] = useState(null)
 
-  const router = useRouter();
+  const router = useRouter()
 
   const handleClick = () => {
-    router.push(`/post/${_id}`);
-  };
+    router.push(`/post/${_id}`)
+  }
 
-  const handleUpvote = () => {
-    setVote(vote !== "upvote" ? "upvote" : null);
-  };
+  const handleUpvote = (e) => {
+    e.stopPropagation()
+    setVote(vote !== "upvote" ? "upvote" : null)
+  }
 
-  const handleDownvote = () => {
-    setVote(vote !== "downvote" ? "downvote" : null);
-  };
+  const handleDownvote = (e) => {
+    e.stopPropagation()
+    setVote(vote !== "downvote" ? "downvote" : null)
+  }
 
   const calculateTimeAgo = (publishedAt) => {
-    if (!publishedAt) return "N/A";
+    if (!publishedAt) return "N/A"
 
-    const publishedDate = new Date(publishedAt);
+    const publishedDate = new Date(publishedAt)
 
     // Check if the date is valid
-    if (isNaN(publishedDate.getTime())) return "N/A";
+    if (isNaN(publishedDate.getTime())) return "N/A"
 
-    const now = new Date();
-    const diffInSeconds = Math.floor((now - publishedDate) / 1000);
+    const now = new Date()
+    const diffInSeconds = Math.floor((now - publishedDate) / 1000)
 
     // Handle different time intervals
-    if (diffInSeconds < 60) return "just now";
-    if (diffInSeconds < 3600) return `${Math.floor(diffInSeconds / 60)} min ago`;
-    if (diffInSeconds < 86400) return `${Math.floor(diffInSeconds / 3600)}h ago`;
-    if (diffInSeconds < 2592000) return `${Math.floor(diffInSeconds / 86400)}d ago`;
-    if (diffInSeconds < 31536000) return `${Math.floor(diffInSeconds / 2592000)}mo ago`;
-    return `${Math.floor(diffInSeconds / 31536000)}y ago`;
-  };  
+    if (diffInSeconds < 60) return "just now"
+    if (diffInSeconds < 3600) return `${Math.floor(diffInSeconds / 60)} min ago`
+    if (diffInSeconds < 86400) return `${Math.floor(diffInSeconds / 3600)}h ago`
+    if (diffInSeconds < 2592000) return `${Math.floor(diffInSeconds / 86400)}d ago`
+    if (diffInSeconds < 31536000) return `${Math.floor(diffInSeconds / 2592000)}mo ago`
+    return `${Math.floor(diffInSeconds / 31536000)}y ago`
+  }
 
   return (
-    <motion.div
+    <motion.article
       initial={{ opacity: 0, y: 15 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.3 }}
-      className="w-full my-2"
+      className="w-full my-4"
     >
       <div
-        className="flex hover:shadow-md cursor-pointer w-full flex-col lg:flex-row bg-white dark:bg-darkgrey border p-2 md:p-4 mx-auto rounded-xl shadow-sm"
+        className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl shadow-sm hover:shadow-md transition-shadow duration-200 overflow-hidden cursor-pointer"
         onClick={handleClick}
       >
-        <div className="flex flex-col lg:flex-row items-center space-y-1 lg:space-y-1 lg:space-x-3 w-full">
+        {/* Use grid instead of flex for better layout control */}
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-0">
+          {/* Image Container - fixed size on desktop */}
           {imageUrl && (
-            <div className="w-full border-mainColor h-60 md:max-w-[95%] lg:h-[350px] relative rounded-xl overflow-hidden mb-2 lg:mb-0">
-              <Image
-                className="w-full h-full object-cover rounded-xl"
-                src={imageUrl}
-                alt={title}
-                width={400}
-                height={300}
-              />
+            <div className="lg:col-span-5 xl:col-span-4 relative">
+              <div className="w-full h-64 lg:h-full relative">
+                <Image
+                  className="object-cover"
+                  src={imageUrl || "/placeholder.svg"}
+                  alt={title || "Article image"}
+                  fill
+                  sizes="(max-width: 768px) 100vw, (max-width: 1200px) 40vw, 30vw"
+                  priority
+                />
+              </div>
             </div>
           )}
 
-          <div className="flex flex-col justify-between w-full">
-            <header className="flex items-center justify-between text-sm text-gray-500 dark:text-gray-400 mb-2 p-1">
-              <div className="flex items-center space-x-2">
-                <div className="rounded-full text-lg cursor-pointer border-mainColor bg-gray-300 dark:bg-gray-700 w-10 h-10 flex items-center justify-center text-white font-semibold">
+          {/* Content Container - takes remaining space */}
+          <div className={`p-4 lg:p-5 ${imageUrl ? "lg:col-span-7 xl:col-span-8" : "lg:col-span-12"}`}>
+            {/* Author and Time */}
+            <header className="flex items-center justify-between mb-3">
+              <div className="flex items-center space-x-3">
+                <div className="rounded-full bg-gray-200 dark:bg-gray-700 w-10 h-10 flex items-center justify-center text-gray-800 dark:text-gray-200 font-semibold">
                   {author ? author[0].toUpperCase() : "U"}
                 </div>
-                <div className="flex flex-col">
-                  <p className="truncate max-sm:text-sm font-semibold capitalize cursor-pointer hover:underline text-gray-900 dark:text-gray-100 text-lg">
+                <div>
+                  <p className="font-medium text-gray-900 dark:text-gray-100 capitalize hover:underline">
                     {author || "Unknown"}
                   </p>
                 </div>
               </div>
-              
-              <span className="text-xs capitalize flex items-center text-gray-400">
-                {calculateTimeAgo(publishedAt)} &nbsp;
-                <Clock3 className="h-4 w-4 inline-block" />
+
+              <span className="text-xs text-gray-500 dark:text-gray-400 flex items-center">
+                <Clock className="h-3.5 w-3.5 mr-1" />
+                {calculateTimeAgo(publishedAt)}
               </span>
             </header>
 
-            <h1 className="font-serif font-semibold text-2xl text-primary capitalize mx-1 my-4 hover:underline underline-offset-4 ">
+            {/* Title */}
+            <h2 className="font-serif font-bold text-xl sm:text-2xl text-gray-900 dark:text-gray-100 capitalize mb-3 hover:underline decoration-2 underline-offset-2">
               {title}
-            </h1>
+            </h2>
 
-            <p className="text-md text-gray-600 dark:text-gray-300 line-clamp-4 mb-4">{content || "No content available"}</p>
-            <hr className="mx-5"/>
-            <div className="flex items-center justify-between space-x-6 mt-2 text-sm text-gray-500 dark:text-gray-400">
-              <div className="flex items-center space-x-4">
-                <div className="flex items-center space-x-1 bg-gray-100 dark:bg-gray-800 p-1 rounded-full cursor-pointer">
-                  <div
-                    className={`p-1 rounded-full cursor-pointer hover:text-mainColor ${vote === "upvote" ? "text-green-500" : "text-gray-500"}`}
-                    onClick={(e) => { e.preventDefault(); handleUpvote(); }}
-                  >
-                    <span className="flex items-center space-x-1">
-                      <ArrowBigUp className="w-7 h-7 transition-transform transform hover:scale-110" />
-                      <span>20</span>
-                    </span>
+            {/* Content */}
+            <p className="text-gray-600 dark:text-gray-300 line-clamp-3 sm:line-clamp-4 mb-4 text-sm sm:text-base">
+              {content || "No content available"}
+            </p>
+
+            <div className="mt-auto pt-3 border-t border-gray-200 dark:border-gray-700">
+              <div className="flex flex-wrap items-center justify-between gap-2">
+                {/* Action Buttons */}
+                <div className="flex flex-wrap items-center gap-2">
+                  {/* Vote Buttons */}
+                  <div className="flex items-center bg-gray-100 dark:bg-gray-700 rounded-full overflow-hidden">
+                    <button
+                      className={`p-1.5 flex items-center space-x-1 transition-colors ${
+                        vote === "upvote"
+                          ? "text-green-500 dark:text-green-400"
+                          : "text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300"
+                      }`}
+                      onClick={handleUpvote}
+                      aria-label="Upvote"
+                    >
+                      <ArrowBigUp className="w-5 h-5" />
+                      <span className="text-xs font-medium">20</span>
+                    </button>
+
+                    <div className="h-5 w-px bg-gray-300 dark:bg-gray-600" />
+
+                    <button
+                      className={`p-1.5 transition-colors ${
+                        vote === "downvote"
+                          ? "text-red-500 dark:text-red-400"
+                          : "text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300"
+                      }`}
+                      onClick={handleDownvote}
+                      aria-label="Downvote"
+                    >
+                      <ArrowBigDown className="w-5 h-5" />
+                    </button>
                   </div>
-                  <div className="h-5 w-0.5 bg-gray-400 dark:bg-gray-500" />
-                  <div
-                    className={`p-1 rounded-full cursor-pointer hover:text-mainColor ${vote === "downvote" ? "text-red-500" : "text-gray-500"}`}
-                    onClick={(e) => { e.preventDefault(); handleDownvote(); }}
-                  >
-                    <ArrowBigDown className="w-7 h-7 transition-transform transform hover:scale-110" />
+
+                  {/* Other Action Buttons */}
+                  <div className="flex items-center gap-1">
+                    <button
+                      className="p-1.5 rounded-full bg-gray-100 dark:bg-gray-700 text-gray-500 dark:text-gray-400 hover:text-blue-500 dark:hover:text-blue-400 transition-colors"
+                      onClick={(e) => e.stopPropagation()}
+                      aria-label="Comment"
+                    >
+                      <MessageCircle className="w-4 h-4" />
+                    </button>
+
+                    <button
+                      className="p-1.5 rounded-full bg-gray-100 dark:bg-gray-700 text-gray-500 dark:text-gray-400 hover:text-blue-500 dark:hover:text-blue-400 transition-colors"
+                      onClick={(e) => e.stopPropagation()}
+                      aria-label="Share"
+                    >
+                      <Share2 className="w-4 h-4" />
+                    </button>
+
+                    <button
+                      className="p-1.5 rounded-full bg-gray-100 dark:bg-gray-700 text-gray-500 dark:text-gray-400 hover:text-blue-500 dark:hover:text-blue-400 transition-colors"
+                      onClick={(e) => e.stopPropagation()}
+                      aria-label="Report"
+                    >
+                      <Flag className="w-4 h-4" />
+                    </button>
+
+                    <button
+                      className="p-1.5 rounded-full bg-gray-100 dark:bg-gray-700 text-gray-500 dark:text-gray-400 hover:text-blue-500 dark:hover:text-blue-400 transition-colors"
+                      onClick={(e) => e.stopPropagation()}
+                      aria-label="More options"
+                    >
+                      <MoreHorizontal className="w-4 h-4" />
+                    </button>
                   </div>
                 </div>
-                <div className="bg-gray-100 dark:bg-gray-800 p-2 rounded-full cursor-pointer text-gray-500 hover:text-blue-500">
-                  <MessageCircle className="w-5 h-5 transition-transform transform hover:scale-110" />
-                </div>
-                <div className="bg-gray-100 dark:bg-gray-800 p-2 rounded-full cursor-pointer text-gray-500 hover:text-blue-500">
-                  <Share2 className="w-5 h-5 transition-transform transform hover:scale-110" />
-                </div>
-                <div className="bg-gray-100 dark:bg-gray-800 p-2 rounded-full cursor-pointer text-gray-500 hover:text-blue-500">
-                  <Flag className="w-5 h-5 transition-transform transform hover:scale-110" />
-                </div>
-                <div className="bg-gray-100 dark:bg-gray-800 p-2 rounded-full cursor-pointer text-gray-500 hover:text-blue-500">
-                  <MoreHorizontal className="w-5 h-5 transition-transform transform hover:scale-110" />
+
+                {/* Category */}
+                <div
+                  className="px-3 py-1 text-xs font-medium text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-900/30 rounded-full capitalize hover:bg-blue-100 dark:hover:bg-blue-900/50 transition-colors"
+                  onClick={(e) => {
+                    e.stopPropagation()
+                    router.push(`/category/${category?.toLowerCase() || "general"}`)
+                  }}
+                >
+                  {category || "General"}
                 </div>
               </div>
-
-              <p className="text-blue-500 cursor-pointer font-semibold capitalize text-md py-1 transition duration-300 px-2 hover:border border-transparent hover:border-mainColor rounded-full">{category || "General"}</p>
             </div>
           </div>
         </div>
       </div>
+    </motion.article>
+  )
+}
 
-    </motion.div>
-  );
-};
-
-export default Article;
+export default Article
 
