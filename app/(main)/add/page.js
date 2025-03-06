@@ -157,16 +157,21 @@ export default function AddPostPage() {
   }
 
   return (
-    <div className="max-w-3xl mx-auto px-4 py-8">
+    <motion.div
+      initial={{ opacity: 0, y: -10 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.6 }}
+      className="max-w-3xl mx-auto"
+    >
       <button
         onClick={() => router.back()}
         className="flex items-center gap-1.5 mb-6 text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-200 transition-colors"
       >
         <ArrowLeft className="w-4 h-4" />
-        <span>Back</span>
+        <span  className="font-semibold p-1">Back</span>
       </button>
 
-      <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden">
+      <div className="bg-white dark:bg-darkgrey rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden">
         <div className="p-6 border-b border-gray-200 dark:border-gray-700">
           <div className="flex items-center gap-3 mb-2">
             <div className="w-10 h-10 rounded-full bg-mainColor text-white flex items-center justify-center font-semibold text-lg">
@@ -295,7 +300,7 @@ export default function AddPostPage() {
             </div>
 
             {/* Image Upload Section */}
-            <div className="bg-gray-50 dark:bg-gray-750 border border-gray-200 dark:border-gray-700 rounded-lg p-5">
+            <div className="bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-lg p-5">
               <div className="flex items-center justify-between mb-4">
                 <h3 className="text-base font-medium text-gray-900 dark:text-white flex items-center gap-2">
                   <ImageIcon className="w-4 h-4" />
@@ -387,7 +392,7 @@ export default function AddPostPage() {
             </div>
 
             {/* Sources Section */}
-            <div className="bg-gray-50 dark:bg-gray-750 border border-gray-200 dark:border-gray-700 rounded-lg p-5">
+            <div className="bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-lg p-5">
               <div className="flex items-center justify-between mb-4">
                 <h3 className="text-base font-medium text-gray-900 dark:text-white flex items-center gap-2">
                   <Link2 className="w-4 h-4" />
@@ -466,7 +471,7 @@ export default function AddPostPage() {
           </div>
         </form>
       </div>
-    </div>
+    </motion.div>
   )
 }
 

@@ -44,7 +44,7 @@ const SideMenu = ({ setVisible }) => {
 
   return (
     <motion.div
-      className="bg-white z-30 dark:bg-gray-800 border-r border-gray-200 dark:border-gray-700 w-[250px] h-screen fixed top-0 pt-16 overflow-y-auto left-0 shadow-md"
+      className="bg-white z-30 dark:bg-darkgrey border-r border-gray-200 dark:border-gray-700 w-[250px] h-screen fixed top-0 pt-16 overflow-y-auto left-0 shadow-md"
       initial={{ x: -250 }}
       animate={{ x: 0 }}
       exit={{ x: -250 }}
@@ -84,10 +84,10 @@ const SideMenu = ({ setVisible }) => {
           <Link href="/add" className="block">
             <button
               onClick={() => setVisible(false)}
-              className={`flex items-center w-full p-3 rounded-lg transition-colors duration-200 ${
+              className={`flex items-center outline outline-mainColor w-full p-3 rounded-lg transition-colors duration-200 ${
                 activePath === "/add"
                   ? "bg-mainColor text-white font-medium"
-                  : "bg-white dark:bg-gray-800 text-mainColor border-2 border-mainColor hover:bg-mainColor/10"
+                  : "bg-transparent text-mainColor"
               }`}
             >
               <Plus size={20} className="mr-3" />

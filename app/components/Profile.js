@@ -70,7 +70,12 @@ const Profile = ({ userData }) => {
   }
 
   return (
-    <div className="max-w-5xl mx-auto px-4 py-6">
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.4, ease: [0.5, 0, 0.5, 1] }}
+      className="max-w-5xl mx-auto p-4"
+    >
       {/* Banner Section */}
       <div className="relative w-full h-40 sm:h-52 rounded-xl mb-16 bg-gradient-to-r from-mainColor to-sky-400">
         {isOwnProfile && (
@@ -332,9 +337,8 @@ const Profile = ({ userData }) => {
           )}
         </div>
       </div>
-    </div>
+    </motion.div>
   )
 }
 
 export default Profile
-

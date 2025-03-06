@@ -40,7 +40,7 @@ const Comment = ({ userProfilename, username, text, timeAgo, onReport, onReply }
       transition={{ duration: 0.3 }}
       className="w-full mb-4"
     >
-      <div className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 hover:border-blue-300 dark:hover:border-blue-700 rounded-xl p-4 transition-all duration-200 shadow-sm hover:shadow">
+      <div className="bg-white dark:bg-darkgrey border border-gray-200 dark:border-gray-700 hover:border-blue-300 dark:hover:border-blue-700 rounded-xl p-4 transition-all duration-200 shadow-sm hover:shadow">
         {/* User info and timestamp */}
         <div className="flex items-start gap-3 mb-3">
           <div className="w-10 h-10 flex-shrink-0 rounded-full bg-gradient-to-br from-blue-500 to-indigo-600 flex items-center justify-center text-white font-semibold shadow-sm">

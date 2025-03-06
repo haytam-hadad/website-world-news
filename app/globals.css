@@ -34,13 +34,13 @@
     --chart-5: 27 87% 67%;
     --radius: 0.5rem;
 
-    /* royalblue */
-    --mainColor: #4271ff;
+    /* royalblue 1f6feb*/
+    --mainColor: #0A5EB0;
     --secondaryColor: #fff;
-    --thirdColor: #121122;
+    --thirdColor: #0d1117 ;
     --mainTextColor: #000;
     --lightgrey: #fafafa;
-    --darkgrey: #112;
+    --darkgrey: #161b22;
   }
   .dark {
     --background: 0 0% 3.9%;

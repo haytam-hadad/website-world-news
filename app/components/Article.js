@@ -55,7 +55,7 @@ const Article = ({ articleData }) => {
       className="w-full my-4"
     >
       <div
-        className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl shadow-sm hover:shadow-md transition-shadow duration-200 overflow-hidden cursor-pointer"
+        className="bg-white dark:bg-darkgrey border border-gray-200 dark:border-gray-700 rounded-xl shadow-sm hover:shadow-md transition-shadow duration-200 overflow-hidden cursor-pointer"
         onClick={handleClick}
       >
         {/* Use grid instead of flex for better layout control */}
@@ -81,7 +81,7 @@ const Article = ({ articleData }) => {
             {/* Author and Time */}
             <header className="flex items-center justify-between mb-3">
               <div className="flex items-center space-x-3">
-                <div className="rounded-full bg-gray-200 dark:bg-gray-700 w-10 h-10 flex items-center justify-center text-gray-800 dark:text-gray-200 font-semibold">
+                <div className="rounded-full bg-mainColor w-10 h-10 flex items-center justify-center text-secondaryColor font-semibold">
                   {author ? author[0].toUpperCase() : "U"}
                 </div>
                 <div>
