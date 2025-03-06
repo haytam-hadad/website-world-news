@@ -142,7 +142,7 @@ const Article = ({ articleData }) => {
                   </div>
 
                   {/* Other Action Buttons */}
-                  <div className="flex items-center gap-1">
+                  <div className="flex items-center gap-2">
                     <button
                       className="p-1.5 rounded-full bg-gray-100 dark:bg-gray-700 text-gray-500 dark:text-gray-400 hover:text-blue-500 dark:hover:text-blue-400 transition-colors"
                       onClick={(e) => e.stopPropagation()}

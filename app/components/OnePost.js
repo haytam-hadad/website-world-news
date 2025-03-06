@@ -195,7 +195,7 @@ const SinglePost = ({ post }) => {
                 }`}
                 aria-label="Upvote"
               >
-                <ArrowBigUp className="w-5 h-5" />
+                <ArrowBigUp className="w-6 h-6" />
               </button>
 
               <span className="px-2 font-medium text-sm text-gray-700 dark:text-gray-300">{voteCount}</span>
@@ -209,7 +209,7 @@ const SinglePost = ({ post }) => {
                 }`}
                 aria-label="Downvote"
               >
-                <ArrowBigDown className="w-5 h-5" />
+                <ArrowBigDown className="w-6 h-6" />
               </button>
             </div>
 
