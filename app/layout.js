@@ -1,17 +1,20 @@
-"use client";
-import Footer from "./components/Footer";
-import "./globals.css";
-import { ThemeProvider } from "./ThemeProvider";
+"use client"
+import Footer from "./components/Footer"
+import "./globals.css"
+import { ThemeProvider } from "./ThemeProvider"
 
 export default function Layout({ children }) {
   return (
     <html lang="en">
-      <body className="bg-secondaryColor dark:bg-thirdColor" >
+      <body className="bg-secondaryColor dark:bg-thirdColor">
         <ThemeProvider>
-            {children} 
-          <Footer/>
+          <div className="flex flex-col min-h-screen">
+            {children}
+            <Footer />
+          </div>
         </ThemeProvider>
       </body>
     </html>
-  );
+  )
 }
+

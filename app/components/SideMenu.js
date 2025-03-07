@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useContext } from "react"
+import { useState, useContext, useEffect } from "react"
 import { ThemeContext } from "../ThemeProvider"
 import {
   Home,
@@ -15,6 +15,11 @@ import {
   Plus,
   Sun,
   Moon,
+  LogIn,
+  UserPlus,
+  BookOpen,
+  Bell,
+  Bookmark,
 } from "lucide-react"
 import Link from "next/link"
 import { motion, AnimatePresence } from "framer-motion"
@@ -39,16 +44,32 @@ const menuItems = [
 
 const SideMenu = ({ setVisible }) => {
   const [categoriesVisible, setCategoriesVisible] = useState(true)
+  const [personalVisible, setPersonalVisible] = useState(false)
   const { theme, setTheme, user } = useContext(ThemeContext)
   const activePath = usePathname()
 
+  // Close the mobile menu when navigating to a new page
+  useEffect(() => {
+    const handleRouteChange = () => {
+      if (typeof setVisible === "function") {
+        setVisible(false)
+      }
+    }
+
+    // Listen for pathname changes
+    return () => {
+      handleRouteChange()
+    }
+  }, [activePath, setVisible])
+
   return (
     <motion.div
-      className="bg-white z-30 dark:bg-darkgrey border-r border-gray-200 dark:border-gray-700 w-[250px] h-screen fixed top-0 pt-16 overflow-y-auto left-0 shadow-md"
+      className="bg-white z-30 dark:bg-darkgrey border-r border-gray-200 dark:border-gray-700 w-[250px] h-full fixed top-0 pt-16 overflow-y-auto left-0 shadow-md"
       initial={{ x: -250 }}
       animate={{ x: 0 }}
       exit={{ x: -250 }}
       transition={{ duration: 0.25, ease: "easeInOut" }}
+      style={{ bottom: 0 }} // Ensure it doesn't extend beyond the viewport
     >
       <div className="flex flex-col p-4 space-y-3">
         {/* Theme Toggle */}
@@ -84,29 +105,41 @@ const SideMenu = ({ setVisible }) => {
           <Link href="/add" className="block">
             <button
               onClick={() => setVisible(false)}
-              className={`flex items-center outline outline-mainColor w-full p-3 rounded-lg transition-colors duration-200 ${
+              className={`flex items-center justify-center gap-2 w-full p-3 rounded-lg transition-colors duration-200 ${
                 activePath === "/add"
                   ? "bg-mainColor text-white font-medium"
-                  : "bg-transparent text-mainColor"
+                  : "bg-mainColor/10 text-mainColor hover:bg-mainColor/20"
               }`}
             >
-              <Plus size={20} className="mr-3" />
-              <span className="text-base font-semibold">POST</span>
+              <Plus size={20} />
+              <span className="text-base font-semibold">Create Post</span>
             </button>
           </Link>
         )}
 
-        {/* Login Button (for guests) */}
+        {/* Login/Signup Buttons (for guests) */}
         {!user && (
-          <Link href="/trends" className="block sm:hidden">
-            <button
-              onClick={() => setVisible(false)}
-              className="flex items-center justify-center w-full p-3 rounded-lg transition-colors duration-200 bg-mainColor text-white font-medium hover:bg-mainColor/90"
-              aria-label="Log in"
-            >
-              <span className="text-base">Log in</span>
-            </button>
-          </Link>
+          <div className="space-y-2 sm:hidden">
+            <Link href="/login" className="block">
+              <button
+                onClick={() => setVisible(false)}
+                className="flex items-center w-full p-3 rounded-lg transition-colors duration-200 text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 border border-gray-300 dark:border-gray-600"
+              >
+                <LogIn size={20} className="mr-3" />
+                <span className="text-base">Log in</span>
+              </button>
+            </Link>
+
+            <Link href="/sign-up" className="block">
+              <button
+                onClick={() => setVisible(false)}
+                className="flex items-center justify-center w-full p-3 rounded-lg transition-colors duration-200 bg-mainColor text-white font-medium hover:bg-mainColor/90"
+              >
+                <UserPlus size={20} className="mr-3" />
+                <span className="text-base">Sign up</span>
+              </button>
+            </Link>
+          </div>
         )}
 
         {/* Trends Link */}
@@ -133,8 +166,12 @@ const SideMenu = ({ setVisible }) => {
           <button
             className="flex items-center justify-between w-full p-2 text-mainColor font-medium hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors duration-200"
             onClick={() => setCategoriesVisible(!categoriesVisible)}
+            aria-expanded={categoriesVisible}
           >
-            <span>Categories</span>
+            <div className="flex items-center">
+              <BookOpen size={20} className="mr-3" />
+              <span>Categories</span>
+            </div>
             {categoriesVisible ? <ChevronUp size={18} /> : <ChevronDown size={18} />}
           </button>
 
@@ -168,6 +205,64 @@ const SideMenu = ({ setVisible }) => {
             )}
           </AnimatePresence>
         </div>
+
+        {/* Personal Section (for logged in users) */}
+        {user && (
+          <div className="space-y-2">
+            <button
+              className="flex items-center justify-between w-full p-2 text-mainColor font-medium hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors duration-200"
+              onClick={() => setPersonalVisible(!personalVisible)}
+              aria-expanded={personalVisible}
+            >
+              <div className="flex items-center">
+                <Bell size={20} className="mr-3" />
+                <span>Personal</span>
+              </div>
+              {personalVisible ? <ChevronUp size={18} /> : <ChevronDown size={18} />}
+            </button>
+
+            <AnimatePresence initial={false}>
+              {personalVisible && (
+                <motion.div
+                  initial={{ height: 0, opacity: 0 }}
+                  animate={{ height: "auto", opacity: 1 }}
+                  exit={{ height: 0, opacity: 0 }}
+                  transition={{ duration: 0.2 }}
+                  className="overflow-hidden"
+                >
+                  <div className="flex flex-col space-y-1 pl-2">
+                    <Link href="/saved" className="block">
+                      <button
+                        onClick={() => setVisible(false)}
+                        className={`flex items-center w-full p-2.5 rounded-lg transition-colors duration-200 ${
+                          activePath === "/saved"
+                            ? "bg-mainColor text-white font-medium"
+                            : "text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700"
+                        }`}
+                      >
+                        <Bookmark size={20} className="mr-3" />
+                        <span className="text-base">Saved</span>
+                      </button>
+                    </Link>
+                    <Link href="/subscriptions" className="block">
+                      <button
+                        onClick={() => setVisible(false)}
+                        className={`flex items-center w-full p-2.5 rounded-lg transition-colors duration-200 ${
+                          activePath === "/subscriptions"
+                            ? "bg-mainColor text-white font-medium"
+                            : "text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700"
+                        }`}
+                      >
+                        <Bell size={20} className="mr-3" />
+                        <span className="text-base">Subscriptions</span>
+                      </button>
+                    </Link>
+                  </div>
+                </motion.div>
+              )}
+            </AnimatePresence>
+          </div>
+        )}
       </div>
     </motion.div>
   )

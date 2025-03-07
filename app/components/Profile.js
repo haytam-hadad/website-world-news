@@ -342,3 +342,4 @@ const Profile = ({ userData }) => {
 }
 
 export default Profile
+

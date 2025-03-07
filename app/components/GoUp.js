@@ -1,23 +1,23 @@
-"use client";
-import { ArrowUp } from "lucide-react";
-import { useEffect, useState } from "react";
+"use client"
+import { ArrowUp } from "lucide-react"
+import { useEffect, useState } from "react"
 
 export const GoUp = () => {
-  const [show, setShow] = useState(false);
+  const [show, setShow] = useState(false)
   const handleScroll = () => {
     if (window.scrollY > 300) {
-      setShow(true);
+      setShow(true)
     } else {
-      setShow(false);
+      setShow(false)
     }
-  };
+  }
   useEffect(() => {
-    window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
+    window.addEventListener("scroll", handleScroll)
+    return () => window.removeEventListener("scroll", handleScroll)
+  }, [])
   const handleClick = () => {
-    window.scrollTo({ top: 0, behavior: "smooth" });
-  };
+    window.scrollTo({ top: 0, behavior: "smooth" })
+  }
   return show ? (
     <button
       className="fixed bottom-4 right-4 rounded-full bg-mainColor p-2 text-white shadow-md transition-transform transform hover:scale-110"
@@ -25,6 +25,6 @@ export const GoUp = () => {
     >
       <ArrowUp />
     </button>
-  ) : null;
-};
+  ) : null
+}
 

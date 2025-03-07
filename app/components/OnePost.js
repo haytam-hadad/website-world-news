@@ -2,7 +2,20 @@
 
 import Image from "next/image"
 import Link from "next/link"
-import { Clock, Share2, MessageCircle, MoreHorizontal, Flag, Bell, BellOff, Bookmark, Copy } from "lucide-react"
+import {
+  Clock,
+  Share2,
+  MessageCircle,
+  MoreHorizontal,
+  Flag,
+  Bell,
+  BellOff,
+  Bookmark,
+  Copy,
+  Link2,
+  Facebook,
+  Twitter,
+} from "lucide-react"
 import { useState, useContext, useRef, useEffect } from "react"
 import { ArrowBigUp, ArrowBigDown } from "lucide-react"
 import Comment from "../components/Comment"
@@ -17,8 +30,10 @@ const SinglePost = ({ post }) => {
   const [newComment, setNewComment] = useState("")
   const [showShareOptions, setShowShareOptions] = useState(false)
   const [copied, setCopied] = useState(false)
+  const [imageLoaded, setImageLoaded] = useState(false)
   const { user } = useContext(ThemeContext)
   const shareRef = useRef(null)
+  const commentInputRef = useRef(null)
 
   // Close share options when clicking outside
   useEffect(() => {
@@ -30,6 +45,16 @@ const SinglePost = ({ post }) => {
 
     document.addEventListener("mousedown", handleClickOutside)
     return () => document.removeEventListener("mousedown", handleClickOutside)
+  }, [])
+
+  // Check if URL has #comments anchor and scroll to comments
+  useEffect(() => {
+    if (typeof window !== "undefined" && window.location.hash === "#comments" && commentInputRef.current) {
+      setTimeout(() => {
+        commentInputRef.current.scrollIntoView({ behavior: "smooth" })
+        commentInputRef.current.focus()
+      }, 500)
+    }
   }, [])
 
   const handleUpvote = () => {
@@ -72,13 +97,39 @@ const SinglePost = ({ post }) => {
   }
 
   const handleShare = () => {
-    setShowShareOptions(!showShareOptions)
+    if (navigator.share) {
+      navigator
+        .share({
+          title: post.title || "Check out this article",
+          text: post.content?.substring(0, 100) + "...",
+          url: window.location.href,
+        })
+        .catch((err) => {
+          console.error("Error sharing:", err)
+          setShowShareOptions(!showShareOptions)
+        })
+    } else {
+      setShowShareOptions(!showShareOptions)
+    }
   }
 
   const copyToClipboard = () => {
     navigator.clipboard.writeText(window.location.href)
     setCopied(true)
     setTimeout(() => setCopied(false), 2000)
+    setShowShareOptions(false)
+  }
+
+  const shareToTwitter = () => {
+    window.open(
+      `https://twitter.com/intent/tweet?url=${encodeURIComponent(window.location.href)}&text=${encodeURIComponent(post.title || "")}`,
+      "_blank",
+    )
+    setShowShareOptions(false)
+  }
+
+  const shareToFacebook = () => {
+    window.open(`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(window.location.href)}`, "_blank")
     setShowShareOptions(false)
   }
 
@@ -122,7 +173,7 @@ const SinglePost = ({ post }) => {
                 </Link>
                 <div className="flex items-center text-sm text-gray-500 dark:text-gray-400">
                   <Clock className="w-3.5 h-3.5 mr-1" />
-                  <span>{calculateTimeAgo(post.publishedAt) || "Unknown"}</span>
+                  <time dateTime={post.publishedAt}>{calculateTimeAgo(post.publishedAt) || "Unknown"}</time>
                 </div>
               </div>
             </div>
@@ -134,6 +185,8 @@ const SinglePost = ({ post }) => {
                   ? "bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-gray-200"
                   : "bg-mainColor text-white hover:bg-mainColor/90"
               }`}
+              aria-pressed={subscribed}
+              aria-label={subscribed ? "Unsubscribe from author" : "Subscribe to author"}
             >
               {subscribed ? (
                 <>
@@ -157,14 +210,24 @@ const SinglePost = ({ post }) => {
           </h1>
 
           {post.imageUrl && post.imageUrl !== "" && (
-            <div className="relative w-full aspect-video mb-6 rounded-lg">
+            <div className="relative w-full aspect-video mb-6 rounded-lg bg-gray-200 dark:bg-gray-700 overflow-hidden">
+              {!imageLoaded && (
+                <div className="absolute inset-0 flex items-center justify-center">
+                  <div className="w-10 h-10 border-4 border-mainColor border-t-transparent rounded-full animate-spin"></div>
+                </div>
+              )}
               <Image
                 src={post.imageUrl || "/placeholder.svg"}
                 alt={post.title || "Post image"}
                 fill
-                className="object-cover"
+                className={`object-cover transition-opacity duration-300 ${imageLoaded ? "opacity-100" : "opacity-0"}`}
                 sizes="(max-width: 768px) 100vw, (max-width: 1200px) 80vw, 1200px"
                 priority
+                onLoad={() => setImageLoaded(true)}
+                onError={(e) => {
+                  e.target.src = "/placeholder.svg"
+                  setImageLoaded(true)
+                }}
               />
             </div>
           )}
@@ -194,6 +257,7 @@ const SinglePost = ({ post }) => {
                     : "text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-200"
                 }`}
                 aria-label="Upvote"
+                aria-pressed={vote === "upvote"}
               >
                 <ArrowBigUp className="w-6 h-6" />
               </button>
@@ -208,6 +272,7 @@ const SinglePost = ({ post }) => {
                     : "text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-200"
                 }`}
                 aria-label="Downvote"
+                aria-pressed={vote === "downvote"}
               >
                 <ArrowBigDown className="w-6 h-6" />
               </button>
@@ -216,7 +281,8 @@ const SinglePost = ({ post }) => {
             {/* Comment button */}
             <button
               className="p-2 rounded-full bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-200 transition-colors flex items-center gap-1"
-              aria-label="Comments"
+              aria-label={`${comments.length} comments`}
+              onClick={() => commentInputRef.current?.scrollIntoView({ behavior: "smooth" })}
             >
               <MessageCircle className="w-5 h-5" />
               <span className="text-sm font-medium">{comments.length}</span>
@@ -229,6 +295,7 @@ const SinglePost = ({ post }) => {
                 className="p-2 rounded-full bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-200 transition-colors"
                 aria-label="Share"
                 aria-expanded={showShareOptions}
+                aria-haspopup="true"
               >
                 <Share2 className="w-5 h-5" />
               </button>
@@ -249,32 +316,34 @@ const SinglePost = ({ post }) => {
                       <Copy className="w-4 h-4 mr-2" />
                       {copied ? "Copied!" : "Copy link"}
                     </button>
-                    <a
-                      href={`https://twitter.com/intent/tweet?url=${encodeURIComponent(
-                        typeof window !== "undefined" ? window.location.href : "",
-                      )}&text=${encodeURIComponent(post.title || "")}`}
-                      target="_blank"
-                      rel="noopener noreferrer"
+
+                    <button
+                      onClick={shareToTwitter}
                       className="flex items-center w-full px-4 py-2.5 text-left text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors"
                     >
-                      <svg className="w-4 h-4 mr-2" viewBox="0 0 24 24" fill="currentColor">
-                        <path d="M22.46 6c-.77.35-1.6.58-2.46.69.88-.53 1.56-1.37 1.88-2.38-.83.5-1.75.85-2.72 1.05C18.37 4.5 17.26 4 16 4c-2.35 0-4.27 1.92-4.27 4.29 0 .34.04.67.11.98C8.28 9.09 5.11 7.38 3 4.79c-.37.63-.58 1.37-.58 2.15 0 1.49.75 2.81 1.91 3.56-.71 0-1.37-.2-1.95-.5v.03c0 2.08 1.48 3.82 3.44 4.21a4.22 4.22 0 0 1-1.93.07 4.28 4.28 0 0 0 4 2.98 8.521 8.521 0 0 1-5.33 1.84c-.34 0-.68-.02-1.02-.06C3.44 20.29 5.7 21 8.12 21 16 21 20.33 14.46 20.33 8.79c0-.19 0-.37-.01-.56.84-.6 1.56-1.36 2.14-2.23z" />
-                      </svg>
+                      <Twitter className="w-4 h-4 mr-2" />
                       Share on Twitter
-                    </a>
-                    <a
-                      href={`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(
-                        typeof window !== "undefined" ? window.location.href : "",
-                      )}`}
-                      target="_blank"
-                      rel="noopener noreferrer"
+                    </button>
+
+                    <button
+                      onClick={shareToFacebook}
                       className="flex items-center w-full px-4 py-2.5 text-left text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors"
                     >
-                      <svg className="w-4 h-4 mr-2" viewBox="0 0 24 24" fill="currentColor">
-                        <path d="M22 12c0-5.52-4.48-10-10-10S2 6.48 2 12c0 4.84 3.44 8.87 8 9.8V15H8v-3h2V9.5C10 7.57 11.57 6 13.5 6H16v3h-2c-.55 0-1 .45-1 1v2h3v3h-3v6.95c5.05-.5 9-4.76 9-9.95z" />
-                      </svg>
+                      <Facebook className="w-4 h-4 mr-2" />
                       Share on Facebook
-                    </a>
+                    </button>
+
+                    <button
+                      onClick={() => {
+                        setShowShareOptions(false)
+                        // Implement email sharing functionality
+                        window.location.href = `mailto:?subject=${encodeURIComponent(post.title || "Check out this article")}&body=${encodeURIComponent(`I thought you might be interested in this: ${window.location.href}`)}`
+                      }}
+                      className="flex items-center w-full px-4 py-2.5 text-left text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors"
+                    >
+                      <Link2 className="w-4 h-4 mr-2" />
+                      Share via Email
+                    </button>
                   </motion.div>
                 )}
               </AnimatePresence>
@@ -283,7 +352,7 @@ const SinglePost = ({ post }) => {
             {/* Save button */}
             <button
               className="p-2 rounded-full bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-200 transition-colors"
-              aria-label="Save"
+              aria-label="Save article"
             >
               <Bookmark className="w-5 h-5" />
             </button>
@@ -291,7 +360,7 @@ const SinglePost = ({ post }) => {
             {/* Report button */}
             <button
               className="p-2 rounded-full bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-200 transition-colors"
-              aria-label="Report"
+              aria-label="Report article"
             >
               <Flag className="w-5 h-5" />
             </button>
@@ -308,17 +377,18 @@ const SinglePost = ({ post }) => {
       </motion.article>
 
       {/* Comments section */}
-      {user && (
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, delay: 0.2 }}
-          className="bg-white dark:bg-darkgrey border border-gray-200 dark:border-gray-700 rounded-xl shadow-sm"
-        >
-          <div className="p-4 sm:p-6">
-            <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-4">Comments ({comments.length})</h2>
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5, delay: 0.2 }}
+        className="bg-white dark:bg-darkgrey border border-gray-200 dark:border-gray-700 rounded-xl shadow-sm"
+        id="comments"
+      >
+        <div className="p-4 sm:p-6">
+          <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-4">Comments ({comments.length})</h2>
 
-            {/* Add comment form */}
+          {/* Add comment form */}
+          {user ? (
             <div className="mb-6">
               <div className="flex items-start gap-3">
                 <div className="w-10 h-10 rounded-full bg-mainColor text-white flex-shrink-0 flex items-center justify-center font-semibold">
@@ -326,11 +396,13 @@ const SinglePost = ({ post }) => {
                 </div>
                 <div className="flex-1">
                   <textarea
+                    ref={commentInputRef}
                     className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-700 dark:text-gray-200 focus:outline-none focus:ring-2 focus:ring-mainColor focus:border-transparent transition-colors resize-none"
                     rows="3"
                     value={newComment}
                     onChange={(e) => setNewComment(e.target.value)}
                     placeholder="Add a comment..."
+                    aria-label="Add a comment"
                   ></textarea>
                   <div className="mt-2 flex justify-end">
                     <button
@@ -344,29 +416,40 @@ const SinglePost = ({ post }) => {
                 </div>
               </div>
             </div>
-
-            {/* Comments list */}
-            <div className="space-y-6">
-              {comments.length > 0 ? (
-                comments.map((comment) => (
-                  <Comment
-                    key={comment.id}
-                    userProfilename={comment.userProfilename}
-                    username={comment.username}
-                    text={comment.text}
-                    timeAgo={comment.timeAgo}
-                    avatar={comment.avatar}
-                  />
-                ))
-              ) : (
-                <p className="text-gray-500 dark:text-gray-400 text-center py-4">
-                  No comments yet. Be the first to comment!
-                </p>
-              )}
+          ) : (
+            <div className="mb-6 p-4 bg-gray-50 dark:bg-gray-800 rounded-lg text-center">
+              <p className="text-gray-700 dark:text-gray-300 mb-3">
+                Sign in to join the conversation and leave a comment
+              </p>
+              <Link href="/login">
+                <button className="px-4 py-2 bg-mainColor text-white rounded-lg font-medium hover:bg-mainColor/90 transition-colors">
+                  Sign In
+                </button>
+              </Link>
             </div>
+          )}
+
+          {/* Comments list */}
+          <div className="space-y-6">
+            {comments.length > 0 ? (
+              comments.map((comment) => (
+                <Comment
+                  key={comment.id}
+                  userProfilename={comment.userProfilename}
+                  username={comment.username}
+                  text={comment.text}
+                  timeAgo={comment.timeAgo}
+                  avatar={comment.avatar}
+                />
+              ))
+            ) : (
+              <p className="text-gray-500 dark:text-gray-400 text-center py-4">
+                No comments yet. Be the first to comment!
+              </p>
+            )}
           </div>
-        </motion.div>
-      )}
+        </div>
+      </motion.div>
     </div>
   )
 }

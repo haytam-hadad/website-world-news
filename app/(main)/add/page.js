@@ -168,7 +168,7 @@ export default function AddPostPage() {
         className="flex items-center gap-1.5 mb-6 text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-200 transition-colors"
       >
         <ArrowLeft className="w-4 h-4" />
-        <span  className="font-semibold p-1">Back</span>
+        <span className="font-semibold p-1">Back</span>
       </button>
 
       <div className="bg-white dark:bg-darkgrey rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden">

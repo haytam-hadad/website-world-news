@@ -6,7 +6,7 @@ import Image from "next/image"
 import Link from "next/link"
 import { ThemeContext } from "../../ThemeProvider"
 import { motion } from "framer-motion"
-import { Loader2 } from "lucide-react"
+import { Loader2, Eye, EyeOff } from "lucide-react"
 
 export default function LoginPage() {
   const { user, setUser } = useContext(ThemeContext)
@@ -15,8 +15,17 @@ export default function LoginPage() {
   const [password, setPassword] = useState("")
   const [error, setError] = useState(null)
   const [loading, setLoading] = useState(false)
+  const [showPassword, setShowPassword] = useState(false)
+  const [rememberMe, setRememberMe] = useState(false)
 
   useEffect(() => {
+    // Check for saved username
+    const savedUsername = localStorage.getItem("rememberedUsername")
+    if (savedUsername) {
+      setUsername(savedUsername)
+      setRememberMe(true)
+    }
+
     if (user) {
       router.push(`/`)
     }
@@ -26,6 +35,13 @@ export default function LoginPage() {
     e.preventDefault()
     setLoading(true)
     setError(null)
+
+    // Handle "remember me" functionality
+    if (rememberMe) {
+      localStorage.setItem("rememberedUsername", username.trim())
+    } else {
+      localStorage.removeItem("rememberedUsername")
+    }
 
     try {
       const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/auth`, {
@@ -39,8 +55,14 @@ export default function LoginPage() {
       })
 
       if (!response.ok) {
-        const errorData = await response.json()
-        setError(errorData?.message || "Login failed. Please try again.")
+        if (response.status === 401) {
+          setError("Invalid username or password. Please try again.")
+        } else if (response.status === 429) {
+          setError("Too many login attempts. Please try again later.")
+        } else {
+          const errorData = await response.json()
+          setError(errorData?.message || "Login failed. Please try again.")
+        }
         return
       }
 
@@ -48,7 +70,8 @@ export default function LoginPage() {
       setUser(userData)
       router.push("/")
     } catch (err) {
-      setError("An unexpected error occurred. Please try again.")
+      setError("An unexpected error occurred. Please check your connection and try again.")
+      console.error("Login error:", err)
     } finally {
       setLoading(false)
     }
@@ -59,24 +82,15 @@ export default function LoginPage() {
     setError(null)
 
     try {
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/auth/google`, {
-        credentials: "include", // Send cookies with the request
-      })
-
-      if (!response.ok) {
-        const errorData = await response.json()
-        setError(errorData?.message || "Login failed. Please try again.")
-        return
-      }
-
-      const userData = await response.json()
-      setUser(userData)
-      router.push(`/`)
+      window.location.href = `${process.env.NEXT_PUBLIC_API_URL}/auth/google/redirect`
     } catch (err) {
-      setError(err.message || "An unexpected error occurred. Please try again.")
-    } finally {
+      setError(err.message || "An unexpected error occurred with Google login.")
       setLoading(false)
     }
+  }
+
+  const togglePasswordVisibility = () => {
+    setShowPassword(!showPassword)
   }
 
   return (
@@ -137,6 +151,7 @@ export default function LoginPage() {
                     onChange={(e) => setUsername(e.target.value)}
                     className="block w-full appearance-none rounded-lg border border-gray-300 dark:border-gray-600 px-3 py-2.5 placeholder-gray-400 shadow-sm focus:border-mainColor focus:outline-none focus:ring-mainColor sm:text-sm bg-white dark:bg-gray-700 dark:text-white transition-colors duration-200"
                     placeholder="Enter your username"
+                    autoComplete="username"
                   />
                 </div>
               </div>
@@ -145,21 +160,44 @@ export default function LoginPage() {
                 <label htmlFor="password" className="block text-sm font-medium text-gray-700 dark:text-gray-300">
                   Password
                 </label>
-                <div className="mt-1">
+                <div className="mt-1 relative">
                   <input
                     id="password"
                     name="password"
-                    type="password"
+                    type={showPassword ? "text" : "password"}
                     required
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
-                    className="block w-full appearance-none rounded-lg border border-gray-300 dark:border-gray-600 px-3 py-2.5 placeholder-gray-400 shadow-sm focus:border-mainColor focus:outline-none focus:ring-mainColor sm:text-sm bg-white dark:bg-gray-700 dark:text-white transition-colors duration-200"
+                    className="block w-full appearance-none rounded-lg border border-gray-300 dark:border-gray-600 px-3 py-2.5 placeholder-gray-400 shadow-sm focus:border-mainColor focus:outline-none focus:ring-mainColor sm:text-sm bg-white dark:bg-gray-700 dark:text-white transition-colors duration-200 pr-10"
                     placeholder="Enter your password"
+                    autoComplete="current-password"
                   />
+                  <button
+                    type="button"
+                    onClick={togglePasswordVisibility}
+                    className="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300"
+                    tabIndex="-1"
+                    aria-label={showPassword ? "Hide password" : "Show password"}
+                  >
+                    {showPassword ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
+                  </button>
                 </div>
               </div>
 
               <div className="flex items-center justify-between">
+                <div className="flex items-center">
+                  <input
+                    id="remember-me"
+                    name="remember-me"
+                    type="checkbox"
+                    checked={rememberMe}
+                    onChange={(e) => setRememberMe(e.target.checked)}
+                    className="h-4 w-4 rounded border-gray-300 text-mainColor focus:ring-mainColor"
+                  />
+                  <label htmlFor="remember-me" className="ml-2 block text-sm text-gray-700 dark:text-gray-300">
+                    Remember me
+                  </label>
+                </div>
                 <div className="text-sm">
                   <Link
                     href="/forgot-password"
@@ -184,7 +222,7 @@ export default function LoginPage() {
               <div>
                 <button
                   type="submit"
-                  disabled={loading}
+                  disabled={loading || !username.trim() || !password.trim()}
                   className="group relative flex w-full justify-center rounded-lg border border-transparent bg-mainColor py-3 px-4 text-sm font-medium text-white hover:bg-mainColor/90 focus:outline-none focus:ring-2 focus:ring-mainColor focus:ring-offset-2 transition-colors duration-200 disabled:opacity-70"
                 >
                   {loading ? (

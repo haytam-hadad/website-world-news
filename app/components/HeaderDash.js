@@ -1,145 +1,286 @@
-import Link from "next/link";
-import { Menu, Moon, Sun, User, LogOut, Home } from "lucide-react";
-import { Label } from "@/components/ui/label";
-import { Switch } from "@/components/ui/switch";
-import { Toggle } from "@/components/ui/toggle";
-import { useState, useContext } from "react";
-import { ThemeContext } from "../ThemeProvider";
-import Image from "next/image";
+"use client"
 
+import Link from "next/link"
+import { Menu, Moon, Sun, User, LogOut, Home, Search, Bell, X } from "lucide-react"
+import { Label } from "@/components/ui/label"
+import { Switch } from "@/components/ui/switch"
+import { useState, useContext, useRef, useEffect } from "react"
+import { ThemeContext } from "../ThemeProvider"
+import Image from "next/image"
+import { useRouter } from "next/navigation"
+import { motion, AnimatePresence } from "framer-motion"
 
-export default function Header({ onToggleMenu }) {
-  const { theme, setTheme, user, setUser } = useContext(ThemeContext);
-  const [dropdownOpen, setDropdownOpen] = useState(false);
+export default function HeaderDash({ onToggleMenu }) {
+  const { theme, setTheme, user, setUser } = useContext(ThemeContext)
+  const [dropdownOpen, setDropdownOpen] = useState(false)
+  const [searchQuery, setSearchQuery] = useState("")
+  const [showSearch, setShowSearch] = useState(false)
+  const dropdownRef = useRef(null)
+  const searchRef = useRef(null)
+  const searchInputRef = useRef(null)
+  const router = useRouter()
+
+  // Close dropdown when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+        setDropdownOpen(false)
+      }
+      if (searchRef.current && !searchRef.current.contains(event.target) && showSearch) {
+        setShowSearch(false)
+      }
+    }
+
+    document.addEventListener("mousedown", handleClickOutside)
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside)
+    }
+  }, [showSearch])
+
+  // Focus search input when search is shown
+  useEffect(() => {
+    if (showSearch && searchInputRef.current) {
+      setTimeout(() => {
+        searchInputRef.current.focus()
+      }, 100) // Small delay to ensure animation has started
+    }
+  }, [showSearch])
 
   const logout = async () => {
     if (!user) {
-      console.log('User is not logged in');
-      return;
-    }; // Ensure user is defined
+      console.log("User is not logged in")
+      return
+    }
     try {
       const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/auth/logout`, {
         method: "POST",
         headers: {
-          'Content-Type': 'application/json'
+          "Content-Type": "application/json",
         },
-        credentials: 'include' // Include session information in the request
-      });
-  
-      if (response.status === 200) {
-        console.log('Logout successful');
-        setUser(null);
-        window.location.href = "/";
-      } else if (response.status === 401) {
-        console.log('User is not logged in');
-      } else if (response.status === 400) {
-        console.log('An error occurred during logout');
-      } else {
-        console.log('Unexpected response', response.status);
+        credentials: "include",
+      })
+
+      if (response.ok) {
+        console.log("Logout successful")
+        setUser(null)
+        router.push("/")
       }
     } catch (error) {
-      console.error('Error during logout', error);
+      console.error("Error during logout", error)
     }
-    setUser(null);
-    window.location.href = "/";
-  };
-  
+  }
+
+  const handleSearch = (e) => {
+    e.preventDefault()
+    if (searchQuery.trim()) {
+      router.push(`/search/${encodeURIComponent(searchQuery.trim().toLowerCase())}`)
+      setSearchQuery("")
+      setShowSearch(false)
+    }
+  }
+
+  const handleToggleMenu = () => {
+    if (typeof onToggleMenu === "function") {
+      onToggleMenu()
+    }
+  }
+
   return (
-    <header className="sticky border-b bg-white dark:bg-darkgrey select-none top-0 z-50 py-1 px-10 max-sm:px-3">
-      <div className="z-50 flex justify-between items-center py-3 text-maintextColor dark:text-secondaryColor gap-1">
-        {/* Logo Group */}
-        <Link href="/" className="flex items-center gap-2">
-          <Image
-            src="/images/i1.svg"
-            alt="logo"
-            width={45}
-            height={45}
-            className="dark:filter dark:invert"
-          />
-          <span className="font-bold text-xl ">World News</span>
-          <span className="text-mainColor font-bold text-md">/ Dashboard </span>
-        </Link>
-
-        {/* Control Group */}
-        <div className="flex items-center gap-2">
-          {/* Dark Mode Toggle */}
-          <div className="hidden sm:flex items-center gap-1 rounded-full p-1 max-sm:scale-90">
-            <Switch
-              checked={theme}
-              onCheckedChange={(checked) => setTheme(checked)}
+    <header className="sticky border-b bg-white dark:bg-darkgrey top-0 z-50 shadow-sm">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6">
+        <div className="flex items-center justify-between py-3 gap-3">
+          {/* Logo Group */}
+          <Link href="/" className="flex items-center gap-2 group shrink-0">
+            <Image
+              src="/images/i1.svg"
+              alt="World News logo"
+              width={40}
+              height={40}
+              className="dark:filter dark:invert transition-all duration-200 group-hover:scale-110"
             />
-            <Label htmlFor="Dark-Mode" className="flex items-center cursor-pointer">
-              {theme ? (
-                <Sun className="w-5 h-5 opacity-90 "/>
-              ) : (
-                <Moon className="w-5 h-5 opacity-90 "/>
-              )}
-            </Label>
-          </div>
+            <div className="flex flex-col">
+              <span className="font-bold text-xl text-gray-800 dark:text-gray-100 transition-colors duration-200 group-hover:text-mainColor dark:group-hover:text-mainColor">
+                World News
+              </span>
+              <span className="text-mainColor font-bold text-xs">Dashboard</span>
+            </div>
+          </Link>
 
-          {user ? (
-            <div className="relative rounded-full">
-              <button
-                className="flex items-center gap-1 rounded-full group p-1"
-                onClick={() => setDropdownOpen(!dropdownOpen)}
+          {/* Search Group - Only show when search is active or on larger screens */}
+          <AnimatePresence>
+            {showSearch ? (
+              <motion.form
+                ref={searchRef}
+                onSubmit={handleSearch}
+                className="absolute left-0 right-0 top-0 z-20 px-4 py-3 bg-white dark:bg-darkgrey border-b border-gray-200 dark:border-gray-700 md:static md:border-0 md:p-0 md:flex-1 md:max-w-lg md:mx-auto"
+                initial={{ opacity: 0, y: -10 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -10 }}
+                transition={{ duration: 0.2 }}
               >
-                <div className="w-8 h-8 rounded-full bg-mainColor text-bold text-white flex items-center justify-center">
-                  {user.displayname.charAt(0).toUpperCase()}
-                </div>
-                <span className="font-semibold  hidden p-1 md:inline capitalize hover:underline">{user.displayname}</span>
-              </button>
-              {dropdownOpen && (
-                <div className="absolute right-0 w-40 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-md shadow-lg py-1 z-20">
-                  <Link href={`/profile/${user.username}`}>
-                    <button
-                      className="flex items-center w-full text-left px-3 p-2 hover:bg-gray-100 dark:hover:bg-gray-700"
-                      onClick={() => setDropdownOpen(false)}
-                    >
-                      <User className="mx-1" /> Profile
-                    </button>
-                  </Link>
-                  <Link href="/">
-                    <button
-                      className="flex items-center w-full text-left px-3 p-2 hover:bg-gray-100 dark:hover:bg-gray-700"
-                      onClick={() => setDropdownOpen(false)}
-                    >
-                      <Home className="mx-1" /> Home
-                    </button>
-                  </Link>
+                <div className="relative flex items-center">
+                  <input
+                    ref={searchInputRef}
+                    type="text"
+                    placeholder="Search for news..."
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                    className="w-full bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 focus:border-mainColor dark:focus:border-mainColor rounded-full px-4 py-2 pr-10 text-gray-800 dark:text-gray-100 placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none transition-colors duration-200"
+                    aria-label="Search"
+                  />
                   <button
-                    className="flex w-full text-red-800 dark:text-red-500 text-left px-3 p-2 hover:bg-gray-100 dark:hover:bg-gray-700"
-                    onClick={logout}
+                    type="submit"
+                    className="absolute right-10 p-1.5 rounded-full text-gray-500 dark:text-gray-400 hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors duration-200"
+                    aria-label="Search"
                   >
-                    <LogOut className="mx-1" /> Log out
+                    <Search className="w-5 h-5" />
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setShowSearch(false)}
+                    className="absolute right-2 p-1.5 rounded-full text-gray-500 dark:text-gray-400 hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors duration-200"
+                    aria-label="Close search"
+                  >
+                    <X className="w-5 h-5" />
                   </button>
                 </div>
-              )}
-            </div>
-          ) : (
-            <div className="hidden ml-2 md:flex items-center gap-2">
-              <Link href="/login">
-                <button className="rounded-full border px-6 py-3 text-xs sm:text-sm font-semibold bg-thirdColor dark:bg-secondaryColor text-secondaryColor dark:text-mainTextColor">
-                  Log in
+              </motion.form>
+            ) : (
+              <motion.div
+                className="hidden md:flex justify-center flex-1 max-w-lg mx-auto"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+              >
+                <button
+                  onClick={() => setShowSearch(true)}
+                  className="flex items-center gap-2 px-4 py-2 text-gray-600 dark:text-gray-300 rounded-full border border-gray-300 dark:border-gray-600 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors duration-200 w-full justify-center"
+                >
+                  <Search className="w-4 h-4" />
+                  <span className="text-sm">Search news...</span>
                 </button>
-              </Link>
-              <Link href="/sign-up">
-                <button className="rounded-full border px-6 py-3 text-xs sm:text-sm font-semibold bg-mainColor text-secondaryColor">
-                  Sign up
-                </button>
-              </Link>
-            </div>
-          )}
+              </motion.div>
+            )}
+          </AnimatePresence>
 
-          {/* Sidebar Toggle Button (Mobile) */}
-          <Toggle
-            onClick={onToggleMenu}
-            className="md:hidden shadow-sm flex items-center cursor-pointer rounded-full border p-2 "
-          >
-            <Menu className="w-7 h-7 scale-150" />
-          </Toggle>
+          {/* Control Group */}
+          <div className="flex items-center gap-2 shrink-0">
+            {/* Mobile Search Button */}
+            <button
+              onClick={() => setShowSearch(true)}
+              className="md:hidden p-2 rounded-full text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors duration-200"
+              aria-label="Search"
+            >
+              <Search className="w-5 h-5" />
+            </button>
+
+            {/* Notifications */}
+            <button
+              className="p-2 rounded-full text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors duration-200 relative"
+              aria-label="Notifications"
+            >
+              <Bell className="w-5 h-5" />
+              <span className="absolute top-0 right-0 w-2 h-2 bg-red-500 rounded-full"></span>
+            </button>
+
+            {/* Dark Mode Toggle */}
+            <div className="hidden sm:flex items-center gap-2 rounded-full">
+              <div className="flex items-center space-x-2">
+                <Switch
+                  id="dark-mode"
+                  checked={theme}
+                  onCheckedChange={(checked) => setTheme(checked)}
+                  className="data-[state=checked]:bg-mainColor"
+                />
+                <Label htmlFor="dark-mode" className="cursor-pointer text-gray-700 dark:text-gray-300">
+                  {theme ? <Sun className="w-5 h-5 text-amber-500" /> : <Moon className="w-5 h-5 text-indigo-400" />}
+                </Label>
+              </div>
+            </div>
+
+            {/* User Menu */}
+            {user ? (
+              <div className="relative" ref={dropdownRef}>
+                <button
+                  className="flex items-center gap-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700 p-1.5 transition-colors duration-200"
+                  onClick={() => setDropdownOpen(!dropdownOpen)}
+                  aria-expanded={dropdownOpen}
+                  aria-haspopup="true"
+                >
+                  <div className="w-8 h-8 rounded-full bg-mainColor text-white flex items-center justify-center font-semibold shadow-sm">
+                    {user.displayname.charAt(0).toUpperCase()}
+                  </div>
+                  <span className="font-medium hidden md:inline capitalize text-gray-800 dark:text-gray-100">
+                    {user.displayname}
+                  </span>
+                </button>
+
+                <AnimatePresence>
+                  {dropdownOpen && (
+                    <motion.div
+                      className="absolute right-0 mt-2 w-48 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg shadow-lg py-1 z-20 overflow-hidden"
+                      initial={{ opacity: 0, y: 10, scale: 0.95 }}
+                      animate={{ opacity: 1, y: 0, scale: 1 }}
+                      exit={{ opacity: 0, y: 10, scale: 0.95 }}
+                      transition={{ duration: 0.2 }}
+                    >
+                      <Link href={`/profile/${user.username}`}>
+                        <button
+                          className="flex items-center w-full text-left px-4 py-2.5 text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors duration-150"
+                          onClick={() => setDropdownOpen(false)}
+                        >
+                          <User className="w-4 h-4 mr-2" />
+                          <span>Profile</span>
+                        </button>
+                      </Link>
+                      <Link href="/">
+                        <button
+                          className="flex items-center w-full text-left px-4 py-2.5 text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors duration-150"
+                          onClick={() => setDropdownOpen(false)}
+                        >
+                          <Home className="w-4 h-4 mr-2" />
+                          <span>Home</span>
+                        </button>
+                      </Link>
+                      <div className="border-t border-gray-200 dark:border-gray-700 my-1"></div>
+                      <button
+                        className="flex items-center w-full text-left px-4 py-2.5 text-red-600 dark:text-red-400 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors duration-150"
+                        onClick={logout}
+                      >
+                        <LogOut className="w-4 h-4 mr-2" />
+                        <span>Log out</span>
+                      </button>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+              </div>
+            ) : (
+              <div className="hidden md:flex items-center gap-2">
+                <Link href="/login">
+                  <button className="rounded-full border border-gray-300 dark:border-gray-600 px-4 py-2 text-sm font-medium text-gray-800 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors duration-200">
+                    Log in
+                  </button>
+                </Link>
+                <Link href="/sign-up">
+                  <button className="rounded-full px-4 py-2 text-sm font-medium bg-mainColor hover:bg-mainColor/90 text-white transition-colors duration-200">
+                    Sign up
+                  </button>
+                </Link>
+              </div>
+            )}
+
+            {/* Sidebar Toggle Button (Mobile) */}
+            <button
+              onClick={handleToggleMenu}
+              className="md:hidden flex items-center justify-center rounded-full border border-gray-300 dark:border-gray-600 p-2 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors duration-200"
+              aria-label="Toggle menu"
+            >
+              <Menu className="w-5 h-5" />
+            </button>
+          </div>
         </div>
       </div>
     </header>
-  );
+  )
 }
 

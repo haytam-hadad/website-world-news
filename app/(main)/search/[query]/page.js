@@ -1,28 +1,28 @@
-import Article from "@/app/components/Article";
-import { ChevronDown } from "lucide-react";
+import Article from "@/app/components/Article"
+import { ChevronDown } from "lucide-react"
 
 const fetchSearchResults = async (query) => {
   try {
-    if (!query) return [];
+    if (!query) return []
 
-    const apiUrl = `${process.env.NEXT_PUBLIC_API_URL}/news/search/${encodeURIComponent(query)}`;
-    const res = await fetch(apiUrl, { cache: "no-store" });
+    const apiUrl = `${process.env.NEXT_PUBLIC_API_URL}/news/search/${encodeURIComponent(query)}`
+    const res = await fetch(apiUrl, { cache: "no-store" })
 
     if (!res.ok) {
-      throw new Error(`Failed to fetch search results: ${res.status} ${res.statusText}`);
+      throw new Error(`Failed to fetch search results: ${res.status} ${res.statusText}`)
     }
 
-    const articles = await res.json();
-    return Array.isArray(articles) ? articles : [];
+    const articles = await res.json()
+    return Array.isArray(articles) ? articles : []
   } catch (error) {
-    console.error("Error fetching search results:", error);
-    return [];
+    console.error("Error fetching search results:", error)
+    return []
   }
-};
+}
 
 const Search = async ({ params }) => {
-  const { query } = await params;
-  const articles = await fetchSearchResults(query);
+  const { query } = await params
+  const articles = await fetchSearchResults(query)
 
   return (
     <div>
@@ -34,9 +34,7 @@ const Search = async ({ params }) => {
       )}
       <main className="flex flex-wrap justify-center sm:justify-start md:justify-around gap-2">
         {articles.length === 0 ? (
-            <h1 className="text-primary p-1">
-              No results found for &quot;{query}&quot;;
-            </h1>
+          <h1 className="text-primary p-1">No results found for &quot;{query}&quot;;</h1>
         ) : (
           articles.map((article) => {
             const {
@@ -48,7 +46,7 @@ const Search = async ({ params }) => {
               publishedAt,
               category = "General",
               url = "#",
-            } = article || {};
+            } = article || {}
 
             return (
               <Article
@@ -59,15 +57,15 @@ const Search = async ({ params }) => {
                 author={author}
                 publishedAt={publishedAt}
                 category={category}
-                url={"/post/"+_id}
+                url={"/post/" + _id}
               />
-            );
+            )
           })
         )}
       </main>
     </div>
-  );
-};
+  )
+}
 
-export default Search;
+export default Search
 

@@ -1,6 +1,4 @@
-"use client";
-
-import { Clock3, ArrowBigUp, ArrowBigDown, Share2, MessageCircle, MoreHorizontal } from "lucide-react";
+"use client"
 
 const ArticleSkeleton = () => {
   return (
@@ -41,7 +39,8 @@ const ArticleSkeleton = () => {
         </div>
       </div>
     </article>
-  );
-};
+  )
+}
 
-export default ArticleSkeleton;
+export default ArticleSkeleton
+

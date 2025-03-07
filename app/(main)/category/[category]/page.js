@@ -1,29 +1,29 @@
-import Article from "@/app/components/Article";
-import { ChevronDown } from "lucide-react";
+import Article from "@/app/components/Article"
+import { ChevronDown } from "lucide-react"
 
 const fetchArticlesByCategory = async (category) => {
   try {
-    const apiUrl = `${process.env.NEXT_PUBLIC_API_URL}/news/category/${category}`;
+    const apiUrl = `${process.env.NEXT_PUBLIC_API_URL}/news/category/${category}`
 
-    if (!apiUrl) throw new Error("API URL is not defined in environment variables");
+    if (!apiUrl) throw new Error("API URL is not defined in environment variables")
 
-    const res = await fetch(apiUrl, { cache: "no-store" });
+    const res = await fetch(apiUrl, { cache: "no-store" })
 
     if (!res.ok) {
-      throw new Error(`Failed to fetch articles: ${res.status} ${res.statusText}`);
+      throw new Error(`Failed to fetch articles: ${res.status} ${res.statusText}`)
     }
 
-    const articles = await res.json();
-    return Array.isArray(articles) ? articles : [];
+    const articles = await res.json()
+    return Array.isArray(articles) ? articles : []
   } catch (error) {
-    console.error("Error fetching articles:", error);
-    return [];
+    console.error("Error fetching articles:", error)
+    return []
   }
-};
+}
 
 const Category = async ({ params }) => {
-  const { category } = await params;
-  const articles = await fetchArticlesByCategory(category);
+  const { category } = await params
+  const articles = await fetchArticlesByCategory(category)
 
   return (
     <div>
@@ -35,22 +35,18 @@ const Category = async ({ params }) => {
 
       <main className="flex flex-wrap justify-center sm:justify-start md:justify-around gap-2">
         {articles.length === 0 ? (
-            <h1 className="text-primary p-2">
-              No articles in this category &quot;<b>{category}</b>&quot; available
-            </h1>
+          <h1 className="text-primary p-2">
+            No articles in this category &quot;<b>{category}</b>&quot; available
+          </h1>
         ) : (
-          articles.map((article , i) => {
-            return (
-              <Article
-                key={i}
-                articleData={article}
-              />
-            );
+          articles.map((article, i) => {
+            return <Article key={i} articleData={article} />
           })
         )}
       </main>
     </div>
-  );
-};
+  )
+}
 
-export default Category;
+export default Category
+
