@@ -641,13 +641,17 @@ const UserDashboard = () => {
                 onChange={(e) => handleChange("gender", e.target.value)}
               >
                 <option value="">Select a gender</option>
-                <option value="male">Male</option>
-                <option value="female">Female</option>
-                <option value="prefer-not-to-say">Prefer not to say</option>
+                <option value="M">Male</option>
+                <option value="F">Female</option>
+                <option value="U">Prefer not to say</option>
               </select>
             ) : (
               <div className="p-3 text-primary bg-gray-50 dark:bg-gray-800 rounded-lg">
-                {userData.gender ? <span className="capitalize">{userData.gender}</span> : "Not specified"}
+                {userData.gender ? (
+                  <span className="capitalize">
+                    {userData.gender === "M" ? "Male" : userData.gender === "F" ? "Female" : "Prefer not to say"}
+                  </span>
+                ) : "Not specified"}
               </div>
             )}
           </div>
