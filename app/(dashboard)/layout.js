@@ -4,9 +4,11 @@ import { ThemeContext } from "../ThemeProvider"
 import HeaderDash from "../components/HeaderDash"
 import SideMenuDashboard from "../components/SideMenuDashboard"
 import { motion } from "framer-motion"
+import { useRouter } from 'next/navigation'
 
 function useWindowWidth() {
   const [width, setWidth] = useState(() => (typeof window !== "undefined" ? window.innerWidth : 1024))
+
 
   useEffect(() => {
     const handleResize = () => {
@@ -21,10 +23,17 @@ function useWindowWidth() {
 }
 
 function LayoutContent({ children }) {
-  const { theme } = useContext(ThemeContext)
+  const { user} = useContext(ThemeContext);
   const [showMenu, setShowMenu] = useState(false)
   const windowWidth = useWindowWidth()
-  const isDesktop = windowWidth >= 768
+  const isDesktop = windowWidth >= 768;
+  const router = useRouter();
+
+  useEffect(() => {
+    if (!user) {
+      router.replace('/');
+    }
+  }, [user, router]);
 
   return (
     <div className="flex flex-col min-h-screen">

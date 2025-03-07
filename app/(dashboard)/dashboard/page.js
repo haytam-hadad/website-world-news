@@ -137,7 +137,7 @@ const DashboardOverview = () => {
             <h1 className="text-2xl font-bold text-gray-900 dark:text-white">
               {greeting}, {user?.displayname || "User"}!
             </h1>
-            <p className="text-gray-600 dark:text-gray-400 mt-1">Here's what's happening with your account today.</p>
+            <p className="text-gray-600 dark:text-gray-400 mt-1">Here&apos;s what&apos;s happening with your account today.</p>
           </div>
           <div className="flex gap-3">
             <Link href="/add">
@@ -209,7 +209,7 @@ const DashboardOverview = () => {
                   <div className="flex-1 min-w-0">
                     <p className="text-sm text-gray-900 dark:text-white">
                       <span className="font-medium">{activity.user}</span> {activity.action}
-                      {activity.article && <span className="font-medium"> "{activity.article}"</span>}
+                      {activity.article && <span className="font-medium"> {activity.article}</span>}
                     </p>
                     <div className="flex items-center mt-1 text-xs text-gray-500 dark:text-gray-400">
                       <Clock className="w-3.5 h-3.5 mr-1" />
