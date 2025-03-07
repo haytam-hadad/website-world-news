@@ -9,6 +9,7 @@ module.exports = {
   	extend: {
   		colors: {
   			mainColor: 'var(--mainColor)',
+			main2Color: 'var(--main2Color)',
   			secondaryColor: 'var(--secondaryColor)',
   			thirdColor: 'var(--thirdColor)',
   			mainTextColor: 'var(--mainTextColor)',

@@ -89,7 +89,7 @@ const SideMenuDashboard = ({ setVisible }) => {
 
   return (
     <motion.div
-      className="bg-mainColor text-white select-none p-4 z-40 w-[250px] h-full fixed top-16 overflow-y-auto left-0"
+      className="bg-gradient-to-r from-mainColor to-main2Color text-white select-none p-4 z-40 w-[250px] h-full fixed top-16 overflow-y-auto left-0"
       initial={{ x: -250 }}
       animate={{ x: 0 }}
       exit={{ x: -250 }}

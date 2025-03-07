@@ -13,6 +13,9 @@ import {
   Briefcase,
   User,
   ImageIcon,
+  Phone,
+  Globe,
+  Cake,
 } from "lucide-react"
 import Article from "./Article"
 import { ThemeContext } from "../ThemeProvider"
@@ -168,10 +171,17 @@ const Profile = ({ userData }) => {
                     <span>Joined {formatDate(userData.createdAt)}</span>
                   </div>
 
-                  {userData.location && (
+                  {userData.country && (
                     <div className="flex items-center gap-2 text-gray-700 dark:text-gray-300 mb-3">
                       <MapPin className="w-4 h-4 text-gray-500 dark:text-gray-400" />
-                      <span>{userData.location}</span>
+                      <span>{userData.country}</span>
+                    </div>
+                  )}
+
+                  {userData.city && (
+                    <div className="flex items-center gap-2 text-gray-700 dark:text-gray-300 mb-3">
+                      <MapPin className="w-4 h-4 text-gray-500 dark:text-gray-400" />
+                      <span>{userData.city}</span>
                     </div>
                   )}
 
@@ -342,4 +352,5 @@ const Profile = ({ userData }) => {
 }
 
 export default Profile
+
 

@@ -10,7 +10,7 @@ const Welcome = () => {
 
   return (
     <motion.div
-      className="relative overflow-hidden bg-gradient-to-r from-mainColor via-mainColor/90 to-sky-500 my-4 py-14 px-6 sm:px-10 rounded-2xl shadow-lg"
+      className="relative overflow-hidden bg-gradient-to-r from-mainColor to-main2Color my-4 py-14 px-6 sm:px-10 rounded-2xl shadow-lg"
       initial={{ opacity: 0, scale: 0.98 }}
       animate={{ opacity: 1, scale: 1 }}
       transition={{ duration: 0.6, ease: "easeOut" }}
