@@ -229,108 +229,137 @@ const UserDashboard = () => {
     "Zambia",
     "Zimbabwe"];
 
-  const validateForm = () => {
-    const errors = {}
+  // Updated validateForm function in page.js
+const validateForm = () => {
+  const errors = {};
 
-    // Email validation
-    if (!userData.email) {
-      errors.email = "Email is required"
-    } else if (!/\S+@\S+\.\S+/.test(userData.email)) {
-      errors.email = "Please enter a valid email address"
-    }
-
-    // Username validation (if changed)
-    if (userData.username && userData.username !== user.username) {
-      if (userData.username.length < 3) {
-        errors.username = "Username must be at least 3 characters"
-      } else if (!/^[a-zA-Z0-9._-]+$/.test(userData.username)) {
-        errors.username = "Username can only contain letters, numbers, and ._-"
-      }
-    }
-
-    return errors
+  // Email validation
+  if (!userData.email) {
+    errors.email = "Email is required";
+  } else if (!/\S+@\S+\.\S+/.test(userData.email)) {
+    errors.email = "Please enter a valid email address";
   }
 
-  const handleSave = async () => {
-    // Validate form
-    const errors = validateForm();
-    if (Object.keys(errors).length > 0) {
-      setValidationErrors(errors);
-      return;
+  // Username validation
+  if (!userData.username) {
+    errors.username = "Username is required";
+  } else if (userData.username.length < 3) {
+    errors.username = "Username must be at least 3 characters";
+  } else if (!/^[a-zA-Z0-9._-]+$/.test(userData.username)) {
+    errors.username = "Username can only contain letters, numbers, and ._-";
+  }
+
+  // Website validation (if provided)
+  if (userData.website && !isValidUrl(userData.website)) {
+    errors.website = "Please enter a valid URL";
+  }
+
+  // Phone validation (if provided)
+  if (userData.phone && !isValidPhone(userData.phone)) {
+    errors.phone = "Please enter a valid phone number";
+  }
+
+  return errors;
+};
+
+// Helper functions
+const isValidUrl = (url) => {
+  try {
+    new URL(url.startsWith('http') ? url : `https://${url}`);
+    return true;
+  } catch (e) {
+    return false;
+  }
+};
+
+const isValidPhone = (phone) => {
+  // Basic phone validation - can be improved
+  return /^[+]?[(]?[0-9]{3}[)]?[-\s.]?[0-9]{3}[-\s.]?[0-9]{4,6}$/.test(phone);
+};
+
+const handleSave = async () => {
+  // Validate form
+  const errors = validateForm();
+  if (Object.keys(errors).length > 0) {
+    setValidationErrors(errors);
+    return;
+  }
+
+  setValidationErrors({});
+  setSaving(true);
+  setErrorMessage("");
+
+  try {
+    if (!userData) {
+      throw new Error("User data is undefined!");
     }
-  
-    setValidationErrors({});
-    setSaving(true);
-    setErrorMessage("");
-  
-    try {
-      if (!userData) {
-        throw new Error("User data is undefined!");
-      }
-  
-      // Prepare data to send to API
-      const dataToSend = {
-        username: userData.username || "",
-        displayname: userData.displayname || "",
-        email: userData.email || "",
-        phone: userData.phone || "",
-        website: userData.website || "",
-        bio: userData.bio || "",
-        birthday: userData.birthday || "",
-        gender: userData.gender || "",
-        country: userData.country || "",
-        city: userData.city || "",
-        zipCode: userData.zipCode || "",
-      };
-  
-      console.log("Data being sent:", dataToSend);
-  
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/userprofile/changeinformation`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        credentials: "include",
-        body: JSON.stringify(dataToSend),
+
+    // Prepare data to send to API
+    const dataToSend = {
+      username: userData.username,
+      displayname: userData.displayname,
+      email: userData.email,
+      phone: userData.phone || "",
+      website: userData.website || "",
+      bio: userData.bio || "",
+      birthdate: userData.birthdate ? new Date(userData.birthdate).toISOString().split('T')[0] : "",
+      gender: userData.gender || "",
+      country: userData.country || "",
+      city: userData.city || "",
+      zipCode: userData.zipCode || "",
+    };
+
+    console.log("Data being sent:", dataToSend);
+
+    const apiUrl = `${process.env.NEXT_PUBLIC_API_URL}/userprofile/changeinformation`;
+    console.log("API URL:", apiUrl);
+
+    const response = await fetch(apiUrl, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      credentials: "include",
+      body: JSON.stringify(dataToSend),
+    });
+
+    // Check if response is JSON
+    const contentType = response.headers.get("content-type");
+    if (!contentType || !contentType.includes("application/json")) {
+      const text = await response.text();
+      console.error("Received non-JSON response:", text);
+      throw new Error("Server returned an invalid response");
+    }
+
+    const result = await response.json();
+
+    if (!response.ok) {
+      throw new Error(result.message || "Failed to update profile");
+    }
+
+    setSuccessMessage(result.message || "User Information Updated!");
+    setEditMode(false);
+
+    // Update user context if username changed
+    if (userData.username !== user.username) {
+      setUser({
+        ...user,
+        username: userData.username,
+        displayname: userData.displayname,
       });
-  
-      const responseText = await response.text(); // Read raw response for debugging
-      console.log("Raw API Response:", responseText);
-  
-      if (!response.ok) {
-        let errorMessage = "Failed to update profile";
-        try {
-          const errorData = JSON.parse(responseText);
-          errorMessage = errorData?.message || errorMessage;
-        } catch (jsonError) {
-          console.error("Failed to parse JSON response:", jsonError);
-        }
-        throw new Error(errorMessage);
-      }
-  
-      const result = JSON.parse(responseText);
-      setSuccessMessage(result?.message || "User Information Updated!");
-      setEditMode(false);
-  
-      // Update user context if username changed
-      if (userData.username !== user.username) {
-        setUser({
-          ...user,
-          username: userData.username,
-        });
-      }
-  
-      // Clear success message after 3 seconds
-      setTimeout(() => {
-        setSuccessMessage("");
-      }, 3000);
-    } catch (err) {
-      console.error("Error updating profile:", err);
-      setErrorMessage(err?.message || "Failed to update profile. Please try again.");
-    } finally {
-      setSaving(false);
     }
-  };
+
+    // Clear success message after 3 seconds
+    setTimeout(() => {
+      setSuccessMessage("");
+    }, 3000);
+  } catch (err) {
+    console.error("Error updating profile:", err);
+    setErrorMessage(err.message || "Failed to update profile. Please try again.");
+  } finally {
+    setSaving(false);
+  }
+};
   
 
   const handleChange = (field, value) => {
