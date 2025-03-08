@@ -148,7 +148,7 @@ const SinglePost = ({ post }) => {
   }
 
   return (
-    <div className="max-w-4xl mx-auto w-full px-4 py-6">
+    <div className="max-w-4xl mx-auto w-full p-1 sm:p-2">
       <motion.article
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
@@ -156,7 +156,7 @@ const SinglePost = ({ post }) => {
         className="bg-white dark:bg-darkgrey border border-gray-200 dark:border-gray-700 rounded-xl shadow-sm mb-6"
       >
         {/* Author and metadata header */}
-        <div className="p-4 sm:p-6 border-b border-gray-200 dark:border-gray-700">
+        <div className="p-3 border-b border-gray-200 dark:border-gray-700">
           <div className="flex flex-wrap items-center justify-between gap-4">
             <div className="flex items-center gap-3">
               <Link href={post.author ? `/profile/${post.author}` : "#"}>

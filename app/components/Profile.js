@@ -77,7 +77,7 @@ const Profile = ({ userData }) => {
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.4, ease: [0.5, 0, 0.5, 1] }}
-      className="max-w-5xl mx-auto p-4"
+      className="max-w-5xl mx-auto"
     >
       {/* Banner Section */}
       <div className="relative w-full h-40 sm:h-52 rounded-xl mb-16 bg-gradient-to-r from-mainColor to-sky-400">

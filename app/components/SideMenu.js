@@ -105,7 +105,7 @@ const SideMenu = ({ setVisible }) => {
           <Link href="/add" className="block">
             <button
               onClick={() => setVisible(false)}
-              className={`flex items-center justify-center gap-2 w-full p-3 rounded-lg transition-colors duration-200 ${
+              className={`flex items-center justify-center gap-2 w-full outline p-3 rounded-lg transition-colors duration-200 ${
                 activePath === "/add"
                   ? "bg-mainColor text-white font-medium"
                   : "bg-mainColor/10 text-mainColor hover:bg-mainColor/20"
