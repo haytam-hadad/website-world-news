@@ -1,71 +1,79 @@
 import Article from "@/app/components/Article"
-import { ChevronDown } from "lucide-react"
+import { ChevronDown } from 'lucide-react'
 
-const fetchSearchResults = async (query) => {
+async function fetchSearchResults(query) {
   try {
     if (!query) return []
 
     const apiUrl = `${process.env.NEXT_PUBLIC_API_URL}/news/search/${encodeURIComponent(query)}`
-    const res = await fetch(apiUrl, { cache: "no-store" })
+    console.log("Fetching search results from:", apiUrl);
+    
+    const res = await fetch(apiUrl, { 
+      cache: "no-store"
+    })
 
     if (!res.ok) {
-      throw new Error(`Failed to fetch search results: ${res.status} ${res.statusText}`)
+      console.log(`Error response: ${res.status}`);
+      return []; 
     }
 
-    const articles = await res.json()
-    return Array.isArray(articles) ? articles : []
+    const data = await res.json();
+    console.log(`Received ${Array.isArray(data) ? data.length : 0} search results`);
+    
+    return Array.isArray(data) ? data : []
   } catch (error) {
     console.error("Error fetching search results:", error)
     return []
   }
 }
 
-const Search = async ({ params }) => {
-  const { query } = await params
-  const articles = await fetchSearchResults(query)
+export default async function Search({ params }) {
+  const query = params.query;
+  console.log("Search page rendering with query:", query);
+  
+  const articles = await fetchSearchResults(query);
 
   return (
-    <div>
-      {articles.length > 0 && (
-        <h2 className="title">
-          Search Results for &nbsp; <u>{query}</u>
-          <ChevronDown className="ml-2 inline-block" />
-        </h2>
-      )}
-      <main className="flex flex-wrap justify-center sm:justify-start md:justify-around gap-2">
+    <div className="container mx-auto px-4 py-8">
+      <h2 className="text-2xl font-bold mb-6 text-primary">
+        {articles.length > 0 ? (
+          <>
+            Search Results for <span className="underline">{query}</span>
+            <ChevronDown className="ml-2 inline-block" />
+          </>
+        ) : (
+          <>No results found for <span className="underline">{query}</span></>
+        )}
+      </h2>
+      
+      <main className="flex flex-wrap justify-center sm:justify-start md:justify-around gap-4">
         {articles.length === 0 ? (
-          <h1 className="text-primary p-1">No results found for &quot;{query}&quot;;</h1>
+          <div className="w-full text-center py-8 text-gray-500 dark:text-gray-400">
+            No articles found matching your search. Try different keywords.
+          </div>
         ) : (
           articles.map((article) => {
-            const {
-              _id,
-              title = "No title available",
-              content = "No content available",
-              imageUrl = "/images/default.jpg",
-              author = "Unknown",
-              publishedAt,
-              category = "General",
-              url = "#",
-            } = article || {}
-
+            // Format the data to match what Article component expects
+            const formattedArticle = {
+              _id: article._id,
+              title: article.title || "No title available",
+              content: article.content || "No content available",
+              imageUrl: article.imageUrl || "/placeholder.svg",
+              author: article.authordisplayname || article.authorusername || "Unknown",
+              publishedAt: article.publishedAt,
+              category: article.category || "General",
+              comments: [] // Add empty comments array if your Article component expects it
+            };
+            
             return (
               <Article
-                key={_id || Math.random().toString(36)}
-                title={title}
-                desc={content}
-                imageUrl={imageUrl}
-                author={author}
-                publishedAt={publishedAt}
-                category={category}
-                url={"/post/" + _id}
+                key={article._id || Math.random().toString(36)}
+                articleData={formattedArticle}
               />
-            )
+            );
           })
         )}
       </main>
     </div>
   )
 }
-
-export default Search
-
