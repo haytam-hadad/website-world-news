@@ -239,6 +239,9 @@ export default function AddPostPage() {
         method: "POST",
         body: submissionData,
         credentials: "include",
+        headers: formData.media.sourceType === "upload" ? {
+          "Content-Type": "multipart/form-data",
+        } : {},
       })
 
       if (response.ok) {
