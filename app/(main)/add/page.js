@@ -135,13 +135,6 @@ export default function AddPostPage() {
     }))
   }
 
-  // Format content (convert markdown to HTML)
-  const formatContent = (content) => {
-    let formattedContent = content
-    formattedContent = formattedContent.replace(/\*\*(.*?)\*\*/g, "<strong>$1</strong>")
-    formattedContent = formattedContent.replace(/\*(.*?)\*/g, "<u>$1</u>")
-    return formattedContent
-  }
 
   // Add this new function to validate URLs before submission
   const isValidUrl = (urlString) => {
@@ -192,7 +185,7 @@ export default function AddPostPage() {
       // Add basic fields
       const postData = {
         title: formData.title,
-        content: formatContent(formData.content),
+        content: formData.content,
         category: formData.category,
         sources: formData.sources.filter((s) => s.value.trim()),
         mediaType: formData.media.type, // Always include the media type (image or video)
@@ -286,7 +279,7 @@ export default function AddPostPage() {
     // Only show preview for file uploads, not for URLs
     if (formData.media.sourceType === "upload" && mediaPreview) {
       return (
-        <div className="relative w-full h-48 rounded-lg overflow-hidden bg-gray-200 dark:bg-gray-700">
+        <div className="relative w-full h-48 rounded-lg overflow-hidden bg-gray-100 dark:bg-gray-700">
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
             src={mediaPreview || "/placeholder.svg"}
@@ -300,7 +293,7 @@ export default function AddPostPage() {
     // For URL inputs, don't show any preview
     if (formData.media.sourceType === "url") {
       return (
-        <div className="relative w-full h-48 rounded-lg overflow-hidden bg-gray-200 dark:bg-gray-700 flex items-center justify-center">
+        <div className="relative w-full h-48 rounded-lg overflow-hidden bg-gray-100 dark:bg-gray-700 flex items-center justify-center">
           <div className="text-gray-500 dark:text-gray-400 text-center p-4">
             <ImageIcon className="w-8 h-8 mx-auto mb-2" />
             <p>No preview available. URL will be used when post is published.</p>
@@ -321,17 +314,17 @@ export default function AddPostPage() {
       initial={{ opacity: 0, y: -10 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.6 }}
-      className="max-w-3xl mx-auto px-4 py-6"
+      className="max-w-3xl mx-auto p-2"
     >
       <button
         onClick={() => router.back()}
-        className="flex items-center gap-1.5 mb-6 text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-200 transition-colors"
+        className="flex items-center gap-1.5 mb-6 text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-200"
       >
         <ArrowLeft className="w-4 h-4" />
         <span className="font-semibold p-1">Back</span>
       </button>
 
-      <div className="bg-white dark:bg-darkgrey rounded-xl shadow-md border border-gray-200 dark:border-gray-700 overflow-hidden">
+      <div className="bg-white dark:bg-darkgrey rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden">
         <div className="p-6 border-b border-gray-200 dark:border-gray-700">
           <div className="flex items-center gap-3 mb-2">
             <div className="w-10 h-10 rounded-full bg-mainColor text-white flex items-center justify-center font-semibold text-lg">

@@ -156,11 +156,10 @@ const Profile = ({ userData }) => {
           <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700">
             <div className="p-5">
               <h2 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">About</h2>
-
-              <div className="space-y-4">
+              <div className="space-y-3">
                 {userData.bio && <p className="text-gray-700 dark:text-gray-300">{userData.bio}</p>}
-
-                <div className="pt-2">
+                <span className="block h-0.5 w-full bg-gray-100 dark:bg-gray-700"></span>
+                <div className="pt-1">
                   <div className="flex items-center gap-2 text-gray-700 dark:text-gray-300 mb-3">
                     <Mail className="w-4 h-4 text-gray-500 dark:text-gray-400" />
                     <span>{userData.email || "No email available"}</span>
@@ -170,6 +169,13 @@ const Profile = ({ userData }) => {
                     <Calendar className="w-4 h-4 text-gray-500 dark:text-gray-400" />
                     <span>Joined {formatDate(userData.createdAt)}</span>
                   </div>
+
+                  {userData.birthdate && (
+                    <div className="flex items-center gap-2 text-gray-700 dark:text-gray-300 mb-3">
+                      <Cake className="w-4 h-4 text-gray-500 dark:text-gray-400" />
+                      <span>{formatDate(userData.birthdate, "MMMM d, yyyy")}</span>
+                    </div>
+                  )}
 
                   {userData.country && (
                     <div className="flex items-center gap-2 text-gray-700 dark:text-gray-300 mb-3">
