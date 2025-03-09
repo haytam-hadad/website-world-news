@@ -158,7 +158,7 @@ const SinglePost = ({ post }) => {
         className="bg-white dark:bg-darkgrey border border-gray-200 dark:border-gray-700 rounded-xl shadow-sm mb-6"
       >
         {/* Author and metadata header */}
-        <div className="p-3 border-b border-gray-200 dark:border-gray-700">
+        <div className="p-4 border-b border-gray-200 dark:border-gray-700">
           <div className="flex flex-wrap items-center justify-between gap-4">
             <div className="flex items-center gap-3">
               <Link href={post.authorusername ? `/profile/${post.authorusername}` : "#"}>
@@ -169,10 +169,11 @@ const SinglePost = ({ post }) => {
               <div>
                 <Link
                   href={post.authorusername ? `/profile/${post.authorusername}` : "#"}
-                  className="font-semibold text-gray-900 dark:text-white hover:underline text-lg capitalize"
-                >
-                  {post.authordisplayname || "Unknown"}
+                  className="font-semibold text-gray-900 dark:text-white text-lg"
+                > <span className="hover:underline capitalize" >{post.authordisplayname || "Unknown"} </span>
+                  <span className="text-gray-500 text-sm ml-1 font-normal dark:text-gray-400">{post.authorusername ? `@${post.authorusername}` : ""}</span>
                 </Link>
+
                 <div className="flex items-center text-sm text-gray-500 dark:text-gray-400">
                   <Clock className="w-3.5 h-3.5 mr-1" />
                   <time dateTime={post.publishedAt?.$date || post.publishedAt}>

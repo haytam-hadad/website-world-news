@@ -148,7 +148,7 @@ const Article = ({ articleData }) => {
           {/* Content Container - takes remaining space */}
           <div className={`p-4 lg:p-5 ${imageUrl ? "lg:col-span-7 xl:col-span-8" : "lg:col-span-12"}`}>
             {/* Author and Time */}
-            <header className="flex items-center justify-between mb-3">
+            <header className="flex items-center justify-between mb-4">
               <div className="flex items-center space-x-3">
                 <div className="rounded-full bg-mainColor w-10 h-10 flex items-center justify-center text-secondaryColor font-semibold">
                   {authordisplayname ? authordisplayname[0].toUpperCase() : "U"}
@@ -157,6 +157,9 @@ const Article = ({ articleData }) => {
                   <p className="font-medium text-gray-900 dark:text-gray-100 capitalize hover:underline">
                     {authordisplayname || "Unknown"}
                   </p>
+                  <span className="text-sm text-gray-400 dark:text-gray-500 flex items-center">
+                    {authorusername ? `@${authorusername}` : "N/A"}
+                  </span>
                 </div>
               </div>
 
@@ -335,3 +338,4 @@ const Article = ({ articleData }) => {
 }
 
 export default Article
+
