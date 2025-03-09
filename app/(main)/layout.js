@@ -1,8 +1,8 @@
 "use client"
 import "../globals.css"
-import Header from "../components/Header"
-import { GoUp } from "../components/GoUp"
-import SideMenu from "../components/SideMenu"
+import Header from "@/components/Header"
+import { GoUp } from "@/components/GoUp"
+import SideMenu from "@/components/SideMenu"
 import { ThemeContext } from "../ThemeProvider"
 import { useState, useContext, useEffect, useCallback } from "react"
 

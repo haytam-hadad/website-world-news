@@ -1,8 +1,8 @@
-import Article from "../components/Article"
+import Article from "@/components/Article"
 import { ChevronDown, AlertCircle } from "lucide-react"
-import Welcome from "../components/Welcome"
+import Welcome from "@/components/Welcome"
 import { Suspense } from "react"
-import SkeletonArticle from "../components/SkeletonArticle"
+import SkeletonArticle from "@/components/SkeletonArticle"
 
 const fetchArticles = async () => {
   try {

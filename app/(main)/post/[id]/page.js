@@ -1,4 +1,4 @@
-import OnePost from "@/app/components/OnePost"
+import OnePost from "@/components/OnePost"
 const fetchArticle = async (id) => {
   try {
     const apiUrl = `${process.env.NEXT_PUBLIC_API_URL}/news/${id}`

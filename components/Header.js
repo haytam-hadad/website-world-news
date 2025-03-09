@@ -1,16 +1,15 @@
 "use client"
-
 import Link from "next/link"
-import { Menu, Moon, Sun, User, LogOut, Home, Search, Bell, X } from "lucide-react"
+import { Search, Menu, Moon, Sun, User, LogOut, LayoutDashboard, X } from "lucide-react"
 import { Label } from "@/components/ui/label"
 import { Switch } from "@/components/ui/switch"
-import { useState, useContext, useRef, useEffect } from "react"
-import { ThemeContext } from "../ThemeProvider"
+import { useState, useContext, useEffect, useRef } from "react"
+import { ThemeContext } from "../app/ThemeProvider"
 import Image from "next/image"
 import { useRouter } from "next/navigation"
 import { motion, AnimatePresence } from "framer-motion"
 
-export default function HeaderDash({ onToggleMenu }) {
+export default function Header({ onToggleMenu }) {
   const { theme, setTheme, user, setUser } = useContext(ThemeContext)
   const [dropdownOpen, setDropdownOpen] = useState(false)
   const [searchQuery, setSearchQuery] = useState("")
@@ -47,10 +46,6 @@ export default function HeaderDash({ onToggleMenu }) {
   }, [showSearch])
 
   const logout = async () => {
-    if (!user) {
-      console.log("User is not logged in")
-      return
-    }
     try {
       const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/auth/logout`, {
         method: "POST",
@@ -61,7 +56,6 @@ export default function HeaderDash({ onToggleMenu }) {
       })
 
       if (response.ok) {
-        console.log("Logout successful")
         setUser(null)
         router.push("/")
       }
@@ -86,7 +80,7 @@ export default function HeaderDash({ onToggleMenu }) {
   }
 
   return (
-    <header className="sticky border-b bg-white dark:bg-darkgrey top-0 z-50 shadow-sm">
+    <header className="sticky bg-white dark:bg-darkgrey top-0 z-50 border-b border-gray-200 dark:border-gray-700 shadow-sm">
       <div className="max-w-7xl mx-auto px-4 sm:px-6">
         <div className="flex items-center justify-between py-3 gap-3">
           {/* Logo Group */}
@@ -98,12 +92,9 @@ export default function HeaderDash({ onToggleMenu }) {
               height={40}
               className="dark:filter dark:invert transition-all duration-200 group-hover:scale-110"
             />
-            <div className="flex flex-col">
-              <span className="font-bold text-xl text-gray-800 dark:text-gray-100 transition-colors duration-200 group-hover:text-mainColor dark:group-hover:text-mainColor">
-                World News
-              </span>
-              <span className="text-mainColor font-bold text-xs">Dashboard</span>
-            </div>
+            <span className="hidden font-bold text-xl sm:inline text-gray-800 dark:text-gray-100 transition-colors duration-200 group-hover:text-mainColor dark:group-hover:text-mainColor">
+              World News
+            </span>
           </Link>
 
           {/* Search Group - Only show when search is active or on larger screens */}
@@ -174,15 +165,6 @@ export default function HeaderDash({ onToggleMenu }) {
               <Search className="w-5 h-5" />
             </button>
 
-            {/* Notifications */}
-            <button
-              className="p-2 rounded-full text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors duration-200 relative"
-              aria-label="Notifications"
-            >
-              <Bell className="w-5 h-5" />
-              <span className="absolute top-0 right-0 w-2 h-2 bg-red-500 rounded-full"></span>
-            </button>
-
             {/* Dark Mode Toggle */}
             <div className="hidden sm:flex items-center gap-2 rounded-full">
               <div className="flex items-center space-x-2">
@@ -198,7 +180,6 @@ export default function HeaderDash({ onToggleMenu }) {
               </div>
             </div>
 
-            {/* User Menu */}
             {user ? (
               <div className="relative" ref={dropdownRef}>
                 <button
@@ -233,13 +214,13 @@ export default function HeaderDash({ onToggleMenu }) {
                           <span>Profile</span>
                         </button>
                       </Link>
-                      <Link href="/">
+                      <Link href={`/update-info`}>
                         <button
                           className="flex items-center w-full text-left px-4 py-2.5 text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors duration-150"
                           onClick={() => setDropdownOpen(false)}
                         >
-                          <Home className="w-4 h-4 mr-2" />
-                          <span>Home</span>
+                          <LayoutDashboard className="w-4 h-4 mr-2" />
+                          <span>Dashboard</span>
                         </button>
                       </Link>
                       <div className="border-t border-gray-200 dark:border-gray-700 my-1"></div>

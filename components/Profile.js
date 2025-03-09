@@ -18,7 +18,7 @@ import {
   Cake,
 } from "lucide-react"
 import Article from "./Article"
-import { ThemeContext } from "../ThemeProvider"
+import { ThemeContext } from "../app/ThemeProvider"
 import Link from "next/link"
 import { motion } from "framer-motion"
 

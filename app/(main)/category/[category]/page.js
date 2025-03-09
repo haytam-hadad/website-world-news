@@ -1,4 +1,4 @@
-import Article from "@/app/components/Article"
+import Article from "@/components/Article"
 import { ChevronDown } from "lucide-react"
 
 const fetchArticlesByCategory = async (category) => {

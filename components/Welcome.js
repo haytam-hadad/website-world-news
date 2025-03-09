@@ -3,7 +3,7 @@ import { useContext } from "react"
 import { motion } from "framer-motion"
 import Link from "next/link"
 import { ChevronDown, Sparkles } from "lucide-react"
-import { ThemeContext } from "../ThemeProvider"
+import { ThemeContext } from "../app/ThemeProvider"
 
 const Welcome = () => {
   const { user } = useContext(ThemeContext)

@@ -1,8 +1,8 @@
 "use client"
 import { useState, useEffect, useContext } from "react"
 import { ThemeContext } from "../ThemeProvider"
-import HeaderDash from "../components/HeaderDash"
-import SideMenuDashboard from "../components/SideMenuDashboard"
+import HeaderDash from "@/components/HeaderDash"
+import SideMenuDashboard from "@/components/SideMenuDashboard"
 import { motion } from "framer-motion"
 import { useRouter } from 'next/navigation'
 

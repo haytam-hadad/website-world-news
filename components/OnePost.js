@@ -18,8 +18,8 @@ import {
 } from "lucide-react"
 import { useState, useContext, useRef, useEffect } from "react"
 import { ArrowBigUp, ArrowBigDown } from "lucide-react"
-import Comment from "../components/Comment"
-import { ThemeContext } from "../ThemeProvider"
+import Comment from "@/components/Comment"
+import { ThemeContext } from "../app/ThemeProvider"
 import { motion, AnimatePresence } from "framer-motion"
 
 const SinglePost = ({ post }) => {

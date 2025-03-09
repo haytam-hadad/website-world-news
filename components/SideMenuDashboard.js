@@ -1,7 +1,7 @@
 "use client"
 
 import { useState, useContext, useEffect } from "react"
-import { ThemeContext } from "../ThemeProvider"
+import { ThemeContext } from "../app/ThemeProvider"
 import {
   Home,
   FileText,
