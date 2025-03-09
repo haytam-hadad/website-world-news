@@ -15,16 +15,18 @@ import {
   Link2,
   Facebook,
   Twitter,
+  Eye,
 } from "lucide-react"
 import { useState, useContext, useRef, useEffect } from "react"
 import { ArrowBigUp, ArrowBigDown } from "lucide-react"
 import Comment from "@/components/Comment"
 import { ThemeContext } from "../app/ThemeProvider"
 import { motion, AnimatePresence } from "framer-motion"
+import SourcesDisplay from "./sources-display"
 
 const SinglePost = ({ post }) => {
   const [vote, setVote] = useState(null)
-  const [voteCount, setVoteCount] = useState(Math.floor(Math.random() * 50) + 5) // Simulated vote count
+  const [voteCount, setVoteCount] = useState(post.likes || 0)
   const [subscribed, setSubscribed] = useState(false)
   const [comments, setComments] = useState(post.comments || [])
   const [newComment, setNewComment] = useState("")
@@ -135,7 +137,7 @@ const SinglePost = ({ post }) => {
 
   const calculateTimeAgo = (t) => {
     if (!t) return "N/A"
-    const publishedDate = new Date(t)
+    const publishedDate = new Date(t?.$date || t)
     if (isNaN(publishedDate.getTime())) return "N/A"
     const now = new Date()
     const diffInSeconds = Math.floor((now - publishedDate) / 1000)
@@ -159,21 +161,28 @@ const SinglePost = ({ post }) => {
         <div className="p-3 border-b border-gray-200 dark:border-gray-700">
           <div className="flex flex-wrap items-center justify-between gap-4">
             <div className="flex items-center gap-3">
-              <Link href={post.author ? `/profile/${post.author}` : "#"}>
+              <Link href={post.authorusername ? `/profile/${post.authorusername}` : "#"}>
                 <div className="w-12 h-12 rounded-full bg-mainColor text-white flex items-center justify-center text-xl font-semibold shadow-sm">
-                  {post.author ? post.author.charAt(0).toUpperCase() : "U"}
+                  {post.authordisplayname ? post.authordisplayname.charAt(0).toUpperCase() : "U"}
                 </div>
               </Link>
               <div>
                 <Link
-                  href={post.author ? `/profile/${post.author}` : "#"}
+                  href={post.authorusername ? `/profile/${post.authorusername}` : "#"}
                   className="font-semibold text-gray-900 dark:text-white hover:underline text-lg capitalize"
                 >
-                  {post.author || "Unknown"}
+                  {post.authordisplayname || "Unknown"}
                 </Link>
                 <div className="flex items-center text-sm text-gray-500 dark:text-gray-400">
                   <Clock className="w-3.5 h-3.5 mr-1" />
-                  <time dateTime={post.publishedAt}>{calculateTimeAgo(post.publishedAt) || "Unknown"}</time>
+                  <time dateTime={post.publishedAt?.$date || post.publishedAt}>
+                    {calculateTimeAgo(post.publishedAt) || "Unknown"}
+                  </time>
+
+                  <div className="flex items-center ml-4">
+                    <Eye className="w-3.5 h-3.5 mr-1" />
+                    <span>{post.views || 0} views</span>
+                  </div>
                 </div>
               </div>
             </div>
@@ -235,6 +244,9 @@ const SinglePost = ({ post }) => {
           <div className="prose prose-lg dark:prose-invert max-w-none mb-6">
             <p className="text-gray-700 dark:text-gray-300 leading-relaxed">{post.content || "No content available"}</p>
           </div>
+
+          {/* Sources section */}
+          <SourcesDisplay sources={post.sources} />
 
           {/* Category tag */}
           <div className="mb-6">

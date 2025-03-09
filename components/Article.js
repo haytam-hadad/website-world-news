@@ -2,13 +2,13 @@
 
 import { useRouter } from "next/navigation"
 import Image from "next/image"
-import { Clock, Share2, MessageCircle, MoreHorizontal, Flag, Bookmark, BookmarkCheck } from "lucide-react"
+import { Clock, Share2, MessageCircle, MoreHorizontal, Flag, Bookmark, BookmarkCheck, Eye } from 'lucide-react'
 import { useState, useRef, useEffect } from "react"
-import { ArrowBigUp, ArrowBigDown } from "lucide-react"
+import { ArrowBigUp, ArrowBigDown } from 'lucide-react'
 import { motion, AnimatePresence } from "framer-motion"
 
 const Article = ({ articleData }) => {
-  const { _id, title, content, imageUrl, author, publishedAt, category, comments = [] } = articleData
+  const { _id, title, content, imageUrl, authorusername, authordisplayname, category, publishedAt, views, likes, comments = [] } = articleData
   const [vote, setVote] = useState(null)
   const [isSaved, setIsSaved] = useState(false)
   const [showOptions, setShowOptions] = useState(false)
@@ -33,7 +33,7 @@ const Article = ({ articleData }) => {
   }, [])
 
   const handleClick = () => {
-    router.push(`/post/${_id}`)
+    router.push(`/post/${_id.$oid || _id}`)
   }
 
   const handleUpvote = (e) => {
@@ -60,13 +60,13 @@ const Article = ({ articleData }) => {
         .share({
           title: title,
           text: content?.substring(0, 100) + "...",
-          url: `/post/${_id}`,
+          url: `/post/${_id.$oid || _id}`,
         })
         .catch((err) => console.error("Error sharing", err))
     } else {
       // Fallback for browsers that don't support navigator.share
       navigator.clipboard
-        .writeText(window.location.origin + `/post/${_id}`)
+        .writeText(window.location.origin + `/post/${_id.$oid || _id}`)
         .then(() => {
           alert("Link copied to clipboard!")
         })
@@ -77,7 +77,7 @@ const Article = ({ articleData }) => {
   const calculateTimeAgo = (publishedAt) => {
     if (!publishedAt) return "N/A"
 
-    const publishedDate = new Date(publishedAt)
+    const publishedDate = new Date(publishedAt?.$date || publishedAt)
 
     // Check if the date is valid
     if (isNaN(publishedDate.getTime())) return "N/A"
@@ -151,18 +151,18 @@ const Article = ({ articleData }) => {
             <header className="flex items-center justify-between mb-3">
               <div className="flex items-center space-x-3">
                 <div className="rounded-full bg-mainColor w-10 h-10 flex items-center justify-center text-secondaryColor font-semibold">
-                  {author ? author[0].toUpperCase() : "U"}
+                  {authordisplayname ? authordisplayname[0].toUpperCase() : "U"}
                 </div>
                 <div>
                   <p className="font-medium text-gray-900 dark:text-gray-100 capitalize hover:underline">
-                    {author || "Unknown"}
+                    {authordisplayname || "Unknown"}
                   </p>
                 </div>
               </div>
 
               <span className="text-xs text-gray-500 dark:text-gray-400 flex items-center">
                 <Clock className="h-5 w-5 mr-1" />
-                <time dateTime={publishedAt}>{calculateTimeAgo(publishedAt)}</time>
+                <time dateTime={publishedAt?.$date || publishedAt}>{calculateTimeAgo(publishedAt)}</time>
               </span>
             </header>
 
@@ -193,7 +193,7 @@ const Article = ({ articleData }) => {
                       aria-pressed={vote === "upvote"}
                     >
                       <ArrowBigUp className="w-6 h-6" />
-                      <span className="text-sm font-medium">20</span>
+                      <span className="text-sm font-medium">{likes || 0}</span>
                     </button>
 
                     <div className="h-5 w-px bg-gray-300 dark:bg-gray-600" />
@@ -218,7 +218,7 @@ const Article = ({ articleData }) => {
                       className="p-1.5 rounded-full bg-gray-100 dark:bg-gray-700 text-gray-500 dark:text-gray-400 hover:text-blue-500 dark:hover:text-blue-400 transition-colors"
                       onClick={(e) => {
                         e.stopPropagation()
-                        router.push(`/post/${_id}#comments`)
+                        router.push(`/post/${_id.$oid || _id}#comments`)
                       }}
                       aria-label={`Comments (${comments.length || 0})`}
                     >
@@ -335,4 +335,3 @@ const Article = ({ articleData }) => {
 }
 
 export default Article
-
