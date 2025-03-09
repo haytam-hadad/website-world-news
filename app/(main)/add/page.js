@@ -135,7 +135,6 @@ export default function AddPostPage() {
     }))
   }
 
-
   // Add this new function to validate URLs before submission
   const isValidUrl = (urlString) => {
     if (!urlString || typeof urlString !== "string" || urlString.trim() === "") {
@@ -165,6 +164,7 @@ export default function AddPostPage() {
     const newErrors = {}
     if (!formData.title.trim()) newErrors.title = "Title is required"
     if (!formData.content.trim()) newErrors.content = "Content is required"
+    if (!formData.category) newErrors.category = "Category is required"
 
     // Validate URL if provided for URL-based media
     if (formData.media.sourceType === "url" && formData.media.url && !isValidUrl(formData.media.url)) {
@@ -179,83 +179,55 @@ export default function AddPostPage() {
     setIsSubmitting(true)
 
     try {
-      // Create submission data object
-      const submissionData = new FormData()
+      // Filter out empty sources
+      const filteredSources = formData.sources.filter((source) => source.value.trim() !== "")
 
-      // Add basic fields
-      const postData = {
+      // Create the article data object
+      const articleData = {
         title: formData.title,
         content: formData.content,
-        category: formData.category,
-        sources: formData.sources.filter((s) => s.value.trim()),
-        mediaType: formData.media.type, // Always include the media type (image or video)
-        mediaSourceType: formData.media.sourceType, // Include whether it's url or upload
-        hasMedia: false, // Default to false, will set to true if media exists
+        category: formData.category || "General",
+        status: "on-going",
+        sources: filteredSources,
       }
 
-      // Check if media is provided
-      const hasUrlMedia = formData.media.sourceType === "url" && formData.media.url && formData.media.url.trim() !== ""
-      const hasFileMedia = formData.media.sourceType === "upload" && formData.media.file !== null
-
-      // Add media URL if using URL source type and URL is provided
-      if (hasUrlMedia) {
+      // Handle media URL - only process URL media, ignore file uploads
+      if (formData.media.sourceType === "url" && formData.media.url) {
         // Make sure URL starts with http:// or https://
         let mediaUrl = formData.media.url
         if (!mediaUrl.match(/^https?:\/\//i)) {
           mediaUrl = "https://" + mediaUrl
         }
-        postData.mediaUrl = mediaUrl
-        postData.hasMedia = true
+        articleData.imageUrl = mediaUrl
       }
 
-      // Update hasMedia flag if file is provided
-      if (hasFileMedia) {
-        postData.hasMedia = true
-      }
+      console.log("Submitting article data:", articleData)
 
-      // Add the JSON data
-      submissionData.append("postData", JSON.stringify(postData))
-
-      // Add file separately if it exists (for upload source type)
-      if (hasFileMedia) {
-        submissionData.append("mediaFile", formData.media.file)
-        // Also add the file type to help server process it correctly
-        submissionData.append("mediaFileType", formData.media.file.type)
-      }
-
-      console.log("Submitting post data:", postData)
-      console.log("Media source type:", formData.media.sourceType)
-      console.log("Has media:", postData.hasMedia)
-
-      if (hasFileMedia) {
-        console.log("Uploading file:", formData.media.file?.name)
-      } else if (hasUrlMedia) {
-        console.log("Using media URL:", postData.mediaUrl)
-      } else {
-        console.log("No media included in this post")
-      }
-
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/news/newpost`, {
+      // Make the API request
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/news/newpost`, {
         method: "POST",
-        body: submissionData,
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(articleData),
         credentials: "include",
-        headers: formData.media.sourceType === "upload" ? {
-          "Content-Type": "multipart/form-data",
-        } : {},
       })
 
-      if (response.ok) {
-        setSuccess(true)
-        setTimeout(() => {
-          router.push("/")
-        }, 2000)
-      } else {
-        const data = await response.json().catch(() => ({ message: "Failed to create post" }))
-        setErrors({ general: data.message || "Failed to create post" })
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => ({ message: "Failed to create post" }))
+        throw new Error(errorData.message || "Failed to create post")
       }
+
+      const data = await response.json()
+      console.log("Article created successfully:", data)
+
+      setSuccess(true)
+      setTimeout(() => {
+        router.push("/")
+      }, 2000)
     } catch (error) {
       console.error("Error creating post:", error)
-      setErrors({ general: "An unexpected error occurred" })
+      setErrors({ general: error.message || "An unexpected error occurred" })
     } finally {
       setIsSubmitting(false)
     }
@@ -430,13 +402,15 @@ export default function AddPostPage() {
             {/* Category Field */}
             <div>
               <label htmlFor="category" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                Category
+                Category <span className="text-red-500">*</span>
               </label>
               <select
                 id="category"
                 value={formData.category}
                 onChange={(e) => handleChange("category", e.target.value)}
-                className="w-full px-4 py-2.5 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-mainColor focus:border-transparent transition-colors"
+                className={`w-full px-4 py-2.5 rounded-lg border ${
+                  errors.category ? "border-red-500 dark:border-red-500" : "border-gray-300 dark:border-gray-600"
+                } bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-mainColor focus:border-transparent transition-colors`}
               >
                 <option value="">Select a category</option>
                 {categories.map((cat) => (
@@ -445,6 +419,12 @@ export default function AddPostPage() {
                   </option>
                 ))}
               </select>
+              {errors.category && (
+                <p className="mt-1 text-sm text-red-600 dark:text-red-400 flex items-center gap-1">
+                  <AlertCircle className="w-3.5 h-3.5" />
+                  {errors.category}
+                </p>
+              )}
             </div>
 
             {/* Media Section */}
@@ -523,16 +503,6 @@ export default function AddPostPage() {
                 </div>
               )}
 
-              {/* Display media errors */}
-              {/* Remove this line from the error display section:
-
-              {(errors.media || (imageError && formData.media.url && formData.media.url.trim().length > 10)) && (
-                <div className="mb-4 p-3 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg text-red-600 dark:text-red-400 text-sm flex items-center">
-                  <AlertCircle className="w-4 h-4 mr-2 flex-shrink-0" />
-                  <span>{errors.media || "Failed to load image. Please check the URL and try again."}</span>
-                </div>
-              )} */}
-
               {/* URL Input for Video or Image URL */}
               {(formData.media.type === "video" || formData.media.sourceType === "url") && (
                 <div>
@@ -561,6 +531,9 @@ export default function AddPostPage() {
                         <span className="font-semibold">Click to upload</span> or drag and drop
                       </p>
                       <p className="text-xs text-gray-500 dark:text-gray-400">PNG, JPG or GIF (max. 5MB)</p>
+                      <p className="text-xs text-yellow-500 dark:text-yellow-400 mt-2">
+                        Note: File upload is currently disabled. Please use URL option.
+                      </p>
                     </div>
                     <input
                       type="file"
