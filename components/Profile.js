@@ -5,7 +5,6 @@ import {
   BellOff,
   Edit,
   Star,
-  Mail,
   Plus,
   Calendar,
   MapPin,
@@ -39,7 +38,7 @@ const Profile = ({ userData }) => {
     const fetchArticles = async (username) => {
       setIsLoading(true)
       try {
-        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/articles?username=${username}`)
+        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/articles/${username}`)
         if (!response.ok) {
           if (response.status === 404) {
             setArticles([])
@@ -77,7 +76,7 @@ const Profile = ({ userData }) => {
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.4, ease: [0.5, 0, 0.5, 1] }}
-      className="max-w-5xl mx-auto"
+      className="w-full mx-auto"
     >
       {/* Banner Section */}
       <div className="relative w-full h-40 sm:h-52 rounded-xl mb-16 bg-gradient-to-r from-mainColor to-sky-400">
@@ -161,11 +160,6 @@ const Profile = ({ userData }) => {
                 <span className="block h-0.5 w-full bg-gray-100 dark:bg-gray-700"></span>
                 <div className="pt-1">
                   <div className="flex items-center gap-2 text-gray-700 dark:text-gray-300 mb-3">
-                    <Mail className="w-4 h-4 text-gray-500 dark:text-gray-400" />
-                    <span>{userData.email || "No email available"}</span>
-                  </div>
-
-                  <div className="flex items-center gap-2 text-gray-700 dark:text-gray-300 mb-3">
                     <Calendar className="w-4 h-4 text-gray-500 dark:text-gray-400" />
                     <span>Joined {formatDate(userData.createdAt)}</span>
                   </div>
@@ -174,20 +168,6 @@ const Profile = ({ userData }) => {
                     <div className="flex items-center gap-2 text-gray-700 dark:text-gray-300 mb-3">
                       <Cake className="w-4 h-4 text-gray-500 dark:text-gray-400" />
                       <span>{formatDate(userData.birthdate, "MMMM d, yyyy")}</span>
-                    </div>
-                  )}
-
-                  {userData.country && (
-                    <div className="flex items-center gap-2 text-gray-700 dark:text-gray-300 mb-3">
-                      <MapPin className="w-4 h-4 text-gray-500 dark:text-gray-400" />
-                      <span>{userData.country}</span>
-                    </div>
-                  )}
-
-                  {userData.city && (
-                    <div className="flex items-center gap-2 text-gray-700 dark:text-gray-300 mb-3">
-                      <MapPin className="w-4 h-4 text-gray-500 dark:text-gray-400" />
-                      <span>{userData.city}</span>
                     </div>
                   )}
 
@@ -205,17 +185,11 @@ const Profile = ({ userData }) => {
                     </div>
                   )}
 
-                  {userData.occupation && (
-                    <div className="flex items-center gap-2 text-gray-700 dark:text-gray-300">
-                      <Briefcase className="w-4 h-4 text-gray-500 dark:text-gray-400" />
-                      <span>{userData.occupation}</span>
-                    </div>
-                  )}
                 </div>
               </div>
             </div>
 
-            <div className="bg-gray-50 dark:bg-gray-900 border-t border-gray-200 dark:border-gray-700 px-5 py-3">
+            <div className="bg-gray-50 dark:bg-gray-900 border-t border-gray-200 dark:border-gray-700 px-4 py-2">
               <div className="flex justify-between">
                 <div className="text-center">
                   <div className="font-semibold text-gray-900 dark:text-white">{articles.length}</div>
@@ -274,7 +248,7 @@ const Profile = ({ userData }) => {
 
           {/* Tab Content */}
           {activeTab === "articles" && (
-            <div className="space-y-6">
+            <div className="space-y-4">
               <div className="flex items-center justify-between mb-2">
                 <h2 className="text-xl font-semibold text-gray-900 dark:text-white">
                   {isOwnProfile ? "Your Articles" : `${userData.displayname}'s Articles`}
@@ -291,7 +265,7 @@ const Profile = ({ userData }) => {
               </div>
 
               {isLoading ? (
-                <div className="flex justify-center py-8">
+                <div className="flex justify-center py-4">
                   <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-mainColor"></div>
                 </div>
               ) : articles.length === 0 ? (
@@ -358,5 +332,6 @@ const Profile = ({ userData }) => {
 }
 
 export default Profile
+
 
 
