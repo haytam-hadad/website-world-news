@@ -3,8 +3,10 @@ import "../globals.css"
 import Header from "@/components/Header"
 import { GoUp } from "@/components/GoUp"
 import SideMenu from "@/components/SideMenu"
+import Welcome from "@/components/Welcome"
 import { ThemeContext } from "../ThemeProvider"
 import { useState, useContext, useEffect, useCallback } from "react"
+
 
 // Custom hook to track window width
 function useWindowWidth() {
@@ -47,7 +49,9 @@ function LayoutContent({ children }) {
         )}
 
         {/* Content Area */}
-        <div className="flex-1 p-1 md:p-3 overflow-y-auto bg-lightgrey dark:bg-thirdColor">{children}</div>
+        <div className="flex-1 p-1 md:p-2 overflow-y-auto bg-lightgrey dark:bg-thirdColor">
+          <Welcome/>
+          {children}</div>
       </div>
       <GoUp />
     </div>

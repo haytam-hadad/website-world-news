@@ -129,7 +129,7 @@ const Article = ({ articleData }) => {
       initial={{ opacity: 0, y: 15 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.3 }}
-      className="w-full my-4"
+      className="w-full my-2"
     >
       <div
         className="bg-white dark:bg-darkgrey border border-gray-200 dark:border-gray-700 rounded-xl shadow-sm hover:shadow-md transition-shadow duration-200 overflow-hidden cursor-pointer"
@@ -208,7 +208,7 @@ const Article = ({ articleData }) => {
                 {/* Action Buttons */}
                 <div className="flex flex-wrap items-center gap-2">
                   {/* Vote Buttons */}
-                  <div className="flex items-center bg-gray-100 dark:bg-gray-700 rounded-full overflow-hidden">
+                  <div className="flex items-center bg-gray-100 dark:bg-gray-700 rounded-full">
                     <button
                       className={`p-1.5 flex items-center space-x-1 transition-colors ${
                         vote === "upvote"

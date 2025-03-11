@@ -152,7 +152,7 @@ const Profile = ({ userData }) => {
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-6">
         {/* Left Column - User Info */}
         <div className="md:col-span-1">
-          <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700">
+          <div className="bg-white dark:bg-darkgrey rounded-xl shadow-sm border border-gray-200 dark:border-gray-700">
             <div className="p-5">
               <h2 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">About</h2>
               <div className="space-y-3">
@@ -189,7 +189,7 @@ const Profile = ({ userData }) => {
               </div>
             </div>
 
-            <div className="bg-gray-50 dark:bg-gray-900 border-t border-gray-200 dark:border-gray-700 px-4 py-2">
+            <div className="bg-gray-50 dark:bg-thirdColor rounded-b-xl border-t border-gray-200 dark:border-gray-700 px-4 py-2">
               <div className="flex justify-between">
                 <div className="text-center">
                   <div className="font-semibold text-gray-900 dark:text-white">{articles.length}</div>
