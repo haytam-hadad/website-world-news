@@ -24,6 +24,31 @@ import { ThemeContext } from "../app/ThemeProvider"
 import { motion, AnimatePresence } from "framer-motion"
 import SourcesDisplay from "./sources-display"
 
+
+const formatText = (text) => {
+  return text
+    .split(/(\*\*[^*]+\*\*|\*[^*]+\*|~~[^~]+~~|`[^`]+`|_[^_]+_)/)
+    .map((chunk, index) => {
+      switch (true) {
+        case chunk.startsWith("**") && chunk.endsWith("**"):
+          return <span key={index} className="font-bold">{chunk.slice(2, -2)}</span>;
+        case chunk.startsWith("*") && chunk.endsWith("*"):
+          return <span key={index} className="underline">{chunk.slice(1, -1)}</span>;
+        case chunk.startsWith("_") && chunk.endsWith("_"):
+          return <span key={index} className="italic">{chunk.slice(1, -1)}</span>;
+        case chunk.startsWith("~~") && chunk.endsWith("~~"):
+          return <span key={index} className="line-through">{chunk.slice(2, -2)}</span>;
+        case chunk.startsWith("`") && chunk.endsWith("`"):
+          return (
+            <code key={index} className="px-1.5 py-0.5 bg-gray-100 dark:bg-gray-700 rounded text-md font-mono">{chunk.slice(1, -1)}</code>
+          );
+        default:
+          return chunk;
+      }
+    });
+};
+
+
 const SinglePost = ({ post }) => {
   const [vote, setVote] = useState(null)
   const [voteCount, setVoteCount] = useState(post.likes || 0)
@@ -243,7 +268,7 @@ const SinglePost = ({ post }) => {
           )}
 
           <div className="prose prose-lg dark:prose-invert max-w-none mb-6">
-            <p className="text-gray-700 dark:text-gray-300 leading-relaxed">{post.content || "No content available"}</p>
+            <p className="text-gray-700 dark:text-gray-300 leading-relaxed">{formatText(post.content) || "No content available"}</p>
           </div>
 
           {/* Sources section */}

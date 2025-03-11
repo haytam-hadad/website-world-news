@@ -7,6 +7,30 @@ import { useState, useRef, useEffect } from "react"
 import { ArrowBigUp, ArrowBigDown } from 'lucide-react'
 import { motion, AnimatePresence } from "framer-motion"
 
+
+  const formatText = (text) => {
+    return text
+      .split(/(\*\*[^*]+\*\*|\*[^*]+\*|~~[^~]+~~|`[^`]+`|_[^_]+_)/)
+      .map((chunk, index) => {
+        switch (true) {
+          case chunk.startsWith("**") && chunk.endsWith("**"):
+            return <span key={index} className="font-bold">{chunk.slice(2, -2)}</span>;
+          case chunk.startsWith("*") && chunk.endsWith("*"):
+            return <span key={index} className="underline">{chunk.slice(1, -1)}</span>;
+          case chunk.startsWith("_") && chunk.endsWith("_"):
+            return <span key={index} className="italic">{chunk.slice(1, -1)}</span>;
+          case chunk.startsWith("~~") && chunk.endsWith("~~"):
+            return <span key={index} className="line-through">{chunk.slice(2, -2)}</span>;
+          case chunk.startsWith("`") && chunk.endsWith("`"):
+            return (
+              <code key={index} className="px-1.5 py-0.5 bg-gray-100 dark:bg-gray-700 rounded text-md font-mono">{chunk.slice(1, -1)}</code>
+            );
+          default:
+            return chunk;
+        }
+      });
+  };
+
 const Article = ({ articleData }) => {
   const { _id, title, content, imageUrl, authorusername, authordisplayname, category, publishedAt, views, likes, comments = [] } = articleData
   const [vote, setVote] = useState(null)
@@ -176,7 +200,7 @@ const Article = ({ articleData }) => {
 
             {/* Content */}
             <p className="text-gray-600 dark:text-gray-300 line-clamp-3 sm:line-clamp-4 mb-4 text-sm sm:text-base">
-              {truncateContent(content)}
+              {formatText(truncateContent(content))}
             </p>
 
             <div className="mt-auto pt-3 border-t border-gray-200 dark:border-gray-700">

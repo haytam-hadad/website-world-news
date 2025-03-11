@@ -14,6 +14,7 @@ import {
   Check,
   Loader2,
   ArrowLeft,
+  InfoIcon
 } from "lucide-react"
 import { motion, AnimatePresence } from "framer-motion"
 
@@ -235,17 +236,18 @@ export default function AddPostPage() {
 
   // Get source icon based on type
   const getSourceIcon = (type) => {
+    const style = "w-4 h-4 text-primary";
     switch (type) {
       case "url":
-        return <Link2 className="w-4 h-4" />
+        return <Link2 className={style} />
       case "book":
-        return <BookOpen className="w-4 h-4" />
+        return <BookOpen className={style} />
       case "article":
-        return <FileText className="w-4 h-4" />
+        return <FileText className={style} />
       case "video":
-        return <Video className="w-4 h-4" />
+        return <Video className={style} />
       default:
-        return <Link2 className="w-4 h-4" />
+        return <Link2 className={style} />
     }
   }
 
@@ -254,7 +256,7 @@ export default function AddPostPage() {
     // Only show preview for file uploads, not for URLs
     if (formData.media.sourceType === "upload" && mediaPreview) {
       return (
-        <div className="relative w-full h-48 rounded-lg overflow-hidden bg-gray-100 dark:bg-gray-700">
+        <div className="relative w-full h-48 rounded-lg overflow-hidden bg-white dark:bg-gray-700">
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
             src={mediaPreview || "/placeholder.svg"}
@@ -268,7 +270,7 @@ export default function AddPostPage() {
     // For URL inputs, don't show any preview
     if (formData.media.sourceType === "url") {
       return (
-        <div className="relative w-full h-48 rounded-lg overflow-hidden bg-gray-100 dark:bg-gray-700 flex items-center justify-center">
+        <div className="relative w-full h-48 rounded-lg overflow-hidden bg-secondaryColor dark:bg-gray-700 flex items-center justify-center">
           <div className="text-gray-500 dark:text-gray-400 text-center p-4">
             <ImageIcon className="w-8 h-8 mx-auto mb-2" />
             <p>No preview available. URL will be used when post is published.</p>
@@ -389,13 +391,27 @@ export default function AddPostPage() {
                 </p>
               )}
               <p className="mt-1.5 text-sm text-gray-500 dark:text-gray-400 flex flex-wrap items-center gap-1">
-                <span>Formatting:</span>
+                <InfoIcon className="w-4 h-4 mr-1" />
+                <span>Formatting guide:</span>
+                <br className="mt-1" />
                 <span className="px-1.5 py-0.5 bg-gray-100 dark:bg-gray-700 rounded text-xs font-mono">**bold**</span>
-                <span>for bold and</span>
+                <span>for bold</span>
+                <br className="mt-1" />
                 <span className="px-1.5 py-0.5 bg-gray-100 dark:bg-gray-700 rounded text-xs font-mono">
                   *underline*
                 </span>
                 <span>for underline</span>
+                <br className="mt-1" />
+                <span className="px-1.5 py-0.5 bg-gray-100 dark:bg-gray-700 rounded text-xs font-mono">_italic_</span>
+                <span>for italic</span>
+                <br className="mt-1" />
+                <span className="px-1.5 py-0.5 bg-gray-100 dark:bg-gray-700 rounded text-xs font-mono">~~strikethrough~~</span>
+                <span>for strikethrough</span>
+                <br className="mt-1" />
+                <span className="px-1.5 py-0.5 bg-gray-100 dark:bg-gray-700 rounded text-xs font-mono">
+                  `code`
+                </span>
+                <span>for code</span>
               </p>
             </div>
 
@@ -428,7 +444,7 @@ export default function AddPostPage() {
             </div>
 
             {/* Media Section */}
-            <div className="bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-lg p-5">
+            <div className="bg-gray-50 dark:bg-gray-600 border border-gray-200 dark:border-gray-700 rounded-lg p-5">
               <div className="flex items-center justify-between mb-4">
                 <h3 className="text-base font-medium text-gray-900 dark:text-white flex items-center gap-2">
                   {formData.media.type === "image" ? <ImageIcon className="w-4 h-4" /> : <Video className="w-4 h-4" />}
@@ -572,7 +588,7 @@ export default function AddPostPage() {
             </div>
 
             {/* Sources Section */}
-            <div className="bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-lg p-5">
+            <div className="bg-gray-50 dark:bg-gray-600 border border-gray-200 dark:border-gray-700 rounded-lg p-5">
               <div className="flex items-center justify-between mb-4">
                 <h3 className="text-base font-medium text-gray-900 dark:text-white flex items-center gap-2">
                   <Link2 className="w-4 h-4" />
@@ -587,7 +603,6 @@ export default function AddPostPage() {
                   Add Source
                 </button>
               </div>
-
               <div className="space-y-3">
                 {formData.sources.map((source, index) => (
                   <div key={index} className="flex items-center gap-2">
@@ -618,10 +633,10 @@ export default function AddPostPage() {
                     <button
                       type="button"
                       onClick={() => handleRemoveSource(index)}
-                      className="p-2 text-gray-500 hover:text-red-500 transition-colors"
+                      className="p-2 transition-colors opacity-80"
                       aria-label="Remove source"
                     >
-                      <Trash2 className="w-4 h-4" />
+                      <Trash2 className="w-4 h-4 text-primary hover:text-red-500" />
                     </button>
                   </div>
                 ))}
