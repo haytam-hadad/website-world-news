@@ -82,7 +82,7 @@ export default function LoginPage() {
     setError(null)
 
     try {
-      window.location.href = `${process.env.NEXT_PUBLIC_API_URL}/auth/google/redirect`
+      window.location.href = `${process.env.NEXT_PUBLIC_API_URL}/auth/google`
     } catch (err) {
       setError(err.message || "An unexpected error occurred with Google login.")
       setLoading(false)
