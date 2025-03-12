@@ -3,6 +3,8 @@ import { useContext, useState, useEffect } from "react"
 import { motion, AnimatePresence } from "framer-motion"
 import Link from "next/link"
 import Image from "next/image"
+import { usePathname } from "next/navigation"
+
 import {
   ChevronDown,
   Sparkles,
@@ -21,7 +23,9 @@ const Welcome = () => {
   const { user } = useContext(ThemeContext)
   const [activeCategory, setActiveCategory] = useState(0)
   const [isVisible, setIsVisible] = useState(false)
-  const [isMinimized, setIsMinimized] = useState(false)
+  const [isMinimized, setIsMinimized] = useState(
+    () => JSON.parse(localStorage.getItem("welcomeMinimized") || "false")
+  )
 
   // Featured categories with icons
   const categories = [
@@ -39,7 +43,6 @@ const Welcome = () => {
     if (storedMinimizedState !== null) {
       setIsMinimized(storedMinimizedState === "true")
     }
-
     setIsVisible(true)
   }, [])
 
@@ -48,6 +51,8 @@ const Welcome = () => {
     setIsMinimized(!isMinimized)
     localStorage.setItem("welcomeMinimized", (!isMinimized).toString())
   }
+  const pathname = usePathname();
+  if (pathname === "/add" || pathname.startsWith("/profile/")) return null;
 
   return (
     <div className="relative w-full overflow-hidden mb-6">
@@ -313,7 +318,7 @@ const Welcome = () => {
       </motion.div>
 
       {/* Featured Categories Section - Only show when not minimized */}
-      <AnimatePresence>
+      <>
         {!isMinimized && (
           <motion.div
             className="mt-8 px-4 sm:px-6"
@@ -322,7 +327,7 @@ const Welcome = () => {
             exit={{ opacity: 0, height: 0, marginTop: 0 }}
             transition={{ duration: 0.4 }}
           >
-            <div className="max-w-5xl mx-auto">
+            <div className="max-w-5xl py-1 mx-auto">
               <div className="flex items-center justify-between mb-4">
                 <h2 className="text-xl font-bold text-gray-900 dark:text-white">Featured Categories</h2>
                 <Link
@@ -362,41 +367,7 @@ const Welcome = () => {
             </div>
           </motion.div>
         )}
-      </AnimatePresence>
-
-      {/* Stats Section - Only show when not minimized */}
-      <AnimatePresence>
-        {!isMinimized && (
-          <motion.div
-            className="mt-10 px-4 sm:px-6"
-            initial={{ opacity: 0, height: 0 }}
-            animate={{ opacity: 1, height: "auto" }}
-            exit={{ opacity: 0, height: 0, marginTop: 0 }}
-            transition={{ duration: 0.4, delay: 0.1 }}
-          >
-            <div className="max-w-5xl mx-auto bg-gradient-to-r from-gray-50 to-gray-100 dark:from-gray-800 dark:to-gray-750 rounded-xl p-6 border border-gray-200 dark:border-gray-700">
-              <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-center">
-                <div className="p-4">
-                  <p className="text-3xl font-bold text-mainColor">10K+</p>
-                  <p className="text-gray-600 dark:text-gray-400 text-sm">Daily Readers</p>
-                </div>
-                <div className="p-4">
-                  <p className="text-3xl font-bold text-mainColor">5K+</p>
-                  <p className="text-gray-600 dark:text-gray-400 text-sm">Articles</p>
-                </div>
-                <div className="p-4">
-                  <p className="text-3xl font-bold text-mainColor">50+</p>
-                  <p className="text-gray-600 dark:text-gray-400 text-sm">Categories</p>
-                </div>
-                <div className="p-4">
-                  <p className="text-3xl font-bold text-mainColor">24/7</p>
-                  <p className="text-gray-600 dark:text-gray-400 text-sm">Updates</p>
-                </div>
-              </div>
-            </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
+      </>
     </div>
   )
 }
