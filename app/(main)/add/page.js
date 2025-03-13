@@ -353,14 +353,16 @@ export default function AddPostPage() {
         sources: filteredSources,
       }
 
-      // Handle media URL - only process URL media, ignore file uploads
+      // Handle media URL and type - only process URL media, ignore file uploads
       if (formData.media.sourceType === "url" && formData.media.url) {
         // Make sure URL starts with http:// or https://
         let mediaUrl = formData.media.url
         if (!mediaUrl.match(/^https?:\/\//i)) {
           mediaUrl = "https://" + mediaUrl
         }
-        articleData.imageUrl = mediaUrl
+        // Store the media type and URL in the appropriate fields
+        articleData.mediaType = formData.media.type // Store as "image" or "video"
+        articleData.mediaUrl = mediaUrl // Store the URL
       }
 
       console.log("Submitting article data:", articleData)
