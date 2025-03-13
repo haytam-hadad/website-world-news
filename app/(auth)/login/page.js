@@ -139,7 +139,7 @@ export default function LoginPage() {
             <form className="space-y-6" onSubmit={handleSubmit}>
               <div>
                 <label htmlFor="username" className="block text-sm font-medium text-gray-700 dark:text-gray-300">
-                  Username
+                  Email or Username
                 </label>
                 <div className="mt-1">
                   <input
@@ -150,7 +150,7 @@ export default function LoginPage() {
                     value={username}
                     onChange={(e) => setUsername(e.target.value)}
                     className="block w-full appearance-none rounded-lg border border-gray-300 dark:border-gray-600 px-3 py-2.5 placeholder-gray-400 shadow-sm focus:border-mainColor focus:outline-none focus:ring-mainColor sm:text-sm bg-white dark:bg-gray-700 dark:text-white transition-colors duration-200"
-                    placeholder="Enter your username"
+                    placeholder="Enter your email or your username"
                     autoComplete="username"
                   />
                 </div>
@@ -273,7 +273,7 @@ export default function LoginPage() {
             animate={{ opacity: 1 }}
             transition={{ duration: 0.5, delay: 0.6 }}
           >
-            Don&apos;t have an account?
+            Don&apos;t have an account?&nbsp;
             <Link
               href="/sign-up"
               className="font-medium text-mainColor hover:text-mainColor/80 transition-colors duration-200"

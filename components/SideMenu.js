@@ -20,6 +20,7 @@ import {
   BookOpen,
   Bell,
   Bookmark,
+  ChevronRight,
 } from "lucide-react"
 import Link from "next/link"
 import { motion, AnimatePresence } from "framer-motion"
@@ -44,7 +45,7 @@ const menuItems = [
 
 const SideMenu = ({ setVisible }) => {
   const [categoriesVisible, setCategoriesVisible] = useState(true)
-  const [personalVisible, setPersonalVisible] = useState(false)
+  const [personalVisible, setPersonalVisible] = useState(true)
   const { theme, setTheme, user } = useContext(ThemeContext)
   const activePath = usePathname()
 
@@ -71,7 +72,7 @@ const SideMenu = ({ setVisible }) => {
       transition={{ duration: 0.25, ease: "easeInOut" }}
       style={{ bottom: 0 }} // Ensure it doesn't extend beyond the viewport
     >
-      <div className="flex flex-col p-4 space-y-3">
+      <div className="flex flex-col p-3 space-y-3">
         {/* Theme Toggle */}
         <button
           onClick={() => setTheme(!theme)}
@@ -184,7 +185,7 @@ const SideMenu = ({ setVisible }) => {
                 transition={{ duration: 0.2 }}
                 className="overflow-hidden"
               >
-                <div className="flex flex-col space-y-1 pl-2">
+                <div className="flex flex-col space-y-1 pl-2 max-h-[calc(100vh-400px)] overflow-y-auto pr-1">
                   {menuItems.map(({ name, path, icon }) => (
                     <Link key={path} href={path} className="block">
                       <button
@@ -200,6 +201,15 @@ const SideMenu = ({ setVisible }) => {
                       </button>
                     </Link>
                   ))}
+                  <Link href="/categories" className="block">
+                    <button
+                      onClick={() => setVisible(false)}
+                      className="flex items-center justify-between w-full p-2 rounded-lg transition-colors duration-200 text-mainColor hover:bg-gray-100 dark:hover:bg-gray-700 border border-gray-200 dark:border-gray-700 pt-3"
+                    >
+                      <span className="text-base font-medium">View All Categories</span>
+                      <ChevronRight size={17} />
+                    </button>
+                  </Link>
                 </div>
               </motion.div>
             )}
@@ -269,4 +279,3 @@ const SideMenu = ({ setVisible }) => {
 }
 
 export default SideMenu
-

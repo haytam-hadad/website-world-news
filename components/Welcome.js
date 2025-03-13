@@ -20,39 +20,19 @@ import {
 import { ThemeContext } from "../app/ThemeProvider"
 
 const Welcome = () => {
-  const { user } = useContext(ThemeContext)
-  const [activeCategory, setActiveCategory] = useState(0)
+  const { user , isMinimized , setIsMinimized } = useContext(ThemeContext)
   const [isVisible, setIsVisible] = useState(false)
-  const [isMinimized, setIsMinimized] = useState(
-    () => JSON.parse(localStorage.getItem("welcomeMinimized") || "false")
-  )
 
-  // Featured categories with icons
-  const categories = [
-    { name: "Technology", icon: <Globe className="w-4 h-4" /> },
-    { name: "Business", icon: <TrendingUp className="w-4 h-4" /> },
-    { name: "Health", icon: <Users className="w-4 h-4" /> },
-  ]
+  const pathname = usePathname()
 
   // Trending topics
   const trendingTopics = ["Artificial Intelligence", "Climate Change", "Global Economy", "Space Exploration"]
 
-  // Check localStorage for minimized state preference on component mount
-  useEffect(() => {
-    const storedMinimizedState = localStorage.getItem("welcomeMinimized")
-    if (storedMinimizedState !== null) {
-      setIsMinimized(storedMinimizedState === "true")
-    }
-    setIsVisible(true)
-  }, [])
 
   // Handle minimizing/maximizing the welcome section
   const handleToggleMinimize = () => {
     setIsMinimized(!isMinimized)
-    localStorage.setItem("welcomeMinimized", (!isMinimized).toString())
   }
-  const pathname = usePathname();
-  if (pathname === "/add" || pathname.startsWith("/profile/")) return null;
 
   return (
     <div className="relative w-full overflow-hidden mb-6">
@@ -316,58 +296,6 @@ const Welcome = () => {
           )}
         </div>
       </motion.div>
-
-      {/* Featured Categories Section - Only show when not minimized */}
-      <>
-        {!isMinimized && (
-          <motion.div
-            className="mt-8 px-4 sm:px-6"
-            initial={{ opacity: 0, height: 0 }}
-            animate={{ opacity: 1, height: "auto" }}
-            exit={{ opacity: 0, height: 0, marginTop: 0 }}
-            transition={{ duration: 0.4 }}
-          >
-            <div className="max-w-5xl py-1 mx-auto">
-              <div className="flex items-center justify-between mb-4">
-                <h2 className="text-xl font-bold text-gray-900 dark:text-white">Featured Categories</h2>
-                <Link
-                  href="/categories"
-                  className="text-mainColor hover:text-main2Color text-sm font-medium flex items-center gap-1 transition-colors"
-                >
-                  View All
-                  <ArrowRight className="w-4 h-4" />
-                </Link>
-              </div>
-
-              <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                {categories.map((category, index) => (
-                  <motion.div
-                    key={index}
-                    className={`bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-5 cursor-pointer hover:shadow-md transition-all duration-200 ${
-                      activeCategory === index ? "ring-2 ring-mainColor" : ""
-                    }`}
-                    onClick={() => setActiveCategory(index)}
-                    whileHover={{ y: -5 }}
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.4, delay: 0.1 + index * 0.1 }}
-                  >
-                    <div className="flex items-center gap-3">
-                      <div className="w-10 h-10 rounded-full bg-mainColor/10 flex items-center justify-center text-mainColor">
-                        {category.icon}
-                      </div>
-                      <div>
-                        <h3 className="font-semibold text-gray-900 dark:text-white">{category.name}</h3>
-                        <p className="text-sm text-gray-500 dark:text-gray-400">Latest updates</p>
-                      </div>
-                    </div>
-                  </motion.div>
-                ))}
-              </div>
-            </div>
-          </motion.div>
-        )}
-      </>
     </div>
   )
 }

@@ -6,7 +6,13 @@ export const ThemeContext = createContext()
 export function ThemeProvider({ children }) {
   const [theme, setThemeState] = useState(false)
   const [user, setUser] = useState(null)
-  const [isLoading, setIsLoading] = useState(true)
+  const [isMinimized, setIsMinimized] = useState(() => {
+    if (typeof window !== "undefined") {
+      const savedState = localStorage.getItem("isMinimized")
+      return savedState !== null ? JSON.parse(savedState) : false
+    }
+    return false
+  })
 
   // Initialize theme based on user preference or system preference
   useEffect(() => {
@@ -80,6 +86,11 @@ export function ThemeProvider({ children }) {
     document.documentElement.classList.toggle("dark", newTheme)
   }
 
-  return <ThemeContext.Provider value={{ theme, setTheme, user, setUser, isLoading }}>{children}</ThemeContext.Provider>
+  const setIsMinimizedState = (state) => {
+    setIsMinimized(state)
+    localStorage.setItem("isMinimized", JSON.stringify(state))
+  }
+
+  return <ThemeContext.Provider value={{ theme, setTheme, user, setUser, isMinimized, setIsMinimized: setIsMinimizedState }}>{children}</ThemeContext.Provider>
 }
 

@@ -7,14 +7,30 @@ import {
   Trash2,
   ImageIcon,
   Link2,
-  BookOpen,
   Video,
   FileText,
   AlertCircle,
   Check,
   Loader2,
   ArrowLeft,
-  InfoIcon
+  InfoIcon,
+  Laptop,
+  HeartPulse,
+  Trophy,
+  Landmark,
+  TestTube,
+  Briefcase,
+  Music,
+  Film,
+  Utensils,
+  Plane,
+  BookOpen,
+  Gamepad2,
+  ShoppingBag,
+  Leaf,
+  Palette,
+  Lightbulb,
+  ChevronRight,
 } from "lucide-react"
 import { motion, AnimatePresence } from "framer-motion"
 
@@ -44,11 +60,134 @@ export default function AddPostPage() {
   const [mediaPreview, setMediaPreview] = useState(null)
 
   const categories = [
-    { id: "technology", name: "Technology" },
-    { id: "health", name: "Health" },
-    { id: "sports", name: "Sports" },
-    { id: "science", name: "Science" },
-    { id: "politics", name: "Politics" },
+    {
+      id: "technology",
+      name: "Technology",
+      icon: <Laptop className="w-4 h-4" />,
+      description: "Latest in tech, gadgets, and digital innovation",
+      color: "bg-blue-500",
+      type: "news",
+    },
+    {
+      id: "health",
+      name: "Health",
+      icon: <HeartPulse className="w-4 h-4" />,
+      description: "Wellness, medical breakthroughs, and health advice",
+      color: "bg-red-500",
+      type: "news",
+    },
+    {
+      id: "sports",
+      name: "Sports",
+      icon: <Trophy className="w-4 h-4" />,
+      description: "Sports news, results, and athlete stories",
+      color: "bg-green-500",
+      type: "news",
+    },
+    {
+      id: "politics",
+      name: "Politics",
+      icon: <Landmark className="w-4 h-4" />,
+      description: "Political developments, policy changes, and governance",
+      color: "bg-purple-500",
+      type: "news",
+    },
+    {
+      id: "science",
+      name: "Science",
+      icon: <TestTube className="w-4 h-4" />,
+      description: "Scientific discoveries, research, and innovations",
+      color: "bg-indigo-500",
+      type: "news",
+    },
+    {
+      id: "business",
+      name: "Business",
+      icon: <Briefcase className="w-4 h-4" />,
+      description: "Business news, market trends, and economic updates",
+      color: "bg-amber-500",
+      type: "news",
+    },
+    {
+      id: "entertainment",
+      name: "Entertainment",
+      icon: <Film className="w-4 h-4" />,
+      description: "Movies, TV shows, celebrity news, and entertainment",
+      color: "bg-pink-500",
+      type: "lifestyle",
+    },
+    {
+      id: "music",
+      name: "Music",
+      icon: <Music className="w-4 h-4" />,
+      description: "Music news, album releases, and artist interviews",
+      color: "bg-violet-500",
+      type: "lifestyle",
+    },
+    {
+      id: "food",
+      name: "Food",
+      icon: <Utensils className="w-4 h-4" />,
+      description: "Recipes, restaurant reviews, and culinary trends",
+      color: "bg-orange-500",
+      type: "lifestyle",
+    },
+    {
+      id: "travel",
+      name: "Travel",
+      icon: <Plane className="w-4 h-4" />,
+      description: "Travel destinations, tips, and adventure stories",
+      color: "bg-sky-500",
+      type: "lifestyle",
+    },
+    {
+      id: "education",
+      name: "Education",
+      icon: <BookOpen className="w-4 h-4" />,
+      description: "Educational news, learning resources, and academic insights",
+      color: "bg-emerald-500",
+      type: "knowledge",
+    },
+    {
+      id: "gaming",
+      name: "Gaming",
+      icon: <Gamepad2 className="w-4 h-4" />,
+      description: "Video game news, reviews, and gaming culture",
+      color: "bg-rose-500",
+      type: "entertainment",
+    },
+    {
+      id: "fashion",
+      name: "Fashion",
+      icon: <ShoppingBag className="w-4 h-4" />,
+      description: "Fashion trends, style tips, and industry news",
+      color: "bg-fuchsia-500",
+      type: "lifestyle",
+    },
+    {
+      id: "environment",
+      name: "Environment",
+      icon: <Leaf className="w-4 h-4" />,
+      description: "Environmental news, sustainability, and climate change",
+      color: "bg-teal-500",
+      type: "news",
+    },
+    {
+      id: "art",
+      name: "Art & Design",
+      icon: <Palette className="w-4 h-4" />,
+      description: "Art exhibitions, design trends, and creative inspiration",
+      color: "bg-cyan-500",
+      type: "lifestyle",
+    },
+    {
+      id: "innovation",
+      name: "Innovation",
+      icon: <Lightbulb className="w-4 h-4" />,
+      description: "Innovative ideas, startups, and future technologies",
+      color: "bg-lime-500",
+      type: "knowledge",
+    },
   ]
 
   // Redirect if not logged in
@@ -236,7 +375,7 @@ export default function AddPostPage() {
 
   // Get source icon based on type
   const getSourceIcon = (type) => {
-    const style = "w-4 h-4 text-primary";
+    const style = "w-4 h-4 text-primary"
     switch (type) {
       case "url":
         return <Link2 className={style} />
@@ -405,12 +544,12 @@ export default function AddPostPage() {
                 <span className="px-1.5 py-0.5 bg-gray-100 dark:bg-gray-700 rounded text-xs font-mono">_italic_</span>
                 <span>for italic</span>
                 <br className="mt-1" />
-                <span className="px-1.5 py-0.5 bg-gray-100 dark:bg-gray-700 rounded text-xs font-mono">~~strikethrough~~</span>
+                <span className="px-1.5 py-0.5 bg-gray-100 dark:bg-gray-700 rounded text-xs font-mono">
+                  ~~strikethrough~~
+                </span>
                 <span>for strikethrough</span>
                 <br className="mt-1" />
-                <span className="px-1.5 py-0.5 bg-gray-100 dark:bg-gray-700 rounded text-xs font-mono">
-                  `code`
-                </span>
+                <span className="px-1.5 py-0.5 bg-gray-100 dark:bg-gray-700 rounded text-xs font-mono">`code`</span>
                 <span>for code</span>
               </p>
             </div>
@@ -420,27 +559,75 @@ export default function AddPostPage() {
               <label htmlFor="category" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                 Category <span className="text-red-500">*</span>
               </label>
-              <select
-                id="category"
-                value={formData.category}
-                onChange={(e) => handleChange("category", e.target.value)}
-                className={`w-full px-4 py-2.5 rounded-lg border ${
-                  errors.category ? "border-red-500 dark:border-red-500" : "border-gray-300 dark:border-gray-600"
-                } bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-mainColor focus:border-transparent transition-colors`}
-              >
-                <option value="">Select a category</option>
-                {categories.map((cat) => (
-                  <option key={cat.id} value={cat.id}>
-                    {cat.name}
-                  </option>
-                ))}
-              </select>
+
+              <div className={`relative ${errors.category ? "mb-1" : "mb-0"}`}>
+                <select
+                  id="category"
+                  value={formData.category}
+                  onChange={(e) => handleChange("category", e.target.value)}
+                  className={`w-full px-4 py-2.5 rounded-lg border appearance-none ${
+                    errors.category ? "border-red-500 dark:border-red-500" : "border-gray-300 dark:border-gray-600"
+                  } bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-mainColor focus:border-transparent transition-colors`}
+                >
+                  <option value="">Select a category</option>
+                  {categories.map((cat) => (
+                    <option key={cat.id} value={cat.id}>
+                      {cat.name}
+                    </option>
+                  ))}
+                </select>
+                <div className="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
+                  <ChevronRight className="w-4 h-4 text-gray-500 dark:text-gray-400 rotate-90" />
+                </div>
+              </div>
+
               {errors.category && (
                 <p className="mt-1 text-sm text-red-600 dark:text-red-400 flex items-center gap-1">
                   <AlertCircle className="w-3.5 h-3.5" />
                   {errors.category}
                 </p>
               )}
+
+              {/* Category Preview */}
+              {formData.category && (
+                <div className="mt-3 p-3 bg-gray-50 dark:bg-gray-700 rounded-lg border border-gray-200 dark:border-gray-600">
+                  {categories.map(
+                    (cat) =>
+                      cat.id === formData.category && (
+                        <div key={cat.id} className="flex items-center gap-3">
+                          <div
+                            className={`w-10 h-10 rounded-lg ${cat.color} bg-opacity-20 dark:bg-opacity-30 flex items-center justify-center`}
+                          >
+                            {cat.icon}
+                          </div>
+                          <div>
+                            <h4 className="font-medium text-gray-900 dark:text-white">{cat.name}</h4>
+                            <p className="text-xs text-gray-500 dark:text-gray-400">{cat.description}</p>
+                          </div>
+                        </div>
+                      ),
+                  )}
+                </div>
+              )}
+
+              {/* Category Grid */}
+              <div className="mt-4 grid grid-cols-2 sm:grid-cols-3 gap-2">
+                {categories.map((cat) => (
+                  <button
+                    key={cat.id}
+                    type="button"
+                    onClick={() => handleChange("category", cat.id)}
+                    className={`p-2 rounded-lg border transition-all ${
+                      formData.category === cat.id
+                        ? `${cat.color} bg-opacity-20 dark:bg-opacity-30 border-${cat.color.split("-")[1]}-400 dark:border-${cat.color.split("-")[1]}-500`
+                        : "border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700"
+                    } flex items-center gap-2`}
+                  >
+                    <div className={`w-6 h-6 rounded-md ${cat.color} flex items-center justify-center`}>{cat.icon}</div>
+                    <span className="text-sm font-medium text-gray-700 dark:text-gray-300">{cat.name}</span>
+                  </button>
+                ))}
+              </div>
             </div>
 
             {/* Media Section */}
