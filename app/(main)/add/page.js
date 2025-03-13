@@ -3,6 +3,8 @@ import { useState, useContext, useEffect } from "react"
 import { useRouter } from "next/navigation"
 import { ThemeContext } from "../../ThemeProvider"
 import {
+  Info,
+  ChevronDown,
   Plus,
   Trash2,
   ImageIcon,
@@ -344,13 +346,13 @@ export default function AddPostPage() {
       // Filter out empty sources
       const filteredSources = formData.sources.filter((source) => source.value.trim() !== "")
 
-      // Create the article data object
       const articleData = {
         title: formData.title,
         content: formData.content,
         category: formData.category || "General",
         status: "on-going",
         sources: filteredSources,
+        description: formData.description,
       }
 
       // Handle media URL and type - only process URL media, ignore file uploads
@@ -532,6 +534,29 @@ export default function AddPostPage() {
               )}
             </div>
 
+            {/* Description Field */}
+            <div>
+              <label htmlFor="description" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                Description
+              </label>
+              <textarea
+                id="description"
+                value={formData.description}
+                onChange={(e) => handleChange("description", e.target.value)}
+                placeholder="Provide a brief description of your post..."
+                rows="2"
+                className={`w-full px-4 py-2.5 rounded-lg border ${
+                  errors.description ? "border-red-500 dark:border-red-500" : "border-gray-300 dark:border-gray-600"
+                } bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-mainColor focus:border-transparent transition-colors`}
+              />
+              {errors.description && (
+                <p className="mt-1 text-sm text-red-600 dark:text-red-400 flex items-center gap-1">
+                  <AlertCircle className="w-3.5 h-3.5" />
+                  {errors.description}
+                </p>
+              )}
+            </div>
+
             {/* Content Field */}
             <div>
               <label htmlFor="content" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
@@ -553,33 +578,70 @@ export default function AddPostPage() {
                   {errors.content}
                 </p>
               )}
-              <p className="mt-1.5 text-sm text-gray-500 dark:text-gray-400 flex flex-wrap items-center gap-1">
-                <InfoIcon className="w-4 h-4 mr-1" />
-                <span>Formatting guide:</span>
-                <br className="mt-1" />
-                <span className="px-1.5 py-0.5 bg-gray-100 dark:bg-gray-700 rounded text-xs font-mono">**bold**</span>
-                <span>for bold</span>
-                <br className="mt-1" />
-                <span className="px-1.5 py-0.5 bg-gray-100 dark:bg-gray-700 rounded text-xs font-mono">
-                  *underline*
-                </span>
-                <span>for underline</span>
-                <br className="mt-1" />
-                <span className="px-1.5 py-0.5 bg-gray-100 dark:bg-gray-700 rounded text-xs font-mono">_italic_</span>
-                <span>for italic</span>
-                <br className="mt-1" />
-                <span className="px-1.5 py-0.5 bg-gray-100 dark:bg-gray-700 rounded text-xs font-mono">
-                  ~~strikethrough~~
-                </span>
-                <span>for strikethrough</span>
-                <br className="mt-1" />
-                <span className="px-1.5 py-0.5 bg-gray-100 dark:bg-gray-700 rounded text-xs font-mono">`code`</span>
-                <span>for code</span>
-              </p>
+              {/* Formatting Guide */}
+              <details className="bg-gray-50 dark:bg-thirdColor text-primary p-3 rounded-lg mb-3 border border-gray-200 dark:border-gray-700">
+                <summary className="flex items-center gap-2 cursor-pointer">
+                  <Info className="w-4 h-4" />
+                  <span className="text-md font-medium text-gray-700 dark:text-gray-300">Formatting Guide</span>
+                  <ChevronDown className="w-4 h-4 ml-2 "/>
+                </summary>
+                <ul className="mt-3 grid grid-cols-2 gap-1">
+                  <li>
+                    <code className="px-1.5 py-0.5 bg-gray-100 dark:bg-gray-700 rounded text-gray-800 dark:text-white">
+                      **bold**
+                    </code>{" "}
+                    for <strong>bold text</strong>
+                  </li>
+                  <li>
+                    <code className="px-1.5 py-0.5 bg-gray-100 dark:bg-gray-700 rounded text-gray-800 dark:text-white">
+                      *underline*
+                    </code>{" "}
+                    for <span className="underline">underlined text</span>
+                  </li>
+                  <li>
+                    <code className="px-1.5 py-0.5 bg-gray-100 dark:bg-gray-700 rounded text-gray-800 dark:text-white">
+                      __italic__
+                    </code>{" "}
+                    for <em>italic text</em>
+                  </li>
+                  <li>
+                    <code className="px-1.5 py-0.5 bg-gray-100 dark:bg-gray-700 rounded text-gray-800 dark:text-white">
+                      ~~strikethrough~~
+                    </code>{" "}
+                    for <span className="line-through">strikethrough</span>
+                  </li>
+                  <li>
+                    <code className="px-1.5 py-0.5 bg-gray-100 dark:bg-gray-700 rounded text-gray-800 dark:text-white">
+                      # Heading 1
+                    </code>{" "}
+                    for main titles
+                  </li>
+                  <li>
+                    <code className="px-1.5 py-0.5 bg-gray-100 dark:bg-gray-700 rounded text-gray-800 dark:text-white">
+                      ## Heading 2
+                    </code>{" "}
+                    for section titles
+                  </li>
+                  <li>
+                    <code className="px-1.5 py-0.5 bg-gray-100 dark:bg-gray-700 rounded text-gray-800 dark:text-white">
+                      ### Heading 3
+                    </code>{" "}
+                    for subsections
+                  </li>
+                  <li>
+                    <code className="px-1.5 py-0.5 bg-gray-100 dark:bg-gray-700 rounded text-gray-800 dark:text-white">
+                      &gt; Quote text
+                    </code>{" "}
+                    for blockquotes
+                  </li>
+                </ul>
+              </details>
+
             </div>
 
+
             {/* Category Field */}
-            <div>
+            <div className="mt-4">
               <label htmlFor="category" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                 Category <span className="text-red-500">*</span>
               </label>
@@ -635,7 +697,7 @@ export default function AddPostPage() {
               )}
 
               {/* Category Search and Filter */}
-              <div className="mt-4 mb-3 flex flex-col sm:flex-row gap-3">
+              <div className="my-2 flex flex-col sm:flex-row gap-3">
                 <div className="relative flex-1">
                   <input
                     type="text"
@@ -669,14 +731,14 @@ export default function AddPostPage() {
               </div>
 
               {/* Category Grid */}
-              <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 max-h-[300px] overflow-y-auto pr-1 border border-gray-200 dark:border-gray-700 rounded-lg p-2">
+              <div className="grid grid-cols-2 sm:grid-cols-3 bg-gray-50 dark:bg-thirdColor gap-3 max-h-[300px] overflow-y-auto p-2 border border-gray-200 dark:border-gray-700 rounded-lg">
                 {filteredCategories.length > 0 ? (
                   filteredCategories.map((cat) => (
                     <button
                       key={cat.id}
                       type="button"
                       onClick={() => handleChange("category", cat.id)}
-                      className={`p-2 rounded-lg border transition-all ${
+                      className={`p-2 rounded-lg bg-white dark:bg-darkgrey border transition-all ${
                         formData.category === cat.id
                           ? `${cat.color} bg-opacity-20 dark:bg-opacity-30 border-${cat.color.split("-")[1]}-400 dark:border-${cat.color.split("-")[1]}-500`
                           : "border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700"
@@ -935,4 +997,5 @@ export default function AddPostPage() {
     </motion.div>
   )
 }
+
 

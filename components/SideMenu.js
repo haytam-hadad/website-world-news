@@ -21,6 +21,7 @@ import {
   Bell,
   Bookmark,
   ChevronRight,
+  Briefcase
 } from "lucide-react"
 import Link from "next/link"
 import { motion, AnimatePresence } from "framer-motion"
@@ -41,6 +42,11 @@ const menuItems = [
     icon: <Landmark size={20} />,
   },
   { name: "Science", path: "/category/science", icon: <TestTube size={20} /> },
+  {
+    name: "Business",
+    path: "/category/business",
+    icon: <Briefcase size={20} />,
+  },
 ]
 
 const SideMenu = ({ setVisible }) => {
@@ -204,7 +210,7 @@ const SideMenu = ({ setVisible }) => {
                   <Link href="/categories" className="block">
                     <button
                       onClick={() => setVisible(false)}
-                      className="flex items-center justify-between w-full p-2 rounded-lg transition-colors duration-200 text-mainColor hover:bg-gray-100 dark:hover:bg-gray-700 border border-gray-200 dark:border-gray-700 pt-3"
+                      className="flex items-center justify-between w-full p-2 rounded-md transition-colors duration-200 text-mainColor hover:bg-gray-100 dark:hover:bg-gray-700 border-b border-gray-200 dark:border-gray-700"
                     >
                       <span className="text-base font-medium">View All Categories</span>
                       <ChevronRight size={17} />

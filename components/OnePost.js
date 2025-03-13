@@ -24,30 +24,107 @@ import { ThemeContext } from "../app/ThemeProvider"
 import { motion, AnimatePresence } from "framer-motion"
 import SourcesDisplay from "./sources-display"
 
-
 const formatText = (text) => {
-  return text
-    .split(/(\*\*[^*]+\*\*|\*[^*]+\*|~~[^~]+~~|`[^`]+`|_[^_]+_)/)
-    .map((chunk, index) => {
-      switch (true) {
-        case chunk.startsWith("**") && chunk.endsWith("**"):
-          return <span key={index} className="font-bold">{chunk.slice(2, -2)}</span>;
-        case chunk.startsWith("*") && chunk.endsWith("*"):
-          return <span key={index} className="underline">{chunk.slice(1, -1)}</span>;
-        case chunk.startsWith("_") && chunk.endsWith("_"):
-          return <span key={index} className="italic">{chunk.slice(1, -1)}</span>;
-        case chunk.startsWith("~~") && chunk.endsWith("~~"):
-          return <span key={index} className="line-through">{chunk.slice(2, -2)}</span>;
-        case chunk.startsWith("`") && chunk.endsWith("`"):
-          return (
-            <code key={index} className="px-1.5 py-0.5 bg-gray-100 dark:bg-gray-700 rounded text-md font-mono">{chunk.slice(1, -1)}</code>
-          );
-        default:
-          return chunk;
-      }
-    });
-};
+  if (!text) return null
 
+  // Process text line by line to handle headings and blockquotes
+  const lines = text.split("\n")
+
+  return (
+    <>
+      {lines.map((line, lineIndex) => {
+        // Skip empty lines but preserve the space
+        if (!line.trim()) {
+          return <br key={`br-${lineIndex}`} />
+        }
+
+        // Handle headings
+        if (line.startsWith("# ")) {
+          return (
+            <h1 key={`line-${lineIndex}`} className="text-2xl font-bold my-4 text-gray-900 dark:text-white">
+              {processInlineFormatting(line.substring(2))}
+            </h1>
+          )
+        }
+
+        if (line.startsWith("## ")) {
+          return (
+            <h2 key={`line-${lineIndex}`} className="text-xl font-bold my-3 text-gray-900 dark:text-white">
+              {processInlineFormatting(line.substring(3))}
+            </h2>
+          )
+        }
+
+        if (line.startsWith("### ")) {
+          return (
+            <h3 key={`line-${lineIndex}`} className="text-lg font-bold my-2 text-gray-900 dark:text-white">
+              {processInlineFormatting(line.substring(4))}
+            </h3>
+          )
+        }
+
+        // Handle blockquotes
+        if (line.startsWith("> ")) {
+          return (
+            <blockquote
+              key={`line-${lineIndex}`}
+              className="border-l-4 border-gray-300 dark:border-gray-600 pl-4 py-2 my-4 bg-gray-50 dark:bg-gray-800 rounded-r-md italic text-gray-700 dark:text-gray-300"
+            >
+              {processInlineFormatting(line.substring(2))}
+            </blockquote>
+          )
+        }
+
+        // Regular paragraph
+        return (
+          <p key={`line-${lineIndex}`} className="my-2 text-gray-700 dark:text-gray-300">
+            {processInlineFormatting(line)}
+          </p>
+        )
+      })}
+    </>
+  )
+}
+
+// Helper function to process inline formatting
+const processInlineFormatting = (text) => {
+  return text.split(/(\*\*[^*]+\*\*|\*[^*]+\*|~~[^~]+~~|`[^`]+`|_[^_]+_)/).map((chunk, index) => {
+    switch (true) {
+      case chunk.startsWith("**") && chunk.endsWith("**"):
+        return (
+          <span key={index} className="font-bold">
+            {chunk.slice(2, -2)}
+          </span>
+        )
+      case chunk.startsWith("*") && chunk.endsWith("*"):
+        return (
+          <span key={index} className="underline">
+            {chunk.slice(1, -1)}
+          </span>
+        )
+      case chunk.startsWith("_") && chunk.endsWith("_"):
+        return (
+          <span key={index} className="italic">
+            {chunk.slice(1, -1)}
+          </span>
+        )
+      case chunk.startsWith("~~") && chunk.endsWith("~~"):
+        return (
+          <span key={index} className="line-through">
+            {chunk.slice(2, -2)}
+          </span>
+        )
+      case chunk.startsWith("`") && chunk.endsWith("`"):
+        return (
+          <code key={index} className="px-1.5 py-0.5 bg-gray-100 dark:bg-gray-700 rounded text-md font-mono">
+            {chunk.slice(1, -1)}
+          </code>
+        )
+      default:
+        return chunk
+    }
+  })
+}
 
 const SinglePost = ({ post }) => {
   const [vote, setVote] = useState(null)
@@ -57,7 +134,7 @@ const SinglePost = ({ post }) => {
   const [newComment, setNewComment] = useState("")
   const [showShareOptions, setShowShareOptions] = useState(false)
   const [copied, setCopied] = useState(false)
-  const [imageLoaded, setImageLoaded] = useState(false)
+  const [mediaLoaded, setMediaLoaded] = useState(false)
   const { user } = useContext(ThemeContext)
   const shareRef = useRef(null)
   const commentInputRef = useRef(null)
@@ -128,7 +205,7 @@ const SinglePost = ({ post }) => {
       navigator
         .share({
           title: post.title || "Check out this article",
-          text: post.content?.substring(0, 100) + "...",
+          text: post.description || post.content?.substring(0, 100) + "...",
           url: window.location.href,
         })
         .catch((err) => {
@@ -174,6 +251,96 @@ const SinglePost = ({ post }) => {
     return `${Math.floor(diffInSeconds / 31536000)}y ago`
   }
 
+  // Helper function to extract YouTube video ID
+  const getYouTubeID = (url) => {
+    if (!url) return null
+    const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|&v=)([^#&?]*).*/
+    const match = url.match(regExp)
+    return match && match[2].length === 11 ? match[2] : null
+  }
+
+  // Helper function to render the appropriate media
+  const renderMedia = () => {
+    const mediaToUse = post.mediaUrl || null
+    const type = post.mediaType || null 
+
+    if (!mediaToUse || !type) return null
+
+    if (type === "image") {
+      return (
+        <div className="relative w-full aspect-video mb-6 rounded-lg bg-gray-200 dark:bg-gray-700 overflow-hidden">
+          {!mediaLoaded && (
+            <div className="absolute inset-0 flex items-center justify-center">
+              <div className="w-10 h-10 border-4 border-mainColor border-t-transparent rounded-full animate-spin"></div>
+            </div>
+          )}
+          <Image
+            src={mediaToUse || "/placeholder.svg"}
+            alt={post.title || "Post image"}
+            fill
+            className={`object-cover transition-opacity duration-300 ${mediaLoaded ? "opacity-100" : "opacity-0"}`}
+            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 80vw, 1200px"
+            priority
+            onLoad={() => setMediaLoaded(true)}
+            onError={(e) => {
+              e.target.src = "/placeholder.svg"
+              setMediaLoaded(true)
+            }}
+          />
+        </div>
+      )
+    } else if (type === "video") {
+      const youtubeID = getYouTubeID(mediaToUse)
+
+      if (youtubeID) {
+        return (
+          <div className="relative w-full aspect-video mb-6 rounded-lg overflow-hidden">
+            <iframe
+              src={`https://www.youtube.com/embed/${youtubeID}`}
+              title={post.title || "Video content"}
+              className="absolute top-0 left-0 w-full h-full"
+              frameBorder="0"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+              allowFullScreen
+            ></iframe>
+          </div>
+        )
+      } else if (mediaToUse.includes("vimeo")) {
+        // Extract Vimeo ID
+        const vimeoRegex = /(?:vimeo\.com\/|player\.vimeo\.com\/video\/)([0-9]+)/
+        const vimeoMatch = mediaToUse.match(vimeoRegex)
+        const vimeoID = vimeoMatch ? vimeoMatch[1] : null
+
+        if (vimeoID) {
+          return (
+            <div className="relative w-full aspect-video mb-6 rounded-lg overflow-hidden">
+              <iframe
+                src={`https://player.vimeo.com/video/${vimeoID}`}
+                title={post.title || "Video content"}
+                className="absolute top-0 left-0 w-full h-full"
+                frameBorder="0"
+                allow="autoplay; fullscreen; picture-in-picture"
+                allowFullScreen
+              ></iframe>
+            </div>
+          )
+        }
+      } else {
+        // Direct video file
+        return (
+          <div className="relative w-full aspect-video mb-6 rounded-lg overflow-hidden">
+            <video controls className="w-full h-full" poster="/placeholder.svg">
+              <source src={mediaToUse} type="video/mp4" />
+              Your browser does not support the video tag.
+            </video>
+          </div>
+        )
+      }
+    }
+
+    return null
+  }
+
   return (
     <div className="max-w-4xl mx-auto w-full p-1 sm:p-2">
       <motion.article
@@ -195,8 +362,12 @@ const SinglePost = ({ post }) => {
                 <Link
                   href={post.authorusername ? `/profile/${post.authorusername}` : "#"}
                   className="font-semibold text-gray-900 dark:text-white text-lg"
-                > <span className="hover:underline capitalize" >{post.authordisplayname || "Unknown"} </span>
-                  <span className="text-gray-500 text-sm ml-1 font-normal dark:text-gray-400">{post.authorusername ? `@${post.authorusername}` : ""}</span>
+                >
+                  {" "}
+                  <span className="hover:underline capitalize">{post.authordisplayname || "Unknown"} </span>
+                  <span className="text-gray-500 text-sm ml-1 font-normal dark:text-gray-400">
+                    {post.authorusername ? `@${post.authorusername}` : ""}
+                  </span>
                 </Link>
 
                 <div className="flex items-center text-sm text-gray-500 dark:text-gray-400">
@@ -244,31 +415,18 @@ const SinglePost = ({ post }) => {
             {post.title || "No Title Available"}
           </h1>
 
-          {post.imageUrl && post.imageUrl !== "" && (
-            <div className="relative w-full aspect-video mb-6 rounded-lg bg-gray-200 dark:bg-gray-700 overflow-hidden">
-              {!imageLoaded && (
-                <div className="absolute inset-0 flex items-center justify-center">
-                  <div className="w-10 h-10 border-4 border-mainColor border-t-transparent rounded-full animate-spin"></div>
-                </div>
-              )}
-              <Image
-                src={post.imageUrl || "/placeholder.svg"}
-                alt={post.title || "Post image"}
-                fill
-                className={`object-cover transition-opacity duration-300 ${imageLoaded ? "opacity-100" : "opacity-0"}`}
-                sizes="(max-width: 768px) 100vw, (max-width: 1200px) 80vw, 1200px"
-                priority
-                onLoad={() => setImageLoaded(true)}
-                onError={(e) => {
-                  e.target.src = "/placeholder.svg"
-                  setImageLoaded(true)
-                }}
-              />
+          {/* Description (if available) */}
+          {post.description && (
+            <div className="mb-6 text-lg text-gray-600 dark:text-gray-300 font-medium italic border-l-4 border-mainColor pl-4 py-2">
+              {formatText(post.description)}
             </div>
           )}
 
+          {/* Render media based on type */}
+          {renderMedia()}
+
           <div className="prose prose-lg dark:prose-invert max-w-none mb-6">
-            <p className="text-gray-700 dark:text-gray-300 leading-relaxed">{formatText(post.content) || "No content available"}</p>
+            {formatText(post.content) || "No content available"}
           </div>
 
           {/* Sources section */}

@@ -2,42 +2,77 @@
 
 import { useRouter } from "next/navigation"
 import Image from "next/image"
-import { Clock, Share2, MessageCircle, MoreHorizontal, Flag, Bookmark, BookmarkCheck, Eye } from 'lucide-react'
+import { Clock, Share2, MessageCircle, MoreHorizontal, Flag, Bookmark, BookmarkCheck } from "lucide-react"
 import { useState, useRef, useEffect } from "react"
-import { ArrowBigUp, ArrowBigDown } from 'lucide-react'
+import { ArrowBigUp, ArrowBigDown } from "lucide-react"
 import { motion, AnimatePresence } from "framer-motion"
 
+const formatText = (text) => {
+  if (!text) return null
 
-  const formatText = (text) => {
-    return text
-      .split(/(\*\*[^*]+\*\*|\*[^*]+\*|~~[^~]+~~|`[^`]+`|_[^_]+_)/)
-      .map((chunk, index) => {
-        switch (true) {
-          case chunk.startsWith("**") && chunk.endsWith("**"):
-            return <span key={index} className="font-bold">{chunk.slice(2, -2)}</span>;
-          case chunk.startsWith("*") && chunk.endsWith("*"):
-            return <span key={index} className="underline">{chunk.slice(1, -1)}</span>;
-          case chunk.startsWith("_") && chunk.endsWith("_"):
-            return <span key={index} className="italic">{chunk.slice(1, -1)}</span>;
-          case chunk.startsWith("~~") && chunk.endsWith("~~"):
-            return <span key={index} className="line-through">{chunk.slice(2, -2)}</span>;
-          case chunk.startsWith("`") && chunk.endsWith("`"):
-            return (
-              <code key={index} className="px-1.5 py-0.5 bg-gray-100 dark:bg-gray-700 rounded text-md font-mono">{chunk.slice(1, -1)}</code>
-            );
-          default:
-            return chunk;
-        }
-      });
-  };
+  // Remove heading markers and blockquote markers for preview
+  text = text.replace(/^#+\s+/gm, "")
+  text = text.replace(/^>\s+/gm, "")
+
+  return text.split(/(\*\*[^*]+\*\*|\*[^*]+\*|~~[^~]+~~|`[^`]+`|_[^_]+_)/).map((chunk, index) => {
+    switch (true) {
+      case chunk.startsWith("**") && chunk.endsWith("**"):
+        return (
+          <span key={index} className="font-bold">
+            {chunk.slice(2, -2)}
+          </span>
+        )
+      case chunk.startsWith("*") && chunk.endsWith("*"):
+        return (
+          <span key={index} className="underline">
+            {chunk.slice(1, -1)}
+          </span>
+        )
+      case chunk.startsWith("_") && chunk.endsWith("_"):
+        return (
+          <span key={index} className="italic">
+            {chunk.slice(1, -1)}
+          </span>
+        )
+      case chunk.startsWith("~~") && chunk.endsWith("~~"):
+        return (
+          <span key={index} className="line-through">
+            {chunk.slice(2, -2)}
+          </span>
+        )
+      case chunk.startsWith("`") && chunk.endsWith("`"):
+        return (
+          <code key={index} className="px-1.5 py-0.5 bg-gray-100 dark:bg-gray-700 rounded text-md font-mono">
+            {chunk.slice(1, -1)}
+          </code>
+        )
+      default:
+        return chunk
+    }
+  })
+}
 
 const Article = ({ articleData }) => {
-  const { _id, title, content, imageUrl, authorusername, authordisplayname, category, publishedAt, views, likes, comments = [] } = articleData
+  const {
+    _id,
+    title,
+    content,
+    description,
+    mediaType,
+    mediaUrl,
+    authorusername,
+    authordisplayname,
+    category,
+    publishedAt,
+    views,
+    likes,
+    comments = [],
+  } = articleData
   const [vote, setVote] = useState(null)
   const [isSaved, setIsSaved] = useState(false)
   const [showOptions, setShowOptions] = useState(false)
-  const [imageLoaded, setImageLoaded] = useState(false)
-  const [imageError, setImageError] = useState(false)
+  const [mediaLoaded, setMediaLoaded] = useState(false)
+  const [mediaError, setMediaError] = useState(false)
 
   const optionsRef = useRef(null)
   const router = useRouter()
@@ -83,7 +118,7 @@ const Article = ({ articleData }) => {
       navigator
         .share({
           title: title,
-          text: content?.substring(0, 100) + "...",
+          text: description || content?.substring(0, 100) + "...",
           url: `/post/${_id.$oid || _id}`,
         })
         .catch((err) => console.error("Error sharing", err))
@@ -124,6 +159,43 @@ const Article = ({ articleData }) => {
     return text.substring(0, maxLength) + "..."
   }
 
+  // Determine which media to display
+  const displayMedia = (mediaUrl) => {
+    return (
+      <div className="lg:col-span-5 xl:col-span-4 relative overflow-hidden">
+        <div className="w-full h-64 lg:h-full relative bg-gray-200 dark:bg-gray-700 overflow-hidden">
+          {!mediaLoaded && !mediaError && (
+            <div className="absolute inset-0 flex items-center justify-center">
+              <div className="w-8 h-8 border-4 border-mainColor border-t-transparent rounded-full animate-spin"></div>
+            </div>
+          )}
+          <Image
+            className={`object-cover transition-opacity duration-300 ${mediaLoaded ? "opacity-100" : "opacity-0"}`}
+            src={mediaUrl || "/placeholder.svg"}
+            alt={title || "Article image"}
+            fill
+            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 40vw, 30vw"
+            priority
+            onLoad={() => setMediaLoaded(true)}
+            onError={(e) => {
+              setMediaError(true);
+              setMediaLoaded(true);
+              e.target.src = "/placeholder.svg";
+            }}
+          />
+        </div>
+      </div>
+    );
+  }
+
+  // Helper function to extract YouTube video ID
+  const getYouTubeID = (url) => {
+    const regExp = /[?&]v=([^#&?]{11})/;
+    const match = url.match(regExp);
+    return match ? match[1] : null;
+  };
+  
+  
   return (
     <motion.article
       initial={{ opacity: 0, y: 15 }}
@@ -140,37 +212,12 @@ const Article = ({ articleData }) => {
         aria-label={`Article: ${title || "Untitled"}`}
       >
         {/* Use grid instead of flex for better layout control */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-0">
-          {/* Image Container - fixed size on desktop */}
-          {imageUrl && (
-            <div className="lg:col-span-5 xl:col-span-4 relative">
-              <div className="w-full h-64 lg:h-full relative bg-gray-200 dark:bg-gray-700">
-                {!imageLoaded && !imageError && (
-                  <div className="absolute inset-0 flex items-center justify-center">
-                    <div className="w-8 h-8 border-4 border-mainColor border-t-transparent rounded-full animate-spin"></div>
-                  </div>
-                )}
-
-                <Image
-                  className={`object-cover transition-opacity duration-300 ${imageLoaded ? "opacity-100" : "opacity-0"}`}
-                  src={imageUrl || "/placeholder.svg"}
-                  alt={title || "Article image"}
-                  fill
-                  sizes="(max-width: 768px) 100vw, (max-width: 1200px) 40vw, 30vw"
-                  priority
-                  onLoad={() => setImageLoaded(true)}
-                  onError={(e) => {
-                    setImageError(true)
-                    setImageLoaded(true)
-                    e.target.src = "/placeholder.svg"
-                  }}
-                />
-              </div>
-            </div>
-          )}
+        <div className="grid grid-cols-1 lg:grid-cols-12 space-y-1">
+          {/* Media Container - fixed size on desktop */}
+          {mediaType === "image" && displayMedia(mediaUrl)}
 
           {/* Content Container - takes remaining space */}
-          <div className={`p-4 lg:p-5 ${imageUrl ? "lg:col-span-7 xl:col-span-8" : "lg:col-span-12"}`}>
+          <div className={`p-4 lg:p-5 ${mediaUrl ? "lg:col-span-7 xl:col-span-8" : "lg:col-span-12"}`}>
             {/* Author and Time */}
             <header className="flex items-center justify-between mb-4">
               <div className="flex items-center space-x-3">
@@ -198,9 +245,9 @@ const Article = ({ articleData }) => {
               {title}
             </h2>
 
-            {/* Content */}
+            {/* Description (if available) or Content */}
             <p className="text-gray-600 dark:text-gray-300 line-clamp-3 sm:line-clamp-4 mb-4 text-sm sm:text-base">
-              {formatText(truncateContent(content))}
+              {description ? formatText(description) : formatText(truncateContent(content))}
             </p>
 
             <div className="mt-auto pt-3 border-t border-gray-200 dark:border-gray-700">
