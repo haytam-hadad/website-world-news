@@ -7,6 +7,7 @@ import {
   Trash2,
   ImageIcon,
   Link2,
+  BookOpen,
   Video,
   FileText,
   AlertCircle,
@@ -24,13 +25,14 @@ import {
   Film,
   Utensils,
   Plane,
-  BookOpen,
   Gamepad2,
   ShoppingBag,
   Leaf,
   Palette,
   Lightbulb,
   ChevronRight,
+  Search,
+  Filter,
 } from "lucide-react"
 import { motion, AnimatePresence } from "framer-motion"
 
@@ -58,6 +60,8 @@ export default function AddPostPage() {
 
   const [errors, setErrors] = useState({})
   const [mediaPreview, setMediaPreview] = useState(null)
+  const [categorySearch, setCategorySearch] = useState("")
+  const [categoryFilter, setCategoryFilter] = useState("all")
 
   const categories = [
     {
@@ -189,6 +193,24 @@ export default function AddPostPage() {
       type: "knowledge",
     },
   ]
+
+  // Filter types for category filtering
+  const filterTypes = [
+    { id: "all", name: "All" },
+    { id: "news", name: "News" },
+    { id: "lifestyle", name: "Lifestyle" },
+    { id: "knowledge", name: "Knowledge" },
+    { id: "entertainment", name: "Entertainment" },
+  ]
+
+  // Filter categories based on search and type filter
+  const filteredCategories = categories.filter((category) => {
+    const matchesSearch =
+      category.name.toLowerCase().includes(categorySearch.toLowerCase()) ||
+      category.description.toLowerCase().includes(categorySearch.toLowerCase())
+    const matchesFilter = categoryFilter === "all" || category.type === categoryFilter
+    return matchesSearch && matchesFilter
+  })
 
   // Redirect if not logged in
   useEffect(() => {
@@ -610,23 +632,78 @@ export default function AddPostPage() {
                 </div>
               )}
 
+              {/* Category Search and Filter */}
+              <div className="mt-4 mb-3 flex flex-col sm:flex-row gap-3">
+                <div className="relative flex-1">
+                  <input
+                    type="text"
+                    placeholder="Search categories..."
+                    value={categorySearch}
+                    onChange={(e) => setCategorySearch(e.target.value)}
+                    className="w-full pl-9 pr-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-mainColor focus:border-transparent transition-colors"
+                  />
+                  <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-500 dark:text-gray-400" />
+                </div>
+
+                <div className="flex items-center gap-2 overflow-x-auto pb-1">
+                  <span className="text-xs text-gray-500 dark:text-gray-400 flex items-center gap-1 whitespace-nowrap">
+                    <Filter className="w-3 h-3" /> Filter:
+                  </span>
+                  {filterTypes.map((filter) => (
+                    <button
+                      key={filter.id}
+                      type="button"
+                      onClick={() => setCategoryFilter(filter.id)}
+                      className={`px-2 py-1 text-xs rounded-full whitespace-nowrap transition-colors ${
+                        categoryFilter === filter.id
+                          ? "bg-mainColor text-white"
+                          : "bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600"
+                      }`}
+                    >
+                      {filter.name}
+                    </button>
+                  ))}
+                </div>
+              </div>
+
               {/* Category Grid */}
-              <div className="mt-4 grid grid-cols-2 sm:grid-cols-3 gap-2">
-                {categories.map((cat) => (
-                  <button
-                    key={cat.id}
-                    type="button"
-                    onClick={() => handleChange("category", cat.id)}
-                    className={`p-2 rounded-lg border transition-all ${
-                      formData.category === cat.id
-                        ? `${cat.color} bg-opacity-20 dark:bg-opacity-30 border-${cat.color.split("-")[1]}-400 dark:border-${cat.color.split("-")[1]}-500`
-                        : "border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700"
-                    } flex items-center gap-2`}
-                  >
-                    <div className={`w-6 h-6 rounded-md ${cat.color} flex items-center justify-center`}>{cat.icon}</div>
-                    <span className="text-sm font-medium text-gray-700 dark:text-gray-300">{cat.name}</span>
-                  </button>
-                ))}
+              <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 max-h-[300px] overflow-y-auto pr-1 border border-gray-200 dark:border-gray-700 rounded-lg p-2">
+                {filteredCategories.length > 0 ? (
+                  filteredCategories.map((cat) => (
+                    <button
+                      key={cat.id}
+                      type="button"
+                      onClick={() => handleChange("category", cat.id)}
+                      className={`p-2 rounded-lg border transition-all ${
+                        formData.category === cat.id
+                          ? `${cat.color} bg-opacity-20 dark:bg-opacity-30 border-${cat.color.split("-")[1]}-400 dark:border-${cat.color.split("-")[1]}-500`
+                          : "border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700"
+                      } flex items-center gap-2`}
+                    >
+                      <div className={`w-6 h-6 rounded-md ${cat.color} flex items-center justify-center`}>
+                        {cat.icon}
+                      </div>
+                      <span className="text-sm font-medium text-gray-700 dark:text-gray-300">{cat.name}</span>
+                    </button>
+                  ))
+                ) : (
+                  <div className="col-span-full py-8 text-center">
+                    <div className="mx-auto w-12 h-12 mb-3 text-gray-300 dark:text-gray-600">
+                      <Search className="w-full h-full" />
+                    </div>
+                    <p className="text-gray-500 dark:text-gray-400">No categories found</p>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setCategorySearch("")
+                        setCategoryFilter("all")
+                      }}
+                      className="mt-2 px-3 py-1 text-sm bg-gray-100 dark:bg-gray-700 rounded-md hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors"
+                    >
+                      Reset filters
+                    </button>
+                  </div>
+                )}
               </div>
             </div>
 

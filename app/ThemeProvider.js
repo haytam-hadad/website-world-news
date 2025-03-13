@@ -4,6 +4,7 @@ import { createContext, useState, useEffect } from "react"
 export const ThemeContext = createContext()
 
 export function ThemeProvider({ children }) {
+  const [isLoading, setIsLoading] = useState(true)
   const [theme, setThemeState] = useState(false)
   const [user, setUser] = useState(null)
   const [isMinimized, setIsMinimized] = useState(() => {

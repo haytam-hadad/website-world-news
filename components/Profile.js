@@ -79,7 +79,7 @@ const Profile = ({ userData }) => {
       className="w-full mx-auto"
     >
       {/* Banner Section */}
-      <div className="relative w-full h-40 sm:h-52 rounded-xl mb-16 bg-gradient-to-r from-mainColor to-sky-400">
+      <div className="relative w-full h-40 sm:h-52 rounded-xl mb-16 bg-gradient-to-r from-mainColor to-main2Color">
         {isOwnProfile && (
           <button
             type="button"
@@ -108,7 +108,7 @@ const Profile = ({ userData }) => {
       </div>
 
       {/* Profile Header */}
-      <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between pt-2 pb-6 border-b border-gray-200 dark:border-gray-700">
+      <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between p-1 pb-4 border-b border-gray-200 dark:border-gray-700">
         <div className="ml-2 sm:ml-32 mb-4 sm:mb-0">
           <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-white capitalize">
             {userData.displayname || "Unknown"}

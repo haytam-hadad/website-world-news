@@ -47,8 +47,8 @@ const Welcome = () => {
 
       {/* Hero Section - Adaptive height based on minimized state */}
       <motion.div
-        className={`relative overflow-hidden bg-gradient-to-r from-mainColor via-main2Color to-purple-600 rounded-2xl shadow-lg ${
-          isMinimized ? "py-3 px-4" : "pt-12 pb-16 px-6 sm:px-10"
+        className={`relative overflow-hidden bg-gradient-to-r from-mainColor via-main2Color to-main2Color rounded-2xl shadow-lg ${
+          isMinimized ? "py-3 px-4" : "pt-10 pb-5 px-6 sm:px-10"
         }`}
         initial={{ opacity: 0, scale: 0.98 }}
         animate={{ opacity: 1, scale: 1 }}

@@ -132,7 +132,7 @@ const Article = ({ articleData }) => {
       className="w-full my-2"
     >
       <div
-        className="bg-white dark:bg-darkgrey border border-gray-200 dark:border-gray-700 rounded-xl shadow-sm hover:shadow-md transition-shadow duration-200 overflow-hidden cursor-pointer"
+        className="bg-white dark:bg-darkgrey border border-gray-200 dark:border-gray-700 rounded-xl shadow-sm hover:shadow-md transition-shadow duration-200 cursor-pointer"
         onClick={handleClick}
         role="article"
         tabIndex="0"
