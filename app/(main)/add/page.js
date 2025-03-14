@@ -50,6 +50,7 @@ export default function AddPostPage() {
   const [formData, setFormData] = useState({
     title: "",
     content: "",
+    description: null,
     category: "",
     media: {
       type: "image", // image or video
@@ -352,7 +353,7 @@ export default function AddPostPage() {
         category: formData.category || "General",
         status: "on-going",
         sources: filteredSources,
-        description: formData.description,
+        description: formData.description || null,
       }
 
       // Handle media URL and type - only process URL media, ignore file uploads

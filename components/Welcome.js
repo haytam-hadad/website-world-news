@@ -3,8 +3,7 @@ import { useContext, useState, useEffect } from "react"
 import { motion, AnimatePresence } from "framer-motion"
 import Link from "next/link"
 import Image from "next/image"
-import { usePathname } from "next/navigation"
-
+import { usePathname, useRouter } from "next/navigation"
 import {
   ChevronDown,
   Sparkles,
@@ -16,30 +15,74 @@ import {
   Bell,
   Maximize,
   Minimize,
+  BookOpen,
+  Zap,
+  ArrowUpRight,
+  MessageSquare,
 } from "lucide-react"
 import { ThemeContext } from "../app/ThemeProvider"
 
 const Welcome = () => {
-  const { user , isMinimized , setIsMinimized } = useContext(ThemeContext)
+  const { user, isMinimized, setIsMinimized } = useContext(ThemeContext)
   const [isVisible, setIsVisible] = useState(false)
-
+  const [searchQuery, setSearchQuery] = useState("")
+  const router = useRouter()
   const pathname = usePathname()
 
-  // Trending topics
-  const trendingTopics = ["Artificial Intelligence", "Climate Change", "Global Economy", "Space Exploration"]
+  // Enhanced trending topics with categories
+  const trendingTopics = [
+    { name: "Artificial Intelligence", category: "tech" },
+    { name: "Climate Change", category: "environment" },
+    { name: "Global Economy", category: "business" },
+    { name: "Space Exploration", category: "science" },
+  ]
 
+  // Featured categories with icons
+  const featuredCategories = [
+    { name: "Technology", icon: <Zap className="w-4 h-4" />, path: "/category/technology" },
+    { name: "Health", icon: <Users className="w-4 h-4" />, path: "/category/health" },
+    { name: "Education", icon: <BookOpen className="w-4 h-4" />, path: "/category/education" },
+  ]
+
+  // Set visibility after component mounts for animations
+  useEffect(() => {
+    setIsVisible(true)
+  }, [])
 
   // Handle minimizing/maximizing the welcome section
   const handleToggleMinimize = () => {
     setIsMinimized(!isMinimized)
+    // Save preference to localStorage
+    localStorage.setItem("welcomeMinimized", (!isMinimized).toString())
+  }
+
+  // Handle search submission
+  const handleSearch = (e) => {
+    e.preventDefault()
+    if (searchQuery.trim()) {
+      router.push(`/search/${encodeURIComponent(searchQuery.trim().toLowerCase())}`)
+    }
+  }
+
+  // Get category color based on type
+  const getCategoryColor = (category) => {
+    const colors = {
+      tech: "bg-blue-500",
+      environment: "bg-green-500",
+      business: "bg-amber-500",
+      science: "bg-purple-500",
+    }
+    return colors[category] || "bg-gray-500"
   }
 
   return (
     <div className="relative w-full overflow-hidden mb-6">
-      {/* Toggle button - always visible */}
+      {/* Toggle button - positioned differently based on minimized state */}
       <button
         onClick={handleToggleMinimize}
-        className="absolute top-3 right-3 z-20 p-2 rounded-full bg-white/20 hover:bg-white/30 text-white transition-colors shadow-md"
+        className={`absolute z-20 p-2 rounded-full bg-white/20 hover:bg-white/30 text-white transition-colors shadow-md ${
+          isMinimized ? "top-1/2 -translate-y-1/2 right-3" : "top-3 right-3"
+        }`}
         aria-label={isMinimized ? "Expand welcome section" : "Minimize welcome section"}
       >
         {isMinimized ? <Maximize className="w-4 h-4" /> : <Minimize className="w-4 h-4" />}
@@ -48,7 +91,7 @@ const Welcome = () => {
       {/* Hero Section - Adaptive height based on minimized state */}
       <motion.div
         className={`relative overflow-hidden bg-gradient-to-r from-mainColor via-main2Color to-main2Color rounded-2xl shadow-lg ${
-          isMinimized ? "py-3 px-4" : "pt-10 pb-5 px-6 sm:px-10"
+          isMinimized ? "py-2 sm:py-3 px-3 sm:px-4" : "pt-8 sm:pt-10 pb-6 sm:pb-8 px-4 sm:px-6 md:px-10"
         }`}
         initial={{ opacity: 0, scale: 0.98 }}
         animate={{ opacity: 1, scale: 1 }}
@@ -106,33 +149,56 @@ const Welcome = () => {
         <div className="relative z-10 max-w-5xl mx-auto">
           {/* Minimized state content */}
           {isMinimized ? (
-            <div className="flex items-center justify-between">
+            <div className="flex flex-wrap items-center justify-between gap-2">
               <div className="flex items-center gap-3">
                 <Sparkles className="w-5 h-5 text-yellow-200" />
-                <h2 className="text-lg font-bold text-white">
+                <h2 className="text-lg font-bold text-white truncate max-w-[180px] sm:max-w-none">
                   {user ? `Welcome back, ${user.displayname}!` : "Discover the World Through News"}
                 </h2>
               </div>
 
+              {/* Quick search in minimized mode */}
+              <div className="hidden md:block flex-1 max-w-xs mx-4">
+                <form onSubmit={handleSearch} className="relative">
+                  <input
+                    type="text"
+                    placeholder="Search for news..."
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                    className="w-full bg-white/20 backdrop-blur-md border border-white/30 focus:border-white/50 rounded-full px-4 py-1.5 pr-10 text-white placeholder-white/70 focus:outline-none focus:ring-1 focus:ring-white/30 transition-colors duration-200 text-sm"
+                  />
+                  <button
+                    type="submit"
+                    className="absolute right-1 top-1/2 transform -translate-y-1/2 p-1.5 rounded-full text-white hover:bg-white/20 transition-colors duration-200"
+                    aria-label="Search"
+                  >
+                    <Search className="w-4 h-4" />
+                  </button>
+                </form>
+              </div>
+
               {/* Quick action buttons in minimized mode */}
-              <div className="flex items-center gap-2">
+              <div className="flex items-center gap-2 ml-auto">
                 <Link href="/trends">
-                  <button className="px-3 py-1.5 bg-white/20 hover:bg-white/30 backdrop-blur-sm rounded-full text-white text-sm font-medium transition-colors duration-200 flex items-center gap-1.5">
+                  <button className="px-2 sm:px-3 py-1.5 bg-white/20 hover:bg-white/30 backdrop-blur-sm rounded-full text-white text-sm font-medium transition-colors duration-200 flex items-center gap-1.5">
                     <TrendingUp className="w-3.5 h-3.5" />
                     <span className="hidden sm:inline">Trending</span>
                   </button>
                 </Link>
                 <Link href="/categories">
-                  <button className="px-3 py-1.5 bg-white/20 hover:bg-white/30 backdrop-blur-sm rounded-full text-white text-sm font-medium transition-colors duration-200 flex items-center gap-1.5">
+                  <button className="px-2 sm:px-3 py-1.5 bg-white/20 hover:bg-white/30 backdrop-blur-sm rounded-full text-white text-sm font-medium transition-colors duration-200 flex items-center gap-1.5">
                     <Globe className="w-3.5 h-3.5" />
                     <span className="hidden sm:inline">Categories</span>
                   </button>
                 </Link>
-                <Link href="/categories">
-                  <button className="px-3 opacity-0 py-1.5 bg-white/20 hover:bg-white/30 backdrop-blur-sm rounded-full text-white text-sm font-medium transition-colors duration-200 flex items-center gap-1.5">
-                    <span className="hidden sm:inline">-</span>
-                  </button>
-                </Link>
+                {user && (
+                  <Link href="/add">
+                    <button className="px-2 sm:px-3 py-1.5 bg-white/20 hover:bg-white/30 backdrop-blur-sm rounded-full text-white text-sm font-medium transition-colors duration-200 flex items-center gap-1.5">
+                      <MessageSquare className="w-3.5 h-3.5" />
+                      <span className="hidden sm:inline">Post</span>
+                    </button>
+                  </Link>
+                )}
               </div>
             </div>
           ) : (
@@ -175,25 +241,97 @@ const Welcome = () => {
                     : "Get real-time updates on global events, explore diverse perspectives, and join a community of informed readers from around the world."}
                 </motion.p>
 
+                {/* Search bar */}
+                <motion.div
+                  className="mb-6"
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.7, delay: 0.6 }}
+                >
+                  <form onSubmit={handleSearch} className="relative max-w-md mx-auto lg:mx-0">
+                    <input
+                      type="text"
+                      placeholder="Search for news..."
+                      value={searchQuery}
+                      onChange={(e) => setSearchQuery(e.target.value)}
+                      className="w-full bg-white/20 backdrop-blur-md border border-white/30 focus:border-white/50 rounded-full px-5 py-3 pr-12 text-white placeholder-white/70 focus:outline-none focus:ring-2 focus:ring-white/30 transition-colors duration-200"
+                    />
+                    <button
+                      type="submit"
+                      className="absolute right-2 top-1/2 transform -translate-y-1/2 p-2 rounded-full text-white hover:bg-white/20 transition-colors duration-200"
+                      aria-label="Search"
+                    >
+                      <Search className="w-5 h-5" />
+                    </button>
+                  </form>
+                </motion.div>
+
+                {/* CTA Buttons */}
+                <motion.div
+                  className="flex gap-3 flex-col sm:flex-row w-full sm:w-auto justify-center lg:justify-start"
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.7, delay: 0.7 }}
+                >
+                  <Link href="/trends" className="w-full sm:w-auto">
+                    <motion.button
+                      className="bg-white text-mainColor px-4 sm:px-6 py-3 rounded-xl font-semibold shadow-md hover:shadow-lg w-full sm:w-auto flex items-center justify-center gap-2 transition-all duration-300 hover:bg-gray-50 group"
+                      whileHover={{ y: -2, boxShadow: "0 10px 25px -5px rgba(0, 0, 0, 0.1)" }}
+                      whileTap={{ y: 1 }}
+                    >
+                      Explore Latest News
+                      <ChevronDown className="inline-block w-4 h-4 transition-transform duration-300 group-hover:translate-y-0.5" />
+                    </motion.button>
+                  </Link>
+
+                  {user ? (
+                    <Link href={`/profile/${user.username}`} className="w-full sm:w-auto">
+                      <motion.button
+                        className="border-2 border-white/80 text-white hover:bg-white/10 transition-all px-4 sm:px-6 py-3 rounded-xl font-semibold w-full sm:w-auto backdrop-blur-sm"
+                        whileHover={{ y: -2, boxShadow: "0 10px 25px -5px rgba(0, 0, 0, 0.1)" }}
+                        whileTap={{ y: 1 }}
+                      >
+                        View Your Profile
+                      </motion.button>
+                    </Link>
+                  ) : (
+                    <Link href="/login" className="w-full sm:w-auto">
+                      <motion.button
+                        className="border-2 border-white/80 text-white hover:bg-white/10 transition-all px-4 sm:px-6 py-3 rounded-xl font-semibold w-full sm:w-auto backdrop-blur-sm"
+                        whileHover={{ y: -2, boxShadow: "0 10px 25px -5px rgba(0, 0, 0, 0.1)" }}
+                        whileTap={{ y: 1 }}
+                      >
+                        Join the Conversation
+                      </motion.button>
+                    </Link>
+                  )}
+                </motion.div>
+
                 {/* Trending topics */}
                 <motion.div
-                  className="mt-6 hidden sm:block"
+                  className="mt-4 sm:mt-6 block"
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
                   transition={{ duration: 0.7, delay: 0.9 }}
                 >
                   <div className="flex flex-wrap items-center gap-2 justify-center lg:justify-start">
-                    <span className="text-white/80 text-sm">Trending:</span>
+                    <span className="text-white/80 text-xs sm:text-sm">Trending:</span>
                     {trendingTopics.map((topic, index) => (
-                      <Link href={`/search/${encodeURIComponent(topic.toLowerCase())}`} key={index}>
-                        <span className="px-3 py-1 bg-white/10 hover:bg-white/20 backdrop-blur-sm rounded-full text-white text-xs transition-colors duration-200">
-                          {topic}
+                      <Link href={`/search/${encodeURIComponent(topic.name.toLowerCase())}`} key={index}>
+                        <span
+                          className={`px-2 sm:px-3 py-1 ${getCategoryColor(topic.category)}/20 hover:${getCategoryColor(topic.category)}/30 backdrop-blur-sm rounded-full text-white text-xs transition-colors duration-200 flex items-center gap-1`}
+                        >
+                          {topic.name}
+                          <span
+                            className={`w-1.5 h-1.5 rounded-full ${getCategoryColor(topic.category)} ml-0.5`}
+                          ></span>
                         </span>
                       </Link>
                     ))}
                   </div>
                 </motion.div>
               </div>
+
               {/* Right column - Visual element */}
               <motion.div
                 className="hidden lg:block"
@@ -209,6 +347,7 @@ const Welcome = () => {
                       alt="News Illustration"
                       fill
                       className="object-contain filter invert opacity-90"
+                      priority
                     />
 
                     {/* Animated notification dots */}
@@ -283,7 +422,9 @@ const Welcome = () => {
                             <TrendingUp className="w-4 h-4 text-green-500 mt-0.5" />
                             <div>
                               <p className="text-xs font-medium text-gray-800 dark:text-gray-200">Trending Topics</p>
-                              <p className="text-xs text-gray-600 dark:text-gray-400">See what&apos;s popular right now</p>
+                              <p className="text-xs text-gray-600 dark:text-gray-400">
+                                See what&apos;s popular right now
+                              </p>
                             </div>
                           </div>
                         </motion.div>
@@ -296,10 +437,61 @@ const Welcome = () => {
           )}
         </div>
       </motion.div>
+
+      {/* Featured Categories Section - Only show when not minimized */}
+      <AnimatePresence>
+        {!isMinimized && (
+          <motion.div
+            className="mt-6 px-4 sm:px-6"
+            initial={{ opacity: 0, height: 0 }}
+            animate={{ opacity: 1, height: "auto" }}
+            exit={{ opacity: 0, height: 0, marginTop: 0 }}
+            transition={{ duration: 0.4 }}
+          >
+            <div className="max-w-5xl mx-auto">
+              <div className="flex items-center justify-between mb-4">
+                <h2 className="text-xl font-bold text-gray-900 dark:text-white">Featured Categories</h2>
+                <Link
+                  href="/categories"
+                  className="text-mainColor hover:text-main2Color text-sm font-medium flex items-center gap-1 transition-colors"
+                >
+                  View All
+                  <ArrowRight className="w-4 h-4" />
+                </Link>
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3 sm:gap-4">
+                {featuredCategories.map((category, index) => (
+                  <motion.div
+                    key={index}
+                    className="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-4 sm:p-5 cursor-pointer hover:shadow-md transition-all duration-200"
+                    whileHover={{ y: -5 }}
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.4, delay: 0.1 + index * 0.1 }}
+                  >
+                    <Link href={category.path} className="flex items-center justify-between">
+                      <div className="flex items-center gap-3">
+                        <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-mainColor/10 flex items-center justify-center text-mainColor">
+                          {category.icon}
+                        </div>
+                        <div>
+                          <h3 className="font-semibold text-gray-900 dark:text-white">{category.name}</h3>
+                          <p className="text-xs sm:text-sm text-gray-500 dark:text-gray-400">Latest updates</p>
+                        </div>
+                      </div>
+                      <ArrowUpRight className="w-4 h-4 sm:w-5 sm:h-5 text-gray-400 group-hover:text-mainColor transition-colors" />
+                    </Link>
+                  </motion.div>
+                ))}
+              </div>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   )
 }
 
 export default Welcome
-
 

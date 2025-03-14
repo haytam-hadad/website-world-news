@@ -58,6 +58,7 @@ const Article = ({ articleData }) => {
     title,
     content,
     description,
+    imageUrl,
     mediaType,
     mediaUrl,
     authorusername,
@@ -155,47 +156,100 @@ const Article = ({ articleData }) => {
 
   const truncateContent = (text, maxLength = 200) => {
     if (!text) return "No content available"
-    if (text.length <= maxLength) return text
-    return text.substring(0, maxLength) + "..."
+
+    // Remove any markdown formatting for cleaner preview
+    const plainText = text
+      .replace(/^#+\s+/gm, "") // Remove heading markers
+      .replace(/^>\s+/gm, "") // Remove blockquote markers
+      .replace(/\*\*|\*|~~|`|_/g, "") // Remove formatting characters
+
+    if (plainText.length <= maxLength) return plainText
+
+    // Find a good breaking point (end of sentence or space)
+    const breakPoint = plainText.substring(0, maxLength).lastIndexOf(". ")
+    const endPoint = breakPoint > maxLength * 0.7 ? breakPoint + 1 : plainText.substring(0, maxLength).lastIndexOf(" ")
+
+    return plainText.substring(0, endPoint > 0 ? endPoint : maxLength) + "..."
   }
 
-  // Determine which media to display
-  const displayMedia = (mediaUrl) => {
-    return (
-      <div className="lg:col-span-5 xl:col-span-4 relative overflow-hidden">
-        <div className="w-full h-64 lg:h-full relative bg-gray-200 dark:bg-gray-700 overflow-hidden">
-          {!mediaLoaded && !mediaError && (
-            <div className="absolute inset-0 flex items-center justify-center">
-              <div className="w-8 h-8 border-4 border-mainColor border-t-transparent rounded-full animate-spin"></div>
-            </div>
-          )}
-          <Image
-            className={`object-cover transition-opacity duration-300 ${mediaLoaded ? "opacity-100" : "opacity-0"}`}
-            src={mediaUrl || "/placeholder.svg"}
-            alt={title || "Article image"}
-            fill
-            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 40vw, 30vw"
-            priority
-            onLoad={() => setMediaLoaded(true)}
-            onError={(e) => {
-              setMediaError(true);
-              setMediaLoaded(true);
-              e.target.src = "/placeholder.svg";
-            }}
-          />
+  // Update the displayMedia function to handle both image and video types
+  const displayMedia = () => {
+    if (!mediaUrl) return null
+
+    if (mediaType === "image") {
+      return (
+        <div className="lg:col-span-5 xl:col-span-4 relative overflow-hidden">
+          <div className="w-full h-64 lg:h-full relative bg-gray-200 dark:bg-gray-700 overflow-hidden">
+            {!mediaLoaded && !mediaError && (
+              <div className="absolute inset-0 flex items-center justify-center">
+                <div className="w-8 h-8 border-4 border-mainColor border-t-transparent rounded-full animate-spin"></div>
+              </div>
+            )}
+            <Image
+              className={`object-cover transition-opacity duration-300 ${mediaLoaded ? "opacity-100" : "opacity-0"}`}
+              src={mediaUrl || "/placeholder.svg"}
+              alt={title || "Article image"}
+              fill
+              sizes="(max-width: 768px) 100vw, (max-width: 1200px) 40vw, 30vw"
+              priority
+              onLoad={() => setMediaLoaded(true)}
+              onError={(e) => {
+                setMediaError(true)
+                setMediaLoaded(true)
+                e.target.src = "/placeholder.svg"
+              }}
+            />
+          </div>
         </div>
-      </div>
-    );
+      )
+    } else if (mediaType === "video") {
+      const youtubeID = getYouTubeID(mediaUrl)
+
+      return (
+        <div className="lg:col-span-5 xl:col-span-4 relative overflow-hidden">
+          <div className="w-full h-64 lg:h-full relative bg-gray-200 dark:bg-gray-700 overflow-hidden">
+            {!mediaLoaded && !mediaError && (
+              <div className="absolute inset-0 flex items-center justify-center">
+                <div className="w-8 h-8 border-4 border-mainColor border-t-transparent rounded-full animate-spin"></div>
+              </div>
+            )}
+
+            {/* Video thumbnail with play button overlay */}
+            <div className="absolute inset-0 flex items-center justify-center z-10">
+              <div className="w-16 h-16 rounded-full bg-mainColor/80 flex items-center justify-center">
+                <div className="w-0 h-0 border-t-8 border-b-8 border-l-12 border-transparent border-l-white ml-1"></div>
+              </div>
+            </div>
+
+            <Image
+              src={youtubeID ? `https://img.youtube.com/vi/${youtubeID}/hqdefault.jpg` : "/placeholder.svg"}
+              alt={title || "Video thumbnail"}
+              fill
+              className="object-cover"
+              onLoad={() => setMediaLoaded(true)}
+              onError={() => {
+                setMediaError(true)
+                setMediaLoaded(true)
+              }}
+            />
+          </div>
+        </div>
+      )
+    }
+
+    return null
   }
 
-  // Helper function to extract YouTube video ID
+  // Improve the YouTube ID extraction function to handle more URL formats
   const getYouTubeID = (url) => {
-    const regExp = /[?&]v=([^#&?]{11})/;
-    const match = url.match(regExp);
-    return match ? match[1] : null;
-  };
-  
-  
+    if (!url) return null
+
+    // Handle different YouTube URL formats
+    const regExp = /(?:youtube\.com\/(?:[^/]+\/.+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=)|youtu\.be\/)([^"&?/\s]{11})/i
+    const match = url.match(regExp)
+    return match ? match[1] : null
+  }
+
   return (
     <motion.article
       initial={{ opacity: 0, y: 15 }}
@@ -212,9 +266,9 @@ const Article = ({ articleData }) => {
         aria-label={`Article: ${title || "Untitled"}`}
       >
         {/* Use grid instead of flex for better layout control */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 space-y-1">
-          {/* Media Container - fixed size on desktop */}
-          {mediaType === "image" && displayMedia(mediaUrl)}
+        <div className="grid grid-cols-1 lg:grid-cols-12">
+          {/* Media Container - now using the improved displayMedia function */}
+          {displayMedia()}
 
           {/* Content Container - takes remaining space */}
           <div className={`p-4 lg:p-5 ${mediaUrl ? "lg:col-span-7 xl:col-span-8" : "lg:col-span-12"}`}>
@@ -247,7 +301,7 @@ const Article = ({ articleData }) => {
 
             {/* Description (if available) or Content */}
             <p className="text-gray-600 dark:text-gray-300 line-clamp-3 sm:line-clamp-4 mb-4 text-sm sm:text-base">
-              {description ? formatText(description) : formatText(truncateContent(content))}
+              {description ? formatText(description) : formatText(truncateContent(content, 150))}
             </p>
 
             <div className="mt-auto pt-3 border-t border-gray-200 dark:border-gray-700">

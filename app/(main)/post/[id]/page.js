@@ -1,4 +1,4 @@
-import OnePost from "@/components/OnePost"
+import SinglePost from "@/components/SinglePost"
 const fetchArticle = async (id) => {
   try {
     const apiUrl = `${process.env.NEXT_PUBLIC_API_URL}/news/${id}`
@@ -14,7 +14,7 @@ const fetchArticle = async (id) => {
   }
 }
 
-export default async function SinglePost({ params }) {
+export default async function SinglePostPage({ params }) {
   const { id } = await params
   const post = await fetchArticle(id)
 
@@ -22,6 +22,6 @@ export default async function SinglePost({ params }) {
     return <p className="text-center text-red-500 text-xl font-bold">Error: Article not found</p>
   }
 
-  return <OnePost post={post} />
+  return <SinglePost post={post} />
 }
 
