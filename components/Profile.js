@@ -149,11 +149,11 @@ const Profile = ({ userData }) => {
       </div>
 
       {/* Main Content */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-6">
+      <div className="grid grid-cols-1 2xl:grid-cols-3 gap-2 mt-4">
         {/* Left Column - User Info */}
         <div className="md:col-span-1">
           <div className="bg-white dark:bg-darkgrey rounded-xl shadow-sm border border-gray-200 dark:border-gray-700">
-            <div className="p-5">
+            <div className="p-4">
               <h2 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">About</h2>
               <div className="space-y-3">
                 {userData.bio && <p className="text-gray-700 dark:text-gray-300">{userData.bio}</p>}
@@ -211,7 +211,7 @@ const Profile = ({ userData }) => {
         {/* Right Column - Content Tabs */}
         <div className="md:col-span-2">
           {/* Tabs */}
-          <div className="border-b border-gray-200 dark:border-gray-700 mb-6">
+          <div className="border-b p-1 border-gray-200 dark:border-gray-700 mb-6">
             <nav className="flex space-x-8">
               <button
                 onClick={() => setActiveTab("articles")}

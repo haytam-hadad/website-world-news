@@ -1,651 +1,654 @@
 "use client"
 
+import { useState, useEffect, useRef, useContext } from "react"
+import { useRouter } from "next/navigation"
 import Image from "next/image"
 import Link from "next/link"
-import {
-  Clock,
-  Share2,
-  MessageCircle,
-  MoreHorizontal,
-  Flag,
-  Bell,
-  BellOff,
-  Bookmark,
-  Copy,
-  Link2,
-  Facebook,
-  Twitter,
-  Eye,
-} from "lucide-react"
-import { useState, useContext, useRef, useEffect } from "react"
-import { ArrowBigUp, ArrowBigDown } from "lucide-react"
-import Comment from "@/components/Comment"
-import { ThemeContext } from "../app/ThemeProvider"
 import { motion, AnimatePresence } from "framer-motion"
-import SourcesDisplay from "./sources-display"
+import { ThemeContext } from "../app/ThemeProvider"
+import {
+  ArrowBigUp,
+  ArrowBigDown,
+  MessageCircle,
+  Share2,
+  Bookmark,
+  BookmarkCheck,
+  MoreHorizontal,
+  Clock,
+  Eye,
+  Heart,
+  ChevronDown,
+  ChevronUp,
+} from "lucide-react"
+import { formatDistanceToNow } from "date-fns"
 
-const formatText = (text) => {
-  if (!text) return null
-
-  // Process text line by line to handle headings and blockquotes
-  const lines = text.split("\n")
-
-  return (
-    <>
-      {lines.map((line, lineIndex) => {
-        // Skip empty lines but preserve the space
-        if (!line.trim()) {
-          return <br key={`br-${lineIndex}`} />
-        }
-
-        // Handle headings
-        if (line.startsWith("# ")) {
-          return (
-            <h1 key={`line-${lineIndex}`} className="text-2xl font-bold my-4 text-gray-900 dark:text-white">
-              {processInlineFormatting(line.substring(2))}
-            </h1>
-          )
-        }
-
-        if (line.startsWith("## ")) {
-          return (
-            <h2 key={`line-${lineIndex}`} className="text-xl font-bold my-3 text-gray-900 dark:text-white">
-              {processInlineFormatting(line.substring(3))}
-            </h2>
-          )
-        }
-
-        if (line.startsWith("### ")) {
-          return (
-            <h3 key={`line-${lineIndex}`} className="text-lg font-bold my-2 text-gray-900 dark:text-white">
-              {processInlineFormatting(line.substring(4))}
-            </h3>
-          )
-        }
-
-        // Handle blockquotes
-        if (line.startsWith("> ")) {
-          return (
-            <blockquote
-              key={`line-${lineIndex}`}
-              className="border-l-4 border-gray-300 dark:border-gray-600 pl-4 py-2 my-4 bg-gray-50 dark:bg-gray-800 rounded-r-md italic text-gray-700 dark:text-gray-300"
-            >
-              {processInlineFormatting(line.substring(2))}
-            </blockquote>
-          )
-        }
-
-        // Regular paragraph
-        return (
-          <p key={`line-${lineIndex}`} className="my-2 text-gray-700 dark:text-gray-300">
-            {processInlineFormatting(line)}
-          </p>
-        )
-      })}
-    </>
-  )
-}
-
-// Helper function to process inline formatting
-const processInlineFormatting = (text) => {
-  return text.split(/(\*\*[^*]+\*\*|\*[^*]+\*|~~[^~]+~~|`[^`]+`|_[^_]+_)/).map((chunk, index) => {
-    switch (true) {
-      case chunk.startsWith("**") && chunk.endsWith("**"):
-        return (
-          <span key={index} className="font-bold">
-            {chunk.slice(2, -2)}
-          </span>
-        )
-      case chunk.startsWith("*") && chunk.endsWith("*"):
-        return (
-          <span key={index} className="underline">
-            {chunk.slice(1, -1)}
-          </span>
-        )
-      case chunk.startsWith("_") && chunk.endsWith("_"):
-        return (
-          <span key={index} className="italic">
-            {chunk.slice(1, -1)}
-          </span>
-        )
-      case chunk.startsWith("~~") && chunk.endsWith("~~"):
-        return (
-          <span key={index} className="line-through">
-            {chunk.slice(2, -2)}
-          </span>
-        )
-      case chunk.startsWith("`") && chunk.endsWith("`"):
-        return (
-          <code key={index} className="px-1.5 py-0.5 bg-gray-100 dark:bg-gray-700 rounded text-md font-mono">
-            {chunk.slice(1, -1)}
-          </code>
-        )
-      default:
-        return chunk
-    }
-  })
-}
-
-const SinglePost = ({ post }) => {
+const SinglePost = ({ post, comments = [] }) => {
   const [vote, setVote] = useState(null)
-  const [voteCount, setVoteCount] = useState(post.likes || 0)
-  const [subscribed, setSubscribed] = useState(false)
-  const [comments, setComments] = useState(post.comments || [])
-  const [newComment, setNewComment] = useState("")
-  const [showShareOptions, setShowShareOptions] = useState(false)
-  const [copied, setCopied] = useState(false)
+  const [likeCount, setLikeCount] = useState(post?.likes || 0)
+  const [isSaved, setIsSaved] = useState(false)
+  const [showOptions, setShowOptions] = useState(false)
+  const [showCommentForm, setShowCommentForm] = useState(false)
+  const [commentText, setCommentText] = useState("")
+  const [localComments, setLocalComments] = useState(comments)
   const [mediaLoaded, setMediaLoaded] = useState(false)
-  const { user } = useContext(ThemeContext)
-  const shareRef = useRef(null)
-  const commentInputRef = useRef(null)
+  const [mediaError, setMediaError] = useState(false)
+  const [showAllComments, setShowAllComments] = useState(false)
 
-  // Close share options when clicking outside
+  const optionsRef = useRef(null)
+  const commentInputRef = useRef(null)
+  const router = useRouter()
+  const { user } = useContext(ThemeContext)
+
+  // Close dropdown when clicked outside
   useEffect(() => {
     const handleClickOutside = (event) => {
-      if (shareRef.current && !shareRef.current.contains(event.target)) {
-        setShowShareOptions(false)
+      if (optionsRef.current && !optionsRef.current.contains(event.target)) {
+        setShowOptions(false)
       }
     }
 
     document.addEventListener("mousedown", handleClickOutside)
-    return () => document.removeEventListener("mousedown", handleClickOutside)
-  }, [])
-
-  // Check if URL has #comments anchor and scroll to comments
-  useEffect(() => {
-    if (typeof window !== "undefined" && window.location.hash === "#comments" && commentInputRef.current) {
-      setTimeout(() => {
-        commentInputRef.current.scrollIntoView({ behavior: "smooth" })
-        commentInputRef.current.focus()
-      }, 500)
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside)
     }
   }, [])
 
+  // Focus comment input when form is shown
+  useEffect(() => {
+    if (showCommentForm && commentInputRef.current) {
+      commentInputRef.current.focus()
+    }
+  }, [showCommentForm])
+
   const handleUpvote = () => {
-    if (vote === "upvote") {
-      setVote(null)
-      setVoteCount(voteCount - 1)
-    } else {
+    if (vote !== "upvote") {
       setVote("upvote")
-      setVoteCount(vote === "downvote" ? voteCount + 2 : voteCount + 1)
+      setLikeCount((prev) => prev + 1)
+      if (vote === "downvote") {
+        // If previously downvoted, remove the downvote
+        setVote("upvote")
+      }
+    } else {
+      setVote(null)
+      setLikeCount((prev) => prev - 1)
     }
   }
 
   const handleDownvote = () => {
-    if (vote === "downvote") {
-      setVote(null)
-      setVoteCount(voteCount + 1)
-    } else {
+    if (vote !== "downvote") {
       setVote("downvote")
-      setVoteCount(vote === "upvote" ? voteCount - 2 : voteCount - 1)
-    }
-  }
-
-  const toggleSubscribe = () => {
-    setSubscribed(!subscribed)
-  }
-
-  const handleAddComment = () => {
-    if (newComment.trim() !== "") {
-      const newCommentObj = {
-        id: Date.now(),
-        userProfilename: user.displayname,
-        username: user.username,
-        text: newComment,
-        timeAgo: "Just now",
-        avatar: user.displayname.charAt(0).toUpperCase(),
+      if (vote === "upvote") {
+        // If previously upvoted, remove the upvote and decrease the count
+        setLikeCount((prev) => prev - 1)
       }
-      setComments([...comments, newCommentObj])
-      setNewComment("")
+    } else {
+      setVote(null)
     }
+  }
+
+  const toggleSave = () => {
+    setIsSaved(!isSaved)
+    // Here you would implement the actual save functionality with an API call
   }
 
   const handleShare = () => {
     if (navigator.share) {
       navigator
         .share({
-          title: post.title || "Check out this article",
+          title: post.title,
           text: post.description || post.content?.substring(0, 100) + "...",
           url: window.location.href,
         })
-        .catch((err) => {
-          console.error("Error sharing:", err)
-          setShowShareOptions(!showShareOptions)
-        })
+        .catch((err) => console.error("Error sharing", err))
     } else {
-      setShowShareOptions(!showShareOptions)
+      // Fallback for browsers that don't support navigator.share
+      navigator.clipboard
+        .writeText(window.location.href)
+        .then(() => {
+          alert("Link copied to clipboard!")
+        })
+        .catch((err) => console.error("Error copying link", err))
     }
   }
 
-  const copyToClipboard = () => {
-    navigator.clipboard.writeText(window.location.href)
-    setCopied(true)
-    setTimeout(() => setCopied(false), 2000)
-    setShowShareOptions(false)
+  const handleSubmitComment = (e) => {
+    e.preventDefault()
+
+    if (!commentText.trim()) return
+
+    // Create a new comment object
+    const newComment = {
+      id: Date.now(),
+      content: commentText,
+      author: {
+        username: user?.username || "anonymous",
+        displayname: user?.displayname || "Anonymous User",
+      },
+      createdAt: new Date().toISOString(),
+      likes: 0,
+    }
+
+    // Add the new comment to the local state
+    setLocalComments((prev) => [newComment, ...prev])
+
+    // Reset the form
+    setCommentText("")
+    setShowCommentForm(false)
+
+    // Here you would also make an API call to save the comment
   }
 
-  const shareToTwitter = () => {
-    window.open(
-      `https://twitter.com/intent/tweet?url=${encodeURIComponent(window.location.href)}&text=${encodeURIComponent(post.title || "")}`,
-      "_blank",
-    )
-    setShowShareOptions(false)
+  // Format the date
+  const formatDate = (dateString) => {
+    try {
+      const date = new Date(dateString)
+      return formatDistanceToNow(date, { addSuffix: true })
+    } catch (error) {
+      return "Unknown date"
+    }
   }
 
-  const shareToFacebook = () => {
-    window.open(`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(window.location.href)}`, "_blank")
-    setShowShareOptions(false)
-  }
+  // Display media (image or video)
+  const displayMedia = () => {
+    if (!post.mediaUrl) return null
 
-  const calculateTimeAgo = (t) => {
-    if (!t) return "N/A"
-    const publishedDate = new Date(t?.$date || t)
-    if (isNaN(publishedDate.getTime())) return "N/A"
-    const now = new Date()
-    const diffInSeconds = Math.floor((now - publishedDate) / 1000)
-    if (diffInSeconds < 60) return "just now"
-    if (diffInSeconds < 3600) return `${Math.floor(diffInSeconds / 60)} min ago`
-    if (diffInSeconds < 86400) return `${Math.floor(diffInSeconds / 3600)}h ago`
-    if (diffInSeconds < 2592000) return `${Math.floor(diffInSeconds / 86400)}d ago`
-    if (diffInSeconds < 31536000) return `${Math.floor(diffInSeconds / 2592000)}mo ago`
-    return `${Math.floor(diffInSeconds / 31536000)}y ago`
-  }
-
-  // Helper function to extract YouTube video ID
-  const getYouTubeID = (url) => {
-    if (!url) return null
-    const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|&v=)([^#&?]*).*/
-    const match = url.match(regExp)
-    return match && match[2].length === 11 ? match[2] : null
-  }
-
-  // Helper function to render the appropriate media
-  const renderMedia = () => {
-    const mediaToUse = post.mediaUrl || null
-    const type = post.mediaType || null 
-
-    if (!mediaToUse || !type) return null
-
-    if (type === "image") {
+    if (post.mediaType === "image") {
       return (
-        <div className="relative w-full aspect-video mb-6 rounded-lg bg-gray-200 dark:bg-gray-700 overflow-hidden">
-          {!mediaLoaded && (
-            <div className="absolute inset-0 flex items-center justify-center">
-              <div className="w-10 h-10 border-4 border-mainColor border-t-transparent rounded-full animate-spin"></div>
-            </div>
-          )}
-          <Image
-            src={mediaToUse || "/placeholder.svg"}
-            alt={post.title || "Post image"}
-            fill
-            className={`object-cover transition-opacity duration-300 ${mediaLoaded ? "opacity-100" : "opacity-0"}`}
-            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 80vw, 1200px"
-            priority
-            onLoad={() => setMediaLoaded(true)}
-            onError={(e) => {
-              e.target.src = "/placeholder.svg"
-              setMediaLoaded(true)
-            }}
-          />
+        <div className="w-full relative overflow-hidden rounded-lg mb-4">
+          <div className="w-full aspect-[16/9] relative bg-gray-200 dark:bg-gray-700 overflow-hidden">
+            {!mediaLoaded && !mediaError && (
+              <div className="absolute inset-0 flex items-center justify-center">
+                <div className="w-8 h-8 border-4 border-mainColor border-t-transparent rounded-full animate-spin"></div>
+              </div>
+            )}
+            <Image
+              className={`object-cover transition-opacity duration-300 ${mediaLoaded ? "opacity-100" : "opacity-0"}`}
+              src={post.mediaUrl || "/placeholder.svg"}
+              alt={post.title || "Article image"}
+              fill
+              sizes="(max-width: 768px) 100vw, (max-width: 1200px) 80vw, 70vw"
+              priority
+              onLoad={() => setMediaLoaded(true)}
+              onError={(e) => {
+                setMediaError(true)
+                setMediaLoaded(true)
+                e.target.src = "/placeholder.svg"
+              }}
+            />
+          </div>
         </div>
       )
-    } else if (type === "video") {
-      const youtubeID = getYouTubeID(mediaToUse)
+    } else if (post.mediaType === "video") {
+      const youtubeID = getYouTubeID(post.mediaUrl)
 
-      if (youtubeID) {
-        return (
-          <div className="relative w-full aspect-video mb-6 rounded-lg overflow-hidden">
-            <iframe
-              src={`https://www.youtube.com/embed/${youtubeID}`}
-              title={post.title || "Video content"}
-              className="absolute top-0 left-0 w-full h-full"
-              frameBorder="0"
-              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-              allowFullScreen
-            ></iframe>
-          </div>
-        )
-      } else if (mediaToUse.includes("vimeo")) {
-        // Extract Vimeo ID
-        const vimeoRegex = /(?:vimeo\.com\/|player\.vimeo\.com\/video\/)([0-9]+)/
-        const vimeoMatch = mediaToUse.match(vimeoRegex)
-        const vimeoID = vimeoMatch ? vimeoMatch[1] : null
-
-        if (vimeoID) {
-          return (
-            <div className="relative w-full aspect-video mb-6 rounded-lg overflow-hidden">
+      return (
+        <div className="w-full relative overflow-hidden rounded-lg mb-6">
+          <div className="w-full aspect-[16/9] relative bg-gray-200 dark:bg-gray-700 overflow-hidden">
+            {youtubeID ? (
               <iframe
-                src={`https://player.vimeo.com/video/${vimeoID}`}
-                title={post.title || "Video content"}
-                className="absolute top-0 left-0 w-full h-full"
+                src={`https://www.youtube.com/embed/${youtubeID}`}
+                title={post.title || "Video"}
+                className="absolute inset-0 w-full h-full"
                 frameBorder="0"
-                allow="autoplay; fullscreen; picture-in-picture"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                 allowFullScreen
+                onLoad={() => setMediaLoaded(true)}
               ></iframe>
-            </div>
-          )
-        }
-      } else {
-        // Direct video file
-        return (
-          <div className="relative w-full aspect-video mb-6 rounded-lg overflow-hidden">
-            <video controls className="w-full h-full" poster="/placeholder.svg">
-              <source src={mediaToUse} type="video/mp4" />
-              Your browser does not support the video tag.
-            </video>
+            ) : (
+              <div className="absolute inset-0 flex items-center justify-center bg-gray-800 text-white">
+                Video not available
+              </div>
+            )}
           </div>
-        )
-      }
+        </div>
+      )
     }
 
     return null
   }
 
+  // Extract YouTube ID from URL
+  const getYouTubeID = (url) => {
+    if (!url) return null
+
+    // Handle different YouTube URL formats
+    const regExp = /(?:youtube\.com\/(?:[^/]+\/.+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=)|youtu\.be\/)([^"&?/\s]{11})/i
+    const match = url.match(regExp)
+    return match ? match[1] : null
+  }
+
+  // Format content with markdown-like styling
+  const formatContent = (text) => {
+    if (!text) return null
+  
+    // Process text line by line to handle headings and blockquotes
+    const lines = text.split("\n")
+  
+    return (
+      <>
+        {lines.map((line, lineIndex) => {
+          // Skip empty lines but preserve the space
+          if (!line.trim()) {
+            return <br key={`br-${lineIndex}`} />
+          }
+  
+          // Handle headings
+          if (line.startsWith("# ")) {
+            return (
+              <h1 key={`line-${lineIndex}`} className="text-2xl font-bold my-4 text-gray-900 dark:text-white">
+                {processInlineFormatting(line.substring(2))}
+              </h1>
+            )
+          }
+  
+          if (line.startsWith("## ")) {
+            return (
+              <h2 key={`line-${lineIndex}`} className="text-xl font-bold my-3 text-gray-900 dark:text-white">
+                {processInlineFormatting(line.substring(3))}
+              </h2>
+            )
+          }
+  
+          if (line.startsWith("### ")) {
+            return (
+              <h3 key={`line-${lineIndex}`} className="text-lg font-bold my-2 text-gray-900 dark:text-white">
+                {processInlineFormatting(line.substring(4))}
+              </h3>
+            )
+          }
+  
+          // Handle blockquotes
+          if (line.startsWith("> ")) {
+            return (
+              <blockquote
+                key={`line-${lineIndex}`}
+                className="border-l-4 border-gray-300 dark:border-gray-600 pl-4 py-2 my-4 bg-gray-50 dark:bg-gray-800 rounded-r-md italic text-gray-700 dark:text-gray-300"
+              >
+                {processInlineFormatting(line.substring(2))}
+              </blockquote>
+            )
+          }
+  
+          // Regular paragraph
+          return (
+            <p key={`line-${lineIndex}`} className="my-2 text-gray-700 dark:text-gray-300">
+              {processInlineFormatting(line)}
+            </p>
+          )
+        })}
+      </>
+    )
+  }
+  
+  // Helper function to process inline formatting
+  const processInlineFormatting = (text) => {
+    return text.split(/(\*\*[^*]+\*\*|\*[^*]+\*|~~[^~]+~~|`[^`]+`|__[^_]+__)/).map((chunk, index) => {
+      switch (true) {
+        case chunk.startsWith("**") && chunk.endsWith("**"):
+          return (
+            <span key={index} className="font-bold">
+              {chunk.slice(2, -2)}
+            </span>
+          )
+        case chunk.startsWith("*") && chunk.endsWith("*"):
+          return (
+            <span key={index} className="underline">
+              {chunk.slice(1, -1)}
+            </span>
+          )
+        case chunk.startsWith("~~") && chunk.endsWith("~~"):
+          return (
+            <span key={index} className="line-through">
+              {chunk.slice(2, -2)}
+            </span>
+          )
+        case chunk.startsWith("__") && chunk.endsWith("__"):
+          return (
+            <span key={index} className="italic">
+              {chunk.slice(2, -2)}
+            </span>
+          )
+        case chunk.startsWith("`") && chunk.endsWith("`"):
+          return (
+            <code key={index} className="px-1.5 py-0.5 bg-gray-100 dark:bg-gray-700 rounded text-md font-mono">
+              {chunk.slice(1, -1)}
+            </code>
+          )
+        default:
+          return chunk
+      }
+    })
+  }
+  
+
+  // If post is not available yet
+  if (!post) {
+    return (
+      <div className="max-w-3xl mx-auto p-4 mt-8">
+        <div className="animate-pulse">
+          <div className="h-8 bg-gray-200 dark:bg-gray-700 rounded w-3/4 mb-4"></div>
+          <div className="h-4 bg-gray-200 dark:bg-gray-700 rounded w-1/2 mb-6"></div>
+          <div className="h-64 bg-gray-200 dark:bg-gray-700 rounded mb-6"></div>
+          <div className="h-4 bg-gray-200 dark:bg-gray-700 rounded mb-2"></div>
+          <div className="h-4 bg-gray-200 dark:bg-gray-700 rounded mb-2"></div>
+          <div className="h-4 bg-gray-200 dark:bg-gray-700 rounded mb-2"></div>
+          <div className="h-4 bg-gray-200 dark:bg-gray-700 rounded w-4/5"></div>
+        </div>
+      </div>
+    )
+  }
+
   return (
-    <div className="max-w-4xl mx-auto w-full p-1 sm:p-2">
-      <motion.article
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5 }}
-        className="bg-white dark:bg-darkgrey border border-gray-200 dark:border-gray-700 rounded-xl shadow-sm mb-6"
-      >
-        {/* Author and metadata header */}
-        <div className="p-4 border-b border-gray-200 dark:border-gray-700">
-          <div className="flex flex-wrap items-center justify-between gap-4">
-            <div className="flex items-center gap-3">
-              <Link href={post.authorusername ? `/profile/${post.authorusername}` : "#"}>
-                <div className="w-12 h-12 rounded-full bg-mainColor text-white flex items-center justify-center text-xl font-semibold shadow-sm">
-                  {post.authordisplayname ? post.authordisplayname.charAt(0).toUpperCase() : "U"}
-                </div>
-              </Link>
-              <div>
-                <Link
-                  href={post.authorusername ? `/profile/${post.authorusername}` : "#"}
-                  className="font-semibold text-gray-900 dark:text-white text-lg"
-                >
-                  {" "}
-                  <span className="hover:underline capitalize">{post.authordisplayname || "Unknown"} </span>
-                  <span className="text-gray-500 text-sm ml-1 font-normal dark:text-gray-400">
-                    {post.authorusername ? `@${post.authorusername}` : ""}
-                  </span>
-                </Link>
-
-                <div className="flex items-center text-sm text-gray-500 dark:text-gray-400">
+    <div className="max-w-4xl mx-auto p-1">
+      <article className="bg-white dark:bg-darkgrey border border-gray-200 dark:border-gray-700 rounded-xl shadow-sm overflow-hidden mb-6">
+        {/* Header with user info */}
+        <div className="p-3 sm:p-5 flex items-center justify-between border-b border-gray-200 dark:border-gray-700">
+          <Link href={`/profile/${post.authorusername || "unknown"}`} className="flex items-center space-x-3 group">
+            <div className="rounded-full bg-mainColor w-12 h-12 flex items-center justify-center text-secondaryColor font-semibold text-lg cursor-pointer group-hover:shadow-md transition-shadow">
+              {post.authordisplayname ? post.authordisplayname[0].toUpperCase() : "U"}
+            </div>
+            <div>
+              <p className="font-medium text-gray-900 dark:text-gray-100 capitalize group-hover:underline">
+                {post.authordisplayname || "Unknown"}
+              </p>
+              <div className="flex items-center space-x-2">
+                <span className="text-sm text-gray-500 dark:text-gray-400">
+                  {post.authorusername ? `@${post.authorusername}` : "N/A"}
+                </span>
+                <span className="text-gray-400">•</span>
+                <span className="text-sm text-gray-500 dark:text-gray-400 flex items-center">
                   <Clock className="w-3.5 h-3.5 mr-1" />
-                  <time dateTime={post.publishedAt?.$date || post.publishedAt}>
-                    {calculateTimeAgo(post.publishedAt) || "Unknown"}
-                  </time>
-
-                  <div className="flex items-center ml-4">
-                    <Eye className="w-3.5 h-3.5 mr-1" />
-                    <span>{post.views || 0} views</span>
-                  </div>
-                </div>
+                  <time dateTime={post.publishedAt}>{formatDate(post.publishedAt)}</time>
+                </span>
               </div>
             </div>
+          </Link>
 
-            <button
-              onClick={toggleSubscribe}
-              className={`flex items-center gap-1.5 px-4 py-2 rounded-full text-sm font-medium transition-all ${
-                subscribed
-                  ? "bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-gray-200"
-                  : "bg-mainColor text-white hover:bg-mainColor/90"
-              }`}
-              aria-pressed={subscribed}
-              aria-label={subscribed ? "Unsubscribe from author" : "Subscribe to author"}
-            >
-              {subscribed ? (
-                <>
-                  <BellOff className="w-4 h-4" />
-                  <span>Unsubscribe</span>
-                </>
-              ) : (
-                <>
-                  <Bell className="w-4 h-4" />
-                  <span>Subscribe</span>
-                </>
-              )}
-            </button>
-          </div>
-        </div>
-
-        {/* Post content */}
-        <div className="p-4 sm:p-6">
-          <h1 className="font-serif font-bold text-2xl sm:text-3xl lg:text-4xl text-gray-900 dark:text-white mb-6">
-            {post.title || "No Title Available"}
-          </h1>
-
-          {/* Description (if available) */}
-          {post.description && (
-            <div className="mb-6 text-lg text-gray-600 dark:text-gray-300 font-medium italic border-l-4 border-mainColor pl-4 py-2">
-              {formatText(post.description)}
-            </div>
-          )}
-
-          {/* Render media based on type */}
-          {renderMedia()}
-
-          <div className="prose prose-lg dark:prose-invert max-w-none mb-6">
-            {formatText(post.content) || "No content available"}
-          </div>
-
-          {/* Sources section */}
-          <SourcesDisplay sources={post.sources} />
-
-          {/* Category tag */}
-          <div className="mb-6">
+          {/* Category tag and options */}
+          <div className="flex items-center space-x-2">
             <Link href={`/category/${post.category?.toLowerCase() || "general"}`}>
-              <span className="inline-block px-3 py-1 bg-blue-50 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 rounded-full text-sm font-medium hover:bg-blue-100 dark:hover:bg-blue-900/50 transition-colors">
+              <div className="px-3 py-1 text-sm font-medium text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-900/30 rounded-full capitalize hover:bg-blue-100 dark:hover:bg-blue-900/50 transition-colors">
                 {post.category || "General"}
-              </span>
+              </div>
             </Link>
-          </div>
 
-          {/* Action buttons */}
-          <div className="flex flex-wrap items-center gap-3 pt-4 border-t border-gray-200 dark:border-gray-700">
-            {/* Vote buttons */}
-            <div className="flex items-center bg-gray-100 dark:bg-gray-700 rounded-full overflow-hidden">
+            <div className="relative" ref={optionsRef}>
               <button
-                onClick={handleUpvote}
-                className={`p-2 flex items-center gap-1 transition-colors ${
-                  vote === "upvote"
-                    ? "text-green-600 dark:text-green-500"
-                    : "text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-200"
-                }`}
-                aria-label="Upvote"
-                aria-pressed={vote === "upvote"}
-              >
-                <ArrowBigUp className="w-6 h-6" />
-              </button>
-
-              <span className="px-2 font-medium text-sm text-gray-700 dark:text-gray-300">{voteCount}</span>
-
-              <button
-                onClick={handleDownvote}
-                className={`p-2 transition-colors ${
-                  vote === "downvote"
-                    ? "text-red-600 dark:text-red-500"
-                    : "text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-200"
-                }`}
-                aria-label="Downvote"
-                aria-pressed={vote === "downvote"}
-              >
-                <ArrowBigDown className="w-6 h-6" />
-              </button>
-            </div>
-
-            {/* Comment button */}
-            <button
-              className="p-2 rounded-full bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-200 transition-colors flex items-center gap-1"
-              aria-label={`${comments.length} comments`}
-              onClick={() => commentInputRef.current?.scrollIntoView({ behavior: "smooth" })}
-            >
-              <MessageCircle className="w-5 h-5" />
-              <span className="text-sm font-medium">{comments.length}</span>
-            </button>
-
-            {/* Share button with dropdown */}
-            <div className="relative" ref={shareRef}>
-              <button
-                onClick={handleShare}
-                className="p-2 rounded-full bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-200 transition-colors"
-                aria-label="Share"
-                aria-expanded={showShareOptions}
+                className="p-1.5 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-500 dark:text-gray-400 transition-colors"
+                onClick={() => setShowOptions(!showOptions)}
+                aria-label="More options"
+                aria-expanded={showOptions}
                 aria-haspopup="true"
               >
-                <Share2 className="w-5 h-5" />
+                <MoreHorizontal className="w-5 h-5" />
               </button>
 
               <AnimatePresence>
-                {showShareOptions && (
+                {showOptions && (
                   <motion.div
                     initial={{ opacity: 0, y: 10, scale: 0.95 }}
                     animate={{ opacity: 1, y: 0, scale: 1 }}
                     exit={{ opacity: 0, y: 10, scale: 0.95 }}
                     transition={{ duration: 0.2 }}
-                    className="absolute right-0 mt-2 w-48 bg-white dark:bg-gray-800 rounded-lg shadow-lg border border-gray-200 dark:border-gray-700 z-10"
+                    className="absolute right-0 mt-2 w-48 bg-white dark:bg-gray-800 rounded-lg shadow-lg border border-gray-200 dark:border-gray-700 z-10 py-2"
                   >
                     <button
-                      onClick={copyToClipboard}
-                      className="flex items-center w-full px-4 py-2.5 text-left text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors"
+                      className="w-full text-left px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700"
+                      onClick={() => alert("Hide this post")}
                     >
-                      <Copy className="w-4 h-4 mr-2" />
-                      {copied ? "Copied!" : "Copy link"}
+                      Hide this post
                     </button>
-
                     <button
-                      onClick={shareToTwitter}
-                      className="flex items-center w-full px-4 py-2.5 text-left text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors"
+                      className="w-full text-left px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700"
+                      onClick={() => alert("Block this user")}
                     >
-                      <Twitter className="w-4 h-4 mr-2" />
-                      Share on Twitter
+                      Block this user
                     </button>
-
                     <button
-                      onClick={shareToFacebook}
-                      className="flex items-center w-full px-4 py-2.5 text-left text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors"
+                      className="w-full text-left px-4 py-2 text-sm text-red-600 dark:text-red-400 hover:bg-gray-100 dark:hover:bg-gray-700"
+                      onClick={() => alert("Report this post")}
                     >
-                      <Facebook className="w-4 h-4 mr-2" />
-                      Share on Facebook
-                    </button>
-
-                    <button
-                      onClick={() => {
-                        setShowShareOptions(false)
-                        // Implement email sharing functionality
-                        window.location.href = `mailto:?subject=${encodeURIComponent(post.title || "Check out this article")}&body=${encodeURIComponent(`I thought you might be interested in this: ${window.location.href}`)}`
-                      }}
-                      className="flex items-center w-full px-4 py-2.5 text-left text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors"
-                    >
-                      <Link2 className="w-4 h-4 mr-2" />
-                      Share via Email
+                      Report this post
                     </button>
                   </motion.div>
                 )}
               </AnimatePresence>
             </div>
+          </div>
+        </div>
+
+        {/* Content */}
+        <div className="p-3 sm:p-5">
+          {/* Title */}
+          <h1 className="font-serif font-bold text-2xl sm:text-3xl text-gray-900 dark:text-gray-100 mb-4">
+            {post.title}
+          </h1>
+
+          {/* Media */}
+          {displayMedia()}
+
+          {/* Content */}
+          <div className="prose prose-sm sm:prose max-w-none dark:prose-invert">{formatContent(post.content)}</div>
+
+          {/* Post stats */}
+          <div className="flex items-center justify-between mt-6 pt-4 border-t border-gray-200 dark:border-gray-700">
+            <div className="flex items-center space-x-4 text-sm text-gray-500 dark:text-gray-400">
+              <span className="flex items-center">
+                <ArrowBigUp
+                  className={`w-4 h-4 mr-1 ${vote === "upvote" ? "text-green-500 dark:text-green-400" : ""}`}
+                />
+                {likeCount}
+              </span>
+              <span className="flex items-center">
+                <MessageCircle className="w-4 h-4 mr-1" />
+                {localComments.length || 0}
+              </span>
+              <span className="flex items-center">
+                <Eye className="w-4 h-4 mr-1" />
+                {post.views || 0}
+              </span>
+            </div>
 
             {/* Save button */}
             <button
-              className="p-2 rounded-full bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-200 transition-colors"
-              aria-label="Save article"
+              className={`p-1.5 rounded-full transition-colors ${
+                isSaved
+                  ? "text-yellow-500 dark:text-yellow-400"
+                  : "text-gray-500 dark:text-gray-400 hover:text-yellow-500 dark:hover:text-yellow-400"
+              }`}
+              onClick={toggleSave}
+              aria-label={isSaved ? "Unsave article" : "Save article"}
+              aria-pressed={isSaved}
             >
-              <Bookmark className="w-5 h-5" />
-            </button>
-
-            {/* Report button */}
-            <button
-              className="p-2 rounded-full bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-200 transition-colors"
-              aria-label="Report article"
-            >
-              <Flag className="w-5 h-5" />
-            </button>
-
-            {/* More options button */}
-            <button
-              className="p-2 rounded-full bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-200 transition-colors ml-auto"
-              aria-label="More options"
-            >
-              <MoreHorizontal className="w-5 h-5" />
+              {isSaved ? <BookmarkCheck className="w-5 h-5" /> : <Bookmark className="w-5 h-5" />}
             </button>
           </div>
         </div>
-      </motion.article>
+
+        {/* Action buttons */}
+        <div className="border-t border-gray-200 dark:border-gray-700 grid grid-cols-3 divide-x divide-gray-200 dark:divide-gray-700">
+          <button
+            className={`p-3 flex items-center justify-center space-x-2 transition-colors ${
+              vote === "upvote"
+                ? "text-green-500 dark:text-green-400"
+                : "text-gray-500 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-800"
+            }`}
+            onClick={handleUpvote}
+            aria-label="Upvote"
+            aria-pressed={vote === "upvote"}
+          >
+            <ArrowBigUp className="w-5 h-5" />
+            <span className="font-medium">Upvote</span>
+          </button>
+
+          <button
+            className={`p-3 flex items-center justify-center space-x-2 transition-colors ${
+              vote === "downvote"
+                ? "text-red-500 dark:text-red-400"
+                : "text-gray-500 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-800"
+            }`}
+            onClick={handleDownvote}
+            aria-label="Downvote"
+            aria-pressed={vote === "downvote"}
+          >
+            <ArrowBigDown className="w-5 h-5" />
+            <span className="font-medium">Downvote</span>
+          </button>
+
+          <button
+            className="p-3 flex items-center justify-center space-x-2 text-gray-500 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors"
+            onClick={handleShare}
+            aria-label="Share"
+          >
+            <Share2 className="w-5 h-5" />
+            <span className="font-medium">Share</span>
+          </button>
+        </div>
+      </article>
 
       {/* Comments section */}
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5, delay: 0.2 }}
-        className="bg-white dark:bg-darkgrey border border-gray-200 dark:border-gray-700 rounded-xl shadow-sm"
-        id="comments"
-      >
-        <div className="p-4 sm:p-6">
-          <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-4">Comments ({comments.length})</h2>
+      <div className="bg-white dark:bg-darkgrey border border-gray-200 dark:border-gray-700 rounded-xl shadow-sm overflow-hidden">
+        <div className="p-4 sm:p-6 border-b border-gray-200 dark:border-gray-700">
+          <h2 className="text-xl font-bold text-gray-900 dark:text-gray-100" id="comments">
+            Comments ({localComments.length})
+          </h2>
+        </div>
 
-          {/* Add comment form */}
-          {user ? (
-            <div className="mb-6">
-              <div className="flex items-start gap-3">
-                <div className="w-10 h-10 rounded-full bg-mainColor text-white flex-shrink-0 flex items-center justify-center font-semibold">
-                  {user?.displayname?.charAt(0).toUpperCase() || "U"}
-                </div>
-                <div className="flex-1">
-                  <textarea
-                    ref={commentInputRef}
-                    className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-700 dark:text-gray-200 focus:outline-none focus:ring-2 focus:ring-mainColor focus:border-transparent transition-colors resize-none"
-                    rows="3"
-                    value={newComment}
-                    onChange={(e) => setNewComment(e.target.value)}
-                    placeholder="Add a comment..."
-                    aria-label="Add a comment"
-                  ></textarea>
-                  <div className="mt-2 flex justify-end">
-                    <button
-                      onClick={handleAddComment}
-                      disabled={!newComment.trim()}
-                      className="px-4 py-2 bg-mainColor text-white rounded-lg font-medium hover:bg-mainColor/90 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-                    >
-                      Post Comment
-                    </button>
+        {/* Comment form */}
+        {user ? (
+          <div className="p-4 sm:p-6 border-b border-gray-200 dark:border-gray-700">
+            {showCommentForm ? (
+              <form onSubmit={handleSubmitComment} className="space-y-3">
+                <div className="flex items-start space-x-3">
+                  <div className="rounded-full bg-mainColor w-10 h-10 flex-shrink-0 flex items-center justify-center text-secondaryColor font-semibold">
+                    {user.displayname ? user.displayname[0].toUpperCase() : "U"}
+                  </div>
+                  <div className="flex-1">
+                    <textarea
+                      ref={commentInputRef}
+                      value={commentText}
+                      onChange={(e) => setCommentText(e.target.value)}
+                      placeholder="Write your comment..."
+                      className="w-full p-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-mainColor focus:border-transparent bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 resize-none min-h-[100px]"
+                    />
                   </div>
                 </div>
-              </div>
-            </div>
-          ) : (
-            <div className="mb-6 p-4 bg-gray-50 dark:bg-gray-800 rounded-lg text-center">
-              <p className="text-gray-700 dark:text-gray-300 mb-3">
-                Sign in to join the conversation and leave a comment
-              </p>
-              <Link href="/login">
-                <button className="px-4 py-2 bg-mainColor text-white rounded-lg font-medium hover:bg-mainColor/90 transition-colors">
-                  Sign In
-                </button>
-              </Link>
-            </div>
-          )}
-
-          {/* Comments list */}
-          <div className="space-y-6">
-            {comments.length > 0 ? (
-              comments.map((comment) => (
-                <Comment
-                  key={comment.id}
-                  userProfilename={comment.userProfilename}
-                  username={comment.username}
-                  text={comment.text}
-                  timeAgo={comment.timeAgo}
-                  avatar={comment.avatar}
-                />
-              ))
+                <div className="flex justify-end space-x-2">
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setShowCommentForm(false)
+                      setCommentText("")
+                    }}
+                    className="px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    type="submit"
+                    disabled={!commentText.trim()}
+                    className="px-4 py-2 rounded-lg bg-mainColor text-white font-medium hover:bg-mainColor/90 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                  >
+                    Post Comment
+                  </button>
+                </div>
+              </form>
             ) : (
-              <p className="text-gray-500 dark:text-gray-400 text-center py-4">
-                No comments yet. Be the first to comment!
-              </p>
+              <button
+                onClick={() => setShowCommentForm(true)}
+                className="flex items-center space-x-3 w-full p-3 border border-gray-300 dark:border-gray-600 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors text-gray-500 dark:text-gray-400 text-left"
+              >
+                <div className="rounded-full bg-mainColor w-10 h-10 flex-shrink-0 flex items-center justify-center text-secondaryColor font-semibold">
+                  {user.displayname ? user.displayname[0].toUpperCase() : "U"}
+                </div>
+                <span>Write a comment...</span>
+              </button>
             )}
           </div>
+        ) : (
+          <div className="p-4 sm:p-6 border-b border-gray-200 dark:border-gray-700 text-center">
+            <p className="text-gray-600 dark:text-gray-400">
+              <Link href="/login" className="text-mainColor hover:underline">
+                Sign in
+              </Link>{" "}
+              to join the conversation
+            </p>
+          </div>
+        )}
+
+        {/* Comments list */}
+        <div className="divide-y divide-gray-200 dark:divide-gray-700">
+          {localComments.length > 0 ? (
+            <>
+              {(showAllComments ? localComments : localComments.slice(0, 5)).map((comment, index) => (
+                <div key={comment.id || index} className="p-4 sm:p-6">
+                  <div className="flex items-start space-x-3">
+                    <Link href={`/profile/${comment.author?.username || "unknown"}`}>
+                      <div className="rounded-full bg-gray-200 dark:bg-gray-700 w-10 h-10 flex-shrink-0 flex items-center justify-center text-gray-700 dark:text-gray-300 font-semibold">
+                        {comment.author?.displayname ? comment.author.displayname[0].toUpperCase() : "U"}
+                      </div>
+                    </Link>
+                    <div className="flex-1">
+                      <div className="flex items-center justify-between mb-1">
+                        <div>
+                          <Link href={`/profile/${comment.author?.username || "unknown"}`}>
+                            <span className="font-medium text-gray-900 dark:text-gray-100 hover:underline">
+                              {comment.author?.displayname || "Unknown User"}
+                            </span>
+                          </Link>
+                          <span className="text-xs text-gray-500 dark:text-gray-400 ml-2">
+                            {formatDate(comment.createdAt)}
+                          </span>
+                        </div>
+                        <button className="text-gray-400 hover:text-gray-500 dark:hover:text-gray-300">
+                          <MoreHorizontal className="w-4 h-4" />
+                        </button>
+                      </div>
+                      <p className="text-gray-700 dark:text-gray-300">{comment.content}</p>
+                      <div className="flex items-center space-x-4 mt-2 text-sm">
+                        <button className="flex items-center text-gray-500 dark:text-gray-400 hover:text-mainColor dark:hover:text-mainColor transition-colors">
+                          <Heart className="w-4 h-4 mr-1" />
+                          <span>{comment.likes || 0}</span>
+                        </button>
+                        <button className="text-gray-500 dark:text-gray-400 hover:text-mainColor dark:hover:text-mainColor transition-colors">
+                          Reply
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              ))}
+
+              {/* Show more/less comments button */}
+              {localComments.length > 5 && (
+                <div className="p-4 text-center">
+                  <button
+                    onClick={() => setShowAllComments(!showAllComments)}
+                    className="text-mainColor hover:underline flex items-center justify-center mx-auto"
+                  >
+                    {showAllComments ? (
+                      <>
+                        <ChevronUp className="w-4 h-4 mr-1" />
+                        Show less comments
+                      </>
+                    ) : (
+                      <>
+                        <ChevronDown className="w-4 h-4 mr-1" />
+                        Show all {localComments.length} comments
+                      </>
+                    )}
+                  </button>
+                </div>
+              )}
+            </>
+          ) : (
+            <div className="p-8 text-center">
+              <MessageCircle className="w-12 h-12 text-gray-300 dark:text-gray-600 mx-auto mb-3" />
+              <p className="text-gray-500 dark:text-gray-400">No comments yet. Be the first to comment!</p>
+            </div>
+          )}
         </div>
-      </motion.div>
+      </div>
     </div>
   )
 }

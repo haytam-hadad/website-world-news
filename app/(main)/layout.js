@@ -3,10 +3,9 @@ import "../globals.css"
 import Header from "@/components/Header"
 import { GoUp } from "@/components/GoUp"
 import SideMenu from "@/components/SideMenu"
-import Welcome from "@/components/Welcome"
+import RightSidebar from "@/components/right-sidebar"
 import { ThemeContext } from "../ThemeProvider"
 import { useState, useContext, useEffect, useCallback } from "react"
-
 
 // Custom hook to track window width
 function useWindowWidth() {
@@ -27,6 +26,7 @@ function LayoutContent({ children }) {
   const [showMenu, setShowMenu] = useState(false)
   const windowWidth = useWindowWidth()
   const isDesktop = windowWidth >= 768
+  const isWideDesktop = windowWidth >= 1280
 
   return (
     <div className="flex flex-col min-h-screen">
@@ -49,8 +49,14 @@ function LayoutContent({ children }) {
         )}
 
         {/* Content Area */}
-        <div className="flex-1 p-1 md:p-3 overflow-y-auto bg-lightgrey dark:bg-thirdColor">
-          {children}</div>
+        <div className="flex-1 p-1 md:p-3 overflow-y-auto bg-lightgrey dark:bg-thirdColor">{children}</div>
+
+        {/* Right Sidebar - Wide Desktop Only */}
+        {isWideDesktop && (
+          <div className="w-[310px] flex-shrink-0 sticky top-16 h-screen">
+            <RightSidebar />
+          </div>
+        )}
       </div>
       <GoUp />
     </div>

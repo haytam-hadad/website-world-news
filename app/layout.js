@@ -10,7 +10,6 @@ export default function Layout({ children }) {
         <ThemeProvider>
           <div className="flex flex-col min-h-screen">
             {children}
-            <Footer />
           </div>
         </ThemeProvider>
       </body>

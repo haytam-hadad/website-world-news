@@ -286,7 +286,7 @@ export default function CategoriesPage() {
           </Link>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 xl:grid-cols-2 2xl:grid-cols-3 gap-6">
           {featuredCategories.map((category) => (
             <motion.div
               key={category.id}
@@ -329,24 +329,24 @@ export default function CategoriesPage() {
 
       {/* Search and Filter */}
       <motion.div
-        className="mb-8 flex flex-col sm:flex-row gap-4 items-center justify-between"
+        className="mb-6 flex flex-col sm:flex-row gap-2 items-center justify-between"
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5, delay: 0.3 }}
         id="all-categories"
       >
-        <div className="relative w-full sm:w-auto sm:min-w-[300px]">
+        <div className="relative w-full sm:w-auto sm:min-w-[250px]">
           <input
             type="text"
             placeholder="Search categories..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-lg px-4 py-2.5 pl-10 focus:outline-none focus:ring-2 focus:ring-mainColor focus:border-transparent transition-colors"
+            className="w-full bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-lg px-4 py-2 pl-10 focus:outline-none focus:ring-2 focus:ring-mainColor focus:border-transparent transition-colors"
           />
           <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-500 dark:text-gray-400" />
         </div>
 
-        <div className="flex items-center gap-2 overflow-x-auto w-full sm:w-auto pb-2 sm:pb-0">
+        <div className="flex items-center gap-2 overflow-x-auto w-full sm:w-auto pb-1 sm:pb-0">
           <span className="text-sm text-gray-500 dark:text-gray-400 flex items-center gap-1 whitespace-nowrap">
             <Filter className="w-4 h-4" /> Filter:
           </span>
@@ -354,7 +354,7 @@ export default function CategoriesPage() {
             <button
               key={filter.id}
               onClick={() => setActiveFilter(filter.id)}
-              className={`px-3 py-1.5 text-sm rounded-full whitespace-nowrap transition-colors ${
+              className={`px-3 py-1 text-sm rounded-full whitespace-nowrap transition-colors ${
                 activeFilter === filter.id
                   ? "bg-mainColor text-white"
                   : "bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600"
@@ -371,7 +371,7 @@ export default function CategoriesPage() {
         variants={containerVariants}
         initial="hidden"
         animate="visible"
-        className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6"
+        className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-6"
       >
         {visibleCategories.length > 0 ? (
           visibleCategories.map((category) => (

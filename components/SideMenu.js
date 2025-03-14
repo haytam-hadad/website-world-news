@@ -191,7 +191,7 @@ const SideMenu = ({ setVisible }) => {
                 transition={{ duration: 0.2 }}
                 className="overflow-hidden"
               >
-                <div className="flex flex-col space-y-1 pl-2 max-h-[calc(100vh-400px)] overflow-y-auto pr-1">
+                <div className="flex flex-col space-y-1 pl-2 max-h-[calc(100vh-300px)] overflow-y-auto pr-1">
                   {menuItems.map(({ name, path, icon }) => (
                     <Link key={path} href={path} className="block">
                       <button

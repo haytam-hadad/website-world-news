@@ -28,7 +28,7 @@ async function fetchSearchResults(query) {
 }
 
 export default async function Search({ params }) {
-  const query = params.query;
+  const query = decodeURIComponent(params.query);
   console.log("Search page rendering with query:", query);
   
   const articles = await fetchSearchResults(query);

@@ -170,9 +170,11 @@ html {
 }
 
 ::-webkit-scrollbar {
-  @apply w-[8px] h-[8px] bg-transparent rounded-full;
+  width: 0.5rem;
+  height: 0.5rem;
 }
+
 ::-webkit-scrollbar-thumb {
-  @apply rounded-full bg-gray-300 hover:bg-gray-400 dark:bg-gray-700 dark:hover:bg-gray-600 transition-all duration-200 ease-in-out;
+@apply bg-gray-200 dark:bg-gray-700 rounded-md hover:bg-gray-300 dark:hover:bg-gray-600;
 }
 
