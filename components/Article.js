@@ -4,7 +4,7 @@ import { useRouter } from "next/navigation"
 import Image from "next/image"
 import { Clock, Share2, MessageCircle, MoreHorizontal, Bookmark, BookmarkCheck } from "lucide-react"
 import { useState, useRef, useEffect } from "react"
-import { ArrowBigUp, ArrowBigDown } from "lucide-react"
+import { ArrowBigUp } from "lucide-react"
 import { motion, AnimatePresence } from "framer-motion"
 import Link from "next/link"
 
@@ -246,7 +246,7 @@ const Article = ({ articleData }) => {
       initial={{ opacity: 0, y: 15 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.3 }}
-      className="w-full my-4 max-w-2xl mx-auto"
+      className="w-full my-2 max-w-3xl mx-auto"
     >
       <div
         className="bg-white dark:bg-darkgrey border border-gray-200 dark:border-gray-700 rounded-xl shadow-sm hover:shadow-md transition-shadow duration-200 overflow-hidden"
@@ -363,7 +363,7 @@ const Article = ({ articleData }) => {
 
         {/* Content preview */}
         <div className="px-4 pb-3" onClick={handleClick}>
-          <p className="text-gray-600 dark:text-gray-300 text-sm cursor-pointer">
+          <p className="text-gray-600 dark:text-gray-300 text-md cursor-pointer">
             {description ? formatText(description) : formatText(truncateContent(content, 150))}
           </p>
         </div>

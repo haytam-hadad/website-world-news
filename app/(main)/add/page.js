@@ -1,5 +1,5 @@
 "use client"
-import { useState, useContext, useEffect } from "react"
+import { useState, useContext, useEffect, useMemo, useCallback } from "react"
 import { useRouter } from "next/navigation"
 import { ThemeContext } from "../../ThemeProvider"
 import {
@@ -16,7 +16,6 @@ import {
   Check,
   Loader2,
   ArrowLeft,
-  InfoIcon,
   Laptop,
   HeartPulse,
   Trophy,
@@ -35,16 +34,22 @@ import {
   ChevronRight,
   Search,
   Filter,
+  X,
 } from "lucide-react"
 import { motion, AnimatePresence } from "framer-motion"
+
+// Define animation variants outside component to avoid recreation on each render
+// const fadeIn = {
+//   initial: { opacity: 0, y: 10 },
+//   animate: { opacity: 1, y: 0 },
+//   exit: { opacity: 0, y: 10 },
+// }
 
 export default function AddPostPage() {
   const router = useRouter()
   const { user } = useContext(ThemeContext)
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [success, setSuccess] = useState(false)
-  // Remove the imageError state since we're not showing previews for URLs
-  // const [imageError, setImageError] = useState(false)
 
   // Form state
   const [formData, setFormData] = useState({
@@ -66,6 +71,7 @@ export default function AddPostPage() {
   const [categorySearch, setCategorySearch] = useState("")
   const [categoryFilter, setCategoryFilter] = useState("all")
 
+  // Define categories as a constant to prevent unnecessary re-renders
   const categories = [
     {
       id: "technology",
@@ -164,6 +170,14 @@ export default function AddPostPage() {
       type: "entertainment",
     },
     {
+      id: "movies",
+      name: "Movies",
+      icon: <Film className="w-4 h-4" />,
+      description: "Film reviews, movie news, and cinema releases",
+      color: "bg-purple-500",
+      type: "entertainment",
+    },
+    {
       id: "fashion",
       name: "Fashion",
       icon: <ShoppingBag className="w-4 h-4" />,
@@ -206,14 +220,27 @@ export default function AddPostPage() {
     { id: "entertainment", name: "Entertainment" },
   ]
 
-  // Filter categories based on search and type filter
-  const filteredCategories = categories.filter((category) => {
-    const matchesSearch =
-      category.name.toLowerCase().includes(categorySearch.toLowerCase()) ||
-      category.description.toLowerCase().includes(categorySearch.toLowerCase())
-    const matchesFilter = categoryFilter === "all" || category.type === categoryFilter
-    return matchesSearch && matchesFilter
-  })
+  // Memoize filtered categories to prevent unnecessary recalculations
+  const filteredCategories = useMemo(() => {
+    const searchTerm = categorySearch.toLowerCase().trim()
+    const filterType = categoryFilter
+
+    return categories.filter((category) => {
+      const matchesSearch =
+        searchTerm === "" ||
+        category.name.toLowerCase().includes(searchTerm) ||
+        category.description.toLowerCase().includes(searchTerm)
+
+      const matchesFilter = filterType === "all" || category.type === filterType
+
+      return matchesSearch && matchesFilter
+    })
+  }, [categories, categorySearch, categoryFilter])
+
+  // Get the selected category details
+  const selectedCategory = useMemo(() => {
+    return categories.find((cat) => cat.id === formData.category) || null
+  }, [categories, formData.category])
 
   // Redirect if not logged in
   useEffect(() => {
@@ -245,20 +272,25 @@ export default function AddPostPage() {
   }, [formData.media.file, formData.media.sourceType])
 
   // Handle form field changes
-  const handleChange = (field, value) => {
+  const handleChange = useCallback((field, value) => {
     setFormData((prev) => ({
       ...prev,
       [field]: value,
     }))
-  }
+
+    // Clear error for this field when user types
+    setErrors((prev) => {
+      if (prev[field]) {
+        const newErrors = { ...prev }
+        delete newErrors[field]
+        return newErrors
+      }
+      return prev
+    })
+  }, [])
 
   // Handle media changes
-  const handleMediaChange = (field, value) => {
-    // Only reset image error when changing media type or source type, not while typing URL
-    // if (field === 'file' || field === 'sourceType' || field === 'type') {
-    //   setImageError(false);
-    // }
-
+  const handleMediaChange = useCallback((field, value) => {
     setFormData((prev) => ({
       ...prev,
       media: {
@@ -266,42 +298,60 @@ export default function AddPostPage() {
         [field]: value,
       },
     }))
-  }
+
+    // Clear media error when changing media settings
+    setErrors((prev) => {
+      if (prev.media) {
+        const newErrors = { ...prev }
+        delete newErrors.media
+        return newErrors
+      }
+      return prev
+    })
+  }, [])
 
   // Handle source changes
-  const handleSourceChange = (index, key, value) => {
-    const updatedSources = [...formData.sources]
+  const handleSourceChange = useCallback((index, key, value) => {
+    setFormData((prev) => {
+      const updatedSources = [...prev.sources]
 
-    if (key) {
-      updatedSources[index] = { ...updatedSources[index], key }
-    } else {
-      updatedSources[index] = { ...updatedSources[index], value }
-    }
+      if (key) {
+        updatedSources[index] = { ...updatedSources[index], key }
+      } else {
+        updatedSources[index] = { ...updatedSources[index], value }
+      }
 
-    setFormData((prev) => ({
-      ...prev,
-      sources: updatedSources,
-    }))
-  }
+      return {
+        ...prev,
+        sources: updatedSources,
+      }
+    })
+  }, [])
 
   // Add new source
-  const handleAddSource = () => {
+  const handleAddSource = useCallback(() => {
     setFormData((prev) => ({
       ...prev,
       sources: [...prev.sources, { key: "url", value: "" }],
     }))
-  }
+  }, [])
 
   // Remove source
-  const handleRemoveSource = (index) => {
+  const handleRemoveSource = useCallback((index) => {
     setFormData((prev) => ({
       ...prev,
       sources: prev.sources.filter((_, i) => i !== index),
     }))
-  }
+  }, [])
 
-  // Add this new function to validate URLs before submission
-  const isValidUrl = (urlString) => {
+  // Reset category filters
+  const resetCategoryFilters = useCallback(() => {
+    setCategorySearch("")
+    setCategoryFilter("all")
+  }, [])
+
+  // Validate URL
+  const isValidUrl = useCallback((urlString) => {
     if (!urlString || typeof urlString !== "string" || urlString.trim() === "") {
       return false
     }
@@ -318,15 +368,13 @@ export default function AddPostPage() {
     } catch (e) {
       return false
     }
-  }
+  }, [])
 
-  // Handle form submission
-  const handleSubmit = async (e) => {
-    e.preventDefault()
-    setErrors({})
-
-    // Basic validation - only title and content required
+  // Validate form
+  const validateForm = useCallback(() => {
     const newErrors = {}
+
+    // Required fields
     if (!formData.title.trim()) newErrors.title = "Title is required"
     if (!formData.content.trim()) newErrors.content = "Content is required"
     if (!formData.category) newErrors.category = "Category is required"
@@ -336,8 +384,20 @@ export default function AddPostPage() {
       newErrors.media = "Please enter a valid URL (e.g., https://example.com/image.jpg)"
     }
 
-    if (Object.keys(newErrors).length > 0) {
-      setErrors(newErrors)
+    return newErrors
+  }, [formData.title, formData.content, formData.category, formData.media.sourceType, formData.media.url, isValidUrl])
+
+  // Handle form submission
+  const handleSubmit = async (e) => {
+    e.preventDefault()
+
+    // Reset errors
+    setErrors({})
+
+    // Validate form
+    const validationErrors = validateForm()
+    if (Object.keys(validationErrors).length > 0) {
+      setErrors(validationErrors)
       return
     }
 
@@ -401,7 +461,7 @@ export default function AddPostPage() {
   }
 
   // Get source icon based on type
-  const getSourceIcon = (type) => {
+  const getSourceIcon = useCallback((type) => {
     const style = "w-4 h-4 text-primary"
     switch (type) {
       case "url":
@@ -415,10 +475,10 @@ export default function AddPostPage() {
       default:
         return <Link2 className={style} />
     }
-  }
+  }, [])
 
   // Function to safely render image preview
-  const renderImagePreview = () => {
+  const renderImagePreview = useCallback(() => {
     // Only show preview for file uploads, not for URLs
     if (formData.media.sourceType === "upload" && mediaPreview) {
       return (
@@ -433,23 +493,13 @@ export default function AddPostPage() {
       )
     }
 
-    // For URL inputs, don't show any preview
-    if (formData.media.sourceType === "url") {
-      return (
-        <div className="relative w-full h-48 rounded-lg overflow-hidden bg-secondaryColor dark:bg-gray-700 flex items-center justify-center">
-          <div className="text-gray-500 dark:text-gray-400 text-center p-4">
-            <ImageIcon className="w-8 h-8 mx-auto mb-2" />
-            <p>No preview available. URL will be used when post is published.</p>
-          </div>
-        </div>
-      )
-    }
-
+    // Don't show any preview for URL inputs
     return null
-  }
+  }, [formData.media.sourceType, mediaPreview])
 
+  // Don't render anything while redirecting
   if (!user) {
-    return null // Don't render anything while redirecting
+    return null
   }
 
   return (
@@ -457,18 +507,18 @@ export default function AddPostPage() {
       initial={{ opacity: 0, y: -10 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.6 }}
-      className="max-w-3xl mx-auto p-2"
+      className="max-w-3xl mx-auto p-1"
     >
       <button
         onClick={() => router.back()}
-        className="flex items-center gap-1.5 mb-6 text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-200"
+        className="flex items-center gap-1.5 mb-4 text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-200"
       >
         <ArrowLeft className="w-4 h-4" />
         <span className="font-semibold p-1">Back</span>
       </button>
 
       <div className="bg-white dark:bg-darkgrey rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden">
-        <div className="p-6 border-b border-gray-200 dark:border-gray-700">
+        <div className="p-6 border-b  border-gray-200 dark:border-gray-700">
           <div className="flex items-center gap-3 mb-2">
             <div className="w-10 h-10 rounded-full bg-mainColor text-white flex items-center justify-center font-semibold text-lg">
               {user?.displayname?.charAt(0).toUpperCase() || "U"}
@@ -542,9 +592,9 @@ export default function AddPostPage() {
               </label>
               <textarea
                 id="description"
-                value={formData.description}
+                value={formData.description || ""}
                 onChange={(e) => handleChange("description", e.target.value)}
-                placeholder="Provide a brief description of your post..."
+                placeholder="Provide a brief description of your post (optional)..."
                 rows="2"
                 className={`w-full px-4 py-2.5 rounded-lg border ${
                   errors.description ? "border-red-500 dark:border-red-500" : "border-gray-300 dark:border-gray-600"
@@ -580,11 +630,11 @@ export default function AddPostPage() {
                 </p>
               )}
               {/* Formatting Guide */}
-              <details className="bg-gray-50 dark:bg-thirdColor text-primary p-3 rounded-lg mb-3 border border-gray-200 dark:border-gray-700">
+              <details className="bg-gray-50 dark:bg-thirdColor text-primary p-3 rounded-lg mb-3 border border-gray-200 dark:border-gray-700 mt-2">
                 <summary className="flex items-center gap-2 cursor-pointer">
                   <Info className="w-4 h-4" />
                   <span className="text-md font-medium text-gray-700 dark:text-gray-300">Formatting Guide</span>
-                  <ChevronDown className="w-4 h-4 ml-2 "/>
+                  <ChevronDown className="w-4 h-4 ml-2 " />
                 </summary>
                 <ul className="mt-3 grid grid-cols-2 gap-1">
                   <li>
@@ -637,9 +687,7 @@ export default function AddPostPage() {
                   </li>
                 </ul>
               </details>
-
             </div>
-
 
             {/* Category Field */}
             <div className="mt-4">
@@ -676,24 +724,19 @@ export default function AddPostPage() {
               )}
 
               {/* Category Preview */}
-              {formData.category && (
+              {selectedCategory && (
                 <div className="mt-3 p-3 bg-gray-50 dark:bg-gray-700 rounded-lg border border-gray-200 dark:border-gray-600">
-                  {categories.map(
-                    (cat) =>
-                      cat.id === formData.category && (
-                        <div key={cat.id} className="flex items-center gap-3">
-                          <div
-                            className={`w-10 h-10 rounded-lg ${cat.color} bg-opacity-20 dark:bg-opacity-30 flex items-center justify-center`}
-                          >
-                            {cat.icon}
-                          </div>
-                          <div>
-                            <h4 className="font-medium text-gray-900 dark:text-white">{cat.name}</h4>
-                            <p className="text-xs text-gray-500 dark:text-gray-400">{cat.description}</p>
-                          </div>
-                        </div>
-                      ),
-                  )}
+                  <div className="flex items-center gap-3">
+                    <div
+                      className={`w-10 h-10 rounded-lg ${selectedCategory.color} bg-opacity-20 dark:bg-opacity-30 flex items-center justify-center`}
+                    >
+                      {selectedCategory.icon}
+                    </div>
+                    <div>
+                      <h4 className="font-medium text-gray-900 dark:text-white">{selectedCategory.name}</h4>
+                      <p className="text-xs text-gray-500 dark:text-gray-400">{selectedCategory.description}</p>
+                    </div>
+                  </div>
                 </div>
               )}
 
@@ -708,6 +751,15 @@ export default function AddPostPage() {
                     className="w-full pl-9 pr-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-mainColor focus:border-transparent transition-colors"
                   />
                   <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-500 dark:text-gray-400" />
+                  {categorySearch && (
+                    <button
+                      type="button"
+                      onClick={() => setCategorySearch("")}
+                      className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300"
+                    >
+                      <X className="w-4 h-4" />
+                    </button>
+                  )}
                 </div>
 
                 <div className="flex items-center gap-2 overflow-x-auto pb-1">
@@ -759,10 +811,7 @@ export default function AddPostPage() {
                     <p className="text-gray-500 dark:text-gray-400">No categories found</p>
                     <button
                       type="button"
-                      onClick={() => {
-                        setCategorySearch("")
-                        setCategoryFilter("all")
-                      }}
+                      onClick={resetCategoryFilters}
                       className="mt-2 px-3 py-1 text-sm bg-gray-100 dark:bg-gray-700 rounded-md hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors"
                     >
                       Reset filters
@@ -895,7 +944,7 @@ export default function AddPostPage() {
               )}
 
               {/* Image Preview */}
-              {formData.media.type === "image" && (
+              {formData.media.type === "image" && formData.media.sourceType === "upload" && (
                 <div className="mt-4">
                   <p className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Preview:</p>
                   {renderImagePreview()}
@@ -998,5 +1047,4 @@ export default function AddPostPage() {
     </motion.div>
   )
 }
-
 

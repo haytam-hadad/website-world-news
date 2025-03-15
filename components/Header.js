@@ -1,6 +1,6 @@
 "use client"
 import Link from "next/link"
-import { Search, Menu, Moon, Sun, User, LogOut, LayoutDashboard, X } from "lucide-react"
+import { Search, Menu, Moon, Sun, User, LogOut, LayoutDashboard, X , Bell} from "lucide-react"
 import { Label } from "@/components/ui/label"
 import { Switch } from "@/components/ui/switch"
 import { useState, useContext, useEffect, useRef } from "react"
@@ -182,24 +182,34 @@ export default function Header({ onToggleMenu }) {
 
             {user ? (
               <div className="relative" ref={dropdownRef}>
-                <button
-                  className="flex items-center gap-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700 p-1.5 transition-colors duration-200"
-                  onClick={() => setDropdownOpen(!dropdownOpen)}
-                  aria-expanded={dropdownOpen}
-                  aria-haspopup="true"
-                >
-                  <div className="w-8 h-8 rounded-full bg-mainColor text-white flex items-center justify-center font-semibold shadow-sm">
-                    {user.displayname.charAt(0).toUpperCase()}
-                  </div>
-                  <span className="font-medium hidden md:inline capitalize text-gray-800 dark:text-gray-100">
-                    {user.displayname}
-                  </span>
-                </button>
+                <div className="flex items-center">
+                  {/* Notifications */}
+                  <button
+                    className="p-1 px-2 rounded-full text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors duration-200 relative"
+                    aria-label="Notifications"
+                  >
+                    <Bell className="w-5 h-5" />
+                    <span className="absolute top-1 right-1 w-2 h-2 bg-red-500 rounded-full"></span>
+                  </button>
+                  <button
+                    className="flex items-center gap-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700 p-1.5 transition-colors duration-200"
+                    onClick={() => setDropdownOpen(!dropdownOpen)}
+                    aria-expanded={dropdownOpen}
+                    aria-haspopup="true"
+                  >
+                    <div className="w-8 h-8 rounded-full bg-mainColor text-white flex items-center justify-center font-semibold shadow-sm">
+                      {user.displayname.charAt(0).toUpperCase()}
+                    </div>
+                    <span className="font-medium hidden md:inline capitalize text-gray-800 dark:text-gray-100">
+                      {user.displayname}
+                    </span>
+                  </button>                  
+                </div>
 
                 <AnimatePresence>
                   {dropdownOpen && (
                     <motion.div
-                      className="absolute right-0 mt-2 w-48 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg shadow-lg py-1 z-20 overflow-hidden"
+                      className="absolute right-0 mt-1 w-48 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg shadow-lg py-1 z-20 overflow-hidden"
                       initial={{ opacity: 0, y: 10, scale: 0.95 }}
                       animate={{ opacity: 1, y: 0, scale: 1 }}
                       exit={{ opacity: 0, y: 10, scale: 0.95 }}

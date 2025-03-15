@@ -1,289 +1,149 @@
 "use client"
 
-import { useState, useEffect } from "react"
+import { useState } from "react"
 import Link from "next/link"
+import Image from "next/image"
+import { motion } from "framer-motion"
 
 import {
-  Bell,
-  Heart,
-  MessageSquare,
-  Repeat,
-  Users,
-  Filter,
-  Radio,
-  Zap,
-  TrendingUp,
   CheckCircle,
-  Plus,
-  X,
   ChevronDown,
   ChevronUp,
-  Globe,
   Bookmark,
-  AlertCircle,
+  UserCheck,
+  User,
+  TrendingUp,
+  Clock,
+  Calendar,
+  ExternalLink,
+  Zap,
+  Flame,
+  PlayCircle,
 } from "lucide-react"
 
-// Animation variants for notifications
-const notificationVariants = [
-  "animate-pulse bg-blue-50 dark:bg-blue-900/20",
-  "animate-pulse bg-green-50 dark:bg-green-900/20",
-  "animate-pulse bg-yellow-50 dark:bg-yellow-900/20",
-  "animate-pulse bg-purple-50 dark:bg-purple-900/20",
-  "animate-pulse bg-pink-50 dark:bg-pink-900/20",
-]
-
-// Notification types with their respective icons and colors
-const notificationTypes = {
-  like: { icon: Heart, color: "text-red-500" },
-  comment: { icon: MessageSquare, color: "text-blue-500" },
-  mention: { icon: Users, color: "text-green-500" },
-  repost: { icon: Repeat, color: "text-purple-500" },
-  follow: { icon: Users, color: "text-yellow-500" },
-  bookmark: { icon: Bookmark, color: "text-indigo-500" },
-  alert: { icon: AlertCircle, color: "text-orange-500" },
-}
-
-// Sample notification data
-const sampleNotifications = [
+// Sample subscriptions data (users)
+const sampleSubscriptions = [
   {
     id: 1,
-    type: "like",
-    user: "Sarah Johnson",
-    username: "sarahj",
+    name: "Emma Watson",
+    username: "emmaw",
     avatar: "/placeholder.svg?height=40&width=40",
-    content: "liked your post about climate change",
-    time: "2m ago",
-    read: false,
+    bio: "Tech journalist & AI enthusiast",
+    followers: "245K",
+    isVerified: true,
+    isSubscribed: true,
+    hasNewContent: true,
+    lastPosted: "2h ago",
   },
   {
     id: 2,
-    type: "comment",
-    user: "Michael Chen",
-    username: "mchen",
+    name: "David Kim",
+    username: "dkim",
     avatar: "/placeholder.svg?height=40&width=40",
-    content: 'commented on your article: "Great insights on this topic!"',
-    time: "15m ago",
-    read: false,
+    bio: "Climate scientist & environmental reporter",
+    followers: "189K",
+    isVerified: true,
+    isSubscribed: true,
+    hasNewContent: true,
+    lastPosted: "5h ago",
   },
   {
     id: 3,
-    type: "mention",
-    user: "Alex Rivera",
-    username: "arivera",
+    name: "Priya Sharma",
+    username: "psharma",
     avatar: "/placeholder.svg?height=40&width=40",
-    content: "mentioned you in a comment",
-    time: "1h ago",
-    read: false,
+    bio: "Political analyst & foreign affairs expert",
+    followers: "312K",
+    isVerified: true,
+    isSubscribed: true,
+    hasNewContent: false,
+    lastPosted: "1d ago",
   },
   {
     id: 4,
-    type: "repost",
-    user: "Jamie Smith",
-    username: "jsmith",
+    name: "Marcus Johnson",
+    username: "mjohnson",
     avatar: "/placeholder.svg?height=40&width=40",
-    content: "shared your article on renewable energy",
-    time: "3h ago",
-    read: true,
+    bio: "Sports commentator & former athlete",
+    followers: "521K",
+    isVerified: true,
+    isSubscribed: true,
+    hasNewContent: false,
+    lastPosted: "3d ago",
   },
   {
     id: 5,
-    type: "follow",
-    user: "Taylor Wilson",
-    username: "twilson",
+    name: "Sophia Rodriguez",
+    username: "srodriguez",
     avatar: "/placeholder.svg?height=40&width=40",
-    content: "started following you",
-    time: "5h ago",
-    read: true,
+    bio: "Health & wellness journalist",
+    followers: "178K",
+    isVerified: false,
+    isSubscribed: true,
+    hasNewContent: true,
+    lastPosted: "Just now",
   },
-  {
-    id: 6,
-    type: "bookmark",
-    user: "System",
-    content: 'Your bookmarked story "The Future of AI" is trending',
-    time: "1d ago",
-    read: true,
-  }
 ]
 
-// Sample channels data
-const sampleChannels = [
+// Sample trending topics
+const trendingTopics = [
   {
     id: 1,
-    name: "World News",
-    icon: Globe,
-    subscribers: "2.3M",
-    category: "News",
-    isSubscribed: true,
-    isVerified: true,
-    newContent: true,
+    title: "AI Breakthrough in Medical Research",
+    views: "1.2M",
+    category: "Technology",
+    timePosted: "3h ago",
   },
   {
     id: 2,
-    name: "Tech Insights",
-    icon: Zap,
-    subscribers: "1.5M",
-    category: "Technology",
-    isSubscribed: true,
-    isVerified: true,
-    newContent: true,
+    title: "Global Climate Summit Results",
+    views: "856K",
+    category: "Environment",
+    timePosted: "5h ago",
   },
   {
     id: 3,
-    name: "Climate Action",
-    icon: Globe,
-    subscribers: "985K",
-    category: "Environment",
-    isSubscribed: false,
-    isVerified: true,
-    newContent: false,
+    title: "New Economic Policy Announced",
+    views: "723K",
+    category: "Business",
+    timePosted: "12h ago",
   },
   {
     id: 4,
-    name: "Financial Times",
-    icon: TrendingUp,
-    subscribers: "1.8M",
-    category: "Finance",
-    isSubscribed: false,
-    isVerified: true,
-    newContent: false,
-  }
+    title: "Space Exploration Mission Launch",
+    views: "1.5M",
+    category: "Science",
+    timePosted: "1d ago",
+  },
 ]
 
-// Notification component
-const Notification = ({ data, onMarkAsRead, onRemove }) => {
-  const NotificationIcon = notificationTypes[data.type]?.icon || Bell
-  const iconColor = notificationTypes[data.type]?.color || "text-gray-500"
-
-  return (
-    <div
-      className={`p-2 rounded-lg mb-2 transition-all duration-300 ${data.read ? "bg-transparent" : "bg-gray-50 dark:bg-gray-800/50"}`}
-    >
-      <div className="flex items-start space-x-3">
-        <div className="relative mt-0.5">
-          <div
-            className={`p-2 rounded-full ${data.read ? "bg-gray-100 dark:bg-gray-700" : "bg-gray-200 dark:bg-gray-600"}`}
-          >
-            <NotificationIcon className={`w-4 h-4 ${iconColor}`} />
-          </div>
-          {!data.read && (
-            <span className="absolute -top-1 -right-1 w-2.5 h-2.5 bg-mainColor rounded-full border-2 border-white dark:border-darkgrey"></span>
-          )}
-        </div>
-
-        <div className="flex-1">
-          <div className="flex justify-between items-start">
-            <div>
-              {data.user && (
-                <div className="flex items-center space-x-1 mb-1">
-                  <span className="font-medium text-gray-900 dark:text-gray-100">{data.user}</span>
-                  {data.username && <span className="text-xs text-gray-500 dark:text-gray-400">@{data.username}</span>}
-                </div>
-              )}
-              <p className="text-sm text-gray-700 dark:text-gray-300">{data.content}</p>
-              <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">{data.time}</p>
-            </div>
-
-            <div className="flex space-x-1">
-              {!data.read && (
-                <button
-                  onClick={() => onMarkAsRead(data.id)}
-                  className="text-gray-400 hover:text-gray-500 dark:hover:text-gray-300 p-1 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700"
-                  aria-label="Mark as read"
-                >
-                  <CheckCircle size={16} />
-                </button>
-              )}
-              <button
-                onClick={() => onRemove(data.id)}
-                className="text-gray-400 hover:text-gray-500 dark:hover:text-gray-300 p-1 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700"
-                aria-label="Remove notification"
-              >
-                <X size={16} />
-              </button>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  )
-}
-
-// Channel subscription component
-const ChannelItem = ({ channel, onToggleSubscription }) => {
-  const ChannelIcon = channel.icon
-
-  return (
-    <div
-      className={`p-2 rounded-lg mb-2 transition-all duration-300 ${
-        channel.newContent && channel.isSubscribed
-          ? "bg-blue-50 dark:bg-blue-900/20"
-          : "hover:bg-gray-50 dark:hover:bg-gray-800/50"
-      }`}
-    >
-      <div className="flex items-center justify-between">
-        <div className="flex items-center space-x-3">
-          <div
-            className={`p-2 rounded-full ${
-              channel.isSubscribed
-                ? "bg-mainColor text-secondaryColor"
-                : "bg-gray-100 dark:bg-gray-700 text-gray-500 dark:text-gray-400"
-            }`}
-          >
-            <ChannelIcon className="w-4 h-4" />
-          </div>
-
-          <div>
-            <div className="flex items-center space-x-1">
-              <p className="font-medium text-gray-900 dark:text-gray-100">{channel.name}</p>
-              {channel.isVerified && <CheckCircle size={14} className="text-blue-500" />}
-              {channel.newContent && channel.isSubscribed && (
-                <span className="px-1.5 py-0.5 text-xs bg-mainColor text-secondaryColor rounded-full">New</span>
-              )}
-            </div>
-            <div className="flex items-center space-x-2 text-xs text-gray-500 dark:text-gray-400">
-              <span>{channel.subscribers} subscribers</span>
-              <span>•</span>
-              <span>{channel.category}</span>
-            </div>
-          </div>
-        </div>
-
-        <button
-          onClick={() => onToggleSubscription(channel.id)}
-          className={`p-1.5 rounded-full ${
-            channel.isSubscribed
-              ? "bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300"
-              : "bg-mainColor text-secondaryColor"
-          }`}
-          aria-label={channel.isSubscribed ? "Unsubscribe" : "Subscribe"}
-        >
-          {channel.isSubscribed ? <CheckCircle size={18} /> : <Plus size={18} />}
-        </button>
-      </div>
-    </div>
-  )
-}
-
-// Filter tabs component
-const FilterTabs = ({ activeTab, tabs, onChange }) => {
-  return (
-    <div className="flex space-x-1 bg-gray-100 dark:bg-gray-800 p-1 rounded-lg mb-3">
-      {tabs.map((tab) => (
-        <button
-          key={tab.id}
-          className={`flex-1 py-1.5 px-2 text-xs font-medium rounded-md transition-colors ${
-            activeTab === tab.id
-              ? "bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 shadow-sm"
-              : "text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300"
-          }`}
-          onClick={() => onChange(tab.id)}
-        >
-          {tab.label}
-        </button>
-      ))}
-    </div>
-  )
-}
+// Sample upcoming events
+const upcomingEvents = [
+  {
+    id: 1,
+    title: "Tech Conference 2025",
+    date: "Mar 20, 2025",
+    time: "9:00 AM",
+    category: "Technology",
+    isLive: false,
+  },
+  {
+    id: 2,
+    title: "Global Health Summit",
+    date: "Mar 25, 2025",
+    time: "10:30 AM",
+    category: "Health",
+    isLive: false,
+  },
+  {
+    id: 3,
+    title: "Live Interview with Tech CEO",
+    date: "Today",
+    time: "7:00 PM",
+    category: "Business",
+    isLive: true,
+  },
+]
 
 // Section header component
 const SectionHeader = ({ icon, title, action, isExpanded, onToggle }) => {
@@ -310,33 +170,114 @@ const SectionHeader = ({ icon, title, action, isExpanded, onToggle }) => {
   )
 }
 
+// Subscription item component
+const SubscriptionItem = ({ user }) => {
+  return (
+    <Link href={`/profile/${user.username}`}>
+      <div
+        className={`p-2 rounded-lg mb-2 transition-all duration-200 hover:bg-gray-50 dark:hover:bg-gray-800/50 ${
+          user.hasNewContent ? "bg-blue-50 dark:bg-blue-900/20" : ""
+        }`}
+      >
+        <div className="flex items-center space-x-3">
+          <div className="relative w-8 h-8 rounded-full overflow-hidden bg-gray-200 dark:bg-gray-700">
+            <Image src={user.avatar || "/placeholder.svg"} alt={user.name} fill className="object-cover" />
+            {user.hasNewContent && (
+              <span className="absolute bottom-0 right-0 w-2.5 h-2.5 bg-mainColor rounded-full border-2 border-white dark:border-darkgrey"></span>
+            )}
+          </div>
+
+          <div className="flex-1 truncate">
+            <div className="flex items-center space-x-1">
+              <p className="font-medium text-gray-900 dark:text-gray-100 text-sm truncate">{user.name}</p>
+              {user.isVerified && <CheckCircle size={12} className="text-blue-500 flex-shrink-0" />}
+            </div>
+            <div className="flex items-center text-xs text-gray-500 dark:text-gray-400">
+              {user.hasNewContent ? (
+                <span className="text-mainColor">New content</span>
+              ) : (
+                <span>{user.lastPosted}</span>
+              )}
+            </div>
+          </div>
+        </div>
+      </div>
+    </Link>
+  )
+}
+
+// Trending topic item component
+const TrendingTopicItem = ({ topic }) => {
+  return (
+    <Link href={`/search/${encodeURIComponent(topic.title)}`}>
+      <div className="p-2 rounded-lg mb-2 hover:bg-gray-50 dark:hover:bg-gray-800/50 transition-all duration-200">
+        <div className="flex items-start space-x-3">
+          <div className="flex-shrink-0 mt-1">
+            <Flame className="w-4 h-4 text-red-500" />
+          </div>
+          <div className="flex-1">
+            <h4 className="font-medium text-sm text-gray-900 dark:text-gray-100 line-clamp-1">{topic.title}</h4>
+            <div className="flex items-center mt-1 space-x-2">
+              <span className="text-xs text-gray-500 dark:text-gray-400">{topic.views} views</span>
+              <span className="w-1 h-1 bg-gray-300 dark:bg-gray-600 rounded-full"></span>
+              <span className="text-xs text-gray-500 dark:text-gray-400">{topic.timePosted}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </Link>
+  )
+}
+
+// Event item component
+const EventItem = ({ event }) => {
+  return (
+    <Link href={`/events/${event.id}`}>
+      <div className="p-2 rounded-lg mb-2 hover:bg-gray-50 dark:hover:bg-gray-800/50 transition-all duration-200">
+        <div className="flex items-start space-x-3">
+          <div className="flex-shrink-0 mt-1">
+            {event.isLive ? (
+              <div className="relative">
+                <PlayCircle className="w-5 h-5 text-red-500" />
+                <span className="absolute -top-1 -right-1 w-2 h-2 bg-red-500 rounded-full animate-pulse"></span>
+              </div>
+            ) : (
+              <Calendar className="w-5 h-5 text-mainColor" />
+            )}
+          </div>
+          <div className="flex-1">
+            <div className="flex items-center">
+              <h4 className="font-medium text-sm text-gray-900 dark:text-gray-100">{event.title}</h4>
+              {event.isLive && (
+                <span className="ml-2 px-1.5 py-0.5 bg-red-100 dark:bg-red-900/30 text-red-600 dark:text-red-400 text-xs rounded-sm font-medium">
+                  LIVE
+                </span>
+              )}
+            </div>
+            <div className="flex items-center mt-1">
+              <span className="text-xs text-gray-500 dark:text-gray-400">
+                {event.date} • {event.time}
+              </span>
+            </div>
+            <div className="mt-1">
+              <span className="text-xs px-1.5 py-0.5 bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-400 rounded-sm">
+                {event.category}
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </Link>
+  )
+}
+
 // Main RightSidebar component
 const RightSidebar = () => {
-  const [notifications, setNotifications] = useState(sampleNotifications)
-  const [channels, setChannels] = useState(sampleChannels)
-  const [notificationTab, setNotificationTab] = useState("all")
-  const [channelTab, setChannelTab] = useState("subscribed")
+  const [subscriptions, setSubscriptions] = useState(sampleSubscriptions)
   const [expandedSections, setExpandedSections] = useState({
-    notifications: true,
-    channels: true,
-  })
-
-  // Count unread notifications
-  const unreadCount = notifications.filter((n) => !n.read).length
-
-  // Filter notifications based on active tab
-  const filteredNotifications = notifications.filter((notification) => {
-    if (notificationTab === "all") return true
-    if (notificationTab === "unread") return !notification.read
-    return notification.type === notificationTab
-  })
-
-  // Filter channels based on active tab
-  const filteredChannels = channels.filter((channel) => {
-    if (channelTab === "all") return true
-    if (channelTab === "subscribed") return channel.isSubscribed
-    if (channelTab === "trending") return channel.subscribers > "1M"
-    return channel.category.toLowerCase() === channelTab
+    subscriptions: true,
+    trending: true,
+    events: true,
   })
 
   // Toggle section expansion
@@ -347,145 +288,158 @@ const RightSidebar = () => {
     }))
   }
 
-  // Mark notification as read
-  const markAsRead = (id) => {
-    setNotifications((prev) =>
-      prev.map((notification) => (notification.id === id ? { ...notification, read: true } : notification)),
-    )
-  }
-
-  // Remove notification
-  const removeNotification = (id) => {
-    setNotifications((prev) => prev.filter((notification) => notification.id !== id))
-  }
-
-  // Toggle channel subscription
-  const toggleSubscription = (id) => {
-    setChannels((prev) =>
-      prev.map((channel) => (channel.id === id ? { ...channel, isSubscribed: !channel.isSubscribed } : channel)),
-    )
-  }
-
-  // Simulate new notifications periodically
-  useEffect(() => {
-    const interval = setInterval(() => {
-      const randomIndex = Math.floor(Math.random() * sampleNotifications.length)
-      const randomNotification = {
-        ...sampleNotifications[randomIndex],
-        id: Date.now(),
-        time: "just now",
-        read: false,
-      }
-
-      if (notifications.length < 15) {
-        setNotifications((prev) => [randomNotification, ...prev])
-      }
-    }, 30000) // Add a new notification every 30 seconds
-
-    return () => clearInterval(interval)
-  }, [notifications])
-
-  // Notification filter tabs
-  const notificationTabs = [
-    { id: "all", label: "All" },
- 
-    { id: "mention", label: "Mentions" },
-    { id: "like", label: "Likes" },
-  ]
-
-  // Channel filter tabs
-  const channelTabs = [
-    { id: "subscribed", label: "My Channels" },
-    { id: "trending", label: "Trending" },
-    { id: "all", label: "Discover" },
-  ]
+  // Filter to only show subscribed users
+  const filteredSubscriptions = subscriptions.filter((user) => user.isSubscribed)
 
   return (
     <div className="w-full h-full mb-5 bg-white dark:bg-darkgrey border-l border-gray-200 dark:border-gray-700 overflow-y-auto">
-      <div className="p-3 space-y-4">
-        {/* Notification Center */}
+      <div className="p-3 space-y-6">
+        {/* Subscriptions Section */}
         <div>
           <SectionHeader
-            icon={Bell}
-            title={`Notifications ${unreadCount > 0 ? `(${unreadCount})` : ""}`}
-            isExpanded={expandedSections.notifications}
-            onToggle={() => toggleSection("notifications")}
-            action={
-              <button
-                className="p-1.5 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-500"
-                aria-label="Filter notifications"
-              >
-                <Filter size={18} />
-              </button>
-            }
+            icon={UserCheck}
+            title="Subscriptions"
+            isExpanded={expandedSections.subscriptions}
+            onToggle={() => toggleSection("subscriptions")}
           />
 
-          {expandedSections.notifications && (
-            <>
-              <FilterTabs activeTab={notificationTab} tabs={notificationTabs} onChange={setNotificationTab} />
-
+          {expandedSections.subscriptions && (
+            <motion.div
+              initial={{ opacity: 0, height: 0 }}
+              animate={{ opacity: 1, height: "auto" }}
+              exit={{ opacity: 0, height: 0 }}
+              transition={{ duration: 0.2 }}
+            >
               <div className="space-y-1 max-h-[350px] overflow-y-auto pr-1 custom-scrollbar">
-                {filteredNotifications.length > 0 ? (
-                  filteredNotifications.map((notification) => (
-                    <Notification
-                      key={notification.id}
-                      data={notification}
-                      onMarkAsRead={markAsRead}
-                      onRemove={removeNotification}
-                    />
-                  ))
+                {filteredSubscriptions.length > 0 ? (
+                  filteredSubscriptions.map((user) => <SubscriptionItem key={user.id} user={user} />)
                 ) : (
                   <div className="text-center py-6">
-                    <Bell className="w-10 h-10 text-gray-300 dark:text-gray-600 mx-auto mb-2" />
-                    <p className="text-gray-500 dark:text-gray-400">No notifications to show</p>
+                    <User className="w-10 h-10 text-gray-300 dark:text-gray-600 mx-auto mb-2" />
+                    <p className="text-gray-500 dark:text-gray-400">No subscriptions yet</p>
+                    <Link
+                      href="/discover/users"
+                      className="text-mainColor text-sm font-medium hover:underline block mt-2"
+                    >
+                      Discover users to follow
+                    </Link>
                   </div>
                 )}
               </div>
 
-              {filteredNotifications.length > 0 && (
-                <div className="mt-2 text-center">
-                  <Link href="/notifications" className="text-mainColor text-sm font-medium hover:underline">
-                    View all notifications
+              {filteredSubscriptions.length > 0 && (
+                <div className="mt-3 text-center">
+                  <Link
+                    href="/subscriptions"
+                    className="inline-flex items-center text-mainColor text-sm font-medium hover:underline"
+                  >
+                    See all subscriptions
+                    <ChevronDown className="ml-1 w-4 h-4" />
                   </Link>
                 </div>
               )}
-            </>
+            </motion.div>
           )}
         </div>
 
-        {/* Channel Subscriptions */}
+        {/* Trending Section */}
         <div>
           <SectionHeader
-            icon={Radio}
-            title="Subscribed Channels"
-            isExpanded={expandedSections.channels}
-            onToggle={() => toggleSection("channels")}
+            icon={TrendingUp}
+            title="Trending Now"
+            isExpanded={expandedSections.trending}
+            onToggle={() => toggleSection("trending")}
           />
 
-          {expandedSections.channels && (
-            <>
-              <FilterTabs activeTab={channelTab} tabs={channelTabs} onChange={setChannelTab} />
-
-              <div className="space-y-1 max-h-[350px] overflow-y-auto pr-1 custom-scrollbar">
-                {filteredChannels.length > 0 ? (
-                  filteredChannels.map((channel) => (
-                    <ChannelItem key={channel.id} channel={channel} onToggleSubscription={toggleSubscription} />
-                  ))
-                ) : (
-                  <div className="text-center py-6">
-                    <Radio className="w-10 h-10 text-gray-300 dark:text-gray-600 mx-auto mb-2" />
-                    <p className="text-gray-500 dark:text-gray-400">No channels to show</p>
-                  </div>
-                )}
+          {expandedSections.trending && (
+            <motion.div
+              initial={{ opacity: 0, height: 0 }}
+              animate={{ opacity: 1, height: "auto" }}
+              exit={{ opacity: 0, height: 0 }}
+              transition={{ duration: 0.2 }}
+            >
+              <div className="space-y-1 max-h-[300px] overflow-y-auto pr-1 custom-scrollbar">
+                {trendingTopics.map((topic) => (
+                  <TrendingTopicItem key={topic.id} topic={topic} />
+                ))}
               </div>
 
-              <div className="mt-2 text-center">
-                <Link href="/channels/discover" className="text-mainColor text-sm font-medium hover:underline">
-                  Browse all channels
+              <div className="mt-3 text-center">
+                <Link
+                  href="/trending"
+                  className="inline-flex items-center text-mainColor text-sm font-medium hover:underline"
+                >
+                  See all trending topics
+                  <ExternalLink className="ml-1 w-3.5 h-3.5" />
                 </Link>
               </div>
-            </>
+            </motion.div>
           )}
+        </div>
+
+        {/* Upcoming Events Section */}
+        <div>
+          <SectionHeader
+            icon={Calendar}
+            title="Upcoming Events"
+            isExpanded={expandedSections.events}
+            onToggle={() => toggleSection("events")}
+          />
+
+          {expandedSections.events && (
+            <motion.div
+              initial={{ opacity: 0, height: 0 }}
+              animate={{ opacity: 1, height: "auto" }}
+              exit={{ opacity: 0, height: 0 }}
+              transition={{ duration: 0.2 }}
+            >
+              <div className="space-y-1 max-h-[300px] overflow-y-auto pr-1 custom-scrollbar">
+                {upcomingEvents.map((event) => (
+                  <EventItem key={event.id} event={event} />
+                ))}
+              </div>
+
+              <div className="mt-3 text-center">
+                <Link
+                  href="/events"
+                  className="inline-flex items-center text-mainColor text-sm font-medium hover:underline"
+                >
+                  View all events
+                  <ExternalLink className="ml-1 w-3.5 h-3.5" />
+                </Link>
+              </div>
+            </motion.div>
+          )}
+        </div>
+
+        {/* Quick Links */}
+        <div className="pt-2 border-t border-gray-200 dark:border-gray-700">
+          <div className="grid grid-cols-2 gap-2">
+            <Link href="/discover">
+              <div className="p-2 bg-gray-50 dark:bg-gray-800 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors text-center">
+                <Zap className="w-5 h-5 text-mainColor mx-auto mb-1" />
+                <span className="text-xs font-medium text-gray-700 dark:text-gray-300">Discover</span>
+              </div>
+            </Link>
+            <Link href="/saved">
+              <div className="p-2 bg-gray-50 dark:bg-gray-800 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors text-center">
+                <Bookmark className="w-5 h-5 text-mainColor mx-auto mb-1" />
+                <span className="text-xs font-medium text-gray-700 dark:text-gray-300">Saved</span>
+              </div>
+            </Link>
+            <Link href="/live">
+              <div className="p-2 bg-gray-50 dark:bg-gray-800 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors text-center">
+                <PlayCircle className="w-5 h-5 text-red-500 mx-auto mb-1" />
+                <span className="text-xs font-medium text-gray-700 dark:text-gray-300">Live</span>
+              </div>
+            </Link>
+            <Link href="/history">
+              <div className="p-2 bg-gray-50 dark:bg-gray-800 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors text-center">
+                <Clock className="w-5 h-5 text-mainColor mx-auto mb-1" />
+                <span className="text-xs font-medium text-gray-700 dark:text-gray-300">History</span>
+              </div>
+            </Link>
+          </div>
         </div>
 
         {/* Footer */}
@@ -504,7 +458,7 @@ const RightSidebar = () => {
               Settings
             </Link>
           </div>
-          <p className="mt-2">© {new Date().getFullYear()} World News</p>        
+          <p className="mt-2">© {new Date().getFullYear()} World News</p>
         </div>
       </div>
     </div>

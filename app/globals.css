@@ -75,6 +75,55 @@ body {
   background-color: var(--secondaryColor);
 }
 
+@layer base {
+  body {
+    @apply bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-gray-100;
+  }
+
+  /* Custom Scrollbar Styling */
+  ::-webkit-scrollbar {
+    width: 5px;
+    height: 5px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: transparent;
+    border-radius: 10px;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: var(--mainColor);
+    opacity: 0.6;
+    border-radius: 10px;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    background: var(--main2Color);
+    opacity: 0.8;
+  }
+
+  /* Firefox scrollbar styling */
+  * {
+    scrollbar-width: thin;
+    scrollbar-color: var(--mainColor) transparent;
+  }
+
+  .dark ::-webkit-scrollbar-thumb {
+    background: var(--mainColor);
+    opacity: 0.5;
+  }
+
+  .dark ::-webkit-scrollbar-thumb:hover {
+    background: var(--main2Color);
+    opacity: 0.7;
+  }
+
+  /* Firefox dark mode scrollbar */
+  .dark * {
+    scrollbar-color: var(--mainColor) transparent;
+  }
+}
+
 /* Apply serif font to article titles for better readability */
 .font-serif {
   font-family: "Merriweather", serif;
@@ -167,14 +216,5 @@ html {
   a:not(.no-underline):hover {
     @apply underline-offset-4 decoration-2;
   }
-}
-
-::-webkit-scrollbar {
-  width: 0.5rem;
-  height: 0.5rem;
-}
-
-::-webkit-scrollbar-thumb {
-@apply bg-gray-200 dark:bg-gray-700 rounded-md hover:bg-gray-300 dark:hover:bg-gray-600;
 }
 
