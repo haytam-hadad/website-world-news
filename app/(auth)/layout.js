@@ -2,6 +2,7 @@
 import { useContext } from "react"
 import { ThemeContext } from "../ThemeProvider"
 import { ArrowLeft } from "lucide-react"
+import Footer from "@/components/Footer"
 
 function LayoutContent({ children }) {
   const { theme, setTheme, user, setUser } = useContext(ThemeContext)
@@ -18,6 +19,7 @@ function LayoutContent({ children }) {
       <main className="relative flex">
         <div className="flex-1">{children}</div>
       </main>
+      <Footer/>
     </div>
   )
 }
