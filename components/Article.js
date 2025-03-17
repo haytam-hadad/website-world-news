@@ -2,7 +2,18 @@
 
 import { useRouter } from "next/navigation"
 import Image from "next/image"
-import { Clock, Share2, MessageCircle, MoreHorizontal, Bookmark, BookmarkCheck } from "lucide-react"
+import {
+  Clock,
+  Share2,
+  MessageCircle,
+  MoreHorizontal,
+  Bookmark,
+  BookmarkCheck,
+  Eye,
+  AlertCircle,
+  UserX,
+  EyeOff,
+} from "lucide-react"
 import { useState, useRef, useEffect } from "react"
 import { ArrowBigUp } from "lucide-react"
 import { motion, AnimatePresence } from "framer-motion"
@@ -67,14 +78,16 @@ const Article = ({ articleData }) => {
     category,
     publishedAt,
     views,
-    likes,
+    upvote,
     comments = [],
   } = articleData
   const [isSaved, setIsSaved] = useState(false)
   const [showOptions, setShowOptions] = useState(false)
   const [mediaLoaded, setMediaLoaded] = useState(false)
   const [mediaError, setMediaError] = useState(false)
-  const [likeCount, setLikeCount] = useState(likes || 0)
+  const [likeCount, setLikeCount] = useState(upvote || 0)
+  const [isMinimized, setIsMinimized] = useState(false)
+  const [actionTaken, setActionTaken] = useState(null) // 'hide', 'block', or 'report'
 
   const optionsRef = useRef(null)
   const router = useRouter()
@@ -94,7 +107,9 @@ const Article = ({ articleData }) => {
   }, [])
 
   const handleClick = () => {
-    router.push(`/post/${_id.$oid || _id}`)
+    if (!isMinimized) {
+      router.push(`/post/${_id.$oid || _id}`)
+    }
   }
 
   const toggleSave = (e) => {
@@ -123,6 +138,37 @@ const Article = ({ articleData }) => {
         })
         .catch((err) => console.error("Error copying link", err))
     }
+  }
+
+  const handleHidePost = (e) => {
+    e.stopPropagation()
+    setActionTaken("hide")
+    setIsMinimized(true)
+    setShowOptions(false)
+    // Here you would implement the actual hide functionality with an API call
+  }
+
+  const handleBlockUser = (e) => {
+    e.stopPropagation()
+    setActionTaken("block")
+    setIsMinimized(true)
+    setShowOptions(false)
+    // Here you would implement the actual block functionality with an API call
+  }
+
+  const handleReportPost = (e) => {
+    e.stopPropagation()
+    setActionTaken("report")
+    setIsMinimized(true)
+    setShowOptions(false)
+    // Here you would implement the actual report functionality with an API call
+  }
+
+  const handleUndoAction = (e) => {
+    e.stopPropagation()
+    setIsMinimized(false)
+    setActionTaken(null)
+    // Here you would implement the actual undo functionality with an API call
   }
 
   const calculateTimeAgo = (publishedAt) => {
@@ -241,6 +287,43 @@ const Article = ({ articleData }) => {
     return match ? match[1] : null
   }
 
+  // Render minimized view
+  if (isMinimized) {
+    let actionIcon = <EyeOff className="w-5 h-5" />
+    let actionText = "Post hidden"
+
+    if (actionTaken === "block") {
+      actionIcon = <UserX className="w-5 h-5" />
+      actionText = `User @${authorusername} blocked`
+    } else if (actionTaken === "report") {
+      actionIcon = <AlertCircle className="w-5 h-5" />
+      actionText = "Post reported"
+    }
+
+    return (
+      <motion.article
+        initial={{ opacity: 0, y: 15 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.3 }}
+        className="w-full my-2 max-w-3xl mx-auto"
+      >
+        <div className="bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl p-4 flex items-center justify-between">
+          <div className="flex items-center space-x-3 text-gray-500 dark:text-gray-400">
+            {actionIcon}
+            <span>{actionText}</span>
+          </div>
+          <button
+            onClick={handleUndoAction}
+            className="text-mainColor hover:text-mainColor/80 transition-colors flex items-center space-x-1"
+            aria-label="Undo action"
+          >
+            <span>Undo</span>
+          </button>
+        </div>
+      </motion.article>
+    )
+  }
+
   return (
     <motion.article
       initial={{ opacity: 0, y: 15 }}
@@ -249,9 +332,10 @@ const Article = ({ articleData }) => {
       className="w-full my-2 max-w-3xl mx-auto"
     >
       <div
-        className="bg-white dark:bg-darkgrey border border-gray-200 dark:border-gray-700 rounded-xl shadow-sm hover:shadow-md transition-shadow duration-200 overflow-hidden"
+        className="bg-white dark:bg-darkgrey border border-gray-200 dark:border-gray-700 rounded-xl shadow-sm hover:shadow-md transition-shadow duration-200 overflow-hidden cursor-pointer"
         role="article"
         tabIndex="0"
+        onClick={handleClick}
         onKeyDown={(e) => e.key === "Enter" && handleClick()}
         aria-label={`Article: ${title || "Untitled"}`}
       >
@@ -318,34 +402,25 @@ const Article = ({ articleData }) => {
                     onClick={(e) => e.stopPropagation()}
                   >
                     <button
-                      className="w-full text-left px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700"
-                      onClick={(e) => {
-                        e.stopPropagation()
-                        // Implement hide article functionality
-                        alert("Hide this post")
-                      }}
+                      className="w-full text-left px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 flex items-center space-x-2"
+                      onClick={handleHidePost}
                     >
-                      Hide this post
+                      <EyeOff className="w-4 h-4" />
+                      <span>Hide this post</span>
                     </button>
                     <button
-                      className="w-full text-left px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700"
-                      onClick={(e) => {
-                        e.stopPropagation()
-                        // Implement block author functionality
-                        alert("Block this user")
-                      }}
+                      className="w-full text-left px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 flex items-center space-x-2"
+                      onClick={handleBlockUser}
                     >
-                      Block this user
+                      <UserX className="w-4 h-4" />
+                      <span>Block this user</span>
                     </button>
                     <button
-                      className="w-full text-left px-4 py-2 text-sm text-red-600 dark:text-red-400 hover:bg-gray-100 dark:hover:bg-gray-700"
-                      onClick={(e) => {
-                        e.stopPropagation()
-                        // Implement report functionality
-                        alert("Report this post")
-                      }}
+                      className="w-full text-left px-4 py-2 text-sm text-red-600 dark:text-red-400 hover:bg-gray-100 dark:hover:bg-gray-700 flex items-center space-x-2"
+                      onClick={handleReportPost}
                     >
-                      Report this post
+                      <AlertCircle className="w-4 h-4" />
+                      <span>Report this post</span>
                     </button>
                   </motion.div>
                 )}
@@ -355,23 +430,21 @@ const Article = ({ articleData }) => {
         </div>
 
         {/* Title */}
-        <div className="px-4 pb-4" onClick={handleClick}>
-          <h2 className="font-serif font-bold text-xl text-gray-900 dark:text-gray-100 capitalize hover:underline decoration-2 underline-offset-2 cursor-pointer">
+        <div className="px-4 pb-4">
+          <h2 className="font-serif font-bold text-xl text-gray-900 dark:text-gray-100 capitalize hover:underline decoration-2 underline-offset-2">
             {title}
           </h2>
         </div>
 
         {/* Content preview */}
-        <div className="px-4 pb-3" onClick={handleClick}>
-          <p className="text-gray-600 dark:text-gray-300 text-md cursor-pointer">
+        <div className="px-4 pb-3">
+          <p className="text-gray-600 dark:text-gray-300 text-md">
             {description ? formatText(description) : formatText(truncateContent(content, 150))}
           </p>
         </div>
 
         {/* Media */}
-        <div className="cursor-pointer" onClick={handleClick}>
-          {displayMedia()}
-        </div>
+        <div>{displayMedia()}</div>
 
         {/* Action bar */}
         <div className="p-4 pt-3">
@@ -385,6 +458,10 @@ const Article = ({ articleData }) => {
               <div className="flex items-center space-x-1">
                 <MessageCircle className="w-4 h-4" />
                 <span>{comments.length || 0}</span>
+              </div>
+              <div className="flex items-center space-x-1">
+                <Eye className="w-4 h-4" />
+                <span>{views || 0}</span>
               </div>
             </div>
 

@@ -57,8 +57,6 @@ export default function LoginPage() {
       if (!response.ok) {
         if (response.status === 401) {
           setError("Invalid username or password. Please try again.")
-        } else if (response.status === 429) {
-          setError("Too many login attempts. Please try again later.")
         } else {
           const errorData = await response.json()
           setError(errorData?.message || "Login failed. Please try again.")

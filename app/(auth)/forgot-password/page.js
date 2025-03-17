@@ -23,9 +23,9 @@ export default function ForgotPasswordPage() {
   }, [user, router])
 
   const handleSubmit = async (e) => {
-    e.preventDefault();
-    setLoading(true);
-    setError(null);
+    e.preventDefault()
+    setLoading(true)
+    setError(null)
 
     try {
       const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/forgotpwd`, {
@@ -33,24 +33,32 @@ export default function ForgotPasswordPage() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email: email.trim() }),
         credentials: "include",
-      });
+      })
 
       if (!response.ok) {
-        const errorMessage = response.status === 404
-          ? "No account with that email address exists."
-          : (await response.json())?.message || "Failed to send verification code. Please try again.";
-        setError(errorMessage);
-        return;
+        const errorMessage =
+          response.status === 404
+            ? "No account with that email address exists."
+            : (await response.json())?.message || "Failed to send verification code. Please try again."
+        setError(errorMessage)
+        return
       }
 
-      setSuccess(true);
+      setSuccess(true)
     } catch (err) {
-      console.error("Forgot password error:", err);
-      setError("An unexpected error occurred. Please check your connection and try again.");
+      console.error("Forgot password error:", err)
+      console.error("Response status:", response?.status)
+      try {
+        const errorData = await response?.json()
+        console.error("Error data:", errorData)
+      } catch (e) {
+        console.error("Could not parse error response")
+      }
+      setError("An unexpected error occurred. Please check your connection and try again.")
     } finally {
-      setLoading(false);
+      setLoading(false)
     }
-  };
+  }
 
   return (
     <div className="min-h-screen grid grid-cols-1 lg:grid-cols-2 bg-gray-50 dark:bg-gray-900">

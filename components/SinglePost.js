@@ -23,8 +23,10 @@ import {
 import { formatDistanceToNow } from "date-fns"
 
 const SinglePost = ({ post, comments = [] }) => {
-  const [vote, setVote] = useState(null)
-  const [likeCount, setLikeCount] = useState(post?.likes || 0)
+  const [userLiked, setUserLiked] = useState(false)
+  const [userDisliked, setUserDisliked] = useState(false)
+  const [upvoteCount, setUpvoteCount] = useState(post?.upvote || 0)
+  const [downvoteCount, setDownvoteCount] = useState(post?.downvote || 0)
   const [isSaved, setIsSaved] = useState(false)
   const [showOptions, setShowOptions] = useState(false)
   const [showCommentForm, setShowCommentForm] = useState(false)
@@ -33,11 +35,28 @@ const SinglePost = ({ post, comments = [] }) => {
   const [mediaLoaded, setMediaLoaded] = useState(false)
   const [mediaError, setMediaError] = useState(false)
   const [showAllComments, setShowAllComments] = useState(false)
+  const [isVoting, setIsVoting] = useState(false)
 
   const optionsRef = useRef(null)
   const commentInputRef = useRef(null)
   const router = useRouter()
   const { user } = useContext(ThemeContext)
+
+  // Initialize vote state based on user's previous votes
+  useEffect(() => {
+    if (post && user) {
+      // Check if user has already voted on this post
+      if (post.userUpvote && post.userUpvote.includes(user.username)) {
+        setUserLiked(true)
+      } else if (post.userDownvote && post.userDownvote.includes(user.username)) {
+        setUserDisliked(true)
+      }
+
+      // Initialize counts
+      setUpvoteCount(post.upvote || 0)
+      setDownvoteCount(post.downvote || 0)
+    }
+  }, [post, user])
 
   // Close dropdown when clicked outside
   useEffect(() => {
@@ -60,29 +79,79 @@ const SinglePost = ({ post, comments = [] }) => {
     }
   }, [showCommentForm])
 
-  const handleUpvote = () => {
-    if (vote !== "upvote") {
-      setVote("upvote")
-      setLikeCount((prev) => prev + 1)
-      if (vote === "downvote") {
-        // If previously downvoted, remove the downvote
-        setVote("upvote")
+  const handleUpvote = async () => {
+    if (!user) {
+      router.push("/login")
+      return
+    }
+
+    if (isVoting) return // Prevent multiple clicks
+
+    try {
+      setIsVoting(true)
+
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/news/${post._id}/upvote`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        credentials: "include", // Important for sending cookies
+      })
+
+      if (!response.ok) {
+        const errorData = await response.json()
+        throw new Error(errorData.message || "Failed to upvote")
       }
-    } else {
-      setVote(null)
-      setLikeCount((prev) => prev - 1)
+
+      const data = await response.json()
+
+      // Update UI based on response
+      setUpvoteCount(data.upvote)
+      setDownvoteCount(data.downvote)
+      setUserLiked(data.userLiked)
+      setUserDisliked(data.userDisliked)
+    } catch (error) {
+      console.error("Error upvoting article:", error)
+    } finally {
+      setIsVoting(false)
     }
   }
 
-  const handleDownvote = () => {
-    if (vote !== "downvote") {
-      setVote("downvote")
-      if (vote === "upvote") {
-        // If previously upvoted, remove the upvote and decrease the count
-        setLikeCount((prev) => prev - 1)
+  const handleDownvote = async () => {
+    if (!user) {
+      router.push("/login")
+      return
+    }
+
+    if (isVoting) return // Prevent multiple clicks
+
+    try {
+      setIsVoting(true)
+
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/news/${post._id}/downvote`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        credentials: "include", // Important for sending cookies
+      })
+
+      if (!response.ok) {
+        const errorData = await response.json()
+        throw new Error(errorData.message || "Failed to downvote")
       }
-    } else {
-      setVote(null)
+
+      const data = await response.json()
+
+      // Update UI based on response
+      setUpvoteCount(data.upvote)
+      setDownvoteCount(data.downvote)
+      setUserLiked(data.userLiked)
+      setUserDisliked(data.userDisliked)
+    } catch (error) {
+      console.error("Error downvoting article:", error)
+    } finally {
+      setIsVoting(false)
     }
   }
 
@@ -105,7 +174,7 @@ const SinglePost = ({ post, comments = [] }) => {
       navigator.clipboard
         .writeText(window.location.href)
         .then(() => {
-          alert("Link copied to clipboard!")
+          console.log("Link copied to clipboard")
         })
         .catch((err) => console.error("Error copying link", err))
     }
@@ -220,10 +289,10 @@ const SinglePost = ({ post, comments = [] }) => {
   // Format content with markdown-like styling
   const formatContent = (text) => {
     if (!text) return null
-  
+
     // Process text line by line to handle headings and blockquotes
     const lines = text.split("\n")
-  
+
     return (
       <>
         {lines.map((line, lineIndex) => {
@@ -231,7 +300,7 @@ const SinglePost = ({ post, comments = [] }) => {
           if (!line.trim()) {
             return <br key={`br-${lineIndex}`} />
           }
-  
+
           // Handle headings
           if (line.startsWith("# ")) {
             return (
@@ -240,7 +309,7 @@ const SinglePost = ({ post, comments = [] }) => {
               </h1>
             )
           }
-  
+
           if (line.startsWith("## ")) {
             return (
               <h2 key={`line-${lineIndex}`} className="text-xl font-bold my-3 text-gray-900 dark:text-white">
@@ -248,7 +317,7 @@ const SinglePost = ({ post, comments = [] }) => {
               </h2>
             )
           }
-  
+
           if (line.startsWith("### ")) {
             return (
               <h3 key={`line-${lineIndex}`} className="text-lg font-bold my-2 text-gray-900 dark:text-white">
@@ -256,7 +325,7 @@ const SinglePost = ({ post, comments = [] }) => {
               </h3>
             )
           }
-  
+
           // Handle blockquotes
           if (line.startsWith("> ")) {
             return (
@@ -268,7 +337,7 @@ const SinglePost = ({ post, comments = [] }) => {
               </blockquote>
             )
           }
-  
+
           // Regular paragraph
           return (
             <p key={`line-${lineIndex}`} className="my-2 text-gray-700 dark:text-gray-300">
@@ -279,7 +348,7 @@ const SinglePost = ({ post, comments = [] }) => {
       </>
     )
   }
-  
+
   // Helper function to process inline formatting
   const processInlineFormatting = (text) => {
     return text.split(/(\*\*[^*]+\*\*|\*[^*]+\*|~~[^~]+~~|`[^`]+`|__[^_]+__)/).map((chunk, index) => {
@@ -319,7 +388,6 @@ const SinglePost = ({ post, comments = [] }) => {
       }
     })
   }
-  
 
   // If post is not available yet
   if (!post) {
@@ -434,10 +502,12 @@ const SinglePost = ({ post, comments = [] }) => {
           <div className="flex items-center justify-between mt-6 pt-4 border-t border-gray-200 dark:border-gray-700">
             <div className="flex items-center space-x-4 text-sm text-gray-500 dark:text-gray-400">
               <span className="flex items-center">
-                <ArrowBigUp
-                  className={`w-4 h-4 mr-1 ${vote === "upvote" ? "text-green-500 dark:text-green-400" : ""}`}
-                />
-                {likeCount}
+                <ArrowBigUp className={`w-4 h-4 mr-1 ${userLiked ? "text-green-500 dark:text-green-400" : ""}`} />
+                {upvoteCount}
+              </span>
+              <span className="flex items-center">
+                <ArrowBigDown className={`w-4 h-4 mr-1 ${userDisliked ? "text-red-500 dark:text-red-400" : ""}`} />
+                {downvoteCount}
               </span>
               <span className="flex items-center">
                 <MessageCircle className="w-4 h-4 mr-1" />
@@ -469,13 +539,14 @@ const SinglePost = ({ post, comments = [] }) => {
         <div className="border-t border-gray-200 dark:border-gray-700 grid grid-cols-3 divide-x divide-gray-200 dark:divide-gray-700">
           <button
             className={`p-3 flex items-center justify-center space-x-2 transition-colors ${
-              vote === "upvote"
+              userLiked
                 ? "text-green-500 dark:text-green-400"
                 : "text-gray-500 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-800"
             }`}
             onClick={handleUpvote}
+            disabled={isVoting}
             aria-label="Upvote"
-            aria-pressed={vote === "upvote"}
+            aria-pressed={userLiked}
           >
             <ArrowBigUp className="w-5 h-5" />
             <span className="font-medium">Upvote</span>
@@ -483,13 +554,14 @@ const SinglePost = ({ post, comments = [] }) => {
 
           <button
             className={`p-3 flex items-center justify-center space-x-2 transition-colors ${
-              vote === "downvote"
+              userDisliked
                 ? "text-red-500 dark:text-red-400"
                 : "text-gray-500 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-800"
             }`}
             onClick={handleDownvote}
+            disabled={isVoting}
             aria-label="Downvote"
-            aria-pressed={vote === "downvote"}
+            aria-pressed={userDisliked}
           >
             <ArrowBigDown className="w-5 h-5" />
             <span className="font-medium">Downvote</span>
