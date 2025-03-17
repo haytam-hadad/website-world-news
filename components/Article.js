@@ -13,6 +13,7 @@ import {
   AlertCircle,
   UserX,
   EyeOff,
+  ArrowBigDown,
 } from "lucide-react"
 import { useState, useRef, useEffect } from "react"
 import { ArrowBigUp } from "lucide-react"
@@ -79,6 +80,7 @@ const Article = ({ articleData }) => {
     publishedAt,
     views,
     upvote,
+    downvote,
     comments = [],
   } = articleData
   const [isSaved, setIsSaved] = useState(false)
@@ -86,6 +88,7 @@ const Article = ({ articleData }) => {
   const [mediaLoaded, setMediaLoaded] = useState(false)
   const [mediaError, setMediaError] = useState(false)
   const [likeCount, setLikeCount] = useState(upvote || 0)
+  const [dislikeCount, setDislikeCount] = useState(downvote || 0)
   const [isMinimized, setIsMinimized] = useState(false)
   const [actionTaken, setActionTaken] = useState(null) // 'hide', 'block', or 'report'
 
@@ -454,6 +457,10 @@ const Article = ({ articleData }) => {
               <div className="flex items-center space-x-1">
                 <ArrowBigUp className="w-4 h-4" />
                 <span>{likeCount}</span>
+              </div>
+              <div className="flex items-center space-x-1">
+                <ArrowBigDown className="w-4 h-4" />
+                <span>{dislikeCount}</span>
               </div>
               <div className="flex items-center space-x-1">
                 <MessageCircle className="w-4 h-4" />
