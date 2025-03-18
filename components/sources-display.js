@@ -34,7 +34,7 @@ const SourcesDisplay = ({ sources }) => {
   }
 
   return (
-    <div className="border-t border-gray-200 dark:border-gray-700 pt-4 mt-6 mb-3">
+    <div className=" border-gray-200 dark:border-gray-700 pt-1 mb-2">
       <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-3">Sources</h3>
       <ul className="space-y-2 p-1">
         {sources.map((source) => (

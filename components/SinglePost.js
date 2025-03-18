@@ -499,15 +499,15 @@ const SinglePost = ({ post, comments = [] }) => {
           {displayMedia()}
 
           {/* Content */}
-          <div className="prose prose-sm sm:prose max-w-none dark:prose-invert">{formatContent(post.content)}</div>
-            {/* Sources section */}
+          <div className="prose prose-sm sm:prose max-w-none dark:prose-invert">{formatContent(post.content)}
+                    {/* Sources section */}
             {post.sources && post.sources.length > 0 && (
             <div className="mt-6 pt-4 border-t border-gray-200 dark:border-gray-700">
-              <h2 className="text-lg font-bold text-gray-900 dark:text-gray-100 mb-2">Sources</h2>
               <SourcesDisplay sources={post.sources} />
-            </div>
+            </div>  
           )}
-
+          </div>
+          
           {/* Post stats */}
           <div className="flex items-center justify-between mt-6 pt-4 border-t border-gray-200 dark:border-gray-700">
             <div className="flex items-center space-x-4 text-sm text-gray-500 dark:text-gray-400">
