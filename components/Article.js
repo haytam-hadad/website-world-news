@@ -13,10 +13,10 @@ import {
   AlertCircle,
   UserX,
   EyeOff,
+  ArrowBigUp,
   ArrowBigDown,
 } from "lucide-react"
 import { useState, useRef, useEffect } from "react"
-import { ArrowBigUp } from "lucide-react"
 import { motion, AnimatePresence } from "framer-motion"
 import Link from "next/link"
 
@@ -332,7 +332,7 @@ const Article = ({ articleData }) => {
       initial={{ opacity: 0, y: 15 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.3 }}
-      className="w-full my-2 max-w-3xl mx-auto"
+      className="w-full my-2 max-w-4xl mx-auto"
     >
       <div
         className="bg-white dark:bg-darkgrey border border-gray-200 dark:border-gray-700 rounded-xl shadow-sm hover:shadow-md transition-shadow duration-200 overflow-hidden cursor-pointer"
@@ -343,7 +343,7 @@ const Article = ({ articleData }) => {
         aria-label={`Article: ${title || "Untitled"}`}
       >
         {/* Header with user info */}
-        <div className="p-4 flex items-center justify-between">
+        <div className="p-3 sm:p-4 flex items-center justify-between mb-1">
           <Link
             href={`/profile/${authorusername || "unknown"}`}
             className="flex items-center space-x-3 group"
@@ -370,7 +370,7 @@ const Article = ({ articleData }) => {
           </Link>
 
           {/* Category tag and options */}
-          <div className="flex items-center space-x-2">
+          <div className="flex items-center space-x-1">
             <Link
               href={`/category/${category?.toLowerCase() || "general"}`}
               className="px-3 py-1 text-xs font-medium text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-900/30 rounded-full capitalize hover:bg-blue-100 dark:hover:bg-blue-900/50 transition-colors"
@@ -492,7 +492,7 @@ const Article = ({ articleData }) => {
         <div className="border-t border-gray-200 dark:border-gray-700 grid grid-cols-2 divide-x divide-gray-200 dark:divide-gray-700">
           <Link
             href={`/post/${_id.$oid || _id}#comments`}
-            className="p-3 flex items-center justify-center space-x-2 text-gray-500 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors"
+            className="py-3 flex items-center justify-center space-x-2 text-gray-500 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors"
             onClick={(e) => e.stopPropagation()}
             aria-label={`Comments (${comments.length || 0})`}
           >
@@ -501,7 +501,7 @@ const Article = ({ articleData }) => {
           </Link>
 
           <button
-            className="p-3 flex items-center justify-center space-x-2 text-gray-500 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors"
+            className="py-3 flex items-center justify-center space-x-2 text-gray-500 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors"
             onClick={handleShare}
             aria-label="Share"
           >

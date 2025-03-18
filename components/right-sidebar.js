@@ -283,7 +283,7 @@ const RightSidebar = () => {
 
   return (
     <aside className="w-[320px] fixed top-0 right-0 h-full bg-white dark:bg-darkgrey border-l border-gray-200 dark:border-gray-800 overflow-y-auto z-30 pt-16">
-      <div className="p-4 space-y-6 h-full flex flex-col">
+      <div className="p-3 space-y-5 h-full flex flex-col">
         {/* Search Box */}
         <div className="mb-2">
           <form onSubmit={handleSearch} className="relative">

@@ -20,7 +20,7 @@ import {
   ChevronDown,
   ChevronUp,
 } from "lucide-react"
-import { formatDistanceToNow } from "date-fns"
+
 import SourcesDisplay from "./sources-display"
 
 
@@ -211,14 +211,26 @@ const SinglePost = ({ post, comments = [] }) => {
   }
 
   // Format the date
-  const formatDate = (dateString) => {
-    try {
-      const date = new Date(dateString)
-      return formatDistanceToNow(date, { addSuffix: true })
-    } catch (error) {
-      return "Unknown date"
-    }
+  const calculateTimeAgo = (publishedAt) => {
+    if (!publishedAt) return "N/A"
+
+    const publishedDate = new Date(publishedAt?.$date || publishedAt)
+
+    // Check if the date is valid
+    if (isNaN(publishedDate.getTime())) return "N/A"
+
+    const now = new Date()
+    const diffInSeconds = Math.floor((now - publishedDate) / 1000)
+
+    // Handle different time intervals
+    if (diffInSeconds < 60) return "just now"
+    if (diffInSeconds < 3600) return `${Math.floor(diffInSeconds / 60)} min ago`
+    if (diffInSeconds < 86400) return `${Math.floor(diffInSeconds / 3600)}h ago`
+    if (diffInSeconds < 2592000) return `${Math.floor(diffInSeconds / 86400)}d ago`
+    if (diffInSeconds < 31536000) return `${Math.floor(diffInSeconds / 2592000)}mo ago`
+    return `${Math.floor(diffInSeconds / 31536000)}y ago`
   }
+
 
   // Display media (image or video)
   const displayMedia = () => {
@@ -413,9 +425,9 @@ const SinglePost = ({ post, comments = [] }) => {
     <div className="max-w-4xl mx-auto p-1">
       <article className="bg-white dark:bg-darkgrey border border-gray-200 dark:border-gray-700 rounded-xl shadow-sm overflow-hidden mb-6">
         {/* Header with user info */}
-        <div className="p-3 sm:p-5 flex items-center justify-between border-b border-gray-200 dark:border-gray-700">
+        <div className="p-2 sm:p-4 flex items-center justify-between border-b border-gray-200 dark:border-gray-700">
           <Link href={`/profile/${post.authorusername || "unknown"}`} className="flex items-center space-x-3 group">
-            <div className="rounded-full bg-mainColor w-12 h-12 flex items-center justify-center text-secondaryColor font-semibold text-lg cursor-pointer group-hover:shadow-md transition-shadow">
+            <div className="rounded-full bg-mainColor w-10 h-10 flex items-center justify-center text-secondaryColor font-semibold text-lg cursor-pointer group-hover:shadow-md transition-shadow">
               {post.authordisplayname ? post.authordisplayname[0].toUpperCase() : "U"}
             </div>
             <div>
@@ -429,16 +441,16 @@ const SinglePost = ({ post, comments = [] }) => {
                 <span className="text-gray-400">•</span>
                 <span className="text-sm text-gray-500 dark:text-gray-400 flex items-center">
                   <Clock className="w-3.5 h-3.5 mr-1" />
-                  <time dateTime={post.publishedAt}>{formatDate(post.publishedAt)}</time>
+                  <time dateTime={post.publishedAt}>{calculateTimeAgo(post.publishedAt)}</time>
                 </span>
               </div>
             </div>
           </Link>
 
           {/* Category tag and options */}
-          <div className="flex items-center space-x-2">
+          <div className="flex items-center space-x-1">
             <Link href={`/category/${post.category?.toLowerCase() || "general"}`}>
-              <div className="px-3 py-1 text-sm font-medium text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-900/30 rounded-full capitalize hover:bg-blue-100 dark:hover:bg-blue-900/50 transition-colors">
+              <div className="px-3 py-1 text-xs sm:text-sm font-medium text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-900/30 rounded-full capitalize hover:bg-blue-100 dark:hover:bg-blue-900/50 transition-colors">
                 {post.category || "General"}
               </div>
             </Link>
@@ -489,9 +501,9 @@ const SinglePost = ({ post, comments = [] }) => {
         </div>
 
         {/* Content */}
-        <div className="p-3 sm:p-5">
+        <div className="p-2 sm:p-4">
           {/* Title */}
-          <h1 className="font-serif font-bold text-2xl sm:text-3xl text-gray-900 dark:text-gray-100 mb-4">
+          <h1 className="font-serif font-bold text-2xl m-2 sm:text-3xl text-gray-900 dark:text-gray-100 mb-10">
             {post.title}
           </h1>
 
@@ -548,7 +560,7 @@ const SinglePost = ({ post, comments = [] }) => {
         {/* Action buttons */}
         <div className="border-t border-gray-200 dark:border-gray-700 grid grid-cols-3 divide-x divide-gray-200 dark:divide-gray-700">
           <button
-            className={`p-3 flex items-center justify-center space-x-2 transition-colors ${
+            className={`py-3 flex items-center justify-center space-x-2 transition-colors ${
               userLiked
                 ? "text-green-500 dark:text-green-400"
                 : "text-gray-500 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-800"
@@ -563,7 +575,7 @@ const SinglePost = ({ post, comments = [] }) => {
           </button>
 
           <button
-            className={`p-3 flex items-center justify-center space-x-2 transition-colors ${
+            className={`py-3 flex items-center justify-center space-x-2 transition-colors ${
               userDisliked
                 ? "text-red-500 dark:text-red-400"
                 : "text-gray-500 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-800"
@@ -578,7 +590,7 @@ const SinglePost = ({ post, comments = [] }) => {
           </button>
 
           <button
-            className="p-3 flex items-center justify-center space-x-2 text-gray-500 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors"
+            className="py-3 flex items-center justify-center space-x-2 text-gray-500 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors"
             onClick={handleShare}
             aria-label="Share"
           >
@@ -681,7 +693,7 @@ const SinglePost = ({ post, comments = [] }) => {
                         </span>
                         </Link>
                         <span className="text-xs text-gray-500 dark:text-gray-400">
-                          {formatDate(comment.createdAt)}
+                          {calculateTimeAgo(comment.createdAt)}
                         </span>
                       </div>
                       <p className="text-gray-700 dark:text-gray-300">{comment.content}</p>

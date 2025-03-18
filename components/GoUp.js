@@ -20,7 +20,7 @@ export const GoUp = () => {
   }
   return show ? (
     <button
-      className="fixed bottom-4 right-4 rounded-full bg-mainColor p-2 text-white shadow-md transition-transform transform hover:scale-110"
+      className="fixed z-50 bottom-4 right-4 rounded-full bg-mainColor p-2 text-white shadow-md transition-transform transform hover:scale-110"
       onClick={handleClick}
     >
       <ArrowUp />

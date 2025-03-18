@@ -3,8 +3,10 @@ import { useState, useEffect, useContext } from "react"
 import { ThemeContext } from "../ThemeProvider"
 import HeaderDash from "@/components/HeaderDash"
 import SideMenuDashboard from "@/components/SideMenuDashboard"
+import Footer from "@/components/Footer"
 import { motion } from "framer-motion"
 import { useRouter } from 'next/navigation'
+
 
 function useWindowWidth() {
   const [width, setWidth] = useState(() => (typeof window !== "undefined" ? window.innerWidth : 1024))
@@ -64,6 +66,7 @@ function LayoutContent({ children }) {
 
         {/* Main Content */}
         <div className="flex-1 overflow-auto bg-lightgrey dark:bg-thirdColor">{children}</div>
+        <Footer/>
       </div>
     </div>
   )
