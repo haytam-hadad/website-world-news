@@ -21,6 +21,9 @@ import {
   ChevronUp,
 } from "lucide-react"
 import { formatDistanceToNow } from "date-fns"
+import SourcesDisplay from "./sources-display"
+
+
 
 const SinglePost = ({ post, comments = [] }) => {
   const [userLiked, setUserLiked] = useState(false)
@@ -497,6 +500,13 @@ const SinglePost = ({ post, comments = [] }) => {
 
           {/* Content */}
           <div className="prose prose-sm sm:prose max-w-none dark:prose-invert">{formatContent(post.content)}</div>
+            {/* Sources section */}
+            {post.sources && post.sources.length > 0 && (
+            <div className="mt-6 pt-4 border-t border-gray-200 dark:border-gray-700">
+              <h2 className="text-lg font-bold text-gray-900 dark:text-gray-100 mb-2">Sources</h2>
+              <SourcesDisplay sources={post.sources} />
+            </div>
+          )}
 
           {/* Post stats */}
           <div className="flex items-center justify-between mt-6 pt-4 border-t border-gray-200 dark:border-gray-700">

@@ -630,60 +630,88 @@ export default function AddPostPage() {
                 </p>
               )}
               {/* Formatting Guide */}
-              <details className="bg-gray-50 dark:bg-thirdColor text-primary p-3 rounded-lg mb-3 border border-gray-200 dark:border-gray-700 mt-2">
+              <details
+                className="bg-gray-50 dark:bg-thirdColor text-primary p-3 rounded-lg border border-gray-200 dark:border-gray-700 mt-2 transition-shadow duration-200 hover:shadow-sm"
+              >
                 <summary className="flex items-center gap-2 cursor-pointer">
                   <Info className="w-4 h-4" />
-                  <span className="text-md font-medium text-gray-700 dark:text-gray-300">Formatting Guide</span>
-                  <ChevronDown className="w-4 h-4 ml-2 " />
+                  <span className="text-md font-medium text-gray-700 dark:text-gray-300">
+                    Formatting Guide
+                  </span>
+                  <ChevronDown className="w-4 h-4 ml-2 transition-transform duration-200" />
                 </summary>
-                <ul className="mt-3 grid grid-cols-2 gap-1">
-                  <li>
+                <ul className="mt-3 grid gap-1">
+                  <li className="grid grid-cols-2 items-center">
                     <code className="px-1.5 py-0.5 bg-gray-100 dark:bg-gray-700 rounded text-gray-800 dark:text-white">
                       **bold**
-                    </code>{" "}
-                    for <strong>bold text</strong>
+                    </code>
+                    <span className="col-span-1 ml-2">
+                      for <strong>bold text</strong>
+                    </span>
                   </li>
-                  <li>
+                  <li className="grid grid-cols-2 items-center">
                     <code className="px-1.5 py-0.5 bg-gray-100 dark:bg-gray-700 rounded text-gray-800 dark:text-white">
                       *underline*
-                    </code>{" "}
-                    for <span className="underline">underlined text</span>
+                    </code>
+                    <span className="col-span-1 ml-2">
+                      for <span className="underline">underlined text</span>
+                    </span>
                   </li>
-                  <li>
+                  <li className="grid grid-cols-2 items-center">
                     <code className="px-1.5 py-0.5 bg-gray-100 dark:bg-gray-700 rounded text-gray-800 dark:text-white">
                       __italic__
-                    </code>{" "}
-                    for <em>italic text</em>
+                    </code>
+                    <span className="col-span-1 ml-2">
+                      for <em>italic text</em>
+                    </span>
                   </li>
-                  <li>
+                  <li className="grid grid-cols-2 items-center">
                     <code className="px-1.5 py-0.5 bg-gray-100 dark:bg-gray-700 rounded text-gray-800 dark:text-white">
                       ~~strikethrough~~
-                    </code>{" "}
-                    for <span className="line-through">strikethrough</span>
+                    </code>
+                    <span className="col-span-1 ml-2">
+                      for <span className="line-through">strikethrough</span>
+                    </span>
                   </li>
-                  <li>
+                  <li className="grid grid-cols-2 items-center">
                     <code className="px-1.5 py-0.5 bg-gray-100 dark:bg-gray-700 rounded text-gray-800 dark:text-white">
                       # Heading 1
-                    </code>{" "}
-                    for main titles
+                    </code>
+                    <span className="col-span-1 ml-2">
+                      for main titles
+                    </span>
                   </li>
-                  <li>
+                  <li className="grid grid-cols-2 items-center">
                     <code className="px-1.5 py-0.5 bg-gray-100 dark:bg-gray-700 rounded text-gray-800 dark:text-white">
                       ## Heading 2
-                    </code>{" "}
-                    for section titles
+                    </code>
+                    <span className="col-span-1 ml-2">
+                      for section titles
+                    </span>
                   </li>
-                  <li>
+                  <li className="grid grid-cols-2 items-center">
                     <code className="px-1.5 py-0.5 bg-gray-100 dark:bg-gray-700 rounded text-gray-800 dark:text-white">
                       ### Heading 3
-                    </code>{" "}
-                    for subsections
+                    </code>
+                    <span className="col-span-1 ml-2">
+                      for subsections
+                    </span>
                   </li>
-                  <li>
+                  <li className="grid grid-cols-2 items-center">
                     <code className="px-1.5 py-0.5 bg-gray-100 dark:bg-gray-700 rounded text-gray-800 dark:text-white">
                       &gt; Quote text
-                    </code>{" "}
-                    for blockquotes
+                    </code>
+                    <span className="col-span-1 ml-2">
+                      for blockquotes
+                    </span>
+                  </li>
+                  <li className="grid grid-cols-2 items-center">
+                    <code className="px-1.5 py-0.5 bg-gray-100 dark:bg-gray-700 rounded text-gray-800 dark:text-white">
+                      `inline code`
+                    </code>
+                    <span className="col-span-1 ml-2">
+                      for <code>inline code</code>
+                    </span>
                   </li>
                 </ul>
               </details>
