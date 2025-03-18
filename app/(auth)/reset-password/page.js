@@ -151,10 +151,10 @@ export default function ResetPasswordPage() {
                 </div>
 
                 <Link
-                  href="/auth/signin"
+                  href="/login"
                   className="group relative flex w-full justify-center rounded-lg border border-transparent bg-mainColor py-3 px-4 text-sm font-medium text-white hover:bg-mainColor/90 focus:outline-none focus:ring-2 focus:ring-mainColor focus:ring-offset-2 transition-colors duration-200"
                 >
-                  Go to Sign In
+                  Go to Logi In
                 </Link>
               </motion.div>
             ) : (
@@ -300,7 +300,7 @@ export default function ResetPasswordPage() {
           >
             Didn't receive the code?&nbsp;
             <Link
-              href="/auth/forgot-password"
+              href="/forgot-password"
               className="font-medium text-mainColor hover:text-mainColor/80 transition-colors duration-200"
             >
               Request again

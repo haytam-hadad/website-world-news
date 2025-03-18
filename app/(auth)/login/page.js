@@ -68,8 +68,14 @@ export default function LoginPage() {
       setUser(userData)
       router.push("/")
     } catch (err) {
-      setError("An unexpected error occurred. Please check your connection and try again.")
-      console.error("Login error:", err)
+      setError("Something went wrong. Please try again later.")
+      console.error("Login error:", err, "Response status:", response?.status)
+      try {
+        const errorData = await response?.json()
+        console.error("Error data:", errorData)
+      } catch (e) {
+        console.error("Could not parse error response")
+      }
     } finally {
       setLoading(false)
     }

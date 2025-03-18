@@ -182,14 +182,14 @@ export default function Header({ onToggleMenu }) {
 
             {user ? (
               <div className="relative" ref={dropdownRef}>
-                <div className="flex items-center">
+                <div className="flex gap-1 items-center">
                   {/* Notifications */}
                   <button
-                    className="p-1 px-2 rounded-full text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors duration-200 relative"
+                    className="p-1 rounded-full text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors duration-200 relative"
                     aria-label="Notifications"
                   >
                     <Bell className="w-5 h-5" />
-                    <span className="absolute top-1 right-1 w-2 h-2 bg-red-500 rounded-full"></span>
+                    <span className="absolute top-0 right-0 w-2 h-2 bg-red-500 rounded-full"></span>
                   </button>
                   <button
                     className="flex items-center gap-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700 p-1.5 transition-colors duration-200"

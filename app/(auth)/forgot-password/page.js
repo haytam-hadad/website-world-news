@@ -130,7 +130,7 @@ export default function ForgotPasswordPage() {
                 </div>
 
                 <Link
-                  href="/auth/reset-password"
+                  href="/reset-password"
                   className="group relative flex w-full justify-center rounded-lg border border-transparent bg-mainColor py-3 px-4 text-sm font-medium text-white hover:bg-mainColor/90 focus:outline-none focus:ring-2 focus:ring-mainColor focus:ring-offset-2 transition-colors duration-200"
                 >
                   Continue to Reset Password
@@ -196,7 +196,7 @@ export default function ForgotPasswordPage() {
           >
             Remember your password?&nbsp;
             <Link
-              href="/auth/signin"
+              href="/login"
               className="font-medium text-mainColor hover:text-mainColor/80 transition-colors duration-200"
             >
               Sign in
