@@ -1,91 +1,51 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import Link from "next/link"
+import { motion, AnimatePresence } from "framer-motion"
+import { CheckCircle, ChevronDown, ChevronUp, UserCheck, User, TrendingUp, Search, ExternalLink, Bell, Users, Hash } from 'lucide-react'
 import Image from "next/image"
-import { motion } from "framer-motion"
 
-import {
-  CheckCircle,
-  ChevronDown,
-  ChevronUp,
-  Bookmark,
-  UserCheck,
-  User,
-  TrendingUp,
-  Clock,
-  Calendar,
-  ExternalLink,
-  Zap,
-  Flame,
-  PlayCircle,
-} from "lucide-react"
-
-// Sample subscriptions data (users)
+// Sample data
 const sampleSubscriptions = [
   {
     id: 1,
     name: "Emma Watson",
     username: "emmaw",
-    avatar: "/placeholder.svg?height=40&width=40",
     bio: "Tech journalist & AI enthusiast",
     followers: "245K",
     isVerified: true,
     isSubscribed: true,
     hasNewContent: true,
     lastPosted: "2h ago",
+    avatar: "/placeholder.svg?height=40&width=40",
   },
   {
     id: 2,
     name: "David Kim",
     username: "dkim",
-    avatar: "/placeholder.svg?height=40&width=40",
     bio: "Climate scientist & environmental reporter",
     followers: "189K",
     isVerified: true,
     isSubscribed: true,
     hasNewContent: true,
     lastPosted: "5h ago",
+    avatar: "/placeholder.svg?height=40&width=40",
   },
   {
     id: 3,
     name: "Priya Sharma",
     username: "psharma",
-    avatar: "/placeholder.svg?height=40&width=40",
     bio: "Political analyst & foreign affairs expert",
     followers: "312K",
     isVerified: true,
     isSubscribed: true,
     hasNewContent: false,
     lastPosted: "1d ago",
-  },
-  {
-    id: 4,
-    name: "Marcus Johnson",
-    username: "mjohnson",
     avatar: "/placeholder.svg?height=40&width=40",
-    bio: "Sports commentator & former athlete",
-    followers: "521K",
-    isVerified: true,
-    isSubscribed: true,
-    hasNewContent: false,
-    lastPosted: "3d ago",
-  },
-  {
-    id: 5,
-    name: "Sophia Rodriguez",
-    username: "srodriguez",
-    avatar: "/placeholder.svg?height=40&width=40",
-    bio: "Health & wellness journalist",
-    followers: "178K",
-    isVerified: false,
-    isSubscribed: true,
-    hasNewContent: true,
-    lastPosted: "Just now",
   },
 ]
 
-// Sample trending topics
 const trendingTopics = [
   {
     id: 1,
@@ -117,51 +77,55 @@ const trendingTopics = [
   },
 ]
 
-// Sample upcoming events
-const upcomingEvents = [
+const suggestedUsers = [
   {
     id: 1,
-    title: "Tech Conference 2025",
-    date: "Mar 20, 2025",
-    time: "9:00 AM",
-    category: "Technology",
-    isLive: false,
+    name: "Alex Johnson",
+    username: "alexj",
+    bio: "Tech entrepreneur & investor",
+    followers: "542K",
+    isVerified: true,
+    avatar: "/placeholder.svg?height=40&width=40",
   },
   {
     id: 2,
-    title: "Global Health Summit",
-    date: "Mar 25, 2025",
-    time: "10:30 AM",
-    category: "Health",
-    isLive: false,
+    name: "Sarah Chen",
+    username: "schen",
+    bio: "Award-winning journalist",
+    followers: "321K",
+    isVerified: true,
+    avatar: "/placeholder.svg?height=40&width=40",
   },
   {
     id: 3,
-    title: "Live Interview with Tech CEO",
-    date: "Today",
-    time: "7:00 PM",
-    category: "Business",
-    isLive: true,
+    name: "Michael Brown",
+    username: "mbrown",
+    bio: "Political commentator",
+    followers: "189K",
+    isVerified: false,
+    avatar: "/placeholder.svg?height=40&width=40",
   },
 ]
 
 // Section header component
-const SectionHeader = ({ icon, title, action, isExpanded, onToggle }) => {
-  const Icon = icon
-
+const SectionHeader = ({ icon: Icon, title, action, isExpanded, onToggle, id }) => {
   return (
-    <div className="flex items-center justify-between mb-3 px-1">
+    <div className="flex items-center justify-between mb-3">
       <div className="flex items-center">
-        <Icon className="w-5 h-5 text-mainColor mr-2" />
-        <h3 className="font-bold text-gray-900 dark:text-gray-100">{title}</h3>
+        <Icon className="w-5 h-5 text-mainColor mr-2" aria-hidden="true" />
+        <h3 className="font-bold text-gray-900 dark:text-gray-100" id={id}>
+          {title}
+        </h3>
       </div>
       {action ? (
         action
       ) : (
         <button
           onClick={onToggle}
-          className="p-1 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-500"
-          aria-label={isExpanded ? "Collapse" : "Expand"}
+          className="p-1 rounded-full hover:bg-gray-100 dark:hover:bg-gray-800 text-gray-500 dark:text-gray-400 focus:outline-none"
+          aria-expanded={isExpanded}
+          aria-controls={`${id}-content`}
+          aria-label={isExpanded ? `Collapse ${title}` : `Expand ${title}`}
         >
           {isExpanded ? <ChevronUp size={18} /> : <ChevronDown size={18} />}
         </button>
@@ -173,32 +137,44 @@ const SectionHeader = ({ icon, title, action, isExpanded, onToggle }) => {
 // Subscription item component
 const SubscriptionItem = ({ user }) => {
   return (
-    <Link href={`/profile/${user.username}`}>
-      <div
-        className={`p-2 rounded-lg mb-2 transition-all duration-200 hover:bg-gray-50 dark:hover:bg-gray-800/50 ${
-          user.hasNewContent ? "bg-blue-50 dark:bg-blue-900/20" : ""
-        }`}
-      >
-        <div className="flex items-center space-x-3">
-          <div className="relative w-8 h-8 rounded-full overflow-hidden bg-gray-200 dark:bg-gray-700">
-            <Image src={user.avatar || "/placeholder.svg"} alt={user.name} fill className="object-cover" />
-            {user.hasNewContent && (
-              <span className="absolute bottom-0 right-0 w-2.5 h-2.5 bg-mainColor rounded-full border-2 border-white dark:border-darkgrey"></span>
+    <Link
+      href={`/profile/${user.username}`}
+      className={`block p-2 rounded-xl mb-2 transition-all duration-200 hover:bg-gray-100 dark:hover:bg-gray-800 focus:outline-none ${
+        user.hasNewContent ? "bg-gray-50 dark:bg-gray-800/60" : ""
+      }`}
+    >
+      <div className="flex items-center space-x-3">
+        <div className="relative w-10 h-10 rounded-full overflow-hidden bg-mainColor flex-shrink-0 flex items-center justify-center text-white font-medium">
+          {user.avatar ? (
+            <Image src={user.avatar || "/placeholder.svg"} alt={user.name} width={40} height={40} className="object-cover" />
+          ) : (
+            user.name.charAt(0).toUpperCase()
+          )}
+          {user.hasNewContent && (
+            <span
+              className="absolute bottom-0 right-0 w-3 h-3 bg-mainColor rounded-full border-2 border-white dark:border-darkgrey"
+              aria-hidden="true"
+            ></span>
+          )}
+        </div>
+
+        <div className="flex-1 min-w-0">
+          <div className="flex items-center space-x-1">
+            <p className="font-medium text-gray-900 dark:text-gray-100 text-sm truncate">
+              {user.name}
+            </p>
+            {user.isVerified && (
+              <CheckCircle size={12} className="text-mainColor flex-shrink-0" aria-label="Verified" />
             )}
           </div>
-
-          <div className="flex-1 truncate">
-            <div className="flex items-center space-x-1">
-              <p className="font-medium text-gray-900 dark:text-gray-100 text-sm truncate">{user.name}</p>
-              {user.isVerified && <CheckCircle size={12} className="text-blue-500 flex-shrink-0" />}
-            </div>
-            <div className="flex items-center text-xs text-gray-500 dark:text-gray-400">
-              {user.hasNewContent ? (
-                <span className="text-mainColor">New content</span>
-              ) : (
-                <span>{user.lastPosted}</span>
-              )}
-            </div>
+          <div className="flex items-center text-xs">
+            {user.hasNewContent ? (
+              <span className="text-mainColor font-medium">New content</span>
+            ) : (
+              <span className="text-gray-500 dark:text-gray-400">
+                {user.lastPosted}
+              </span>
+            )}
           </div>
         </div>
       </div>
@@ -209,19 +185,26 @@ const SubscriptionItem = ({ user }) => {
 // Trending topic item component
 const TrendingTopicItem = ({ topic }) => {
   return (
-    <Link href={`/search/${encodeURIComponent(topic.title)}`}>
-      <div className="p-2 rounded-lg mb-2 hover:bg-gray-50 dark:hover:bg-gray-800/50 transition-all duration-200">
-        <div className="flex items-start space-x-3">
-          <div className="flex-shrink-0 mt-1">
-            <Flame className="w-4 h-4 text-red-500" />
-          </div>
-          <div className="flex-1">
-            <h4 className="font-medium text-sm text-gray-900 dark:text-gray-100 line-clamp-1">{topic.title}</h4>
-            <div className="flex items-center mt-1 space-x-2">
-              <span className="text-xs text-gray-500 dark:text-gray-400">{topic.views} views</span>
-              <span className="w-1 h-1 bg-gray-300 dark:bg-gray-600 rounded-full"></span>
-              <span className="text-xs text-gray-500 dark:text-gray-400">{topic.timePosted}</span>
-            </div>
+    <Link
+      href={`/search/${encodeURIComponent(topic.title)}`}
+      className="block p-2 rounded-xl mb-2 hover:bg-gray-100 dark:hover:bg-gray-800 transition-all duration-200 focus:outline-none"
+    >
+      <div className="flex items-start space-x-3">
+        <div className="flex-shrink-0 mt-1">
+          <TrendingUp className="w-4 h-4 text-mainColor" aria-hidden="true" />
+        </div>
+        <div className="flex-1 min-w-0">
+          <h4 className="font-medium text-sm text-gray-900 dark:text-gray-100 line-clamp-1">
+            {topic.title}
+          </h4>
+          <div className="flex items-center mt-1 space-x-2">
+            <span className="text-xs text-gray-500 dark:text-gray-400">
+              {topic.views} views
+            </span>
+            <span className="w-1 h-1 bg-gray-300 dark:bg-gray-600 rounded-full" aria-hidden="true"></span>
+            <span className="text-xs text-gray-500 dark:text-gray-400">
+              {topic.timePosted}
+            </span>
           </div>
         </div>
       </div>
@@ -229,56 +212,53 @@ const TrendingTopicItem = ({ topic }) => {
   )
 }
 
-// Event item component
-const EventItem = ({ event }) => {
+// Suggested user component
+const SuggestedUserItem = ({ user }) => {
   return (
-    <Link href={`/events/${event.id}`}>
-      <div className="p-2 rounded-lg mb-2 hover:bg-gray-50 dark:hover:bg-gray-800/50 transition-all duration-200">
-        <div className="flex items-start space-x-3">
-          <div className="flex-shrink-0 mt-1">
-            {event.isLive ? (
-              <div className="relative">
-                <PlayCircle className="w-5 h-5 text-red-500" />
-                <span className="absolute -top-1 -right-1 w-2 h-2 bg-red-500 rounded-full animate-pulse"></span>
-              </div>
-            ) : (
-              <Calendar className="w-5 h-5 text-mainColor" />
+    <div className="flex items-center justify-between p-2 rounded-xl hover:bg-gray-100 dark:hover:bg-gray-800 transition-all duration-200">
+      <Link href={`/profile/${user.username}`} className="flex items-center space-x-3 flex-1 min-w-0">
+        <div className="relative w-10 h-10 rounded-full overflow-hidden bg-mainColor flex-shrink-0 flex items-center justify-center text-white font-medium">
+          {user.avatar ? (
+            <Image src={user.avatar || "/placeholder.svg"} alt={user.name} width={40} height={40} className="object-cover" />
+          ) : (
+            user.name.charAt(0).toUpperCase()
+          )}
+        </div>
+        <div className="flex-1 min-w-0">
+          <div className="flex items-center space-x-1">
+            <p className="font-medium text-gray-900 dark:text-gray-100 text-sm truncate">
+              {user.name}
+            </p>
+            {user.isVerified && (
+              <CheckCircle size={12} className="text-mainColor flex-shrink-0" aria-label="Verified" />
             )}
           </div>
-          <div className="flex-1">
-            <div className="flex items-center">
-              <h4 className="font-medium text-sm text-gray-900 dark:text-gray-100">{event.title}</h4>
-              {event.isLive && (
-                <span className="ml-2 px-1.5 py-0.5 bg-red-100 dark:bg-red-900/30 text-red-600 dark:text-red-400 text-xs rounded-sm font-medium">
-                  LIVE
-                </span>
-              )}
-            </div>
-            <div className="flex items-center mt-1">
-              <span className="text-xs text-gray-500 dark:text-gray-400">
-                {event.date} • {event.time}
-              </span>
-            </div>
-            <div className="mt-1">
-              <span className="text-xs px-1.5 py-0.5 bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-400 rounded-sm">
-                {event.category}
-              </span>
-            </div>
-          </div>
+          <p className="text-xs text-gray-500 dark:text-gray-400 truncate">
+            @{user.username}
+          </p>
         </div>
-      </div>
-    </Link>
+      </Link>
+      <button className="ml-2 px-3 py-1 text-xs font-medium text-mainColor bg-mainColor/10 hover:bg-mainColor/20 rounded-full transition-colors duration-200">
+        Follow
+      </button>
+    </div>
   )
+}
+
+// Animation variants
+const contentVariants = {
+  hidden: { opacity: 0, height: 0 },
+  visible: { opacity: 1, height: "auto", transition: { duration: 0.2 } },
 }
 
 // Main RightSidebar component
 const RightSidebar = () => {
-  const [subscriptions, setSubscriptions] = useState(sampleSubscriptions)
   const [expandedSections, setExpandedSections] = useState({
     subscriptions: true,
     trending: true,
-    events: true,
+    suggested: false,
   })
+  const [searchQuery, setSearchQuery] = useState("")
 
   // Toggle section expansion
   const toggleSection = (section) => {
@@ -288,182 +268,215 @@ const RightSidebar = () => {
     }))
   }
 
+  // Handle search
+  const handleSearch = (e) => {
+    e.preventDefault()
+    if (searchQuery.trim()) {
+      window.location.href = `/search/${encodeURIComponent(searchQuery.trim())}`
+      setSearchQuery("")
+    }
+  }
+
   // Filter to only show subscribed users
-  const filteredSubscriptions = subscriptions.filter((user) => user.isSubscribed)
+  const filteredSubscriptions = sampleSubscriptions.filter((user) => user.isSubscribed)
+  const currentYear = new Date().getFullYear()
 
   return (
-    <div className="w-full h-full mb-5 bg-white dark:bg-darkgrey border-l border-gray-200 dark:border-gray-700 overflow-y-auto">
-      <div className="p-3 space-y-6">
+    <aside className="w-[320px] fixed top-0 right-0 h-full bg-white dark:bg-darkgrey border-l border-gray-200 dark:border-gray-800 overflow-y-auto z-30 pt-16">
+      <div className="p-4 space-y-6 h-full flex flex-col">
+        {/* Search Box */}
+        <div className="mb-2">
+          <form onSubmit={handleSearch} className="relative">
+            <input
+              type="text"
+              placeholder="Search topics, people..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="w-full bg-gray-100 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-full py-2 pl-10 pr-4 text-gray-900 dark:text-gray-100 placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-mainColor focus:border-transparent transition-all duration-200"
+            />
+            <Search className="absolute left-3 top-2.5 w-5 h-5 text-gray-500 dark:text-gray-400" />
+          </form>
+        </div>
+
+        {/* Quick Actions */}
+        <div className="grid grid-cols-2 gap-2 mb-2">
+          <Link href="/notifications" className="flex flex-col items-center justify-center p-3 rounded-xl bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors duration-200">
+            <div className="relative">
+              <Bell className="w-6 h-6 text-mainColor mb-1" />
+              <span className="absolute -top-1 -right-1 flex h-4 w-4 items-center justify-center rounded-full bg-red-500 text-[10px] font-bold text-white">3</span>
+            </div>
+            <span className="text-xs font-medium text-gray-900 dark:text-gray-100">Alerts</span>
+          </Link>
+          
+          <Link href="/trends" className="flex flex-col items-center justify-center p-3 rounded-xl bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors duration-200">
+            <Hash className="w-6 h-6 text-mainColor mb-1" />
+            <span className="text-xs font-medium text-gray-900 dark:text-gray-100">Trending</span>
+          </Link>
+        </div>
+
         {/* Subscriptions Section */}
-        <div>
+        <section aria-labelledby="subscriptions-heading" className="bg-white dark:bg-darkgrey rounded-xl border border-gray-200 dark:border-gray-800 p-4 shadow-sm">
           <SectionHeader
             icon={UserCheck}
-            title="Subscriptions"
+            title="Your Subscriptions"
             isExpanded={expandedSections.subscriptions}
             onToggle={() => toggleSection("subscriptions")}
+            id="subscriptions-heading"
           />
 
-          {expandedSections.subscriptions && (
-            <motion.div
-              initial={{ opacity: 0, height: 0 }}
-              animate={{ opacity: 1, height: "auto" }}
-              exit={{ opacity: 0, height: 0 }}
-              transition={{ duration: 0.2 }}
-            >
-              <div className="space-y-1 max-h-[350px] overflow-y-auto pr-1 custom-scrollbar">
-                {filteredSubscriptions.length > 0 ? (
-                  filteredSubscriptions.map((user) => <SubscriptionItem key={user.id} user={user} />)
-                ) : (
-                  <div className="text-center py-6">
-                    <User className="w-10 h-10 text-gray-300 dark:text-gray-600 mx-auto mb-2" />
-                    <p className="text-gray-500 dark:text-gray-400">No subscriptions yet</p>
+          <AnimatePresence initial={false}>
+            {expandedSections.subscriptions && (
+              <motion.div
+                id="subscriptions-content"
+                variants={contentVariants}
+                initial="hidden"
+                animate="visible"
+                exit="hidden"
+              >
+                <div className="space-y-1 max-h-[250px] overflow-y-auto pr-1 scrollbar-thin scrollbar-thumb-gray-300 dark:scrollbar-thumb-gray-600 scrollbar-track-transparent">
+                  {filteredSubscriptions.length > 0 ? (
+                    filteredSubscriptions.map((user) => <SubscriptionItem key={user.id} user={user} />)
+                  ) : (
+                    <div className="text-center py-6">
+                      <User className="w-10 h-10 text-gray-300 dark:text-gray-600 mx-auto mb-2" aria-hidden="true" />
+                      <p className="text-gray-500 dark:text-gray-400">No subscriptions yet</p>
+                      <Link
+                        href="/discover/users"
+                        className="text-mainColor text-sm font-medium hover:underline block mt-2 focus:outline-none"
+                      >
+                        Discover users to follow
+                      </Link>
+                    </div>
+                  )}
+                </div>
+
+                {filteredSubscriptions.length > 0 && (
+                  <div className="mt-3 text-center">
                     <Link
-                      href="/discover/users"
-                      className="text-mainColor text-sm font-medium hover:underline block mt-2"
+                      href="/subscriptions"
+                      className="inline-flex items-center text-mainColor text-sm font-medium hover:underline focus:outline-none"
                     >
-                      Discover users to follow
+                      See all subscriptions
+                      <ExternalLink className="ml-1 w-3 h-3" aria-hidden="true" />
                     </Link>
                   </div>
                 )}
-              </div>
-
-              {filteredSubscriptions.length > 0 && (
-                <div className="mt-3 text-center">
-                  <Link
-                    href="/subscriptions"
-                    className="inline-flex items-center text-mainColor text-sm font-medium hover:underline"
-                  >
-                    See all subscriptions
-                    <ChevronDown className="ml-1 w-4 h-4" />
-                  </Link>
-                </div>
-              )}
-            </motion.div>
-          )}
-        </div>
+              </motion.div>
+            )}
+          </AnimatePresence>
+        </section>
 
         {/* Trending Section */}
-        <div>
+        <section aria-labelledby="trending-heading" className="bg-white dark:bg-darkgrey rounded-xl border border-gray-200 dark:border-gray-800 p-4 shadow-sm">
           <SectionHeader
             icon={TrendingUp}
             title="Trending Now"
             isExpanded={expandedSections.trending}
             onToggle={() => toggleSection("trending")}
+            id="trending-heading"
           />
 
-          {expandedSections.trending && (
-            <motion.div
-              initial={{ opacity: 0, height: 0 }}
-              animate={{ opacity: 1, height: "auto" }}
-              exit={{ opacity: 0, height: 0 }}
-              transition={{ duration: 0.2 }}
-            >
-              <div className="space-y-1 max-h-[300px] overflow-y-auto pr-1 custom-scrollbar">
-                {trendingTopics.map((topic) => (
-                  <TrendingTopicItem key={topic.id} topic={topic} />
-                ))}
-              </div>
+          <AnimatePresence initial={false}>
+            {expandedSections.trending && (
+              <motion.div
+                id="trending-content"
+                variants={contentVariants}
+                initial="hidden"
+                animate="visible"
+                exit="hidden"
+              >
+                <div className="space-y-1 max-h-[250px] overflow-y-auto pr-1 scrollbar-thin scrollbar-thumb-gray-300 dark:scrollbar-thumb-gray-600 scrollbar-track-transparent">
+                  {trendingTopics.map((topic) => (
+                    <TrendingTopicItem key={topic.id} topic={topic} />
+                  ))}
+                </div>
 
-              <div className="mt-3 text-center">
-                <Link
-                  href="/trending"
-                  className="inline-flex items-center text-mainColor text-sm font-medium hover:underline"
-                >
-                  See all trending topics
-                  <ExternalLink className="ml-1 w-3.5 h-3.5" />
-                </Link>
-              </div>
-            </motion.div>
-          )}
-        </div>
+                <div className="mt-3 text-center">
+                  <Link
+                    href="/trending"
+                    className="inline-flex items-center text-mainColor text-sm font-medium hover:underline focus:outline-none"
+                  >
+                    See all trending topics
+                    <ExternalLink className="ml-1 w-3 h-3" aria-hidden="true" />
+                  </Link>
+                </div>
+              </motion.div>
+            )}
+          </AnimatePresence>
+        </section>
 
-        {/* Upcoming Events Section */}
-        <div>
+        {/* Suggested Users Section */}
+        <section aria-labelledby="suggested-heading" className="bg-white dark:bg-darkgrey rounded-xl border border-gray-200 dark:border-gray-800 p-4 shadow-sm">
           <SectionHeader
-            icon={Calendar}
-            title="Upcoming Events"
-            isExpanded={expandedSections.events}
-            onToggle={() => toggleSection("events")}
+            icon={Users}
+            title="Suggested for You"
+            isExpanded={expandedSections.suggested}
+            onToggle={() => toggleSection("suggested")}
+            id="suggested-heading"
           />
 
-          {expandedSections.events && (
-            <motion.div
-              initial={{ opacity: 0, height: 0 }}
-              animate={{ opacity: 1, height: "auto" }}
-              exit={{ opacity: 0, height: 0 }}
-              transition={{ duration: 0.2 }}
-            >
-              <div className="space-y-1 max-h-[300px] overflow-y-auto pr-1 custom-scrollbar">
-                {upcomingEvents.map((event) => (
-                  <EventItem key={event.id} event={event} />
-                ))}
-              </div>
+          <AnimatePresence initial={false}>
+            {expandedSections.suggested && (
+              <motion.div
+                id="suggested-content"
+                variants={contentVariants}
+                initial="hidden"
+                animate="visible"
+                exit="hidden"
+              >
+                <div className="space-y-2 max-h-[250px] overflow-y-auto pr-1 scrollbar-thin scrollbar-thumb-gray-300 dark:scrollbar-thumb-gray-600 scrollbar-track-transparent">
+                  {suggestedUsers.map((user) => (
+                    <SuggestedUserItem key={user.id} user={user} />
+                  ))}
+                </div>
 
-              <div className="mt-3 text-center">
-                <Link
-                  href="/events"
-                  className="inline-flex items-center text-mainColor text-sm font-medium hover:underline"
-                >
-                  View all events
-                  <ExternalLink className="ml-1 w-3.5 h-3.5" />
-                </Link>
-              </div>
-            </motion.div>
-          )}
-        </div>
-
-        {/* Quick Links */}
-        <div className="pt-2 border-t border-gray-200 dark:border-gray-700">
-          <div className="grid grid-cols-2 gap-2">
-            <Link href="/discover">
-              <div className="p-2 bg-gray-50 dark:bg-gray-800 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors text-center">
-                <Zap className="w-5 h-5 text-mainColor mx-auto mb-1" />
-                <span className="text-xs font-medium text-gray-700 dark:text-gray-300">Discover</span>
-              </div>
-            </Link>
-            <Link href="/saved">
-              <div className="p-2 bg-gray-50 dark:bg-gray-800 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors text-center">
-                <Bookmark className="w-5 h-5 text-mainColor mx-auto mb-1" />
-                <span className="text-xs font-medium text-gray-700 dark:text-gray-300">Saved</span>
-              </div>
-            </Link>
-            <Link href="/live">
-              <div className="p-2 bg-gray-50 dark:bg-gray-800 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors text-center">
-                <PlayCircle className="w-5 h-5 text-red-500 mx-auto mb-1" />
-                <span className="text-xs font-medium text-gray-700 dark:text-gray-300">Live</span>
-              </div>
-            </Link>
-            <Link href="/history">
-              <div className="p-2 bg-gray-50 dark:bg-gray-800 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors text-center">
-                <Clock className="w-5 h-5 text-mainColor mx-auto mb-1" />
-                <span className="text-xs font-medium text-gray-700 dark:text-gray-300">History</span>
-              </div>
-            </Link>
-          </div>
-        </div>
+                <div className="mt-3 text-center">
+                  <Link
+                    href="/discover/users"
+                    className="inline-flex items-center text-mainColor text-sm font-medium hover:underline focus:outline-none"
+                  >
+                    See more suggestions
+                    <ExternalLink className="ml-1 w-3 h-3" aria-hidden="true" />
+                  </Link>
+                </div>
+              </motion.div>
+            )}
+          </AnimatePresence>
+        </section>
 
         {/* Footer */}
-        <div className="text-xs text-gray-500 dark:text-gray-400">
+        <footer className="text-xs text-gray-500 dark:text-gray-400 mt-auto pt-4 border-t border-gray-200 dark:border-gray-800">
           <div className="flex flex-wrap gap-2">
-            <Link href="/help" className="hover:underline">
+            <Link
+              href="/help"
+              className="hover:underline focus:outline-none rounded"
+            >
               Help Center
             </Link>
-            <Link href="/terms" className="hover:underline">
+            <Link
+              href="/terms"
+              className="hover:underline focus:outline-none rounded"
+            >
               Terms
             </Link>
-            <Link href="/privacy" className="hover:underline">
+            <Link
+              href="/privacy"
+              className="hover:underline focus:outline-none rounded"
+            >
               Privacy
             </Link>
-            <Link href="/settings" className="hover:underline">
+            <Link
+              href="/settings"
+              className="hover:underline focus:outline-none rounded"
+            >
               Settings
             </Link>
           </div>
-          <p className="mt-2">© {new Date().getFullYear()} World News</p>
-        </div>
+          <p className="mt-2">© {currentYear} World News</p>
+        </footer>
       </div>
-    </div>
+    </aside>
   )
 }
 
 export default RightSidebar
-

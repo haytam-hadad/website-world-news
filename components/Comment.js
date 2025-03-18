@@ -1,37 +1,11 @@
 "use client"
 
 import { useState } from "react"
-import { Clock, Flag, MessageCircle, Share2, MoreHorizontal, Heart, Copy } from "lucide-react"
+import { Clock, Flag, Share2, MoreHorizontal, Copy } from "lucide-react"
 import { motion } from "framer-motion"
 
-const Comment = ({ userProfilename, username, text, timeAgo, onReport, onReply }) => {
-  const [liked, setLiked] = useState(false)
-  const [likeCount, setLikeCount] = useState(Math.floor(Math.random() * 10))
+const Comment = ({ userProfilename, username, text, timeAgo, onReport }) => {
   const [showActions, setShowActions] = useState(false)
-  const [showReplyForm, setShowReplyForm] = useState(false)
-  const [replyText, setReplyText] = useState("")
-
-  const handleLike = () => {
-    setLiked(!liked)
-    setLikeCount(liked ? likeCount - 1 : likeCount + 1)
-  }
-
-  const handleReply = () => {
-    setShowReplyForm(!showReplyForm)
-    if (onReply && showReplyForm && replyText.trim()) {
-      onReply(replyText)
-      setReplyText("")
-    }
-  }
-
-  const handleSubmitReply = (e) => {
-    e.preventDefault()
-    if (onReply && replyText.trim()) {
-      onReply(replyText)
-      setReplyText("")
-      setShowReplyForm(false)
-    }
-  }
 
   return (
     <motion.div
@@ -70,30 +44,6 @@ const Comment = ({ userProfilename, username, text, timeAgo, onReport, onReply }
 
           {/* Comment actions */}
           <div className="flex flex-wrap items-center gap-2 mt-2">
-            {/* Like button */}
-            <button
-              onClick={handleLike}
-              className={`flex items-center gap-1 p-1.5 rounded-full transition-colors ${
-                liked
-                  ? "text-red-500 dark:text-red-400"
-                  : "text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300"
-              }`}
-              aria-label={liked ? "Unlike" : "Like"}
-            >
-              <Heart className={`w-4 h-4 ${liked ? "fill-current" : ""}`} />
-              {likeCount > 0 && <span className="text-xs font-medium">{likeCount}</span>}
-            </button>
-
-            {/* Reply button */}
-            <button
-              onClick={handleReply}
-              className="flex items-center gap-1 p-1.5 rounded-full text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300 transition-colors"
-              aria-label="Reply"
-            >
-              <MessageCircle className="w-4 h-4" />
-              <span className="text-xs font-medium">Reply</span>
-            </button>
-
             {/* Share button */}
             <button
               className="p-1.5 rounded-full text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300 transition-colors"
@@ -148,43 +98,6 @@ const Comment = ({ userProfilename, username, text, timeAgo, onReport, onReply }
               )}
             </div>
           </div>
-
-          {/* Reply form */}
-          {showReplyForm && (
-            <motion.div
-              initial={{ opacity: 0, height: 0 }}
-              animate={{ opacity: 1, height: "auto" }}
-              exit={{ opacity: 0, height: 0 }}
-              transition={{ duration: 0.2 }}
-              className="mt-3"
-            >
-              <form onSubmit={handleSubmitReply} className="flex flex-col">
-                <textarea
-                  value={replyText}
-                  onChange={(e) => setReplyText(e.target.value)}
-                  placeholder={`Reply to ${userProfilename}...`}
-                  className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-700 dark:text-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors resize-none text-sm"
-                  rows="2"
-                />
-                <div className="flex justify-end gap-2 mt-2">
-                  <button
-                    type="button"
-                    onClick={() => setShowReplyForm(false)}
-                    className="px-3 py-1.5 text-xs font-medium text-gray-700 dark:text-gray-300 bg-gray-100 dark:bg-gray-700 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors"
-                  >
-                    Cancel
-                  </button>
-                  <button
-                    type="submit"
-                    disabled={!replyText.trim()}
-                    className="px-3 py-1.5 text-xs font-medium text-white bg-blue-600 rounded-lg hover:bg-blue-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-                  >
-                    Reply
-                  </button>
-                </div>
-              </form>
-            </motion.div>
-          )}
         </div>
       </div>
     </motion.div>

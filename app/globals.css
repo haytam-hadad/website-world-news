@@ -92,35 +92,31 @@ body {
   }
 
   ::-webkit-scrollbar-thumb {
-    background: var(--mainColor);
-    opacity: 0.6;
+    background: #ddd;
     border-radius: 10px;
   }
 
   ::-webkit-scrollbar-thumb:hover {
-    background: var(--main2Color);
-    opacity: 0.8;
+    background: #13132c;
   }
 
   /* Firefox scrollbar styling */
   * {
     scrollbar-width: thin;
-    scrollbar-color: var(--mainColor) transparent;
+    scrollbar-color: #ddd transparent;
   }
 
   .dark ::-webkit-scrollbar-thumb {
-    background: var(--mainColor);
-    opacity: 0.5;
+    background: #13132c;
   }
 
   .dark ::-webkit-scrollbar-thumb:hover {
-    background: var(--main2Color);
-    opacity: 0.7;
+    background: #ddd;
   }
 
   /* Firefox dark mode scrollbar */
   .dark * {
-    scrollbar-color: var(--mainColor) transparent;
+    scrollbar-color: #13132c ;
   }
 }
 

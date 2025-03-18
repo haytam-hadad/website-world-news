@@ -127,7 +127,7 @@ export default function AddPostPage() {
       icon: <Film className="w-4 h-4" />,
       description: "Movies, TV shows, celebrity news, and entertainment",
       color: "bg-pink-500",
-      type: "lifestyle",
+      type: "entertainment",
     },
     {
       id: "music",

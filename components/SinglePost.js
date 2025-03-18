@@ -662,30 +662,19 @@ const SinglePost = ({ post, comments = [] }) => {
                     </Link>
                     <div className="flex-1">
                       <div className="flex items-center justify-between mb-1">
-                        <div>
-                          <Link href={`/profile/${comment.author?.username || "unknown"}`}>
-                            <span className="font-medium text-gray-900 dark:text-gray-100 hover:underline">
-                              {comment.author?.displayname || "Unknown User"}
-                            </span>
-                          </Link>
-                          <span className="text-xs text-gray-500 dark:text-gray-400 ml-2">
-                            {formatDate(comment.createdAt)}
+                        <Link href={`/profile/${comment.author?.username || "unknown"}`}>
+                          <span className="font-medium capitalize text-gray-900 dark:text-gray-100 hover:underline">
+                            {comment.author?.displayname || "Unknown User"}
                           </span>
-                        </div>
-                        <button className="text-gray-400 hover:text-gray-500 dark:hover:text-gray-300">
-                          <MoreHorizontal className="w-4 h-4" />
-                        </button>
+                          <span className="text-xs text-gray-500 dark:text-gray-400 ml-1">
+                          @{comment.author?.username || "unknown"}
+                        </span>
+                        </Link>
+                        <span className="text-xs text-gray-500 dark:text-gray-400">
+                          {formatDate(comment.createdAt)}
+                        </span>
                       </div>
                       <p className="text-gray-700 dark:text-gray-300">{comment.content}</p>
-                      <div className="flex items-center space-x-4 mt-2 text-sm">
-                        <button className="flex items-center text-gray-500 dark:text-gray-400 hover:text-mainColor dark:hover:text-mainColor transition-colors">
-                          <Heart className="w-4 h-4 mr-1" />
-                          <span>{comment.likes || 0}</span>
-                        </button>
-                        <button className="text-gray-500 dark:text-gray-400 hover:text-mainColor dark:hover:text-mainColor transition-colors">
-                          Reply
-                        </button>
-                      </div>
                     </div>
                   </div>
                 </div>

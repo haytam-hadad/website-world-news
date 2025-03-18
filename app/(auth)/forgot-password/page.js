@@ -93,7 +93,7 @@ export default function ForgotPasswordPage() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5, delay: 0.3 }}
             >
-              Enter your email and we'll send you a verification code
+              Enter your email and we&apos;ll send you a verification code
             </motion.p>
           </div>
 
@@ -217,7 +217,7 @@ export default function ForgotPasswordPage() {
           >
             <h2 className="text-3xl font-bold p-1 mt-10 mb-1">Account Recovery</h2>
             <p className="text-lg mb-8 text-white/90">
-              We'll help you reset your password and get back to accessing the latest news and global conversations.
+              We&apos;ll help you reset your password and get back to accessing the latest news and global conversations.
             </p>
           </motion.div>
 

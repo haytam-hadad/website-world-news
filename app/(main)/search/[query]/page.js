@@ -67,7 +67,7 @@ export default async function Search({ params }) {
             
             return (
               <Article
-                key={article._id || Math.random().toString(36)}
+                key={article._id}
                 articleData={formattedArticle}
               />
             );

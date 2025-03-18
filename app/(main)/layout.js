@@ -6,6 +6,8 @@ import SideMenu from "@/components/SideMenu"
 import RightSidebar from "@/components/right-sidebar"
 import { ThemeContext } from "../ThemeProvider"
 import { useState, useContext, useEffect, useCallback } from "react"
+import { motion } from "framer-motion"
+
 
 // Custom hook to track window width
 function useWindowWidth() {
@@ -31,7 +33,7 @@ function LayoutContent({ children }) {
   return (
     <div className="flex flex-col min-h-screen">
       <Header onToggleMenu={() => setShowMenu((prev) => !prev)} />
-      <div className="flex flex-1 relative">
+      <div className="flex flex-1 gap-1 relative">
         {/* Side Menu - Desktop */}
         {isDesktop && (
           <div className="w-[250px] flex-shrink-0">
@@ -49,16 +51,25 @@ function LayoutContent({ children }) {
         )}
 
         {/* Content Area */}
-        <div className="flex-1 p-1 md:p-3 overflow-y-auto bg-lightgrey dark:bg-thirdColor">{children}</div>
+        <div className="flex-1 p-1 md:p-3 overflow-y-auto bg-lightgrey dark:bg-thirdColor">
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.2 }}
+          >
+            {children}
+          </motion.div>
+          <GoUp />
+        </div>
 
         {/* Right Sidebar - Wide Desktop Only */}
         {isWideDesktop && (
-          <div className="w-[310px] flex-shrink-0 sticky top-16 h-screen">
+          <div className="w-[310px] flex sticky top-16 h-screen">
             <RightSidebar />
           </div>
         )}
       </div>
-      <GoUp />
     </div>
   )
 }
