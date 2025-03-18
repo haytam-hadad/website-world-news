@@ -298,7 +298,7 @@ export default function ResetPasswordPage() {
             animate={{ opacity: 1 }}
             transition={{ duration: 0.5, delay: 0.6 }}
           >
-            Didn't receive the code?&nbsp;
+            Didn&apos;t receive the code?&nbsp;
             <Link
               href="/forgot-password"
               className="font-medium text-mainColor hover:text-mainColor/80 transition-colors duration-200"
