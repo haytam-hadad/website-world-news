@@ -1,5 +1,4 @@
-"use client"
-import Footer from "@/components/Footer"
+
 import "./globals.css"
 import { ThemeProvider } from "./ThemeProvider"
 
@@ -16,4 +15,3 @@ export default function Layout({ children }) {
     </html>
   )
 }
-

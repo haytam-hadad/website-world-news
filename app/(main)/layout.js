@@ -33,7 +33,7 @@ function LayoutContent({ children }) {
   return (
     <div className="flex flex-col min-h-screen">
       <Header onToggleMenu={() => setShowMenu((prev) => !prev)} />
-      <div className="flex flex-1 gap-1 relative">
+      <div className="flex gap-1 relative">
         {/* Side Menu - Desktop */}
         {isDesktop && (
           <div className="w-[250px] flex-shrink-0">
