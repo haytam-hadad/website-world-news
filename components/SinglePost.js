@@ -16,16 +16,15 @@ import {
   MoreHorizontal,
   Clock,
   Eye,
-  Heart,
   ChevronDown,
   ChevronUp,
+  Loader2,
+  AlertCircle,
 } from "lucide-react"
 
 import SourcesDisplay from "./sources-display"
 
-
-
-const SinglePost = ({ post, comments = [] }) => {
+const SinglePost = ({ post, initialComments = [] }) => {
   const [userLiked, setUserLiked] = useState(false)
   const [userDisliked, setUserDisliked] = useState(false)
   const [upvoteCount, setUpvoteCount] = useState(post?.upvote || 0)
@@ -34,11 +33,14 @@ const SinglePost = ({ post, comments = [] }) => {
   const [showOptions, setShowOptions] = useState(false)
   const [showCommentForm, setShowCommentForm] = useState(false)
   const [commentText, setCommentText] = useState("")
-  const [localComments, setLocalComments] = useState(comments)
+  const [localComments, setLocalComments] = useState(initialComments)
   const [mediaLoaded, setMediaLoaded] = useState(false)
   const [mediaError, setMediaError] = useState(false)
   const [showAllComments, setShowAllComments] = useState(false)
   const [isVoting, setIsVoting] = useState(false)
+  const [isSubmittingComment, setIsSubmittingComment] = useState(false)
+  const [commentError, setCommentError] = useState(null)
+  const [isLoadingComments, setIsLoadingComments] = useState(false)
 
   const optionsRef = useRef(null)
   const commentInputRef = useRef(null)
@@ -61,6 +63,13 @@ const SinglePost = ({ post, comments = [] }) => {
     }
   }, [post, user])
 
+  // Fetch comments when component mounts
+  useEffect(() => {
+    if (post && post._id) {
+      fetchComments()
+    }
+  }, [post])
+
   // Close dropdown when clicked outside
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -81,6 +90,31 @@ const SinglePost = ({ post, comments = [] }) => {
       commentInputRef.current.focus()
     }
   }, [showCommentForm])
+
+  // Fetch comments from the API
+  const fetchComments = async () => {
+    try {
+      setIsLoadingComments(true)
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/news/${post._id}/comments`, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        credentials: "include", // Important for sending cookies
+      })
+
+      if (!response.ok) {
+        throw new Error("Failed to fetch comments")
+      }
+
+      const data = await response.json()
+      setLocalComments(data.comments || [])
+    } catch (error) {
+      console.error("Error fetching comments:", error)
+    } finally {
+      setIsLoadingComments(false)
+    }
+  }
 
   const handleUpvote = async () => {
     if (!user) {
@@ -183,31 +217,51 @@ const SinglePost = ({ post, comments = [] }) => {
     }
   }
 
-  const handleSubmitComment = (e) => {
+  const handleSubmitComment = async (e) => {
     e.preventDefault()
+    setCommentError(null)
 
     if (!commentText.trim()) return
-
-    // Create a new comment object
-    const newComment = {
-      id: Date.now(),
-      content: commentText,
-      author: {
-        username: user?.username || "anonymous",
-        displayname: user?.displayname || "Anonymous User",
-      },
-      createdAt: new Date().toISOString(),
-      likes: 0,
+    if (!user) {
+      router.push("/login")
+      return
     }
 
-    // Add the new comment to the local state
-    setLocalComments((prev) => [newComment, ...prev])
+    try {
+      setIsSubmittingComment(true)
 
-    // Reset the form
-    setCommentText("")
-    setShowCommentForm(false)
+      const commentData = {
+        text: commentText.trim(),
+      }
 
-    // Here you would also make an API call to save the comment
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/news/${post._id}/comments`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(commentData),
+        credentials: "include", // Important for sending cookies
+      })
+
+      if (!response.ok) {
+        const errorData = await response.json()
+        throw new Error(errorData.message || "Failed to post comment")
+      }
+
+      const data = await response.json()
+
+      // Add the new comment to the local state
+      setLocalComments((prev) => [data.comment, ...prev])
+
+      // Reset the form
+      setCommentText("")
+      setShowCommentForm(false)
+    } catch (error) {
+      console.error("Error posting comment:", error)
+      setCommentError(error.message || "Failed to post comment. Please try again.")
+    } finally {
+      setIsSubmittingComment(false)
+    }
   }
 
   // Format the date
@@ -230,7 +284,6 @@ const SinglePost = ({ post, comments = [] }) => {
     if (diffInSeconds < 31536000) return `${Math.floor(diffInSeconds / 2592000)}mo ago`
     return `${Math.floor(diffInSeconds / 31536000)}y ago`
   }
-
 
   // Display media (image or video)
   const displayMedia = () => {
@@ -346,7 +399,7 @@ const SinglePost = ({ post, comments = [] }) => {
             return (
               <blockquote
                 key={`line-${lineIndex}`}
-                className="border-l-4 border-gray-300 dark:border-gray-600 pl-4 py-2 my-4 bg-gray-50 dark:bg-gray-800 rounded-r-md italic text-gray-700 dark:text-gray-300"
+                className="border-gray-300 dark:border-gray-600 pl-4 py-2 my-4 bg-gray-50 dark:bg-gray-800 rounded-r-md italic text-gray-700 dark:text-gray-300"
               >
                 {processInlineFormatting(line.substring(2))}
               </blockquote>
@@ -511,15 +564,16 @@ const SinglePost = ({ post, comments = [] }) => {
           {displayMedia()}
 
           {/* Content */}
-          <div className="prose prose-sm sm:prose max-w-none dark:prose-invert">{formatContent(post.content)}
-                    {/* Sources section */}
+          <div className="prose prose-sm sm:prose max-w-none dark:prose-invert">
+            {formatContent(post.content)}
+            {/* Sources section */}
             {post.sources && post.sources.length > 0 && (
-            <div className="mt-6 pt-4 border-t border-gray-200 dark:border-gray-700">
-              <SourcesDisplay sources={post.sources} />
-            </div>  
-          )}
+              <div className="mt-6 pt-4 border-t border-gray-200 dark:border-gray-700">
+                <SourcesDisplay sources={post.sources} />
+              </div>
+            )}
           </div>
-          
+
           {/* Post stats */}
           <div className="flex items-center justify-between mt-6 pt-4 border-t border-gray-200 dark:border-gray-700">
             <div className="flex items-center space-x-4 text-sm text-gray-500 dark:text-gray-400">
@@ -625,6 +679,13 @@ const SinglePost = ({ post, comments = [] }) => {
                       placeholder="Write your comment..."
                       className="w-full p-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-mainColor focus:border-transparent bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 resize-none min-h-[100px]"
                     />
+
+                    {commentError && (
+                      <div className="mt-2 text-sm text-red-500 flex items-center">
+                        <AlertCircle className="w-4 h-4 mr-1" />
+                        {commentError}
+                      </div>
+                    )}
                   </div>
                 </div>
                 <div className="flex justify-end space-x-2">
@@ -633,17 +694,26 @@ const SinglePost = ({ post, comments = [] }) => {
                     onClick={() => {
                       setShowCommentForm(false)
                       setCommentText("")
+                      setCommentError(null)
                     }}
                     className="px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
+                    disabled={isSubmittingComment}
                   >
                     Cancel
                   </button>
                   <button
                     type="submit"
-                    disabled={!commentText.trim()}
+                    disabled={!commentText.trim() || isSubmittingComment}
                     className="px-4 py-2 rounded-lg bg-mainColor text-white font-medium hover:bg-mainColor/90 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                   >
-                    Post Comment
+                    {isSubmittingComment ? (
+                      <span className="flex items-center">
+                        <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                        Posting...
+                      </span>
+                    ) : (
+                      "Post Comment"
+                    )}
                   </button>
                 </div>
               </form>
@@ -672,35 +742,94 @@ const SinglePost = ({ post, comments = [] }) => {
 
         {/* Comments list */}
         <div className="divide-y divide-gray-200 dark:divide-gray-700">
-          {localComments.length > 0 ? (
+          {isLoadingComments ? (
+            <div className="p-8 text-center">
+              <Loader2 className="w-8 h-8 text-mainColor mx-auto mb-3 animate-spin" />
+              <p className="text-gray-500 dark:text-gray-400">Loading comments...</p>
+            </div>
+          ) : localComments.length > 0 ? (
             <>
-              {(showAllComments ? localComments : localComments.slice(0, 5)).map((comment, index) => (
-                <div key={comment.id || index} className="p-4 sm:p-6">
-                  <div className="flex items-start space-x-3">
-                    <Link href={`/profile/${comment.author?.username || "unknown"}`}>
-                      <div className="rounded-full bg-gray-200 dark:bg-gray-700 w-10 h-10 flex-shrink-0 flex items-center justify-center text-gray-700 dark:text-gray-300 font-semibold">
-                        {comment.author?.displayname ? comment.author.displayname[0].toUpperCase() : "U"}
-                      </div>
-                    </Link>
-                    <div className="flex-1">
-                      <div className="flex items-center justify-between mb-1">
-                        <Link href={`/profile/${comment.author?.username || "unknown"}`}>
-                          <span className="font-medium capitalize text-gray-900 dark:text-gray-100 hover:underline">
-                            {comment.author?.displayname || "Unknown User"}
+              {(showAllComments ? localComments : localComments.slice(0, 5)).map((comment, index) => {
+                // Check if the comment author is the same as the post author
+                const isAuthorComment = comment.author?.username === post.authorusername
+
+                return (
+                  <div
+                    key={comment._id || comment.id || index}
+                    className={`p-3 sm:p-5 ${isAuthorComment ? "bg-blue-50 dark:bg-blue-900/20 border-mainColor" : ""}`}
+                  >
+                    <div className="flex items-start space-x-3">
+                      <Link href={`/profile/${comment.author?.username || "unknown"}`}>
+                        <div
+                          className={`rounded-full ${isAuthorComment ? "bg-mainColor text-white" : "bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300"} w-10 h-10 flex-shrink-0 flex items-center justify-center font-semibold`}
+                        >
+                          {comment.author?.displayname ? comment.author.displayname[0].toUpperCase() : "U"}
+                        </div>
+                      </Link>
+                      <div className="flex-1">
+                        <div className="flex items-center justify-between mb-1">
+                          <div className="flex items-center">
+                            <Link href={`/profile/${comment.author?.username || "unknown"}`}>
+                              <span className="font-medium capitalize text-gray-900 dark:text-gray-100 hover:underline">
+                                {comment.author?.displayname || "Unknown User"}
+                              </span>
+                            </Link>
+                            <span className="text-xs text-gray-500 dark:text-gray-400 ml-1">
+                              @{comment.author?.username || "unknown"}
+                            </span>
+                            {isAuthorComment && (
+                              <span className="ml-2 px-2 py-0.5 text-xs font-medium bg-mainColor text-white rounded-full">
+                                Author
+                              </span>
+                            )}
+                          </div>
+                          <span className="text-xs text-gray-500 dark:text-gray-400">
+                            {calculateTimeAgo(comment.createdAt)}
                           </span>
-                          <span className="text-xs text-gray-500 dark:text-gray-400 ml-1">
-                          @{comment.author?.username || "unknown"}
-                        </span>
-                        </Link>
-                        <span className="text-xs text-gray-500 dark:text-gray-400">
-                          {calculateTimeAgo(comment.createdAt)}
-                        </span>
+                        </div>
+                        <p className="text-gray-700 dark:text-gray-300 whitespace-pre-line break-words">
+                          {comment.text}
+                        </p>
+
+                        {/* Comment actions */}
+                        <div className="flex items-center mt-2 space-x-4 text-xs">
+                          {user && user.username === comment.author?.username && (
+                            <button
+                              className="text-red-500 dark:text-red-400 hover:text-red-600 dark:hover:text-red-300 transition-colors flex items-center"
+                              onClick={() => {
+                                // Here you would implement the actual delete functionality
+                                console.log(`Deleting comment ${comment._id || comment.id}`)
+                                // For now, just remove it from the local state
+                                setLocalComments((prev) =>
+                                  prev.filter((c) => c._id !== comment._id && c.id !== comment.id),
+                                )
+                              }}
+                            >
+                              <svg
+                                xmlns="http://www.w3.org/2000/svg"
+                                width="14"
+                                height="14"
+                                viewBox="0 0 24 24"
+                                fill="none"
+                                stroke="currentColor"
+                                strokeWidth="2"
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                className="mr-1"
+                              >
+                                <path d="M3 6h18"></path>
+                                <path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"></path>
+                                <path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"></path>
+                              </svg>
+                              Delete
+                            </button>
+                          )}
+                        </div>
                       </div>
-                      <p className="text-gray-700 dark:text-gray-300">{comment.content}</p>
                     </div>
                   </div>
-                </div>
-              ))}
+                )
+              })}
 
               {/* Show more/less comments button */}
               {localComments.length > 5 && (
