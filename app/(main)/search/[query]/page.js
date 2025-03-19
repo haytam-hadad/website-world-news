@@ -38,11 +38,11 @@ export default async function Search({ params }) {
       <h2 className="text-2xl font-bold mb-6 text-primary">
         {articles.length > 0 ? (
           <>
-            Search Results for <span className="underline">{query}</span>
-            <ChevronDown className="ml-2 inline-block" />
+            Search Results for &quot;{query}&quot;
+            <ChevronDown className="ml-1 inline-block" />
           </>
         ) : (
-          <>No results found for <span className="underline">{query}</span></>
+          <>No results found for &quot;{query}&quot;</>
         )}
       </h2>
       

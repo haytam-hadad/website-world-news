@@ -65,8 +65,12 @@ function LayoutContent({ children }) {
         )}
 
         {/* Main Content */}
-        <div className="flex-1 overflow-auto bg-lightgrey dark:bg-thirdColor">{children}</div>
-        <Footer/>
+        <div className="flex-1 overflow-auto bg-lightgrey dark:bg-thirdColor">
+          <div>
+            {children}
+          </div>
+          <Footer/>
+          </div>
       </div>
     </div>
   )

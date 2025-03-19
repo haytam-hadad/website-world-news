@@ -6,15 +6,7 @@ import SkeletonArticle from "@/components/SkeletonArticle"
 
 const fetchArticles = async () => {
   try {
-    const apiUrl = `${process.env.NEXT_PUBLIC_API_URL}/news/latest`
-
-    if (!apiUrl) throw new Error("API URL is not defined in environment variables")
-
-    const res = await fetch(apiUrl, {
-      cache: "no-store",
-      // Add timeout for better UX on slow connections
-      next: { revalidate: 300 }, // Revalidate every 5 minutes
-    })
+    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/news/latest`)
 
     if (!res.ok) {
       throw new Error(`Failed to fetch articles: ${res.status} ${res.statusText}`)
