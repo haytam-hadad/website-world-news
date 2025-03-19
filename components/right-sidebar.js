@@ -1,9 +1,21 @@
 "use client"
 
-import { useState, useEffect } from "react"
+import { useState } from "react"
 import Link from "next/link"
 import { motion, AnimatePresence } from "framer-motion"
-import { CheckCircle, ChevronDown, ChevronUp, UserCheck, User, TrendingUp, Search, ExternalLink, Bell, Users, Hash } from 'lucide-react'
+import {
+  CheckCircle,
+  ChevronDown,
+  ChevronUp,
+  UserCheck,
+  User,
+  TrendingUp,
+  Search,
+  ExternalLink,
+  Bell,
+  Users,
+  Hash,
+} from "lucide-react"
 import Image from "next/image"
 
 // Sample data
@@ -110,9 +122,9 @@ const suggestedUsers = [
 // Section header component
 const SectionHeader = ({ icon: Icon, title, action, isExpanded, onToggle, id }) => {
   return (
-    <div className="flex items-center justify-between mb-3">
+    <div className="flex items-center justify-between mb-4">
       <div className="flex items-center">
-        <Icon className="w-5 h-5 text-mainColor mr-2" aria-hidden="true" />
+        <Icon className="w-5 h-5 text-mainColor mr-2.5" aria-hidden="true" />
         <h3 className="font-bold text-gray-900 dark:text-gray-100" id={id}>
           {title}
         </h3>
@@ -122,12 +134,14 @@ const SectionHeader = ({ icon: Icon, title, action, isExpanded, onToggle, id }) 
       ) : (
         <button
           onClick={onToggle}
-          className="p-1 rounded-full hover:bg-gray-100 dark:hover:bg-gray-800 text-gray-500 dark:text-gray-400 focus:outline-none"
+          className="p-1.5 rounded-full hover:bg-gray-100 dark:hover:bg-gray-800 text-gray-500 dark:text-gray-400 focus:outline-none transition-colors duration-300"
           aria-expanded={isExpanded}
           aria-controls={`${id}-content`}
           aria-label={isExpanded ? `Collapse ${title}` : `Expand ${title}`}
         >
-          {isExpanded ? <ChevronUp size={18} /> : <ChevronDown size={18} />}
+          <div className="bg-gray-100 dark:bg-gray-800 rounded-full p-1 hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors">
+            {isExpanded ? <ChevronUp size={16} /> : <ChevronDown size={16} />}
+          </div>
         </button>
       )}
     </div>
@@ -139,20 +153,26 @@ const SubscriptionItem = ({ user }) => {
   return (
     <Link
       href={`/profile/${user.username}`}
-      className={`block p-2 rounded-xl mb-2 transition-all duration-200 hover:bg-gray-100 dark:hover:bg-gray-800 focus:outline-none ${
-        user.hasNewContent ? "bg-gray-50 dark:bg-gray-800/60" : ""
+      className={`block p-3 rounded-xl mb-2.5 transition-all duration-300 hover:bg-gray-50 dark:hover:bg-gray-800/70 focus:outline-none group ${
+        user.hasNewContent ? "bg-gray-50/80 dark:bg-gray-800/40" : ""
       }`}
     >
       <div className="flex items-center space-x-3">
-        <div className="relative w-10 h-10 rounded-full overflow-hidden bg-mainColor flex-shrink-0 flex items-center justify-center text-white font-medium">
+        <div className="relative w-10 h-10 rounded-full overflow-hidden bg-mainColor flex-shrink-0 flex items-center justify-center text-white font-medium shadow-sm group-hover:shadow-md transition-shadow">
           {user.avatar ? (
-            <Image src={user.avatar || "/placeholder.svg"} alt={user.name} width={40} height={40} className="object-cover" />
+            <Image
+              src={user.avatar || "/placeholder.svg"}
+              alt={user.name}
+              width={40}
+              height={40}
+              className="object-cover"
+            />
           ) : (
             user.name.charAt(0).toUpperCase()
           )}
           {user.hasNewContent && (
             <span
-              className="absolute bottom-0 right-0 w-3 h-3 bg-mainColor rounded-full border-2 border-white dark:border-darkgrey"
+              className="absolute bottom-0 right-0 w-3 h-3 bg-mainColor rounded-full border-2 border-white dark:border-gray-900 shadow-sm"
               aria-hidden="true"
             ></span>
           )}
@@ -160,7 +180,7 @@ const SubscriptionItem = ({ user }) => {
 
         <div className="flex-1 min-w-0">
           <div className="flex items-center space-x-1">
-            <p className="font-medium text-gray-900 dark:text-gray-100 text-sm truncate">
+            <p className="font-medium text-gray-900 dark:text-gray-100 text-sm truncate group-hover:text-mainColor transition-colors">
               {user.name}
             </p>
             {user.isVerified && (
@@ -171,9 +191,7 @@ const SubscriptionItem = ({ user }) => {
             {user.hasNewContent ? (
               <span className="text-mainColor font-medium">New content</span>
             ) : (
-              <span className="text-gray-500 dark:text-gray-400">
-                {user.lastPosted}
-              </span>
+              <span className="text-gray-500 dark:text-gray-400">{user.lastPosted}</span>
             )}
           </div>
         </div>
@@ -187,24 +205,20 @@ const TrendingTopicItem = ({ topic }) => {
   return (
     <Link
       href={`/search/${encodeURIComponent(topic.title)}`}
-      className="block p-2 rounded-xl mb-2 hover:bg-gray-100 dark:hover:bg-gray-800 transition-all duration-200 focus:outline-none"
+      className="block p-3 rounded-xl mb-2.5 hover:bg-gray-50 dark:hover:bg-gray-800/70 transition-all duration-300 focus:outline-none group"
     >
       <div className="flex items-start space-x-3">
-        <div className="flex-shrink-0 mt-1">
-          <TrendingUp className="w-4 h-4 text-mainColor" aria-hidden="true" />
+        <div className="flex-shrink-0 mt-1 bg-mainColor/10 p-1.5 rounded-full group-hover:bg-mainColor/20 transition-colors">
+          <TrendingUp className="w-3.5 h-3.5 text-mainColor" aria-hidden="true" />
         </div>
         <div className="flex-1 min-w-0">
-          <h4 className="font-medium text-sm text-gray-900 dark:text-gray-100 line-clamp-1">
+          <h4 className="font-medium text-sm text-gray-900 dark:text-gray-100 line-clamp-1 group-hover:text-mainColor transition-colors">
             {topic.title}
           </h4>
-          <div className="flex items-center mt-1 space-x-2">
-            <span className="text-xs text-gray-500 dark:text-gray-400">
-              {topic.views} views
-            </span>
+          <div className="flex items-center mt-1.5 space-x-2">
+            <span className="text-xs text-gray-500 dark:text-gray-400">{topic.views} views</span>
             <span className="w-1 h-1 bg-gray-300 dark:bg-gray-600 rounded-full" aria-hidden="true"></span>
-            <span className="text-xs text-gray-500 dark:text-gray-400">
-              {topic.timePosted}
-            </span>
+            <span className="text-xs text-gray-500 dark:text-gray-400">{topic.timePosted}</span>
           </div>
         </div>
       </div>
@@ -215,30 +229,34 @@ const TrendingTopicItem = ({ topic }) => {
 // Suggested user component
 const SuggestedUserItem = ({ user }) => {
   return (
-    <div className="flex items-center justify-between p-2 rounded-xl hover:bg-gray-100 dark:hover:bg-gray-800 transition-all duration-200">
+    <div className="flex items-center justify-between p-3 rounded-xl hover:bg-gray-50 dark:hover:bg-gray-800/70 transition-all duration-300 group">
       <Link href={`/profile/${user.username}`} className="flex items-center space-x-3 flex-1 min-w-0">
-        <div className="relative w-10 h-10 rounded-full overflow-hidden bg-mainColor flex-shrink-0 flex items-center justify-center text-white font-medium">
+        <div className="relative w-10 h-10 rounded-full overflow-hidden bg-mainColor flex-shrink-0 flex items-center justify-center text-white font-medium shadow-sm group-hover:shadow-md transition-shadow">
           {user.avatar ? (
-            <Image src={user.avatar || "/placeholder.svg"} alt={user.name} width={40} height={40} className="object-cover" />
+            <Image
+              src={user.avatar || "/placeholder.svg"}
+              alt={user.name}
+              width={40}
+              height={40}
+              className="object-cover"
+            />
           ) : (
             user.name.charAt(0).toUpperCase()
           )}
         </div>
         <div className="flex-1 min-w-0">
           <div className="flex items-center space-x-1">
-            <p className="font-medium text-gray-900 dark:text-gray-100 text-sm truncate">
+            <p className="font-medium text-gray-900 dark:text-gray-100 text-sm truncate group-hover:text-mainColor transition-colors">
               {user.name}
             </p>
             {user.isVerified && (
               <CheckCircle size={12} className="text-mainColor flex-shrink-0" aria-label="Verified" />
             )}
           </div>
-          <p className="text-xs text-gray-500 dark:text-gray-400 truncate">
-            @{user.username}
-          </p>
+          <p className="text-xs text-gray-500 dark:text-gray-400 truncate">@{user.username}</p>
         </div>
       </Link>
-      <button className="ml-2 px-3 py-1 text-xs font-medium text-mainColor bg-mainColor/10 hover:bg-mainColor/20 rounded-full transition-colors duration-200">
+      <button className="ml-2 px-3.5 py-1.5 text-xs font-medium text-mainColor bg-mainColor/10 hover:bg-mainColor/20 rounded-full transition-all duration-300 shadow-sm hover:shadow">
         Follow
       </button>
     </div>
@@ -248,7 +266,7 @@ const SuggestedUserItem = ({ user }) => {
 // Animation variants
 const contentVariants = {
   hidden: { opacity: 0, height: 0 },
-  visible: { opacity: 1, height: "auto", transition: { duration: 0.2 } },
+  visible: { opacity: 1, height: "auto", transition: { duration: 0.3, ease: "easeInOut" } },
 }
 
 // Main RightSidebar component
@@ -282,8 +300,8 @@ const RightSidebar = () => {
   const currentYear = new Date().getFullYear()
 
   return (
-    <aside className="w-[320px] fixed top-0 right-0 h-full bg-white dark:bg-darkgrey border-l border-gray-200 dark:border-gray-800 overflow-y-auto z-30 pt-16">
-      <div className="p-3 space-y-5 h-full flex flex-col">
+    <aside className="w-[320px] fixed top-0 right-0 h-full bg-white dark:bg-darkgrey border-l border-gray-100 dark:border-gray-800 overflow-y-auto z-30 pt-16 shadow-lg">
+      <div className="p-4 space-y-2 h-full flex flex-col">
         {/* Search Box */}
         <div className="mb-2">
           <form onSubmit={handleSearch} className="relative">
@@ -292,30 +310,45 @@ const RightSidebar = () => {
               placeholder="Search topics, people..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full bg-gray-100 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-full py-2 pl-10 pr-4 text-gray-900 dark:text-gray-100 placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-mainColor focus:border-transparent transition-all duration-200"
+              className="w-full bg-gray-50 dark:bg-gray-800/70 border border-gray-100 dark:border-gray-800 rounded-xl py-2.5 pl-11 pr-4 text-darkgrey dark:text-gray-100 placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-mainColor focus:border-transparent transition-all duration-300 shadow-sm"
             />
-            <Search className="absolute left-3 top-2.5 w-5 h-5 text-gray-500 dark:text-gray-400" />
+            <Search className="absolute left-3.5 top-3 w-5 h-5 text-gray-500 dark:text-gray-400" />
           </form>
         </div>
 
         {/* Quick Actions */}
-        <div className="grid grid-cols-2 gap-2 mb-2">
-          <Link href="/notifications" className="flex flex-col items-center justify-center p-3 rounded-xl bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors duration-200">
+        <div className="grid grid-cols-2 gap-3 mb-2">
+          <Link
+            href="/notifications"
+            className="flex flex-col items-center justify-center p-3.5 rounded-xl bg-gray-50 dark:bg-gray-800/70 hover:bg-gray-100 dark:hover:bg-gray-800 transition-all duration-300 shadow-sm hover:shadow group"
+          >
             <div className="relative">
-              <Bell className="w-6 h-6 text-mainColor mb-1" />
-              <span className="absolute -top-1 -right-1 flex h-4 w-4 items-center justify-center rounded-full bg-red-500 text-[10px] font-bold text-white">3</span>
+              <Bell className="w-6 h-6 text-mainColor mb-1.5 group-hover:text-mainColor/80 transition-colors" />
+              <span className="absolute -top-1 -right-1 flex h-4 w-4 items-center justify-center rounded-full bg-red-500 text-[10px] font-bold text-white shadow-sm">
+                3
+              </span>
             </div>
-            <span className="text-xs font-medium text-gray-900 dark:text-gray-100">Alerts</span>
+            <span className="text-xs font-medium text-gray-900 dark:text-gray-100 group-hover:text-gray-700 dark:group-hover:text-gray-300 transition-colors">
+              Alerts
+            </span>
           </Link>
-          
-          <Link href="/trends" className="flex flex-col items-center justify-center p-3 rounded-xl bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors duration-200">
-            <Hash className="w-6 h-6 text-mainColor mb-1" />
-            <span className="text-xs font-medium text-gray-900 dark:text-gray-100">Trending</span>
+
+          <Link
+            href="/trends"
+            className="flex flex-col items-center justify-center p-3.5 rounded-xl bg-gray-50 dark:bg-gray-800/70 hover:bg-gray-100 dark:hover:bg-gray-800 transition-all duration-300 shadow-sm hover:shadow group"
+          >
+            <Hash className="w-6 h-6 text-mainColor mb-1.5 group-hover:text-mainColor/80 transition-colors" />
+            <span className="text-xs font-medium text-gray-900 dark:text-gray-100 group-hover:text-gray-700 dark:group-hover:text-gray-300 transition-colors">
+              Trending
+            </span>
           </Link>
         </div>
 
         {/* Subscriptions Section */}
-        <section aria-labelledby="subscriptions-heading" className="bg-white dark:bg-darkgrey rounded-xl border border-gray-200 dark:border-gray-800 p-4 shadow-sm">
+        <section
+          aria-labelledby="subscriptions-heading"
+          className="bg-white dark:bg-darkgrey rounded-xl border border-gray-100 dark:border-gray-800 p-5 shadow-md"
+        >
           <SectionHeader
             icon={UserCheck}
             title="Your Subscriptions"
@@ -338,8 +371,10 @@ const RightSidebar = () => {
                     filteredSubscriptions.map((user) => <SubscriptionItem key={user.id} user={user} />)
                   ) : (
                     <div className="text-center py-6">
-                      <User className="w-10 h-10 text-gray-300 dark:text-gray-600 mx-auto mb-2" aria-hidden="true" />
-                      <p className="text-gray-500 dark:text-gray-400">No subscriptions yet</p>
+                      <div className="bg-gray-50 dark:bg-gray-800/70 rounded-full p-3 w-16 h-16 mx-auto mb-3 flex items-center justify-center">
+                        <User className="w-8 h-8 text-gray-300 dark:text-gray-600" aria-hidden="true" />
+                      </div>
+                      <p className="text-gray-500 dark:text-gray-400 mb-2">No subscriptions yet</p>
                       <Link
                         href="/discover/users"
                         className="text-mainColor text-sm font-medium hover:underline block mt-2 focus:outline-none"
@@ -351,13 +386,15 @@ const RightSidebar = () => {
                 </div>
 
                 {filteredSubscriptions.length > 0 && (
-                  <div className="mt-3 text-center">
+                  <div className="mt-4 text-center">
                     <Link
                       href="/subscriptions"
-                      className="inline-flex items-center text-mainColor text-sm font-medium hover:underline focus:outline-none"
+                      className="inline-flex items-center text-mainColor text-sm font-medium hover:text-mainColor/80 transition-colors focus:outline-none group"
                     >
                       See all subscriptions
-                      <ExternalLink className="ml-1 w-3 h-3" aria-hidden="true" />
+                      <div className="ml-1.5 bg-mainColor/10 rounded-full p-1 group-hover:bg-mainColor/20 transition-colors">
+                        <ExternalLink className="w-3 h-3" aria-hidden="true" />
+                      </div>
                     </Link>
                   </div>
                 )}
@@ -367,7 +404,10 @@ const RightSidebar = () => {
         </section>
 
         {/* Trending Section */}
-        <section aria-labelledby="trending-heading" className="bg-white dark:bg-darkgrey rounded-xl border border-gray-200 dark:border-gray-800 p-4 shadow-sm">
+        <section
+          aria-labelledby="trending-heading"
+          className="bg-white dark:bg-darkgrey rounded-xl border border-gray-100 dark:border-gray-800 p-5 shadow-md"
+        >
           <SectionHeader
             icon={TrendingUp}
             title="Trending Now"
@@ -391,13 +431,15 @@ const RightSidebar = () => {
                   ))}
                 </div>
 
-                <div className="mt-3 text-center">
+                <div className="mt-4 text-center">
                   <Link
                     href="/trending"
-                    className="inline-flex items-center text-mainColor text-sm font-medium hover:underline focus:outline-none"
+                    className="inline-flex items-center text-mainColor text-sm font-medium hover:text-mainColor/80 transition-colors focus:outline-none group"
                   >
                     See all trending topics
-                    <ExternalLink className="ml-1 w-3 h-3" aria-hidden="true" />
+                    <div className="ml-1.5 bg-mainColor/10 rounded-full p-1 group-hover:bg-mainColor/20 transition-colors">
+                      <ExternalLink className="w-3 h-3" aria-hidden="true" />
+                    </div>
                   </Link>
                 </div>
               </motion.div>
@@ -406,7 +448,10 @@ const RightSidebar = () => {
         </section>
 
         {/* Suggested Users Section */}
-        <section aria-labelledby="suggested-heading" className="bg-white dark:bg-darkgrey rounded-xl border border-gray-200 dark:border-gray-800 p-4 shadow-sm">
+        <section
+          aria-labelledby="suggested-heading"
+          className="bg-white dark:bg-darkgrey rounded-xl border border-gray-100 dark:border-gray-800 p-5 shadow-md"
+        >
           <SectionHeader
             icon={Users}
             title="Suggested for You"
@@ -424,19 +469,21 @@ const RightSidebar = () => {
                 animate="visible"
                 exit="hidden"
               >
-                <div className="space-y-2 max-h-[250px] overflow-y-auto pr-1 scrollbar-thin scrollbar-thumb-gray-300 dark:scrollbar-thumb-gray-600 scrollbar-track-transparent">
+                <div className="space-y-2.5 max-h-[250px] overflow-y-auto pr-1 scrollbar-thin scrollbar-thumb-gray-300 dark:scrollbar-thumb-gray-600 scrollbar-track-transparent">
                   {suggestedUsers.map((user) => (
                     <SuggestedUserItem key={user.id} user={user} />
                   ))}
                 </div>
 
-                <div className="mt-3 text-center">
+                <div className="mt-4 text-center">
                   <Link
                     href="/discover/users"
-                    className="inline-flex items-center text-mainColor text-sm font-medium hover:underline focus:outline-none"
+                    className="inline-flex items-center text-mainColor text-sm font-medium hover:text-mainColor/80 transition-colors focus:outline-none group"
                   >
                     See more suggestions
-                    <ExternalLink className="ml-1 w-3 h-3" aria-hidden="true" />
+                    <div className="ml-1.5 bg-mainColor/10 rounded-full p-1 group-hover:bg-mainColor/20 transition-colors">
+                      <ExternalLink className="w-3 h-3" aria-hidden="true" />
+                    </div>
                   </Link>
                 </div>
               </motion.div>
@@ -445,34 +492,34 @@ const RightSidebar = () => {
         </section>
 
         {/* Footer */}
-        <footer className="text-xs text-gray-500 dark:text-gray-400 mt-auto pt-4 border-t border-gray-200 dark:border-gray-800">
-          <div className="flex flex-wrap gap-2">
+        <footer className="text-xs text-gray-500 dark:text-gray-400 mt-auto pt-5 border-t border-gray-100 dark:border-gray-800">
+          <div className="flex flex-wrap gap-3">
             <Link
               href="/help"
-              className="hover:underline focus:outline-none rounded"
+              className="hover:text-gray-700 dark:hover:text-gray-300 transition-colors focus:outline-none rounded"
             >
               Help Center
             </Link>
             <Link
               href="/terms"
-              className="hover:underline focus:outline-none rounded"
+              className="hover:text-gray-700 dark:hover:text-gray-300 transition-colors focus:outline-none rounded"
             >
               Terms
             </Link>
             <Link
               href="/privacy"
-              className="hover:underline focus:outline-none rounded"
+              className="hover:text-gray-700 dark:hover:text-gray-300 transition-colors focus:outline-none rounded"
             >
               Privacy
             </Link>
             <Link
               href="/settings"
-              className="hover:underline focus:outline-none rounded"
+              className="hover:text-gray-700 dark:hover:text-gray-300 transition-colors focus:outline-none rounded"
             >
               Settings
             </Link>
           </div>
-          <p className="mt-2">© {currentYear} World News</p>
+          <p className="mt-3">© {currentYear} World News</p>
         </footer>
       </div>
     </aside>
@@ -480,3 +527,4 @@ const RightSidebar = () => {
 }
 
 export default RightSidebar
+
