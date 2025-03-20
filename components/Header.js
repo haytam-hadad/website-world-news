@@ -92,8 +92,8 @@ export default function Header({ onToggleMenu }) {
               height={40}
               className="dark:filter dark:invert transition-all duration-200 group-hover:scale-110"
             />
-            <span className="font-bold text-xl text-gray-800 dark:text-gray-100 transition-colors duration-200 group-hover:text-mainColor dark:group-hover:text-mainColor">
-              World News
+            <span className="font-semibold text-2xl text-gray-800 dark:text-gray-100 transition-colors duration-200 group-hover:text-mainColor dark:group-hover:text-mainColor">
+            Trustify
             </span>
           </Link>
 

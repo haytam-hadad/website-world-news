@@ -348,7 +348,7 @@ const Article = ({ articleData }) => {
         <div className="p-4 flex items-center justify-between">
           <Link
             href={`/profile/${authorusername || "unknown"}`}
-            className="flex items-center space-x-3 group"
+            className="flex items-center space-x-2 group"
             onClick={(e) => e.stopPropagation()}
           >
             <div className="rounded-full bg-mainColor w-10 h-10 flex items-center justify-center text-secondaryColor font-semibold group-hover:shadow-md transition-shadow">
@@ -358,7 +358,7 @@ const Article = ({ articleData }) => {
               <p className="font-medium text-gray-900 dark:text-gray-100 capitalize group-hover:underline">
                 {authordisplayname || "Unknown"}
               </p>
-              <div className="flex items-center space-x-2">
+              <div className="flex items-center space-x-1">
                 <span className="text-sm text-gray-500 dark:text-gray-400">
                   {authorusername ? `@${authorusername}` : "N/A"}
                 </span>
@@ -372,7 +372,7 @@ const Article = ({ articleData }) => {
           </Link>
 
           {/* Category tag and options */}
-          <div className="flex items-center space-x-2">
+          <div className="flex items-center space-x-1">
             <Link
               href={`/category/${category?.toLowerCase() || "general"}`}
               className="px-3 py-1 text-xs font-medium text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-900/30 rounded-full capitalize hover:bg-blue-100 dark:hover:bg-blue-900/50 transition-colors"

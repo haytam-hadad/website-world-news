@@ -159,23 +159,7 @@ const SubscriptionItem = ({ user }) => {
     >
       <div className="flex items-center space-x-3">
         <div className="relative w-10 h-10 rounded-full overflow-hidden bg-mainColor flex-shrink-0 flex items-center justify-center text-white font-medium shadow-sm group-hover:shadow-md transition-shadow">
-          {user.avatar ? (
-            <Image
-              src={user.avatar || "/placeholder.svg"}
-              alt={user.name}
-              width={40}
-              height={40}
-              className="object-cover"
-            />
-          ) : (
-            user.name.charAt(0).toUpperCase()
-          )}
-          {user.hasNewContent && (
-            <span
-              className="absolute bottom-0 right-0 w-3 h-3 bg-mainColor rounded-full border-2 border-white dark:border-gray-900 shadow-sm"
-              aria-hidden="true"
-            ></span>
-          )}
+        <span className="text-white font-medium">{user.name.charAt(0).toUpperCase()}</span>
         </div>
 
         <div className="flex-1 min-w-0">

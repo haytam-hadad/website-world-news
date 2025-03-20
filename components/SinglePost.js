@@ -479,7 +479,7 @@ const SinglePost = ({ post, initialComments = [] }) => {
       <article className="bg-white dark:bg-darkgrey border border-gray-200 dark:border-gray-700 rounded-xl shadow-sm overflow-hidden mb-6">
         {/* Header with user info */}
         <div className="p-2 sm:p-4 flex items-center justify-between border-b border-gray-200 dark:border-gray-700">
-          <Link href={`/profile/${post.authorusername || "unknown"}`} className="flex items-center space-x-3 group">
+          <Link href={`/profile/${post.authorusername || "unknown"}`} className="flex items-center space-x-2 group">
             <div className="rounded-full bg-mainColor w-10 h-10 flex items-center justify-center text-secondaryColor font-semibold text-lg cursor-pointer group-hover:shadow-md transition-shadow">
               {post.authordisplayname ? post.authordisplayname[0].toUpperCase() : "U"}
             </div>
@@ -487,7 +487,7 @@ const SinglePost = ({ post, initialComments = [] }) => {
               <p className="font-medium text-gray-900 dark:text-gray-100 capitalize group-hover:underline">
                 {post.authordisplayname || "Unknown"}
               </p>
-              <div className="flex items-center space-x-2">
+              <div className="flex items-center space-x-1">
                 <span className="text-sm text-gray-500 dark:text-gray-400">
                   {post.authorusername ? `@${post.authorusername}` : "N/A"}
                 </span>
@@ -792,7 +792,7 @@ const SinglePost = ({ post, initialComments = [] }) => {
                         </p>
 
                         {/* Comment actions */}
-                        <div className="flex items-center mt-2 space-x-4 text-xs">
+                        <div className="flex items-center mt-2 space-x-3 text-xs">
                           {user && user.username === comment.author?.username && (
                             <button
                               className="text-red-500 dark:text-red-400 hover:text-red-600 dark:hover:text-red-300 transition-colors flex items-center"

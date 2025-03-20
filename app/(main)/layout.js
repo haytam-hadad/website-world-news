@@ -5,7 +5,7 @@ import { GoUp } from "@/components/GoUp"
 import SideMenu from "@/components/SideMenu"
 import RightSidebar from "@/components/right-sidebar"
 import { ThemeContext } from "../ThemeProvider"
-import { useState, useContext, useEffect, useCallback } from "react"
+import { useState, useContext, useEffect } from "react"
 import { motion } from "framer-motion"
 
 
@@ -13,12 +13,10 @@ import { motion } from "framer-motion"
 function useWindowWidth() {
   const [width, setWidth] = useState(typeof window !== "undefined" ? window.innerWidth : 1024)
 
-  const handleResize = useCallback(() => setWidth(window.innerWidth), [])
-
   useEffect(() => {
-    window.addEventListener("resize", handleResize)
-    return () => window.removeEventListener("resize", handleResize)
-  }, [handleResize])
+    window.addEventListener("resize", () => setWidth(window.innerWidth))
+    return () => window.removeEventListener("resize", () => setWidth(window.innerWidth))
+  }, [])
 
   return width
 }

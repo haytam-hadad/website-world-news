@@ -78,7 +78,7 @@ const SideMenu = ({ setVisible }) => {
       transition={{ duration: 0.3, ease: "easeOut" }}
       style={{ bottom: 0 }}
     >
-      <div className="flex flex-col p-4">
+      <div className="flex flex-col p-4 space-y-1 ">
         {/* Theme Toggle */}
         <button
           onClick={() => setTheme(!theme)}
@@ -118,7 +118,7 @@ const SideMenu = ({ setVisible }) => {
           <Link href="/add" className="block">
             <button
               onClick={() => setVisible(false)}
-              className={`flex items-center justify-center gap-2 w-full p-3.5 rounded-xl transition-all duration-300 ${
+              className={`flex items-center outline outline-1 outline-offset-[-4px] justify-center gap-2 w-full p-3.5 rounded-xl transition-all duration-300 ${
                 activePath === "/add"
                   ? "bg-mainColor text-white font-medium shadow-md shadow-mainColor/20"
                   : "bg-mainColor/10 text-mainColor hover:bg-mainColor/20 hover:shadow-sm"
@@ -182,7 +182,7 @@ const SideMenu = ({ setVisible }) => {
         </div>
 
         {/* Categories Section */}
-        <div className="space-y-3">
+        <div>
           <button
             className="flex items-center justify-between w-full p-3.5 rounded-xl transition-all duration-300 text-mainColor font-medium hover:bg-gray-50 dark:hover:bg-gray-800/70 group"
             onClick={() => setCategoriesVisible(!categoriesVisible)}
@@ -206,7 +206,7 @@ const SideMenu = ({ setVisible }) => {
                 transition={{ duration: 0.3, ease: "easeInOut" }}
                 className="overflow-hidden"
               >
-                <div className="flex flex-col space-y-2 pl-4 max-h-[calc(100vh-300px)] overflow-y-auto pr-1 py-1">
+                <div className="flex flex-col pl-4 max-h-[calc(100vh-300px)] overflow-y-auto pr-2 py-1">
                   {menuItems.map(({ name, path, icon }) => (
                     <Link key={path} href={path} className="block">
                       <button
@@ -225,12 +225,10 @@ const SideMenu = ({ setVisible }) => {
                   <Link href="/categories" className="block mt-2">
                     <button
                       onClick={() => setVisible(false)}
-                      className="flex items-center justify-between w-full p-3 rounded-xl transition-all duration-300 text-mainColor hover:bg-gray-50 dark:hover:bg-gray-800/70 mt-1"
+                      className="flex items-center justify-between w-full p-1 rounded-xl transition-all duration-300 text-mainColor hover:bg-gray-50 dark:hover:bg-gray-800/70 mt-1"
                     >
                       <span className="text-base font-medium">View All Categories</span>
-                      <div className="bg-mainColor/10 rounded-full p-1">
-                        <ChevronRight size={14} />
-                      </div>
+                        <ChevronRight size={11} />
                     </button>
                   </Link>
                 </div>
@@ -241,7 +239,7 @@ const SideMenu = ({ setVisible }) => {
 
         {/* Personal Section (for logged in users) */}
         {user && (
-          <div className="space-y-3 mt-2">
+          <div>
             <button
               className="flex items-center justify-between w-full p-3.5 rounded-xl transition-all duration-300 text-mainColor font-medium hover:bg-gray-50 dark:hover:bg-gray-800/70 group"
               onClick={() => setPersonalVisible(!personalVisible)}
@@ -265,8 +263,8 @@ const SideMenu = ({ setVisible }) => {
                   transition={{ duration: 0.3, ease: "easeInOut" }}
                   className="overflow-hidden"
                 >
-                  <div className="flex flex-col space-y-2 pl-4">
-                    <Link href="/saved" className="block">
+                <div className="flex flex-col pl-4 max-h-[calc(100vh-300px)] overflow-y-auto pr-2 py-1">
+                  <Link href="/saved" className="block">
                       <button
                         onClick={() => setVisible(false)}
                         className={`flex items-center w-full p-3 rounded-xl transition-all duration-300 ${
