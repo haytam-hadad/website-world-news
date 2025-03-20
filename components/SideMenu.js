@@ -78,7 +78,7 @@ const SideMenu = ({ setVisible }) => {
       transition={{ duration: 0.3, ease: "easeOut" }}
       style={{ bottom: 0 }}
     >
-      <div className="flex flex-col p-4 space-y-1 ">
+      <div className="flex flex-col p-4">
         {/* Theme Toggle */}
         <button
           onClick={() => setTheme(!theme)}

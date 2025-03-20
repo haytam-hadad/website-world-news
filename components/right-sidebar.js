@@ -300,7 +300,7 @@ const RightSidebar = () => {
   const currentYear = new Date().getFullYear()
 
   return (
-    <aside className="w-[320px] fixed top-0 right-0 h-full bg-white dark:bg-darkgrey border-l border-gray-100 dark:border-gray-800 overflow-y-auto z-30 pt-16 shadow-lg">
+    <aside className="w-[300px] fixed top-0 right-0 h-full bg-white dark:bg-darkgrey border-l border-gray-100 dark:border-gray-800 overflow-y-auto z-30 pt-16 shadow-lg">
       <div className="p-4 space-y-2 h-full flex flex-col">
         {/* Search Box */}
         <div className="mb-2">

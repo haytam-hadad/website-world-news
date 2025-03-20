@@ -33,7 +33,7 @@ function LayoutContent({ children }) {
   return (
     <div className="flex flex-col min-h-screen">
       <Header onToggleMenu={() => setShowMenu((prev) => !prev)} />
-      <div className="flex gap-1 relative">
+      <div className="flex relative gap-1">
         {/* Side Menu - Desktop */}
         {isDesktop && (
           <div className="w-[250px] flex-shrink-0">
@@ -65,7 +65,7 @@ function LayoutContent({ children }) {
 
         {/* Right Sidebar - Wide Desktop Only */}
         {isWideDesktop && (
-          <div className="w-[310px] flex sticky top-16 h-screen">
+          <div className="w-[300px] flex sticky top-16 h-screen">
             <RightSidebar />
           </div>
         )}
