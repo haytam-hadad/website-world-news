@@ -10,15 +10,18 @@ import { motion } from "framer-motion"
 
 // Custom hook to track window width
 function useWindowWidth() {
-  const [width, setWidth] = useState(typeof window !== "undefined" ? window.innerWidth : 1024)
+  const [width, setWidth] = useState(1024);
 
   useEffect(() => {
-    window.addEventListener("resize", () => setWidth(window.innerWidth))
-    return () => window.removeEventListener("resize", () => setWidth(window.innerWidth))
-  }, [])
+    setWidth(window.innerWidth);
+    const handleResize = () => setWidth(window.innerWidth);
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
 
-  return width
+  return width;
 }
+
 
 function LayoutContent({ children }) {
   const [showMenu, setShowMenu] = useState(false)
