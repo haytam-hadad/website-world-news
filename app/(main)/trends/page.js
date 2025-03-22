@@ -10,10 +10,7 @@ async function fetchTrendingArticles() {
     const apiUrl = `${process.env.NEXT_PUBLIC_API_URL}/news/latest`
     console.log("Fetching trending articles from:", apiUrl)
 
-    const res = await fetch(apiUrl, {
-      cache: "no-store",
-      next: { revalidate: 3600 }, // Revalidate every hour
-    })
+    const res = await fetch(apiUrl)
 
     if (!res.ok) {
       console.log(`Error response: ${res.status}`)
@@ -67,7 +64,7 @@ export default function TrendsPage() {
 
   if (error) {
     return (
-      <div className="container mx-auto px-4 py-12">
+      <div className="container mx-auto p-4">
         <div className="flex flex-col items-center justify-center text-center">
           <div className="mb-4 p-4 rounded-full bg-red-100 dark:bg-red-900/20">
             <Trending className="h-10 w-10 text-red-500 dark:text-red-400" />
@@ -129,20 +126,11 @@ export default function TrendsPage() {
           </p>
         </div>
       ) : (
-        <div className="flex-col gap-5">
+        <div className="flex-col gap-4">
           {filteredArticles.map((article) => (
             <Article
               key={article._id}
-              articleData={{
-                _id: article._id,
-                title: article.title || "No title available",
-                content: article.content || "No content available",
-                imageUrl: article.imageUrl || "/placeholder.svg",
-                author: article.authordisplayname || article.authorusername || "Unknown",
-                publishedAt: article.publishedAt,
-                category: article.category || "General",
-                comments: [],
-              }}
+              articleData={article}
             />
           ))}
         </div>

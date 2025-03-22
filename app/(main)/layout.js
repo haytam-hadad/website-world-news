@@ -4,7 +4,6 @@ import Header from "@/components/Header"
 import { GoUp } from "@/components/GoUp"
 import SideMenu from "@/components/SideMenu"
 import RightSidebar from "@/components/right-sidebar"
-import { ThemeContext } from "../ThemeProvider"
 import { useState, useContext, useEffect } from "react"
 import { motion } from "framer-motion"
 
@@ -22,11 +21,10 @@ function useWindowWidth() {
 }
 
 function LayoutContent({ children }) {
-  const { theme } = useContext(ThemeContext)
   const [showMenu, setShowMenu] = useState(false)
   const windowWidth = useWindowWidth()
-  const isDesktop = windowWidth >= 768
-  const isWideDesktop = windowWidth >= 1280
+  const isDesktop = windowWidth >= 780
+  const isWideDesktop = windowWidth >= 1100
 
   return (
     <div className="flex flex-col min-h-screen">
@@ -41,7 +39,7 @@ function LayoutContent({ children }) {
 
         {/* Mobile Side Menu (Overlay) */}
         {!isDesktop && showMenu && (
-          <div className="fixed inset-0 z-50 bg-black bg-opacity-50" onClick={() => setShowMenu(false)}>
+          <div className="fixed inset-0 z-30 bg-black bg-opacity-50" onClick={() => setShowMenu(false)}>
             <div className="absolute left-0 top-0 bottom-0 w-[250px]" onClick={(e) => e.stopPropagation()}>
               <SideMenu setVisible={setShowMenu} />
             </div>

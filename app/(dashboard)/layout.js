@@ -28,7 +28,7 @@ function LayoutContent({ children }) {
   const { user} = useContext(ThemeContext);
   const [showMenu, setShowMenu] = useState(false)
   const windowWidth = useWindowWidth()
-  const isDesktop = windowWidth >= 768;
+  const isDesktop = windowWidth >= 780;
   const router = useRouter();
 
   useEffect(() => {
@@ -50,7 +50,7 @@ function LayoutContent({ children }) {
 
         {/* Side Menu - Mobile Overlay */}
         {!isDesktop && showMenu && (
-          <div className="fixed inset-0 bg-black bg-opacity-50 z-50" onClick={() => setShowMenu(false)}>
+          <div className="fixed inset-0 bg-black bg-opacity-50 z-30" onClick={() => setShowMenu(false)}>
             <motion.div
               initial={{ x: -250 }}
               animate={{ x: 0 }}

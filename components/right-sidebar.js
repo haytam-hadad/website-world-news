@@ -270,14 +270,6 @@ const RightSidebar = () => {
     }))
   }
 
-  // Handle search
-  const handleSearch = (e) => {
-    e.preventDefault()
-    if (searchQuery.trim()) {
-      window.location.href = `/search/${encodeURIComponent(searchQuery.trim())}`
-      setSearchQuery("")
-    }
-  }
 
   // Filter to only show subscribed users
   const filteredSubscriptions = sampleSubscriptions.filter((user) => user.isSubscribed)
@@ -286,19 +278,6 @@ const RightSidebar = () => {
   return (
     <aside className="w-[300px] fixed top-0 right-0 h-full bg-white dark:bg-darkgrey border-l border-gray-100 dark:border-gray-800 overflow-y-auto z-30 pt-16 shadow-lg">
       <div className="p-4 space-y-2 h-full flex flex-col">
-        {/* Search Box */}
-        <div className="mb-2">
-          <form onSubmit={handleSearch} className="relative">
-            <input
-              type="text"
-              placeholder="Search topics, people..."
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full bg-gray-50 dark:bg-gray-800/70 border border-gray-100 dark:border-gray-800 rounded-xl py-2.5 pl-11 pr-4 text-darkgrey dark:text-gray-100 placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-mainColor focus:border-transparent transition-all duration-300 shadow-sm"
-            />
-            <Search className="absolute left-3.5 top-3 w-5 h-5 text-gray-500 dark:text-gray-400" />
-          </form>
-        </div>
 
         {/* Quick Actions */}
         <div className="grid grid-cols-2 gap-3 mb-2">

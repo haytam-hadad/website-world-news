@@ -1,6 +1,6 @@
 "use client"
 import Link from "next/link"
-import { Search, Menu, Moon, Sun, User, LogOut, LayoutDashboard, X , Bell} from "lucide-react"
+import { Search, Menu, Moon, Sun, User, LogOut, LayoutDashboard, X, Bell } from "lucide-react"
 import { Label } from "@/components/ui/label"
 import { Switch } from "@/components/ui/switch"
 import { useState, useContext, useEffect, useRef } from "react"
@@ -8,6 +8,7 @@ import { ThemeContext } from "../app/ThemeProvider"
 import Image from "next/image"
 import { useRouter } from "next/navigation"
 import { motion, AnimatePresence } from "framer-motion"
+import { usePathname } from "next/navigation"
 
 export default function Header({ onToggleMenu }) {
   const { theme, setTheme, user, setUser } = useContext(ThemeContext)
@@ -18,6 +19,7 @@ export default function Header({ onToggleMenu }) {
   const searchRef = useRef(null)
   const searchInputRef = useRef(null)
   const router = useRouter()
+  const activePath = usePathname()
 
   // Close dropdown when clicking outside
   useEffect(() => {
@@ -45,6 +47,36 @@ export default function Header({ onToggleMenu }) {
     }
   }, [showSearch])
 
+  // Handle theme toggle
+  const toggleTheme = () => {
+    const newTheme = !theme
+    setTheme(newTheme)
+
+    // Apply theme class to document for immediate visual feedback
+    if (newTheme) {
+      document.documentElement.classList.add("dark")
+    } else {
+      document.documentElement.classList.remove("dark")
+    }
+
+    // Save theme preference to localStorage
+    localStorage.setItem("theme", newTheme ? "dark" : "light")
+  }
+
+  // Initialize theme from localStorage on component mount
+  useEffect(() => {
+    const savedTheme = localStorage.getItem("theme")
+    if (savedTheme) {
+      const isDark = savedTheme === "dark"
+      setTheme(isDark)
+      if (isDark) {
+        document.documentElement.classList.add("dark")
+      } else {
+        document.documentElement.classList.remove("dark")
+      }
+    }
+  }, [setTheme])
+
   const logout = async () => {
     try {
       const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/auth/logout`, {
@@ -66,17 +98,15 @@ export default function Header({ onToggleMenu }) {
 
   const handleSearch = (e) => {
     e.preventDefault()
-    if (searchQuery.trim()) {
-      router.push(`/search/${encodeURIComponent(searchQuery.trim().toLowerCase())}`)
+    if (searchQuery) {
+      router.push(`/search/${encodeURIComponent(searchQuery.toLowerCase())}`)
       setSearchQuery("")
       setShowSearch(false)
     }
   }
 
   const handleToggleMenu = () => {
-    if (typeof onToggleMenu === "function") {
       onToggleMenu()
-    }
   }
 
   return (
@@ -87,83 +117,87 @@ export default function Header({ onToggleMenu }) {
           <Link href="/" className="flex items-center gap-2 group shrink-0">
             <Image
               src="/images/i1.svg"
-              alt="World News logo"
+              alt="Trustify logo"
               width={40}
               height={40}
               className="dark:filter dark:invert transition-all duration-200 group-hover:scale-110"
             />
             <span className="font-semibold text-2xl text-gray-800 dark:text-gray-100 transition-colors duration-200 group-hover:text-mainColor dark:group-hover:text-mainColor">
-            Trustify
+              Trustify
             </span>
           </Link>
 
           {/* Search Group - Only show when search is active or on larger screens */}
-          <AnimatePresence>
-            {showSearch ? (
-              <motion.form
-                ref={searchRef}
-                onSubmit={handleSearch}
-                className="absolute left-0 right-0 top-0 z-20 px-4 py-3 bg-white dark:bg-darkgrey border-b border-gray-200 dark:border-gray-700 md:static md:border-0 md:p-0 md:flex-1 md:max-w-lg md:mx-auto"
-                initial={{ opacity: 0, y: -10 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -10 }}
-                transition={{ duration: 0.2 }}
-              >
-                <div className="relative flex items-center">
-                  <input
-                    ref={searchInputRef}
-                    type="text"
-                    placeholder="Search for news..."
-                    value={searchQuery}
-                    onChange={(e) => setSearchQuery(e.target.value)}
-                    className="w-full bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 focus:border-mainColor dark:focus:border-mainColor rounded-full px-4 py-2 pr-10 text-gray-800 dark:text-gray-100 placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none transition-colors duration-200"
-                    aria-label="Search"
-                  />
-                  <button
-                    type="submit"
-                    className="absolute right-10 p-1.5 rounded-full text-gray-500 dark:text-gray-400 hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors duration-200"
-                    aria-label="Search"
-                  >
-                    <Search className="w-5 h-5" />
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => setShowSearch(false)}
-                    className="absolute right-2 p-1.5 rounded-full text-gray-500 dark:text-gray-400 hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors duration-200"
-                    aria-label="Close search"
-                  >
-                    <X className="w-5 h-5" />
-                  </button>
-                </div>
-              </motion.form>
-            ) : (
-              <motion.div
-                className="hidden md:flex justify-center flex-1 max-w-lg mx-auto"
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                exit={{ opacity: 0 }}
-              >
-                <button
-                  onClick={() => setShowSearch(true)}
-                  className="flex items-center gap-2 px-4 py-2 text-gray-600 dark:text-gray-300 rounded-full border border-gray-300 dark:border-gray-600 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors duration-200 w-full justify-center"
+          {activePath.includes("search") ? null : (
+            <AnimatePresence>
+              {showSearch ? (
+                <motion.form
+                  ref={searchRef}
+                  onSubmit={handleSearch}
+                  className="absolute left-0 right-0 top-0 z-20 px-4 py-3 bg-white dark:bg-darkgrey border-b border-gray-200 dark:border-gray-700 md:static md:border-0 md:p-0 md:flex-1 md:max-w-lg md:mx-auto"
+                  initial={{ opacity: 0, y: -10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -10 }}
+                  transition={{ duration: 0.2 }}
                 >
-                  <Search className="w-4 h-4" />
-                  <span className="text-sm">Search news...</span>
-                </button>
-              </motion.div>
-            )}
-          </AnimatePresence>
+                  <div className="relative flex items-center">
+                    <input
+                      ref={searchInputRef}
+                      type="text"
+                      placeholder="Search for news..."
+                      value={searchQuery}
+                      onChange={(e) => setSearchQuery(e.target.value)}
+                      className="w-full bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 focus:border-mainColor dark:focus:border-mainColor rounded-full px-4 py-2 pr-10 text-gray-800 dark:text-gray-100 placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none transition-colors duration-200"
+                      aria-label="Search"
+                    />
+                    <button
+                      type="submit"
+                      className="absolute right-10 p-1.5 rounded-full text-gray-500 dark:text-gray-400 hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors duration-200"
+                      aria-label="Search"
+                    >
+                      <Search className="w-5 h-5" />
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => setShowSearch(false)}
+                      className="absolute right-2 p-1.5 rounded-full text-gray-500 dark:text-gray-400 hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors duration-200"
+                      aria-label="Close search"
+                    >
+                      <X className="w-5 h-5" />
+                    </button>
+                  </div>
+                </motion.form>
+              ) : (
+                <motion.div
+                  className="hidden md:flex justify-center flex-1 max-w-lg mx-auto"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                >
+                  <button
+                    onClick={() => setShowSearch(true)}
+                    className="flex items-center gap-2 px-4 py-2 text-gray-600 dark:text-gray-300 rounded-full border border-gray-300 dark:border-gray-600 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors duration-200 w-full justify-center"
+                  >
+                    <Search className="w-4 h-4" />
+                    <span className="text-sm">Search news...</span>
+                  </button>
+                </motion.div>
+              )}
+            </AnimatePresence>
+          )}
 
           {/* Control Group */}
           <div className="flex items-center gap-2 shrink-0">
             {/* Mobile Search Button */}
-            <button
-              onClick={() => setShowSearch(true)}
-              className="md:hidden p-2 rounded-full text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors duration-200"
-              aria-label="Search"
-            >
-              <Search className="w-5 h-5" />
-            </button>
+            {!activePath.includes("search") && (
+              <button
+                onClick={() => setShowSearch(true)}
+                className="md:hidden p-2 rounded-full text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors duration-200"
+                aria-label="Search"
+              >
+                <Search className="w-5 h-5" />
+              </button>
+            )}
 
             {/* Dark Mode Toggle */}
             <div className="hidden sm:flex items-center gap-2 rounded-full">
@@ -171,7 +205,7 @@ export default function Header({ onToggleMenu }) {
                 <Switch
                   id="dark-mode"
                   checked={theme}
-                  onCheckedChange={(checked) => setTheme(checked)}
+                  onCheckedChange={toggleTheme}
                   className="data-[state=checked]:bg-mainColor"
                 />
                 <Label htmlFor="dark-mode" className="cursor-pointer text-gray-700 dark:text-gray-300">
@@ -199,7 +233,7 @@ export default function Header({ onToggleMenu }) {
                   >
                     {user.isGoogleUser ? (
                       <Image
-                        src={user.picture}
+                        src={user.picture || "/placeholder.svg"}
                         alt={user.displayname}
                         width={32}
                         height={32}
@@ -213,7 +247,7 @@ export default function Header({ onToggleMenu }) {
                     <span className="font-medium hidden md:inline capitalize text-gray-800 dark:text-gray-100">
                       {user.displayname}
                     </span>
-                  </button>                  
+                  </button>
                 </div>
 
                 <AnimatePresence>

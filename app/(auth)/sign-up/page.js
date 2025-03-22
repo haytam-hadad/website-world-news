@@ -22,6 +22,8 @@ export default function SignUpPage() {
   const [errors, setErrors] = useState({})
   const [loading, setLoading] = useState(false)
   const [step, setStep] = useState(1) // For multi-step form
+  const [error, setError] = useState(null)
+ 
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value.toLowerCase() })
@@ -66,6 +68,18 @@ export default function SignUpPage() {
     }
 
     return newErrors
+  }
+
+  const handleGoogleLogin = async () => {
+    setLoading(true)
+    setError(null)
+
+    try {
+      window.location.href = `${process.env.NEXT_PUBLIC_API_URL}/auth/google`
+    } catch (err) {
+      setError(err.message || "An unexpected error occurred with Google login.")
+      setLoading(false)
+    }
   }
 
   const handleNextStep = () => {
@@ -483,8 +497,9 @@ export default function SignUpPage() {
 
               <div className="mt-6">
                 <button
-                  type="button"
-                  className="w-full flex items-center justify-center gap-3 bg-white dark:bg-gray-700 text-gray-800 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-600 font-medium rounded-lg px-4 py-2.5 border border-gray-300 dark:border-gray-600 transition-colors duration-200"
+                  onClick={handleGoogleLogin}
+                  disabled={loading}
+                  className="w-full flex items-center justify-center gap-3 bg-white dark:bg-gray-700 text-gray-800 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-600 font-medium rounded-lg px-4 py-3 border border-gray-300 dark:border-gray-600 transition-colors duration-200 disabled:opacity-70"
                 >
                   <Image
                     src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg"
@@ -492,7 +507,7 @@ export default function SignUpPage() {
                     height={20}
                     alt="Google logo"
                   />
-                  Sign up with Google
+                  Sign in with Google
                 </button>
               </div>
             </div>
