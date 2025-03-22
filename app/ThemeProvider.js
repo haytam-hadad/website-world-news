@@ -54,12 +54,13 @@ export function ThemeProvider({ children }) {
     return () => mediaQuery.removeEventListener("change", handleChange)
   }, [])
 
+  // Check authentication status and periodically validate it
   useEffect(() => {
-    const fetchUser = async () => {
+    const checkAuthStatus = async () => {
       try {
         setIsLoading(true)
         const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/auth/status`, {
-          credentials: "include",
+          credentials: "include", // Important for sending cookies
           headers: {
             "Cache-Control": "no-cache",
           },
@@ -67,16 +68,29 @@ export function ThemeProvider({ children }) {
 
         if (res.ok) {
           const userData = await res.json()
+
+          // Store user data in state
           setUser(userData)
+        } else {
+          // Handle unauthenticated state
+          setUser(null)
         }
       } catch (error) {
-        console.error("Error fetching user:", error)
+        console.error("Error checking authentication status:", error)
+        setUser(null)
       } finally {
         setIsLoading(false)
       }
     }
 
-    fetchUser()
+    // Initial check
+    checkAuthStatus()
+
+    // Set up periodic authentication validation
+    // This helps ensure the session is still valid and user is authenticated
+    const authCheckInterval = setInterval(checkAuthStatus, 15 * 60 * 1000) // Check every 15 minutes
+
+    return () => clearInterval(authCheckInterval)
   }, [])
 
   const setTheme = (newTheme) => {
@@ -92,6 +106,23 @@ export function ThemeProvider({ children }) {
     localStorage.setItem("isMinimized", JSON.stringify(state))
   }
 
-  return <ThemeContext.Provider value={{ theme, setTheme, user, setUser, isMinimized, setIsMinimized: setIsMinimizedState }}>{children}</ThemeContext.Provider>
+  // Check if user is authenticated
+  const isAuthenticated = !!user
+
+  return (
+    <ThemeContext.Provider
+      value={{
+        theme,
+        setTheme,
+        user,
+        setUser,
+        isAuthenticated,
+        isMinimized,
+        setIsMinimized: setIsMinimizedState,
+      }}
+    >
+      {children}
+    </ThemeContext.Provider>
+  )
 }
 

@@ -17,6 +17,7 @@ import {
   Moon,
   LogIn,
   UserPlus,
+  Users,
   BookOpen,
   Bell,
   Bookmark,
@@ -31,20 +32,20 @@ import { usePathname } from "next/navigation"
 const menuItems = [
   {
     name: "Technology",
-    path: "/category/technology",
+    path: "/categories/technology",
     icon: <Laptop size={20} />,
   },
-  { name: "Health", path: "/category/health", icon: <HeartPulse size={20} /> },
-  { name: "Sports", path: "/category/sports", icon: <Trophy size={20} /> },
+  { name: "Health", path: "/categories/health", icon: <HeartPulse size={20} /> },
+  { name: "Sports", path: "/categories/sports", icon: <Trophy size={20} /> },
   {
     name: "Politics",
-    path: "/category/politics",
+    path: "/categories/politics",
     icon: <Landmark size={20} />,
   },
-  { name: "Science", path: "/category/science", icon: <TestTube size={20} /> },
+  { name: "Science", path: "/categories/science", icon: <TestTube size={20} /> },
   {
     name: "Business",
-    path: "/category/business",
+    path: "/categories/business",
     icon: <Briefcase size={20} />,
   },
 ]
@@ -71,7 +72,7 @@ const SideMenu = ({ setVisible }) => {
 
   return (
     <motion.div
-      className="bg-white z-30 dark:bg-darkgrey border-r border-gray-100 dark:border-gray-800 w-[260px] h-full fixed top-0 pt-16 overflow-y-auto left-0 shadow-lg"
+      className="bg-white z-20 dark:bg-darkgrey border-r border-gray-100 dark:border-gray-800 w-[260px] h-full fixed top-0 pt-16 overflow-y-auto left-0 shadow-lg"
       initial={{ x: -260 }}
       animate={{ x: 0 }}
       exit={{ x: -260 }}
@@ -277,17 +278,17 @@ const SideMenu = ({ setVisible }) => {
                         <span className="text-base">Saved</span>
                       </button>
                     </Link>
-                    <Link href="/subscriptions" className="block">
+                    <Link href="/subscribes" className="block">
                       <button
                         onClick={() => setVisible(false)}
                         className={`flex items-center w-full p-3 rounded-xl transition-all duration-300 ${
-                          activePath === "/subscriptions"
+                          activePath === "/subscribes"
                             ? "bg-mainColor/10 text-mainColor font-medium"
                             : "text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800/70 hover:text-gray-900 dark:hover:text-white"
                         }`}
                       >
-                        <Bell size={20} className="mr-3 text-mainColor" />
-                        <span className="text-base">Subscriptions</span>
+                        <Users size={20} className="mr-3 text-mainColor" />
+                        <span className="text-base">Subscribes</span>
                       </button>
                     </Link>
                   </div>

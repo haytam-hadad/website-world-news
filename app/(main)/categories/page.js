@@ -481,7 +481,7 @@ export default function CategoriesPage() {
                       </p>
                     </div>
                   </div>
-                  <Link href={`/category/${category.id}`}>
+                  <Link href={`/categories/${category.id}`}>
                     <button className="p-1.5 rounded-full bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300 hover:bg-mainColor hover:text-white transition-colors duration-200 group-hover:rotate-12 transform">
                       <ArrowUpRight className="w-4 h-4" />
                     </button>
@@ -489,7 +489,7 @@ export default function CategoriesPage() {
                 </div>
                 <p className="text-sm text-gray-600 dark:text-gray-300 mb-3 line-clamp-2">{category.description}</p>
                 <Link
-                  href={`/category/${category.id}`}
+                  href={`/categories/${category.id}`}
                   className="text-mainColor hover:text-main2Color font-medium text-sm inline-flex items-center gap-1 transition-colors group-hover:gap-2"
                 >
                   Browse Articles
@@ -564,7 +564,7 @@ export default function CategoriesPage() {
               whileHover={{ y: -3, boxShadow: "0 8px 20px -5px rgba(0, 0, 0, 0.1)" }}
               className="bg-white dark:bg-darkgrey rounded-xl shadow-sm  overflow-hidden group"
             >
-              <Link href={`/category/${category.id}`} className="block">
+              <Link href={`/categories/${category.id}`} className="block">
                 <div className="p-4">
                   <div className="flex items-center gap-2 mb-2">
                     <div

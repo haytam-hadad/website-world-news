@@ -3,6 +3,7 @@ import { useState, useEffect, useContext } from "react"
 import { Edit, Save, User, Mail, Phone, Globe, Info, Cake, AlertCircle } from "lucide-react"
 import { ThemeContext } from "../../ThemeProvider"
 import { motion } from "framer-motion"
+import Image from "next/image"
 
 const UserDashboard = () => {
   const { user, setUser } = useContext(ThemeContext)
@@ -424,8 +425,20 @@ const handleSave = async () => {
         {/* Profile Header */}
         <div className="p-6 border-b border-gray-200 dark:border-gray-700 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div className="flex items-center gap-4">
-            <div className="w-16 h-16 rounded-full bg-mainColor text-white flex items-center justify-center text-2xl font-bold">
-              {userData.displayname?.charAt(0).toUpperCase() || "U"}
+            <div className="w-16 h-16 rounded-full overflow-hidden">
+              {userData.isGoogleUser ? (
+                <Image
+                  src={userData.picture}
+                  alt={userData.displayname}
+                  className="w-full h-full object-cover"
+                  width={100}
+                  height={100}
+                />
+              ) : (
+                <div className="w-16 h-16 rounded-full bg-mainColor text-white flex items-center justify-center text-2xl font-bold">
+                {userData.displayname?.charAt(0).toUpperCase() || "U"}
+              </div>
+              )}
             </div>
             <div>
               <h1 className="text-xl font-bold text-gray-900 dark:text-white">{userData.displayname || "User"}</h1>

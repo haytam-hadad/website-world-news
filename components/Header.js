@@ -197,9 +197,19 @@ export default function Header({ onToggleMenu }) {
                     aria-expanded={dropdownOpen}
                     aria-haspopup="true"
                   >
-                    <div className="w-8 h-8 rounded-full bg-mainColor text-white flex items-center justify-center font-semibold shadow-sm">
-                      {user.displayname.charAt(0).toUpperCase()}
-                    </div>
+                    {user.isGoogleUser ? (
+                      <Image
+                        src={user.picture}
+                        alt={user.displayname}
+                        width={32}
+                        height={32}
+                        className="w-8 h-8 rounded-full shadow-sm"
+                      />
+                    ) : (
+                      <div className="w-8 h-8 rounded-full bg-mainColor text-white flex items-center justify-center font-semibold shadow-sm">
+                        {user.displayname.charAt(0).toUpperCase()}
+                      </div>
+                    )}
                     <span className="font-medium hidden md:inline capitalize text-gray-800 dark:text-gray-100">
                       {user.displayname}
                     </span>

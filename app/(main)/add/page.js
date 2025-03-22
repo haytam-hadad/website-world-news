@@ -16,34 +16,36 @@ import {
   Check,
   Loader2,
   ArrowLeft,
-  Laptop,
-  HeartPulse,
-  Trophy,
-  Landmark,
-  TestTube,
+  Globe,
+  Building,
+  ShieldAlert,
   Briefcase,
-  Music,
+  TestTube,
+  Shield,
+  DollarSign,
+  MapPin,
+  CheckSquare,
+  SearchIcon,
+  Heart,
+  CalendarDays,
+  ClubIcon as Football,
+  Flame,
+  PenTool,
   Film,
-  Utensils,
-  Plane,
-  Gamepad2,
-  ShoppingBag,
+  Theater,
+  Star,
+  Stethoscope,
   Leaf,
-  Palette,
   Lightbulb,
+  GraduationCap,
+  Rocket,
+  Plane,
   ChevronRight,
   Search,
-  Filter,
   X,
+  ThumbsUp,
 } from "lucide-react"
 import { motion, AnimatePresence } from "framer-motion"
-
-// Define animation variants outside component to avoid recreation on each render
-// const fadeIn = {
-//   initial: { opacity: 0, y: 10 },
-//   animate: { opacity: 1, y: 0 },
-//   exit: { opacity: 0, y: 10 },
-// }
 
 export default function AddPostPage() {
   const router = useRouter()
@@ -63,47 +65,53 @@ export default function AddPostPage() {
       url: "",
       file: null,
     },
-    sources: [{ key: "url", value: "" }],
+    sources: [], // Start with 0 sources
   })
 
   const [errors, setErrors] = useState({})
   const [mediaPreview, setMediaPreview] = useState(null)
   const [categorySearch, setCategorySearch] = useState("")
   const [categoryFilter, setCategoryFilter] = useState("all")
+  const [showCategorySelector, setShowCategorySelector] = useState(false)
 
-  // Define categories as a constant to prevent unnecessary re-renders
+  // Define categories with the new structure (removed emojis from names)
   const categories = [
+    // Group 1: Trusted News
     {
-      id: "technology",
-      name: "Technology",
-      icon: <Laptop className="w-4 h-4" />,
-      description: "Latest in tech, gadgets, and digital innovation",
+      id: "world",
+      name: "World",
+      icon: <Globe className="w-4 h-4" />,
+      description: "Global news and international affairs",
       color: "bg-blue-500",
-      type: "news",
-    },
-    {
-      id: "health",
-      name: "Health",
-      icon: <HeartPulse className="w-4 h-4" />,
-      description: "Wellness, medical breakthroughs, and health advice",
-      color: "bg-red-500",
-      type: "news",
-    },
-    {
-      id: "sports",
-      name: "Sports",
-      icon: <Trophy className="w-4 h-4" />,
-      description: "Sports news, results, and athlete stories",
-      color: "bg-green-500",
-      type: "news",
+      type: "trusted-news",
+      group: "Trusted News",
     },
     {
       id: "politics",
       name: "Politics",
-      icon: <Landmark className="w-4 h-4" />,
+      icon: <Building className="w-4 h-4" />,
       description: "Political developments, policy changes, and governance",
-      color: "bg-purple-500",
-      type: "news",
+      color: "bg-red-500",
+      type: "trusted-news",
+      group: "Trusted News",
+    },
+    {
+      id: "crime",
+      name: "Crime",
+      icon: <ShieldAlert className="w-4 h-4" />,
+      description: "Crime reports, legal cases, and law enforcement",
+      color: "bg-gray-500",
+      type: "trusted-news",
+      group: "Trusted News",
+    },
+    {
+      id: "business",
+      name: "Business",
+      icon: <Briefcase className="w-4 h-4" />,
+      description: "Business news, market trends, and corporate updates",
+      color: "bg-amber-500",
+      type: "trusted-news",
+      group: "Trusted News",
     },
     {
       id: "science",
@@ -111,114 +119,206 @@ export default function AddPostPage() {
       icon: <TestTube className="w-4 h-4" />,
       description: "Scientific discoveries, research, and innovations",
       color: "bg-indigo-500",
-      type: "news",
+      type: "trusted-news",
+      group: "Trusted News",
     },
     {
-      id: "business",
-      name: "Business",
+      id: "defense",
+      name: "Defense",
+      icon: <Shield className="w-4 h-4" />,
+      description: "Military news, defense technology, and security",
+      color: "bg-green-700",
+      type: "trusted-news",
+      group: "Trusted News",
+    },
+    {
+      id: "economy",
+      name: "Economy",
+      icon: <DollarSign className="w-4 h-4" />,
+      description: "Economic trends, financial news, and market analysis",
+      color: "bg-emerald-500",
+      type: "trusted-news",
+      group: "Trusted News",
+    },
+    
+    // Group 2: Community Reports
+    {
+      id: "local",
+      name: "Local",
+      icon: <MapPin className="w-4 h-4" />,
+      description: "News and events from your local community",
+      color: "bg-orange-500",
+      type: "community-reports",
+      group: "Community Reports",
+    },
+    {
+      id: "facts",
+      name: "Facts",
+      icon: <CheckSquare className="w-4 h-4" />,
+      description: "Fact-checking and verification of news",
+      color: "bg-green-500",
+      type: "community-reports",
+      group: "Community Reports",
+    },
+    {
+      id: "investigations",
+      name: "Investigations",
+      icon: <SearchIcon className="w-4 h-4" />,
+      description: "Investigative journalism and in-depth reports",
+      color: "bg-purple-500",
+      type: "community-reports",
+      group: "Community Reports",
+    },
+    {
+      id: "humans",
+      name: "Humans",
+      icon: <Heart className="w-4 h-4" />,
+      description: "Personal stories and human interest pieces",
+      color: "bg-pink-500",
+      type: "community-reports",
+      group: "Community Reports",
+    },
+    {
+      id: "jobs",
+      name: "Jobs",
       icon: <Briefcase className="w-4 h-4" />,
-      description: "Business news, market trends, and economic updates",
-      color: "bg-amber-500",
-      type: "news",
+      description: "Career news, job opportunities, and workplace trends",
+      color: "bg-blue-600",
+      type: "community-reports",
+      group: "Community Reports",
+    },
+    {
+      id: "events",
+      name: "Events",
+      icon: <CalendarDays className="w-4 h-4" />,
+      description: "Upcoming events, conferences, and gatherings",
+      color: "bg-teal-500",
+      type: "community-reports",
+      group: "Community Reports",
+    },
+    
+    // Group 3: Discussions
+    {
+      id: "sports",
+      name: "Sports",
+      icon: <Football className="w-4 h-4" />,
+      description: "Sports news, results, and athlete stories",
+      color: "bg-green-600",
+      type: "discussions",
+      group: "Discussions",
+    },
+    {
+      id: "trending",
+      name: "Trending",
+      icon: <Flame className="w-4 h-4" />,
+      description: "Hot topics and viral content",
+      color: "bg-red-600",
+      type: "discussions",
+      group: "Discussions",
+    },
+    {
+      id: "opinions",
+      name: "Opinions",
+      icon: <PenTool className="w-4 h-4" />,
+      description: "Opinion pieces, editorials, and commentary",
+      color: "bg-yellow-500",
+      type: "discussions",
+      group: "Discussions",
     },
     {
       id: "entertainment",
       name: "Entertainment",
       icon: <Film className="w-4 h-4" />,
       description: "Movies, TV shows, celebrity news, and entertainment",
-      color: "bg-pink-500",
-      type: "entertainment",
+      color: "bg-pink-600",
+      type: "discussions",
+      group: "Discussions",
     },
     {
-      id: "music",
-      name: "Music",
-      icon: <Music className="w-4 h-4" />,
-      description: "Music news, album releases, and artist interviews",
+      id: "culture",
+      name: "Culture",
+      icon: <Theater className="w-4 h-4" />,
+      description: "Arts, culture, and societal trends",
+      color: "bg-purple-600",
+      type: "discussions",
+      group: "Discussions",
+    },
+    {
+      id: "reviews",
+      name: "Reviews",
+      icon: <Star className="w-4 h-4" />,
+      description: "Product, service, and media reviews",
+      color: "bg-amber-600",
+      type: "discussions",
+      group: "Discussions",
+    },
+    
+    // Group 4: General Info
+    {
+      id: "health",
+      name: "Health",
+      icon: <Stethoscope className="w-4 h-4" />,
+      description: "Health news, medical breakthroughs, and wellness advice",
+      color: "bg-red-500",
+      type: "general-info",
+      group: "General Info",
+    },
+    {
+      id: "nature",
+      name: "Nature",
+      icon: <Leaf className="w-4 h-4" />,
+      description: "Environmental news, wildlife, and natural phenomena",
+      color: "bg-green-500",
+      type: "general-info",
+      group: "General Info",
+    },
+    {
+      id: "tech",
+      name: "Tech",
+      icon: <Lightbulb className="w-4 h-4" />,
+      description: "Technology news, gadgets, and digital innovation",
+      color: "bg-blue-500",
+      type: "general-info",
+      group: "General Info",
+    },
+    {
+      id: "education",
+      name: "Education",
+      icon: <GraduationCap className="w-4 h-4" />,
+      description: "Educational news, learning resources, and academic insights",
+      color: "bg-indigo-500",
+      type: "general-info",
+      group: "General Info",
+    },
+    {
+      id: "space",
+      name: "Space",
+      icon: <Rocket className="w-4 h-4" />,
+      description: "Space exploration, astronomy, and cosmic discoveries",
       color: "bg-violet-500",
-      type: "lifestyle",
-    },
-    {
-      id: "food",
-      name: "Food",
-      icon: <Utensils className="w-4 h-4" />,
-      description: "Recipes, restaurant reviews, and culinary trends",
-      color: "bg-orange-500",
-      type: "lifestyle",
+      type: "general-info",
+      group: "General Info",
     },
     {
       id: "travel",
       name: "Travel",
       icon: <Plane className="w-4 h-4" />,
       description: "Travel destinations, tips, and adventure stories",
-      color: "bg-sky-500",
-      type: "lifestyle",
-    },
-    {
-      id: "education",
-      name: "Education",
-      icon: <BookOpen className="w-4 h-4" />,
-      description: "Educational news, learning resources, and academic insights",
-      color: "bg-emerald-500",
-      type: "knowledge",
-    },
-    {
-      id: "gaming",
-      name: "Gaming",
-      icon: <Gamepad2 className="w-4 h-4" />,
-      description: "Video game news, reviews, and gaming culture",
-      color: "bg-rose-500",
-      type: "entertainment",
-    },
-    {
-      id: "movies",
-      name: "Movies",
-      icon: <Film className="w-4 h-4" />,
-      description: "Film reviews, movie news, and cinema releases",
-      color: "bg-purple-500",
-      type: "entertainment",
-    },
-    {
-      id: "fashion",
-      name: "Fashion",
-      icon: <ShoppingBag className="w-4 h-4" />,
-      description: "Fashion trends, style tips, and industry news",
-      color: "bg-fuchsia-500",
-      type: "lifestyle",
-    },
-    {
-      id: "environment",
-      name: "Environment",
-      icon: <Leaf className="w-4 h-4" />,
-      description: "Environmental news, sustainability, and climate change",
-      color: "bg-teal-500",
-      type: "news",
-    },
-    {
-      id: "art",
-      name: "Art & Design",
-      icon: <Palette className="w-4 h-4" />,
-      description: "Art exhibitions, design trends, and creative inspiration",
       color: "bg-cyan-500",
-      type: "lifestyle",
-    },
-    {
-      id: "innovation",
-      name: "Innovation",
-      icon: <Lightbulb className="w-4 h-4" />,
-      description: "Innovative ideas, startups, and future technologies",
-      color: "bg-lime-500",
-      type: "knowledge",
+      type: "general-info",
+      group: "General Info",
     },
   ]
 
   // Filter types for category filtering
   const filterTypes = [
-    { id: "all", name: "All" },
-    { id: "news", name: "News" },
-    { id: "lifestyle", name: "Lifestyle" },
-    { id: "knowledge", name: "Knowledge" },
-    { id: "entertainment", name: "Entertainment" },
+    { id: "all", name: "All Categories" },
+    { id: "trusted-news", name: "Trusted News" },
+    { id: "community-reports", name: "Community Reports" },
+    { id: "discussions", name: "Discussions" },
+    { id: "general-info", name: "General Info" },
   ]
+
 
   // Memoize filtered categories to prevent unnecessary recalculations
   const filteredCategories = useMemo(() => {
@@ -449,9 +549,6 @@ export default function AddPostPage() {
       console.log("Article created successfully:", data)
 
       setSuccess(true)
-      setTimeout(() => {
-        router.push("/")
-      }, 2000)
     } catch (error) {
       console.error("Error creating post:", error)
       setErrors({ general: error.message || "An unexpected error occurred" })
@@ -518,7 +615,7 @@ export default function AddPostPage() {
       </button>
 
       <div className="bg-white dark:bg-darkgrey rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden">
-        <div className="p-6 border-b  border-gray-200 dark:border-gray-700">
+        <div className="p-6 border-b border-gray-200 dark:border-gray-700">
           <div className="flex items-center gap-3 mb-2">
             <div className="w-10 h-10 rounded-full bg-mainColor text-white flex items-center justify-center font-semibold text-lg">
               {user?.displayname?.charAt(0).toUpperCase() || "U"}
@@ -532,6 +629,17 @@ export default function AddPostPage() {
           <p className="text-gray-600 dark:text-gray-400 mt-1">
             Share your news, insights, or stories with the community
           </p>
+          
+          {/* Posting Rules Notice */}
+          <div className="mt-4 p-3 bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-800 rounded-lg">
+            <h3 className="font-medium text-yellow-800 dark:text-yellow-400 flex items-center gap-2 mb-2">
+              <Info className="w-4 h-4" />
+              Posting Rules
+            </h3>
+            <p className="text-sm text-yellow-700 dark:text-yellow-300">
+              Your post will undergo a review process before being published, as your account is not verified.
+            </p>
+          </div>
         </div>
 
         <form onSubmit={handleSubmit} className="p-6">
@@ -582,6 +690,179 @@ export default function AddPostPage() {
                   <AlertCircle className="w-3.5 h-3.5" />
                   {errors.title}
                 </p>
+              )}
+            </div>
+
+            {/* Category Field - Simplified UI */}
+            <div>
+              <label htmlFor="category" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                Category <span className="text-red-500">*</span>
+              </label>
+              
+              {selectedCategory ? (
+                <div className="mb-2">
+                  <div className="flex items-center justify-between p-3 bg-gray-50 dark:bg-gray-700 rounded-lg border border-gray-200 dark:border-gray-600">
+                    <div className="flex items-center gap-3">
+                      <div className={`w-10 h-10 rounded-lg ${selectedCategory.color} bg-opacity-20 dark:bg-opacity-30 flex items-center justify-center`}>
+                        {selectedCategory.icon}
+                      </div>
+                      <div>
+                        <h4 className="font-medium text-gray-900 dark:text-white">{selectedCategory.name}</h4>
+                        <div className="flex items-center gap-2">
+                          <span className="text-xs bg-gray-200 dark:bg-gray-600 text-gray-700 dark:text-gray-300 px-2 py-0.5 rounded-full">
+                            {selectedCategory.group}
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+                    <button
+                      type="button"
+                      onClick={() => setShowCategorySelector(true)}
+                      className="text-sm text-mainColor hover:text-mainColor/80 transition-colors"
+                    >
+                      Change
+                    </button>
+                  </div>
+                </div>
+              ) : (
+                <button
+                  type="button"
+                  onClick={() => setShowCategorySelector(true)}
+                  className={`w-full flex items-center justify-between px-4 py-2.5 rounded-lg border ${
+                    errors.category ? "border-red-500 dark:border-red-500" : "border-gray-300 dark:border-gray-600"
+                  } bg-white dark:bg-gray-700 text-left transition-colors hover:bg-gray-50 dark:hover:bg-gray-600`}
+                >
+                  <span className={errors.category ? "text-red-500" : "text-gray-500 dark:text-gray-400"}>
+                    Select a category
+                  </span>
+                  <ChevronRight className="w-4 h-4 text-gray-400" />
+                </button>
+              )}
+
+              {errors.category && (
+                <p className="mt-1 text-sm text-red-600 dark:text-red-400 flex items-center gap-1">
+                  <AlertCircle className="w-3.5 h-3.5" />
+                  {errors.category}
+                </p>
+              )}
+
+              {/* Category Selector Modal */}
+              {showCategorySelector && (
+                <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
+                  <div className="bg-white dark:bg-darkgrey rounded-xl shadow-lg w-full max-w-md max-h-[80vh] overflow-hidden">
+                    <div className="p-4 border-b border-gray-200 dark:border-gray-700 flex items-center justify-between">
+                      <h3 className="text-lg font-medium text-gray-900 dark:text-white">Select a Category</h3>
+                      <button
+                        type="button"
+                        onClick={() => setShowCategorySelector(false)}
+                        className="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-300"
+                      >
+                        <X className="w-5 h-5" />
+                      </button>
+                    </div>
+                    
+                    <div className="p-4">
+                      {/* Search and Filter */}
+                      <div className="mb-4 space-y-2">
+                        <div className="relative">
+                          <input
+                            type="text"
+                            placeholder="Search categories..."
+                            value={categorySearch}
+                            onChange={(e) => setCategorySearch(e.target.value)}
+                            className="w-full pl-9 pr-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-mainColor focus:border-transparent"
+                          />
+                          <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-500 dark:text-gray-400" />
+                          {categorySearch && (
+                            <button
+                              type="button"
+                              onClick={() => setCategorySearch("")}
+                              className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300"
+                            >
+                              <X className="w-4 h-4" />
+                            </button>
+                          )}
+                        </div>
+                        
+                        <div className="flex flex-wrap gap-2">
+                          {filterTypes.map((filter) => (
+                            <button
+                              key={filter.id}
+                              type="button"
+                              onClick={() => setCategoryFilter(filter.id)}
+                              className={`px-2 py-1 text-xs rounded-full whitespace-nowrap transition-colors ${
+                                categoryFilter === filter.id
+                                  ? "bg-mainColor text-white"
+                                  : "bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600"
+                              }`}
+                            >
+                              {filter.name}
+                            </button>
+                          ))}
+                        </div>
+                      </div>
+                      
+                      {/* Categories List */}
+                      <div className="max-h-[50vh] overflow-y-auto pr-1">
+                        {filteredCategories.length > 0 ? (
+                          <div className="space-y-4">
+                            {/* Group categories by type */}
+                            {filterTypes.slice(1).map((filter) => {
+                              const categoriesInGroup = filteredCategories.filter(cat => cat.type === filter.id);
+                              if (categoryFilter !== "all" && categoryFilter !== filter.id) return null;
+                              if (categoriesInGroup.length === 0) return null;
+                              
+                              return (
+                                <div key={filter.id} className="space-y-2">
+                                  <h4 className="text-sm font-medium text-gray-500 dark:text-gray-400">{filter.name}</h4>
+                                  <div className="grid grid-cols-1 gap-2">
+                                    {categoriesInGroup.map((cat) => (
+                                      <button
+                                        key={cat.id}
+                                        type="button"
+                                        onClick={() => {
+                                          handleChange("category", cat.id);
+                                          setShowCategorySelector(false);
+                                        }}
+                                        className={`p-3 rounded-lg bg-white dark:bg-gray-800 border transition-all ${
+                                          formData.category === cat.id
+                                            ? `${cat.color} bg-opacity-20 dark:bg-opacity-30 border-${cat.color.split("-")[1]}-400 dark:border-${cat.color.split("-")[1]}-500`
+                                            : "border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700"
+                                        } flex items-center gap-3 text-left`}
+                                      >
+                                        <div className={`w-8 h-8 rounded-md ${cat.color} flex items-center justify-center flex-shrink-0`}>
+                                          {cat.icon}
+                                        </div>
+                                        <div>
+                                          <span className="font-medium text-gray-900 dark:text-white block">{cat.name}</span>
+                                          <span className="text-xs text-gray-500 dark:text-gray-400">{cat.description}</span>
+                                        </div>
+                                      </button>
+                                    ))}
+                                  </div>
+                                </div>
+                              );
+                            })}
+                          </div>
+                        ) : (
+                          <div className="py-8 text-center">
+                            <div className="mx-auto w-12 h-12 mb-3 text-gray-300 dark:text-gray-600">
+                              <Search className="w-full h-full" />
+                            </div>
+                            <p className="text-gray-500 dark:text-gray-400">No categories found</p>
+                            <button
+                              type="button"
+                              onClick={resetCategoryFilters}
+                              className="mt-2 px-3 py-1 text-sm bg-gray-100 dark:bg-gray-700 rounded-md hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors"
+                            >
+                              Reset filters
+                            </button>
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                  </div>
+                </div>
               )}
             </div>
 
@@ -689,232 +970,45 @@ export default function AddPostPage() {
                       for section titles
                     </span>
                   </li>
-                  <li className="grid grid-cols-2 items-center">
-                    <code className="px-1.5 py-0.5 bg-gray-100 dark:bg-gray-700 rounded text-gray-800 dark:text-white">
-                      ### Heading 3
-                    </code>
-                    <span className="col-span-1 ml-2">
-                      for subsections
-                    </span>
-                  </li>
-                  <li className="grid grid-cols-2 items-center">
-                    <code className="px-1.5 py-0.5 bg-gray-100 dark:bg-gray-700 rounded text-gray-800 dark:text-white">
-                      &gt; Quote text
-                    </code>
-                    <span className="col-span-1 ml-2">
-                      for blockquotes
-                    </span>
-                  </li>
-                  <li className="grid grid-cols-2 items-center">
-                    <code className="px-1.5 py-0.5 bg-gray-100 dark:bg-gray-700 rounded text-gray-800 dark:text-white">
-                      `inline code`
-                    </code>
-                    <span className="col-span-1 ml-2">
-                      for <code>inline code</code>
-                    </span>
-                  </li>
                 </ul>
               </details>
             </div>
 
-            {/* Category Field */}
-            <div className="mt-4">
-              <label htmlFor="category" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                Category <span className="text-red-500">*</span>
-              </label>
-
-              <div className={`relative ${errors.category ? "mb-1" : "mb-0"}`}>
-                <select
-                  id="category"
-                  value={formData.category}
-                  onChange={(e) => handleChange("category", e.target.value)}
-                  className={`w-full px-4 py-2.5 rounded-lg border appearance-none ${
-                    errors.category ? "border-red-500 dark:border-red-500" : "border-gray-300 dark:border-gray-600"
-                  } bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-mainColor focus:border-transparent transition-colors`}
-                >
-                  <option value="">Select a category</option>
-                  {categories.map((cat) => (
-                    <option key={cat.id} value={cat.id}>
-                      {cat.name}
-                    </option>
-                  ))}
-                </select>
-                <div className="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
-                  <ChevronRight className="w-4 h-4 text-gray-500 dark:text-gray-400 rotate-90" />
-                </div>
-              </div>
-
-              {errors.category && (
-                <p className="mt-1 text-sm text-red-600 dark:text-red-400 flex items-center gap-1">
-                  <AlertCircle className="w-3.5 h-3.5" />
-                  {errors.category}
-                </p>
-              )}
-
-              {/* Category Preview */}
-              {selectedCategory && (
-                <div className="mt-3 p-3 bg-gray-50 dark:bg-gray-700 rounded-lg border border-gray-200 dark:border-gray-600">
-                  <div className="flex items-center gap-3">
-                    <div
-                      className={`w-10 h-10 rounded-lg ${selectedCategory.color} bg-opacity-20 dark:bg-opacity-30 flex items-center justify-center`}
-                    >
-                      {selectedCategory.icon}
-                    </div>
-                    <div>
-                      <h4 className="font-medium text-gray-900 dark:text-white">{selectedCategory.name}</h4>
-                      <p className="text-xs text-gray-500 dark:text-gray-400">{selectedCategory.description}</p>
-                    </div>
-                  </div>
-                </div>
-              )}
-
-              {/* Category Search and Filter */}
-              <div className="my-2 flex flex-col sm:flex-row gap-3">
-                <div className="relative flex-1">
-                  <input
-                    type="text"
-                    placeholder="Search categories..."
-                    value={categorySearch}
-                    onChange={(e) => setCategorySearch(e.target.value)}
-                    className="w-full pl-9 pr-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-mainColor focus:border-transparent transition-colors"
-                  />
-                  <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-500 dark:text-gray-400" />
-                  {categorySearch && (
-                    <button
-                      type="button"
-                      onClick={() => setCategorySearch("")}
-                      className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300"
-                    >
-                      <X className="w-4 h-4" />
-                    </button>
-                  )}
-                </div>
-
-                <div className="flex items-center gap-2 overflow-x-auto pb-1">
-                  <span className="text-xs text-gray-500 dark:text-gray-400 flex items-center gap-1 whitespace-nowrap">
-                    <Filter className="w-3 h-3" /> Filter:
-                  </span>
-                  {filterTypes.map((filter) => (
-                    <button
-                      key={filter.id}
-                      type="button"
-                      onClick={() => setCategoryFilter(filter.id)}
-                      className={`px-2 py-1 text-xs rounded-full whitespace-nowrap transition-colors ${
-                        categoryFilter === filter.id
-                          ? "bg-mainColor text-white"
-                          : "bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600"
-                      }`}
-                    >
-                      {filter.name}
-                    </button>
-                  ))}
-                </div>
-              </div>
-
-              {/* Category Grid */}
-              <div className="grid grid-cols-2 sm:grid-cols-3 bg-gray-50 dark:bg-thirdColor gap-3 max-h-[300px] overflow-y-auto p-2 border border-gray-200 dark:border-gray-700 rounded-lg">
-                {filteredCategories.length > 0 ? (
-                  filteredCategories.map((cat) => (
-                    <button
-                      key={cat.id}
-                      type="button"
-                      onClick={() => handleChange("category", cat.id)}
-                      className={`p-2 rounded-lg bg-white dark:bg-darkgrey border transition-all ${
-                        formData.category === cat.id
-                          ? `${cat.color} bg-opacity-20 dark:bg-opacity-30 border-${cat.color.split("-")[1]}-400 dark:border-${cat.color.split("-")[1]}-500`
-                          : "border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700"
-                      } flex items-center gap-2`}
-                    >
-                      <div className={`w-6 h-6 rounded-md ${cat.color} flex items-center justify-center`}>
-                        {cat.icon}
-                      </div>
-                      <span className="text-sm font-medium text-gray-700 dark:text-gray-300">{cat.name}</span>
-                    </button>
-                  ))
-                ) : (
-                  <div className="col-span-full py-8 text-center">
-                    <div className="mx-auto w-12 h-12 mb-3 text-gray-300 dark:text-gray-600">
-                      <Search className="w-full h-full" />
-                    </div>
-                    <p className="text-gray-500 dark:text-gray-400">No categories found</p>
-                    <button
-                      type="button"
-                      onClick={resetCategoryFilters}
-                      className="mt-2 px-3 py-1 text-sm bg-gray-100 dark:bg-gray-700 rounded-md hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors"
-                    >
-                      Reset filters
-                    </button>
-                  </div>
-                )}
-              </div>
-            </div>
-
-            {/* Media Section */}
+            {/* Media Section - Simplified */}
             <div className="bg-gray-50 dark:bg-gray-600 border border-gray-200 dark:border-gray-700 rounded-lg p-5">
               <div className="flex items-center justify-between mb-4">
                 <h3 className="text-base font-medium text-gray-900 dark:text-white flex items-center gap-2">
                   {formData.media.type === "image" ? <ImageIcon className="w-4 h-4" /> : <Video className="w-4 h-4" />}
-                  Media
+                  Add Media (Optional)
                 </h3>
-                <div className="flex items-center gap-4">
-                  <div className="flex items-center gap-3 mr-4">
-                    <label className="flex items-center gap-2 cursor-pointer">
-                      <input
-                        type="radio"
-                        name="mediaType"
-                        value="image"
-                        checked={formData.media.type === "image"}
-                        onChange={() => handleMediaChange("type", "image")}
-                        className="w-4 h-4 text-mainColor focus:ring-mainColor"
-                      />
-                      <span className="text-sm text-gray-700 dark:text-gray-300">Image</span>
-                    </label>
-                    <label className="flex items-center gap-2 cursor-pointer">
-                      <input
-                        type="radio"
-                        name="mediaType"
-                        value="video"
-                        checked={formData.media.type === "video"}
-                        onChange={() => handleMediaChange("type", "video")}
-                        className="w-4 h-4 text-mainColor focus:ring-mainColor"
-                      />
-                      <span className="text-sm text-gray-700 dark:text-gray-300">Video</span>
-                    </label>
-                  </div>
+              </div>
 
-                  {formData.media.type === "image" && (
-                    <div className="flex items-center gap-3">
-                      <label className="flex items-center gap-2 cursor-pointer">
-                        <input
-                          type="radio"
-                          name="mediaSourceType"
-                          value="url"
-                          checked={formData.media.sourceType === "url"}
-                          onChange={() => {
-                            handleMediaChange("sourceType", "url")
-                            handleMediaChange("url", "") // Reset URL when switching
-                          }}
-                          className="w-4 h-4 text-mainColor focus:ring-mainColor"
-                        />
-                        <span className="text-sm text-gray-700 dark:text-gray-300">URL</span>
-                      </label>
-                      <label className="flex items-center gap-2 cursor-pointer">
-                        <input
-                          type="radio"
-                          name="mediaSourceType"
-                          value="upload"
-                          checked={formData.media.sourceType === "upload"}
-                          onChange={() => {
-                            handleMediaChange("sourceType", "upload")
-                            handleMediaChange("file", null) // Reset file when switching
-                          }}
-                          className="w-4 h-4 text-mainColor focus:ring-mainColor"
-                        />
-                        <span className="text-sm text-gray-700 dark:text-gray-300">Upload</span>
-                      </label>
-                    </div>
-                  )}
-                </div>
+              {/* Media Type Selector - Simplified */}
+              <div className="flex flex-wrap gap-4 mb-4">
+                <button
+                  type="button"
+                  onClick={() => handleMediaChange("type", "image")}
+                  className={`flex items-center gap-2 px-4 py-2 rounded-lg border ${
+                    formData.media.type === "image"
+                      ? "bg-mainColor/10 border-mainColor text-mainColor"
+                      : "bg-white dark:bg-gray-700 border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300"
+                  }`}
+                >
+                  <ImageIcon className="w-4 h-4" />
+                  Image
+                </button>
+                <button
+                  type="button"
+                  onClick={() => handleMediaChange("type", "video")}
+                  className={`flex items-center gap-2 px-4 py-2 rounded-lg border ${
+                    formData.media.type === "video"
+                      ? "bg-mainColor/10 border-mainColor text-mainColor"
+                      : "bg-white dark:bg-gray-700 border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300"
+                  }`}
+                >
+                  <Video className="w-4 h-4" />
+                  Video
+                </button>
               </div>
 
               {/* Display media errors */}
@@ -925,127 +1019,108 @@ export default function AddPostPage() {
                 </div>
               )}
 
-              {/* URL Input for Video or Image URL */}
-              {(formData.media.type === "video" || formData.media.sourceType === "url") && (
-                <div>
-                  <input
-                    type="text"
-                    value={formData.media.url || ""}
-                    onChange={(e) => handleMediaChange("url", e.target.value)}
-                    placeholder={`Enter ${formData.media.type} URL`}
-                    className="w-full px-4 py-2.5 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-mainColor focus:border-transparent transition-colors"
-                  />
-                  <p className="mt-1 text-xs text-gray-500 dark:text-gray-400">
-                    {formData.media.type === "image"
-                      ? "Enter a valid image URL (e.g., https://example.com/image.jpg)"
-                      : "Enter a valid video URL (e.g., https://youtube.com/watch?v=...)"}
-                  </p>
-                </div>
-              )}
-
-              {/* File Upload for Images */}
-              {formData.media.type === "image" && formData.media.sourceType === "upload" && (
-                <div className="flex items-center justify-center w-full">
-                  <label className="flex flex-col items-center justify-center w-full h-32 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 dark:hover:bg-gray-700 dark:bg-gray-700 hover:bg-gray-100 dark:border-gray-600 dark:hover:border-gray-500">
-                    <div className="flex flex-col items-center justify-center pt-5 pb-6">
-                      <ImageIcon className="w-8 h-8 mb-3 text-gray-500 dark:text-gray-400" />
-                      <p className="mb-2 text-sm text-gray-500 dark:text-gray-400">
-                        <span className="font-semibold">Click to upload</span> or drag and drop
-                      </p>
-                      <p className="text-xs text-gray-500 dark:text-gray-400">PNG, JPG or GIF (max. 5MB)</p>
-                      <p className="text-xs text-yellow-500 dark:text-yellow-400 mt-2">
-                        Note: File upload is currently disabled. Please use URL option.
-                      </p>
-                    </div>
-                    <input
-                      type="file"
-                      className="hidden"
-                      accept="image/*"
-                      onChange={(e) => {
-                        if (e.target.files && e.target.files[0]) {
-                          handleMediaChange("file", e.target.files[0])
-                        }
-                      }}
-                    />
-                  </label>
-                </div>
-              )}
-
-              {/* Image Preview */}
-              {formData.media.type === "image" && formData.media.sourceType === "upload" && (
-                <div className="mt-4">
-                  <p className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Preview:</p>
-                  {renderImagePreview()}
-                </div>
-              )}
-
-              {/* Video URL Preview */}
-              {formData.media.type === "video" && formData.media.url && formData.media.url.trim() && (
-                <div className="mt-4">
-                  <p className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Video URL:</p>
-                  <div className="p-3 bg-gray-100 dark:bg-gray-800 rounded-lg border border-gray-300 dark:border-gray-600">
-                    <p className="text-sm text-gray-700 dark:text-gray-300 break-all">{formData.media.url}</p>
-                  </div>
-                  <p className="mt-2 text-xs text-gray-500 dark:text-gray-400">
-                    Video will be embedded when your post is published
-                  </p>
-                </div>
-              )}
+              {/* URL Input for Video or Image */}
+              <div>
+                <label htmlFor="mediaUrl" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                  {formData.media.type === "image" ? "Image URL" : "Video URL"}
+                </label>
+                <input
+                  id="mediaUrl"
+                  type="text"
+                  value={formData.media.url || ""}
+                  onChange={(e) => handleMediaChange("url", e.target.value)}
+                  placeholder={`Enter ${formData.media.type} URL`}
+                  className="w-full px-4 py-2.5 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-mainColor focus:border-transparent transition-colors"
+                />
+                <p className="mt-1 text-xs text-gray-500 dark:text-gray-400">
+                  {formData.media.type === "image"
+                    ? "Enter a valid image URL (e.g., https://example.com/image.jpg)"
+                    : "Enter a valid video URL (e.g., https://youtube.com/watch?v=...)"}
+                </p>
+              </div>
             </div>
 
-            {/* Sources Section */}
+            {/* Sources Section - Simplified */}
             <div className="bg-gray-50 dark:bg-gray-600 border border-gray-200 dark:border-gray-700 rounded-lg p-5">
               <div className="flex items-center justify-between mb-4">
                 <h3 className="text-base font-medium text-gray-900 dark:text-white flex items-center gap-2">
                   <Link2 className="w-4 h-4" />
-                  Sources
+                  Sources (Optional)
                 </h3>
-                <button
-                  type="button"
-                  onClick={handleAddSource}
-                  className="flex items-center gap-1.5 text-sm font-medium text-mainColor hover:text-mainColor/80 transition-colors"
-                >
-                  <Plus className="w-4 h-4" />
-                  Add Source
-                </button>
               </div>
-              <div className="space-y-3">
-                {formData.sources.map((source, index) => (
-                  <div key={index} className="flex items-center gap-2">
-                    <div className="w-1/4">
-                      <select
-                        value={source.key}
-                        onChange={(e) => handleSourceChange(index, e.target.value, null)}
-                        className="w-full px-3 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-mainColor focus:border-transparent transition-colors text-sm"
-                      >
-                        <option value="url">URL</option>
-                        <option value="book">Book</option>
-                        <option value="article">Article</option>
-                        <option value="video">Video</option>
-                      </select>
-                    </div>
-                    <div className="flex-1 relative">
-                      <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                        {getSourceIcon(source.key)}
+              
+              {formData.sources.length === 0 ? (
+                <div className="text-center py-6">
+                  <p className="text-gray-500 dark:text-gray-400 mb-4">No sources added yet</p>
+                  <button
+                    type="button"
+                    onClick={handleAddSource}
+                    className="inline-flex items-center gap-2 px-4 py-2 bg-mainColor/10 text-mainColor rounded-lg hover:bg-mainColor/20 transition-colors"
+                  >
+                    <Plus className="w-4 h-4" />
+                    Add Source
+                  </button>
+                </div>
+              ) : (
+                <>
+                  <div className="space-y-3 mb-4">
+                    {formData.sources.map((source, index) => (
+                      <div key={index} className="flex items-center gap-2 bg-white dark:bg-gray-700 p-3 rounded-lg border border-gray-200 dark:border-gray-600">
+                        <div className="w-1/4">
+                          <select
+                            value={source.key}
+                            onChange={(e) => handleSourceChange(index, e.target.value, null)}
+                            className="w-full px-3 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-mainColor focus:border-transparent transition-colors text-sm"
+                          >
+                            <option value="url">URL</option>
+                            <option value="book">Book</option>
+                            <option value="article">Article</option>
+                            <option value="video">Video</option>
+                          </select>
+                        </div>
+                        <div className="flex-1 relative">
+                          <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                            {getSourceIcon(source.key)}
+                          </div>
+                          <input
+                            type="text"
+                            value={source.value}
+                            onChange={(e) => handleSourceChange(index, null, e.target.value)}
+                            placeholder={`Enter ${source.key} reference`}
+                            className="w-full pl-9 pr-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-mainColor focus:border-transparent transition-colors text-sm"
+                          />
+                        </div>
+                        <button
+                          type="button"
+                          onClick={() => handleRemoveSource(index)}
+                          className="p-2 transition-colors opacity-80"
+                          aria-label="Remove source"
+                        >
+                          <Trash2 className="w-4 h-4 text-primary hover:text-red-500" />
+                        </button>
                       </div>
-                      <input
-                        type="text"
-                        value={source.value}
-                        onChange={(e) => handleSourceChange(index, null, e.target.value)}
-                        placeholder={`Enter ${source.key} reference`}
-                        className="w-full pl-9 pr-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-mainColor focus:border-transparent transition-colors text-sm"
-                      />
-                    </div>
+                    ))}
+                  </div>
+                  
+                  <div className="flex justify-between items-center">
                     <button
                       type="button"
-                      onClick={() => handleRemoveSource(index)}
-                      className="p-2 transition-colors opacity-80"
-                      aria-label="Remove source"
+                      onClick={handleAddSource}
+                      className="flex items-center gap-1.5 text-sm font-medium text-mainColor hover:text-mainColor/80 transition-colors"
                     >
-                      <Trash2 className="w-4 h-4 text-primary hover:text-red-500" />
+                      <Plus className="w-4 h-4" />
+                      Add Another Source
                     </button>
                   </div>
-                ))}
+                </>
+              )}
+              
+              {/* Recommended Sources */}
+              <div className="mt-4 pt-3 border-t border-gray-200 dark:border-gray-700">
+                <div className="flex items-center gap-1">
+                  <ThumbsUp className="w-4 h-4 text-mainColor" />
+                  <h4 className="text-sm font-medium text-gray-700 dark:text-gray-300">Add sources to make your post more credible</h4>
+                </div>
               </div>
             </div>
           </div>

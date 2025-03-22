@@ -49,7 +49,7 @@ function LayoutContent({ children }) {
         )}
 
         {/* Content Area */}
-        <div className="flex-1 p-1 md:p-3 overflow-y-auto bg-lightgrey dark:bg-thirdColor">
+        <div className="flex-1 p-1 md:p-3 lg:p-4 overflow-y-auto bg-lightgrey dark:bg-thirdColor">
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}

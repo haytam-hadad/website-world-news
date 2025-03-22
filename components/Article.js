@@ -82,6 +82,8 @@ const Article = ({ articleData }) => {
     views,
     upvote,
     downvote,
+    picture,
+    isGoogleUser,
     comments = [],
   } = articleData
   const [isSaved, setIsSaved] = useState(false)
@@ -351,9 +353,19 @@ const Article = ({ articleData }) => {
             className="flex items-center space-x-2 group"
             onClick={(e) => e.stopPropagation()}
           >
-            <div className="rounded-full bg-mainColor w-10 h-10 flex items-center justify-center text-secondaryColor font-semibold group-hover:shadow-md transition-shadow">
-              {authordisplayname ? authordisplayname[0].toUpperCase() : "U"}
-            </div>
+            {isGoogleUser ? (
+              <Image
+                src={picture}
+                alt={authordisplayname || "Unknown"}
+                width={40}
+                height={40}
+                className="rounded-full"
+              />
+            ) : (
+              <div className="rounded-full bg-mainColor w-10 h-10 flex items-center justify-center text-secondaryColor font-semibold group-hover:shadow-md transition-shadow">
+                {authordisplayname ? authordisplayname[0].toUpperCase() : "U"}
+              </div>
+            )}
             <div>
               <p className="font-medium text-gray-900 dark:text-gray-100 capitalize group-hover:underline">
                 {authordisplayname || "Unknown"}
@@ -374,7 +386,7 @@ const Article = ({ articleData }) => {
           {/* Category tag and options */}
           <div className="flex items-center space-x-1">
             <Link
-              href={`/category/${category?.toLowerCase() || "general"}`}
+              href={`/categories/${category?.toLowerCase() || "general"}`}
               className="px-3 py-1 text-xs font-medium text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-900/30 rounded-full capitalize hover:bg-blue-100 dark:hover:bg-blue-900/50 transition-colors"
               onClick={(e) => e.stopPropagation()}
               aria-label={`Category: ${category || "General"}`}
