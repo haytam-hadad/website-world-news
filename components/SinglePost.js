@@ -23,6 +23,7 @@ import {
 } from "lucide-react"
 
 import SourcesDisplay from "./sources-display"
+import { TrustRating } from "./article-trust-rating"
 
 const SinglePost = ({ post, initialComments = [] }) => {
   const [userLiked, setUserLiked] = useState(false)
@@ -507,6 +508,9 @@ const SinglePost = ({ post, initialComments = [] }) => {
                 {post.category || "General"}
               </div>
             </Link>
+
+            {/* Trust Rating Component */}
+            <TrustRating articleData={post} />
 
             <div className="relative" ref={optionsRef}>
               <button

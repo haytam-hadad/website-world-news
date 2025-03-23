@@ -7,45 +7,12 @@ import { CheckCircle, Loader2 } from "lucide-react"
 
 export default function ProfileCard({ profile, currentUser }) {
   // Initialize subscription state based on API data (using random for demo)
-  const [isSubscribed, setIsSubscribed] = useState(profile.isSubscribed || Math.random() > 0.5)
+  const [isSubscribed, setIsSubscribed] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
 
   const isCurrentUser = currentUser && currentUser.username === profile.username
 
 
-  const handleSubscription = async (e) => {
-    e.preventDefault() // Prevent navigation to profile
-
-    if (!currentUser) {
-      // Redirect to login if not logged in
-      window.location.href = "/login"
-      return
-    }
-
-    setIsLoading(true)
-
-    try {
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/users/${profile.username}`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        credentials: "include",
-      })
-
-      if (response.ok) {
-        // Toggle subscription state on success
-        setIsSubscribed(!isSubscribed)
-        console.log(`${isSubscribed ? "Unsubscribed from" : "Subscribed to"} ${profile.username}`)
-      } else {
-        console.error("Failed to update subscription")
-      }
-    } catch (error) {
-      console.error("Error updating subscription:", error)
-    } finally {
-      setIsLoading(false)
-    }
-  }
 
   return (
     <Link href={`/profile/${profile.username}`} className="block w-full">
@@ -114,7 +81,7 @@ export default function ProfileCard({ profile, currentUser }) {
                         ? "bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-300 dark:hover:bg-gray-600"
                         : "bg-mainColor text-white hover:bg-mainColor/90"
                     } shadow-sm hover:shadow focus:outline-none focus:ring-2 focus:ring-mainColor focus:ring-opacity-50`}
-                    onClick={handleSubscription}
+                    onClick={() => {setIsSubscribed(!isSubscribed)}}
                     disabled={isLoading}
                   >
                     {isLoading ? (

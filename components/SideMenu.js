@@ -116,6 +116,7 @@ const SideMenu = ({ setVisible }) => {
 
         {/* Post Button (for logged in users) */}
         {user && (
+          <>
           <Link href="/add" className="block">
             <button
               onClick={() => setVisible(false)}
@@ -129,6 +130,36 @@ const SideMenu = ({ setVisible }) => {
               <span className="text-base font-semibold">Create Post</span>
             </button>
           </Link>
+          <Link href="/subscriptions" className="block">
+          <button
+            onClick={() => setVisible(false)}
+            className={`flex items-center w-full p-3.5 rounded-xl transition-all duration-300 ${
+              activePath === "/subscriptions"
+                ? "bg-mainColor text-white font-medium shadow-md shadow-mainColor/20"
+                : "text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-800/70 hover:text-gray-900 dark:hover:text-white"
+            }`}
+            aria-label="Subscriptions"
+          >
+            <Users size={20} className={`mr-3 ${activePath === "/subscriptions" ? "" : "text-mainColor"}`} />
+            <span className="text-base font-medium">Subscriptions</span>
+          </button>
+        </Link>
+        <Link href="/saved" className="block">
+          <button
+            onClick={() => setVisible(false)}
+            className={`flex items-center w-full p-3.5 rounded-xl transition-all duration-300 ${
+              activePath === "/saved"
+                ? "bg-mainColor text-white font-medium shadow-md shadow-mainColor/20"
+                : "text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-800/70 hover:text-gray-900 dark:hover:text-white"
+            }`}
+            aria-label="Saved"
+          >
+            <Bookmark size={20} className={`mr-3 ${activePath === "/saved" ? "" : "text-mainColor"}`} />
+            <span className="text-base font-medium">Saved</span>
+          </button>
+        </Link>
+
+          </>
         )}
 
         {/* Login/Signup Buttons (for guests) */}
@@ -237,66 +268,6 @@ const SideMenu = ({ setVisible }) => {
             )}
           </AnimatePresence>
         </div>
-
-        {/* Personal Section (for logged in users) */}
-        {user && (
-          <div>
-            <button
-              className="flex items-center justify-between w-full p-3.5 rounded-xl transition-all duration-300 text-mainColor font-medium hover:bg-gray-50 dark:hover:bg-gray-800/70 group"
-              onClick={() => setPersonalVisible(!personalVisible)}
-              aria-expanded={personalVisible}
-            >
-              <div className="flex items-center">
-                <Bell size={20} className="mr-3 group-hover:text-mainColor/80 transition-colors" />
-                <span className="group-hover:text-mainColor/80 transition-colors">Personal</span>
-              </div>
-              <div className="bg-gray-100 dark:bg-gray-800 rounded-full p-1 group-hover:bg-gray-200 dark:group-hover:bg-gray-700 transition-colors">
-                {personalVisible ? <ChevronUp size={16} /> : <ChevronDown size={16} />}
-              </div>
-            </button>
-
-            <AnimatePresence initial={false}>
-              {personalVisible && (
-                <motion.div
-                  initial={{ height: 0, opacity: 0 }}
-                  animate={{ height: "auto", opacity: 1 }}
-                  exit={{ height: 0, opacity: 0 }}
-                  transition={{ duration: 0.3, ease: "easeInOut" }}
-                  className="overflow-hidden"
-                >
-                <div className="flex flex-col pl-4 max-h-[calc(100vh-300px)] overflow-y-auto pr-2 py-1">
-                  <Link href="/saved" className="block">
-                      <button
-                        onClick={() => setVisible(false)}
-                        className={`flex items-center w-full p-3 rounded-xl transition-all duration-300 ${
-                          activePath === "/saved"
-                            ? "bg-mainColor/10 text-mainColor font-medium"
-                            : "text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800/70 hover:text-gray-900 dark:hover:text-white"
-                        }`}
-                      >
-                        <Bookmark size={20} className="mr-3 text-mainColor" />
-                        <span className="text-base">Saved</span>
-                      </button>
-                    </Link>
-                    <Link href="/subscribes" className="block">
-                      <button
-                        onClick={() => setVisible(false)}
-                        className={`flex items-center w-full p-3 rounded-xl transition-all duration-300 ${
-                          activePath === "/subscribes"
-                            ? "bg-mainColor/10 text-mainColor font-medium"
-                            : "text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800/70 hover:text-gray-900 dark:hover:text-white"
-                        }`}
-                      >
-                        <Users size={20} className="mr-3 text-mainColor" />
-                        <span className="text-base">Subscribes</span>
-                      </button>
-                    </Link>
-                  </div>
-                </motion.div>
-              )}
-            </AnimatePresence>
-          </div>
-        )}
       </div>
     </motion.div>
   )

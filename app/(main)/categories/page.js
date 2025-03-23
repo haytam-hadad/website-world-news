@@ -7,71 +7,79 @@ import Image from "next/image"
 import {
   Search,
   Filter,
-  Laptop,
-  HeartPulse,
-  Trophy,
-  Landmark,
-  TestTube,
-  Briefcase,
-  Music,
-  Film,
-  Utensils,
-  Plane,
-  BookOpen,
-  Gamepad2,
-  ShoppingBag,
-  Leaf,
-  Palette,
-  Lightbulb,
-  TrendingUp,
   ChevronRight,
   ArrowUpRight,
   X,
   Sparkles,
   Globe,
+  Building,
+  ShieldAlert,
+  Briefcase,
+  TestTube,
+  Shield,
+  DollarSign,
+  MapPin,
+  CheckSquare,
+  SearchIcon,
+  Heart,
+  CalendarDays,
+  Flame,
+  PenTool,
+  Film,
+  Theater,
+  Star,
+  Leaf,
+  GraduationCap,
+  Rocket,
+  Plane,
+  TrendingUp,
+  Laptop,
+  HeartPulse,
+  Trophy,
 } from "lucide-react"
 
-
+// Define categories with the new structure from add-post page
 const allCategories = [
+  // Group 1: Trusted News
   {
-    id: "technology",
-    name: "Technology",
-    icon: <Laptop className="w-5 h-5" />,
-    description: "Latest in tech, gadgets, and digital innovation",
+    id: "world",
+    name: "World",
+    icon: <Globe className="w-5 h-5" />,
+    description: "Global news and international affairs",
     color: "bg-blue-500",
-    type: "news",
+    type: "trusted-news",
+    group: "Trusted News",
     featured: true,
-    articleCount: 1243,
-  },
-  {
-    id: "health",
-    name: "Health",
-    icon: <HeartPulse className="w-5 h-5" />,
-    description: "Wellness, medical breakthroughs, and health advice",
-    color: "bg-red-500",
-    type: "news",
-    featured: true,
-    articleCount: 987,
-  },
-  {
-    id: "sports",
-    name: "Sports",
-    icon: <Trophy className="w-5 h-5" />,
-    description: "Sports news, results, and athlete stories",
-    color: "bg-green-500",
-    type: "news",
-    featured: true,
-    articleCount: 1567,
   },
   {
     id: "politics",
     name: "Politics",
-    icon: <Landmark className="w-5 h-5" />,
+    icon: <Building className="w-5 h-5" />,
     description: "Political developments, policy changes, and governance",
-    color: "bg-purple-500",
-    type: "news",
+    color: "bg-red-500",
+    type: "trusted-news",
+    group: "Trusted News",
+    featured: true,
+  },
+  {
+    id: "crime",
+    name: "Crime",
+    icon: <ShieldAlert className="w-5 h-5" />,
+    description: "Crime reports, legal cases, and law enforcement",
+    color: "bg-gray-500",
+    type: "trusted-news",
+    group: "Trusted News",
     featured: false,
-    articleCount: 1089,
+  },
+  {
+    id: "business",
+    name: "Business",
+    icon: <Briefcase className="w-5 h-5" />,
+    description: "Business news, market trends, and corporate updates",
+    color: "bg-amber-500",
+    type: "trusted-news",
+    group: "Trusted News",
+    featured: true,
   },
   {
     id: "science",
@@ -79,128 +87,215 @@ const allCategories = [
     icon: <TestTube className="w-5 h-5" />,
     description: "Scientific discoveries, research, and innovations",
     color: "bg-indigo-500",
-    type: "news",
+    type: "trusted-news",
+    group: "Trusted News",
     featured: true,
-    articleCount: 876,
   },
   {
-    id: "business",
-    name: "Business",
+    id: "defense",
+    name: "Defense",
+    icon: <Shield className="w-5 h-5" />,
+    description: "Military news, defense technology, and security",
+    color: "bg-green-700",
+    type: "trusted-news",
+    group: "Trusted News",
+    featured: false,
+  },
+  {
+    id: "economy",
+    name: "Economy",
+    icon: <DollarSign className="w-5 h-5" />,
+    description: "Economic trends, financial news, and market analysis",
+    color: "bg-emerald-500",
+    type: "trusted-news",
+    group: "Trusted News",
+    featured: false,
+  },
+
+  // Group 2: Community Reports
+  {
+    id: "local",
+    name: "Local",
+    icon: <MapPin className="w-5 h-5" />,
+    description: "News and events from your local community",
+    color: "bg-orange-500",
+    type: "community-reports",
+    group: "Community Reports",
+    featured: false,
+  },
+  {
+    id: "facts",
+    name: "Facts",
+    icon: <CheckSquare className="w-5 h-5" />,
+    description: "Fact-checking and verification of news",
+    color: "bg-green-500",
+    type: "community-reports",
+    group: "Community Reports",
+    featured: false,
+  },
+  {
+    id: "investigations",
+    name: "Investigations",
+    icon: <SearchIcon className="w-5 h-5" />,
+    description: "Investigative journalism and in-depth reports",
+    color: "bg-purple-500",
+    type: "community-reports",
+    group: "Community Reports",
+    featured: false,
+  },
+  {
+    id: "humans",
+    name: "Humans",
+    icon: <Heart className="w-5 h-5" />,
+    description: "Personal stories and human interest pieces",
+    color: "bg-pink-500",
+    type: "community-reports",
+    group: "Community Reports",
+    featured: false,
+  },
+  {
+    id: "jobs",
+    name: "Jobs",
     icon: <Briefcase className="w-5 h-5" />,
-    description: "Business news, market trends, and economic updates",
-    color: "bg-amber-500",
-    type: "news",
+    description: "Career news, job opportunities, and workplace trends",
+    color: "bg-blue-600",
+    type: "community-reports",
+    group: "Community Reports",
+    featured: false,
+  },
+  {
+    id: "events",
+    name: "Events",
+    icon: <CalendarDays className="w-5 h-5" />,
+    description: "Upcoming events, conferences, and gatherings",
+    color: "bg-teal-500",
+    type: "community-reports",
+    group: "Community Reports",
+    featured: false,
+  },
+
+  // Group 3: Discussions
+  {
+    id: "sports",
+    name: "Sports",
+    icon: <Trophy className="w-5 h-5" />,
+    description: "Sports news, results, and athlete stories",
+    color: "bg-green-600",
+    type: "discussions",
+    group: "Discussions",
     featured: true,
-    articleCount: 1342,
+  },
+  {
+    id: "trending",
+    name: "Trending",
+    icon: <Flame className="w-5 h-5" />,
+    description: "Hot topics and viral content",
+    color: "bg-red-600",
+    type: "discussions",
+    group: "Discussions",
+    featured: false,
+  },
+  {
+    id: "opinions",
+    name: "Opinions",
+    icon: <PenTool className="w-5 h-5" />,
+    description: "Opinion pieces, editorials, and commentary",
+    color: "bg-yellow-500",
+    type: "discussions",
+    group: "Discussions",
+    featured: false,
   },
   {
     id: "entertainment",
     name: "Entertainment",
     icon: <Film className="w-5 h-5" />,
     description: "Movies, TV shows, celebrity news, and entertainment",
-    color: "bg-pink-500",
-    type: "entertainment",
-    featured: false,
-    articleCount: 1654,
+    color: "bg-pink-600",
+    type: "discussions",
+    group: "Discussions",
+    featured: true,
   },
   {
-    id: "music",
-    name: "Music",
-    icon: <Music className="w-5 h-5" />,
-    description: "Music news, album releases, and artist interviews",
+    id: "culture",
+    name: "Culture",
+    icon: <Theater className="w-5 h-5" />,
+    description: "Arts, culture, and societal trends",
+    color: "bg-purple-600",
+    type: "discussions",
+    group: "Discussions",
+    featured: false,
+  },
+  {
+    id: "reviews",
+    name: "Reviews",
+    icon: <Star className="w-5 h-5" />,
+    description: "Product, service, and media reviews",
+    color: "bg-amber-600",
+    type: "discussions",
+    group: "Discussions",
+    featured: false,
+  },
+
+  // Group 4: General Info
+  {
+    id: "health",
+    name: "Health",
+    icon: <HeartPulse className="w-5 h-5" />,
+    description: "Health news, medical breakthroughs, and wellness advice",
+    color: "bg-red-500",
+    type: "general-info",
+    group: "General Info",
+    featured: true,
+  },
+  {
+    id: "nature",
+    name: "Nature",
+    icon: <Leaf className="w-5 h-5" />,
+    description: "Environmental news, wildlife, and natural phenomena",
+    color: "bg-green-500",
+    type: "general-info",
+    group: "General Info",
+    featured: false,
+  },
+  {
+    id: "tech",
+    name: "Tech",
+    icon: <Laptop className="w-5 h-5" />,
+    description: "Technology news, gadgets, and digital innovation",
+    color: "bg-blue-500",
+    type: "general-info",
+    group: "General Info",
+    featured: true,
+  },
+  {
+    id: "education",
+    name: "Education",
+    icon: <GraduationCap className="w-5 h-5" />,
+    description: "Educational news, learning resources, and academic insights",
+    color: "bg-indigo-500",
+    type: "general-info",
+    group: "General Info",
+    featured: false,
+  },
+  {
+    id: "space",
+    name: "Space",
+    icon: <Rocket className="w-5 h-5" />,
+    description: "Space exploration, astronomy, and cosmic discoveries",
     color: "bg-violet-500",
-    type: "lifestyle",
+    type: "general-info",
+    group: "General Info",
     featured: false,
-    articleCount: 743,
-  },
-  {
-    id: "food",
-    name: "Food",
-    icon: <Utensils className="w-5 h-5" />,
-    description: "Recipes, restaurant reviews, and culinary trends",
-    color: "bg-orange-500",
-    type: "lifestyle",
-    featured: false,
-    articleCount: 892,
   },
   {
     id: "travel",
     name: "Travel",
     icon: <Plane className="w-5 h-5" />,
     description: "Travel destinations, tips, and adventure stories",
-    color: "bg-sky-500",
-    type: "lifestyle",
-    featured: false,
-    articleCount: 765,
-  },
-  {
-    id: "education",
-    name: "Education",
-    icon: <BookOpen className="w-5 h-5" />,
-    description: "Educational news, learning resources, and academic insights",
-    color: "bg-emerald-500",
-    type: "knowledge",
-    featured: false,
-    articleCount: 543,
-  },
-  {
-    id: "gaming",
-    name: "Gaming",
-    icon: <Gamepad2 className="w-5 h-5" />,
-    description: "Video game news, reviews, and gaming culture",
-    color: "bg-rose-500",
-    type: "entertainment",
-    featured: false,
-    articleCount: 987,
-  },
-  {
-    id: "fashion",
-    name: "Fashion",
-    icon: <ShoppingBag className="w-5 h-5" />,
-    description: "Fashion trends, style tips, and industry news",
-    color: "bg-fuchsia-500",
-    type: "lifestyle",
-    featured: false,
-    articleCount: 654,
-  },
-  {
-    id: "environment",
-    name: "Environment",
-    icon: <Leaf className="w-5 h-5" />,
-    description: "Environmental news, sustainability, and climate change",
-    color: "bg-teal-500",
-    type: "news",
-    featured: false,
-    articleCount: 432,
-  },
-  {
-    id: "art",
-    name: "Art & Design",
-    icon: <Palette className="w-5 h-5" />,
-    description: "Art exhibitions, design trends, and creative inspiration",
     color: "bg-cyan-500",
-    type: "lifestyle",
+    type: "general-info",
+    group: "General Info",
     featured: false,
-    articleCount: 321,
-  },
-  {
-    id: "innovation",
-    name: "Innovation",
-    icon: <Lightbulb className="w-5 h-5" />,
-    description: "Innovative ideas, startups, and future technologies",
-    color: "bg-lime-500",
-    type: "knowledge",
-    featured: false,
-    articleCount: 543,
-  },
-  {
-    id: "movies",
-    name: "Movies",
-    icon: <Film className="w-5 h-5" />,
-    description: "Film reviews, movie news, and cinema releases",
-    color: "bg-purple-500",
-    featured: false,
-    type: "entertainment",
   },
 ]
 
@@ -209,15 +304,13 @@ export default function CategoriesPage() {
   const [activeFilter, setActiveFilter] = useState("all")
   const [visibleCategories, setVisibleCategories] = useState([])
 
-
-
-  // Filter types for the category filter
+  // Filter types for the category filter - updated to match add-post page
   const filterTypes = [
     { id: "all", name: "All Categories" },
-    { id: "news", name: "News" },
-    { id: "lifestyle", name: "Lifestyle" },
-    { id: "knowledge", name: "Knowledge" },
-    { id: "entertainment", name: "Entertainment" },
+    { id: "trusted-news", name: "Trusted News" },
+    { id: "community-reports", name: "Community Reports" },
+    { id: "discussions", name: "Discussions" },
+    { id: "general-info", name: "General Info" },
   ]
 
   // Featured categories for the top section
@@ -288,6 +381,15 @@ export default function CategoriesPage() {
       "bg-teal-500": "bg-teal-400",
       "bg-cyan-500": "bg-cyan-400",
       "bg-lime-500": "bg-lime-400",
+      "bg-gray-500": "bg-gray-400",
+      "bg-green-600": "bg-green-500",
+      "bg-green-700": "bg-green-600",
+      "bg-blue-600": "bg-blue-500",
+      "bg-red-600": "bg-red-500",
+      "bg-pink-600": "bg-pink-500",
+      "bg-purple-600": "bg-purple-500",
+      "bg-amber-600": "bg-amber-500",
+      "bg-yellow-500": "bg-yellow-400",
     }
 
     return colorMap[color] || color
@@ -361,33 +463,8 @@ export default function CategoriesPage() {
             >
               Discover content across a wide range of topics, from breaking news to lifestyle, technology, and more.
             </motion.p>
-
-            <motion.div
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5, delay: 0.5 }}
-              className="relative max-w-md"
-            >
-              <input
-                type="text"
-                placeholder="Search categories..."
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full bg-white/20 backdrop-blur-md border border-white/30 focus:border-white/50 rounded-full px-4 py-2 pl-10 text-white placeholder-white/70 focus:outline-none focus:ring-2 focus:ring-white/30 transition-colors duration-200"
-              />
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-white/70" />
-              {searchQuery && (
-                <button
-                  onClick={() => setSearchQuery("")}
-                  className="absolute right-3 top-1/2 transform -translate-y-1/2 text-white/70 hover:text-white"
-                  aria-label="Clear search"
-                >
-                  <X className="w-4 h-4" />
-                </button>
-              )}
-            </motion.div>
           </div>
-
+          
           <motion.div
             className="hidden md:block"
             initial={{ opacity: 0, x: 20 }}
@@ -476,9 +553,6 @@ export default function CategoriesPage() {
                     </div>
                     <div>
                       <h3 className="font-bold text-base text-gray-900 dark:text-white">{category.name}</h3>
-                      <p className="text-xs text-gray-500 dark:text-gray-400">
-                        {category.articleCount} articles
-                      </p>
                     </div>
                   </div>
                   <Link href={`/categories/${category.id}`}>
@@ -488,13 +562,18 @@ export default function CategoriesPage() {
                   </Link>
                 </div>
                 <p className="text-sm text-gray-600 dark:text-gray-300 mb-3 line-clamp-2">{category.description}</p>
-                <Link
-                  href={`/categories/${category.id}`}
-                  className="text-mainColor hover:text-main2Color font-medium text-sm inline-flex items-center gap-1 transition-colors group-hover:gap-2"
-                >
-                  Browse Articles
-                  <ChevronRight className="w-4 h-4 transition-all duration-300" />
-                </Link>
+                <div className="flex justify-between gap-4 items-center">
+                  <span className="text-xs px-2 text-center py-0.5 rounded-full bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300">
+                    {category.group}
+                  </span>
+                  <Link
+                    href={`/categories/${category.id}`}
+                    className="text-mainColor text-xs hover:text-main2Color font-medium inline-flex items-center gap-1 transition-colors"
+                  >
+                    Browse Articles
+                    <ChevronRight className="w-4 h-4" />
+                  </Link>
+                </div>
               </div>
             </motion.div>
           ))}
@@ -562,7 +641,7 @@ export default function CategoriesPage() {
               key={category.id}
               variants={itemVariants}
               whileHover={{ y: -3, boxShadow: "0 8px 20px -5px rgba(0, 0, 0, 0.1)" }}
-              className="bg-white dark:bg-darkgrey rounded-xl shadow-sm  overflow-hidden group"
+              className="bg-white dark:bg-darkgrey rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden group"
             >
               <Link href={`/categories/${category.id}`} className="block">
                 <div className="p-4">
@@ -574,15 +653,12 @@ export default function CategoriesPage() {
                     </div>
                     <div>
                       <h3 className="font-semibold text-gray-900 dark:text-white">{category.name}</h3>
-                      <p className="text-xs text-gray-500 dark:text-gray-400">
-                        {category.articleCount} articles
-                      </p>
                     </div>
                   </div>
                   <p className="text-sm text-gray-600 dark:text-gray-300 mb-2 line-clamp-2">{category.description}</p>
                   <div className="flex justify-between items-center">
                     <span className="text-xs px-2 py-0.5 rounded-full bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300">
-                      {category.type.charAt(0).toUpperCase() + category.type.slice(1)}
+                      {category.group}
                     </span>
                     <span className="text-mainColor group-hover:text-main2Color text-sm font-medium inline-flex items-center gap-1 transition-colors group-hover:gap-2">
                       Explore

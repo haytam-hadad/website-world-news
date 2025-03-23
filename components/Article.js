@@ -14,12 +14,13 @@ import {
   UserX,
   EyeOff,
   ArrowBigDown,
-  ChevronRight
+  ChevronRight,
 } from "lucide-react"
 import { useState, useRef, useEffect } from "react"
 import { ArrowBigUp } from "lucide-react"
 import { motion, AnimatePresence } from "framer-motion"
 import Link from "next/link"
+import { TrustRating } from "./article-trust-rating"
 
 const formatText = (text) => {
   if (!text) return null
@@ -355,7 +356,7 @@ const Article = ({ articleData }) => {
           >
             {isGoogleUser ? (
               <Image
-                src={picture}
+                src={picture || "/placeholder.svg"}
                 alt={authordisplayname || "Unknown"}
                 width={40}
                 height={40}
@@ -393,6 +394,9 @@ const Article = ({ articleData }) => {
             >
               {category || "General"}
             </Link>
+
+            {/* Trust Rating Component */}
+            <TrustRating articleData={articleData} />
 
             <div className="relative" ref={optionsRef}>
               <button
