@@ -22,18 +22,95 @@ import Link from "next/link"
 import { motion, AnimatePresence } from "framer-motion"
 import Image from "next/image"
 
-
 const Profile = ({ userData }) => {
   const [articles, setArticles] = useState([])
-  const [subscribed, setSubscribed] = useState(false)
+  const [subscriptionState, setSubscriptionState] = useState({
+    isSubscribed: false,
+    isLoading: false,
+  })
   const [activeTab, setActiveTab] = useState("articles")
   const [isLoading, setIsLoading] = useState(true)
   const { user } = useContext(ThemeContext)
 
   const isOwnProfile = user && user._id === userData._id
 
-  const toggleSubscribe = () => {
-    setSubscribed(!subscribed)
+  useEffect(() => {
+    const checkSubscriptionStatus = async () => {
+      if (!user || !userData || isOwnProfile) return
+
+      try {
+        const response = await fetch(
+          `${process.env.NEXT_PUBLIC_API_URL}/users/${userData._id}/subscription-status`,
+          {
+            method: "GET",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            credentials: "include",
+          },
+        )
+
+        if (response.ok) {
+          const data = await response.json()
+          setSubscriptionState((prev) => ({
+            ...prev,
+            isSubscribed: data.subscribed,
+          }))
+        }
+      } catch (error) {
+        console.error("Error checking subscription status:", error)
+      }
+    }
+
+    checkSubscriptionStatus()
+  }, [user, userData, isOwnProfile])
+
+  const toggleSubscribe = async () => {
+    if (!user) {
+      // Redirect to login if not logged in
+      window.location.href = "/login"
+      return
+    }
+
+    try {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/users/${userData._id}/subscribe`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        credentials: "include",
+      })
+
+      if (response.ok) {
+        const data = await response.json()
+        setSubscriptionState((prev) => ({
+          ...prev,
+          isSubscribed: data.subscribed,
+        }))
+
+        // Update the subscribers count in the UI
+        if (data.subscribed) {
+          // Adding a subscriber
+          userData.subscribers = [
+            ...(userData.subscribers || []),
+            {
+              userId: user._id,
+              userModel: user.isGoogleUser ? "Googleuser" : "User",
+            },
+          ]
+        } else {
+          // Removing a subscriber
+          userData.subscribers = (userData.subscribers || []).filter(
+            (sub) => sub.userId.$oid !== user._id && sub.userId !== user._id,
+          )
+        }
+      } else {
+        const errorData = await response.json()
+        console.error(`Error toggling subscription:`, errorData)
+      }
+    } catch (error) {
+      console.error(`Error toggling subscription:`, error)
+    }
   }
 
   useEffect(() => {
@@ -105,7 +182,7 @@ const Profile = ({ userData }) => {
             <div className="w-24 h-24 sm:w-28 sm:h-28 rounded-full bg-white p-1 shadow-md">
               {userData.picture ? (
                 <Image
-                  src={userData.picture}
+                  src={userData.picture || "/placeholder.svg"}
                   alt={userData.displayname}
                   className="w-full h-full rounded-full shadow-inner"
                   width={100}
@@ -148,12 +225,12 @@ const Profile = ({ userData }) => {
             <button
               onClick={toggleSubscribe}
               className={`flex items-center gap-1.5 px-4 py-2.5 rounded-lg font-medium transition-colors duration-200 ${
-                subscribed
+                subscriptionState.isSubscribed
                   ? "bg-gray-100 dark:bg-gray-800 text-gray-800 dark:text-gray-200 border border-gray-300 dark:border-gray-600"
                   : "bg-mainColor text-white hover:bg-mainColor/90"
               }`}
             >
-              {subscribed ? (
+              {subscriptionState.isSubscribed ? (
                 <>
                   <BellOff className="w-4 h-4" />
                   <span>Unsubscribe</span>
@@ -239,12 +316,16 @@ const Profile = ({ userData }) => {
                   <div className="text-xs text-gray-500 dark:text-gray-400">Articles</div>
                 </div>
                 <div className="text-center">
-                  <div className="font-semibold text-lg text-gray-900 dark:text-white">0</div>
-                  <div className="text-xs text-gray-500 dark:text-gray-400">Followers</div>
+                  <div className="font-semibold text-lg text-gray-900 dark:text-white">
+                    {userData.subscribers ? userData.subscribers.length : 0}
+                  </div>
+                  <div className="text-xs text-gray-500 dark:text-gray-400">Subscribers</div>
                 </div>
                 <div className="text-center">
-                  <div className="font-semibold text-lg text-gray-900 dark:text-white">0</div>
-                  <div className="text-xs text-gray-500 dark:text-gray-400">Following</div>
+                  <div className="font-semibold text-lg text-gray-900 dark:text-white">
+                    {userData.subscriptions ? userData.subscriptions.length : 0}
+                  </div>
+                  <div className="text-xs text-gray-500 dark:text-gray-400">Subscriptions</div>
                 </div>
               </div>
             </div>
