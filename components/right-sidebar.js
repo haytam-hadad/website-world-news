@@ -371,34 +371,6 @@ const RightSidebar = () => {
   return (
     <aside className="w-[300px] fixed top-0 right-0 h-full bg-white dark:bg-darkgrey border-l border-gray-100 dark:border-gray-800 overflow-y-auto z-30 pt-16 shadow-md">
       <div className="p-4 space-y-4 h-full flex flex-col">
-        {/* Quick Actions */}
-        <div className="grid grid-cols-2 gap-3 mb-2">
-          <Link
-            href="/notifications"
-            className="flex flex-col items-center justify-center p-3.5 rounded-xl bg-gray-50 dark:bg-gray-800/70 hover:bg-gray-100 dark:hover:bg-gray-800 transition-all duration-300 shadow-sm hover:shadow group"
-          >
-            <div className="relative">
-              <Bell className="w-6 h-6 text-mainColor mb-1.5 group-hover:text-mainColor/80 transition-colors" />
-              <span className="absolute -top-1 -right-1 flex h-4 w-4 items-center justify-center rounded-full bg-red-500 text-[10px] font-bold text-white shadow-sm">
-                3
-              </span>
-            </div>
-            <span className="text-xs font-medium text-gray-900 dark:text-gray-100 group-hover:text-gray-700 dark:group-hover:text-gray-300 transition-colors">
-              Alerts
-            </span>
-          </Link>
-
-          <Link
-            href="/trends"
-            className="flex flex-col items-center justify-center p-3.5 rounded-xl bg-gray-50 dark:bg-gray-800/70 hover:bg-gray-100 dark:hover:bg-gray-800 transition-all duration-300 shadow-sm hover:shadow group"
-          >
-            <Hash className="w-6 h-6 text-mainColor mb-1.5 group-hover:text-mainColor/80 transition-colors" />
-            <span className="text-xs font-medium text-gray-900 dark:text-gray-100 group-hover:text-gray-700 dark:group-hover:text-gray-300 transition-colors">
-              Trending
-            </span>
-          </Link>
-        </div>
-
         {/* User Stats Summary - Only show if user is logged in */}
         {user && (
           <div className="bg-gradient-to-r from-mainColor/10 to-main2Color/10 dark:from-mainColor/20 dark:to-main2Color/20 rounded-xl p-4 shadow-sm">

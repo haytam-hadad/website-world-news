@@ -64,7 +64,7 @@ function LayoutContent({ children }) {
 
         {/* Right Sidebar - Wide Desktop Only */}
         {isWideDesktop && (
-          <div className="w-[300px] flex sticky top-16 h-screen">
+          <div className="w-[290px] flex sticky top-16 h-screen">
             <RightSidebar />
           </div>
         )}
