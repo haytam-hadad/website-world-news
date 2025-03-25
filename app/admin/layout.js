@@ -1,8 +1,7 @@
 "use client"
 import { useState, useEffect, useContext } from "react"
 import { ThemeContext } from "../ThemeProvider"
-import HeaderDash from "@/components/HeaderDash"
-import SideMenuDashboard from "@/components/SideMenuDashboard"
+import SideMenuAdmin from "@/components/SideMenuAdmin"
 import Footer from "@/components/Footer"
 import { motion } from "framer-motion"
 import { useRouter } from 'next/navigation'
@@ -31,20 +30,14 @@ function LayoutContent({ children }) {
   const isDesktop = windowWidth >= 780;
   const router = useRouter();
 
-  if (!user) {
-    router.replace('/login');
+
+  if (!user || user.role !== 'admin') {
+    router.replace('/');
     return null;
   }
   return (
     <div className="flex flex-col min-h-screen">
-      <HeaderDash onToggleMenu={() => setShowMenu((prev) => !prev)} />
       <div className="flex flex-1 relative">
-        {/* Side Menu - Desktop */}
-        {isDesktop && (
-          <div className="w-[250px] flex-shrink-0">
-            <SideMenuDashboard setVisible={setShowMenu} />
-          </div>
-        )}
 
         {/* Side Menu - Mobile Overlay */}
         {!isDesktop && showMenu && (
@@ -57,7 +50,7 @@ function LayoutContent({ children }) {
               className="absolute left-0 top-0 bottom-0 w-[250px] bg-white dark:bg-gray-900 shadow-lg"
               onClick={(e) => e.stopPropagation()}
             >
-              <SideMenuDashboard setVisible={setShowMenu} />
+              <SideMenuAdmin setVisible={setShowMenu} />
             </motion.div>
           </div>
         )}

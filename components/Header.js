@@ -117,13 +117,13 @@ export default function Header({ onToggleMenu }) {
           <Link href="/" className="flex items-center gap-2 group shrink-0">
             <Image
               src="/images/i1.svg"
-              alt="Trustify logo"
+              alt="Newsify logo"
               width={40}
               height={40}
               className="dark:filter dark:invert transition-all duration-200 group-hover:scale-110"
             />
             <span className="font-semibold text-2xl text-gray-800 dark:text-gray-100 transition-colors duration-200 group-hover:text-mainColor dark:group-hover:text-mainColor">
-              Trustify
+            Newsify 
             </span>
           </Link>
 

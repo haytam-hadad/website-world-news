@@ -561,7 +561,7 @@ const RightSidebar = () => {
               Settings
             </Link>
           </div>
-          <p className="mt-3">© {currentYear} World News</p>
+          <p className="mt-3">© {currentYear} Newsify</p>
         </footer>
       </div>
     </aside>

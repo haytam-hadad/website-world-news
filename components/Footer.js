@@ -11,10 +11,10 @@ export default function Footer() {
               width={40}
               height={40}
               className="w-10 h-10 filter dark:filter-none invert transition-transform duration-300 group-hover:scale-110"
-              alt="World News Logo"
+              alt="Newsify  Logo"
             />
             <span className="text-xl font-bold font-sans tracking-wide transition-colors duration-300 group-hover:text-opacity-80">
-            Trustify
+            Newsify 
             </span>
           </div>
 

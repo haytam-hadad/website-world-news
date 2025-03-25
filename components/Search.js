@@ -3,9 +3,10 @@
 import { useState, useEffect, useContext } from "react"
 import { useRouter } from "next/navigation"
 import Article from "@/components/Article"
-import { ChevronDown, SearchIcon } from "lucide-react"
+import { SearchIcon } from "lucide-react"
 import ProfileCard from "@/components/profile-card"
-import { ThemeContext } from "./../app/ThemeProvider" // Adjusted import path
+import { ThemeContext } from "./../app/ThemeProvider"
+import { Input } from "@/components/ui/input"
 
 // Keep the existing fetch function for articles
 async function fetchSearchResults(query) {
@@ -120,7 +121,7 @@ export default function Search({ query }) {
       <div className="m-1">
         <form onSubmit={handleSearch} className="relative max-w-3xl mx-auto">
           <div className="relative flex items-center overflow-hidden rounded-full shadow-md hover:shadow-lg transition-all duration-300 border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 group">
-            <input
+            <Input
               type="text"
               value={searchInput}
               onChange={(e) => setSearchInput(e.target.value)}
@@ -168,12 +169,7 @@ export default function Search({ query }) {
       {/* Posts Tab Content */}
       <main className={`${activeTab !== "posts" ? "hidden" : ""}`}>
         <div className="flex flex-wrap justify-center sm:justify-start md:justify-around gap-6">
-          {isLoading ? (
-            <div className="w-full text-center py-12">
-              <div className="inline-block animate-pulse bg-gray-200 dark:bg-gray-700 rounded-md h-6 w-32 mb-2"></div>
-              <div className="inline-block animate-pulse bg-gray-200 dark:bg-gray-700 rounded-md h-6 w-48"></div>
-            </div>
-          ) : articles.length === 0 ? (
+          { isLoading ? null : articles.length === 0 ? (
             <div className="w-full text-center py-12 text-gray-500 dark:text-gray-400">
               No articles found matching your search. Try different keywords.
             </div>
@@ -188,9 +184,7 @@ export default function Search({ query }) {
       {/* Profiles Tab Content */}
       <main className={`${activeTab !== "profiles" ? "hidden" : ""}`}>
         <div className="flex flex-col space-y-6 w-full max-w-3xl mx-auto">
-          {isLoading ? (
-            null  
-          ) : profiles.length === 0 ? (
+          {isLoading ? null : profiles.length === 0 ? (
             <div className="w-full text-center py-12 text-gray-500 dark:text-gray-400">
               No profiles found matching your search. Try different keywords.
             </div>
