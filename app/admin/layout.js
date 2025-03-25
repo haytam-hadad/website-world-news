@@ -5,6 +5,7 @@ import SideMenuAdmin from "@/components/SideMenuAdmin"
 import Footer from "@/components/Footer"
 import { motion } from "framer-motion"
 import { useRouter } from 'next/navigation'
+import Link from 'next/link'
 
 
 function useWindowWidth() {
@@ -31,16 +32,11 @@ function LayoutContent({ children }) {
   const router = useRouter();
 
 
-  if (!user || user.role !== 'admin') {
-    router.replace('/');
-    return null;
-  }
-  return (
+  if (user){
+    return (
     <div className="flex flex-col min-h-screen">
       <div className="flex flex-1 relative">
 
-        {/* Side Menu - Mobile Overlay */}
-        {!isDesktop && showMenu && (
           <div className="fixed inset-0 bg-black bg-opacity-50 z-30" onClick={() => setShowMenu(false)}>
             <motion.div
               initial={{ x: -250 }}
@@ -52,8 +48,7 @@ function LayoutContent({ children }) {
             >
               <SideMenuAdmin setVisible={setShowMenu} />
             </motion.div>
-          </div>
-        )}
+        </div>
 
         {/* Main Content */}
         <div className="flex-1 overflow-auto bg-lightgrey dark:bg-thirdColor">
@@ -64,7 +59,13 @@ function LayoutContent({ children }) {
           </div>
       </div>
     </div>
-  )
+  )}else{
+    return <div className="flex flex-col items-center justify-center min-h-screen">
+      <h1 className="text-4xl font-bold">Unauthorized</h1>
+      <p className="text-lg text-center">You need to be logged in to access this page.</p>
+      <Link href="/login" className="mt-4 px-4 py-2 bg-primary text-white rounded-md">Login </Link>
+    </div>
+  }
 }
 
 export default function MainLayout({ children }) {

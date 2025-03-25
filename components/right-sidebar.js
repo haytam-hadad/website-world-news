@@ -3,18 +3,7 @@
 import { useState, useEffect, useContext } from "react"
 import Link from "next/link"
 import { motion, AnimatePresence } from "framer-motion"
-import {
-  CheckCircle,
-  ChevronDown,
-  ChevronUp,
-  UserCheck,
-  TrendingUp,
-  ExternalLink,
-  Bell,
-  Hash,
-  Users,
-  Sparkles,
-} from "lucide-react"
+import { CheckCircle, ChevronDown, ChevronUp, UserCheck, TrendingUp, ExternalLink, Users } from "lucide-react"
 import Image from "next/image"
 import { ThemeContext } from "../app/ThemeProvider"
 
@@ -71,12 +60,12 @@ const UserItem = ({ userData, lastActivity, isNew }) => {
   return (
     <Link
       href={`/profile/${userData.username}`}
-      className={`block p-3 rounded-xl mb-2 transition-all duration-300 hover:bg-gray-50 dark:hover:bg-gray-800/70 focus:outline-none group ${
+      className={`block p-2 px-3 rounded-xl mb-2 hover:bg-gray-50 dark:hover:bg-gray-800/70 focus:outline-none group ${
         hasNewContent || isNew ? "bg-gray-50/80 dark:bg-gray-800/40 border-l-2 border-mainColor" : ""
       }`}
     >
-      <div className="flex items-center space-x-3">
-        <div className="relative w-10 h-10 rounded-full overflow-hidden bg-mainColor flex-shrink-0 flex items-center justify-center text-white font-medium shadow-sm group-hover:shadow-md transition-shadow">
+      <div className="flex items-center space-x-2">
+        <div className="relative w-9 h-9 rounded-full overflow-hidden bg-mainColor flex-shrink-0 flex items-center justify-center text-white font-medium shadow-sm group-hover:shadow-md transition-shadow">
           {userData.picture || userData.profilePicture ? (
             <Image
               src={userData.picture || userData.profilePicture || "/placeholder.svg"}
@@ -100,20 +89,9 @@ const UserItem = ({ userData, lastActivity, isNew }) => {
             {userData.isVerified && (
               <CheckCircle size={12} className="text-mainColor flex-shrink-0" aria-label="Verified" />
             )}
-            {isNew && (
-              <span className="inline-flex items-center px-1.5 py-0.5 rounded-full text-xs font-medium bg-mainColor/10 text-mainColor">
-                New
-              </span>
-            )}
           </div>
           <div className="flex items-center text-xs">
-            {hasNewContent ? (
-              <span className="text-mainColor font-medium flex items-center">
-                <Sparkles className="w-3 h-3 mr-1" /> New content
-              </span>
-            ) : (
-              <span className="text-gray-500 dark:text-gray-400">{timeSince || "@" + userData.username}</span>
-            )}
+            <span className="text-gray-500 dark:text-gray-400">{timeSince || "@" + userData.username}</span>
           </div>
         </div>
       </div>
@@ -193,9 +171,7 @@ const RightSidebar = () => {
   })
   const [subscriptions, setSubscriptions] = useState([])
   const [subscribers, setSubscribers] = useState([])
-  const [isLoadingSubscriptions, setIsLoadingSubscriptions] = useState(true)
-  const [isLoadingSubscribers, setIsLoadingSubscribers] = useState(true)
-  const [error, setError] = useState(null)
+  const [isLoading, setIsLoading] = useState(false)
   const { user } = useContext(ThemeContext)
 
   // Toggle section expansion
@@ -206,193 +182,76 @@ const RightSidebar = () => {
     }))
   }
 
-  // Fetch user subscriptions
+  // Fetch user data (subscriptions and subscribers)
   useEffect(() => {
-    const fetchSubscriptions = async () => {
-      if (!user) {
-        setIsLoadingSubscriptions(false)
-        return
-      }
+    const fetchUserData = async () => {
+      if (!user) return
+
+      setIsLoading(true)
 
       try {
-        setIsLoadingSubscriptions(true)
-        setError(null)
+        // Fetch subscriptions and subscribers in parallel
+        const [subscriptionsRes, subscribersRes] = await Promise.all([
+          fetch(`${process.env.NEXT_PUBLIC_API_URL}/users/${user._id}/subscriptions`, {
+            credentials: "include",
+          }),
+          fetch(`${process.env.NEXT_PUBLIC_API_URL}/users/${user._id}/subscribers`, {
+            credentials: "include",
+          }),
+        ])
 
-        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/users/${user._id}/subscriptions`, {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          credentials: "include",
-        })
-
-        if (!response.ok) {
-          throw new Error("Failed to fetch subscriptions")
+        // Process subscriptions
+        if (subscriptionsRes.ok) {
+          const data = await subscriptionsRes.json()
+          setSubscriptions(data.subscriptions || [])
         }
 
-        const data = await response.json()
-
-        // Process the subscriptions data
-        const subscriptionsData = data.subscriptions || []
-
-        // Fetch additional user data for each subscription if needed
-        const processedSubscriptions = await Promise.all(
-          subscriptionsData.map(async (sub) => {
-            // If we already have user data, use it
-            if (sub.username || sub.displayname) {
-              return {
-                ...sub,
-                lastActivity: sub.lastActivity || null,
-              }
-            }
-
-            // Otherwise, try to fetch user data
-            try {
-              const userResponse = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/users/${sub.userId}`, {
-                method: "GET",
-                headers: {
-                  "Content-Type": "application/json",
-                },
-                credentials: "include",
-              })
-
-              if (userResponse.ok) {
-                const userData = await userResponse.json()
-                return {
-                  ...sub,
-                  userData,
-                  lastActivity: userData.lastActivity || null,
-                }
-              }
-
-              return sub
-            } catch (err) {
-              console.error("Error fetching user data for subscription:", err)
-              return sub
-            }
-          }),
-        )
-
-        setSubscriptions(processedSubscriptions)
-      } catch (err) {
-        console.error("Error fetching subscriptions:", err)
-        setError("Failed to load subscriptions")
+        // Process subscribers
+        if (subscribersRes.ok) {
+          const data = await subscribersRes.json()
+          setSubscribers(data.subscribers || [])
+        }
+      } catch (error) {
+        console.error("Error fetching user data:", error)
       } finally {
-        setIsLoadingSubscriptions(false)
+        setIsLoading(false)
       }
     }
 
-    fetchSubscriptions()
-  }, [user])
-
-  // Fetch user subscribers
-  useEffect(() => {
-    const fetchSubscribers = async () => {
-      if (!user) {
-        setIsLoadingSubscribers(false)
-        return
-      }
-
-      try {
-        setIsLoadingSubscribers(true)
-        setError(null)
-
-        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/users/${user._id}/subscribers`, {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          credentials: "include",
-        })
-
-        if (!response.ok) {
-          throw new Error("Failed to fetch subscribers")
-        }
-
-        const data = await response.json()
-
-        // Process the subscribers data
-        const subscribersData = data.subscribers || []
-
-        // Fetch additional user data for each subscriber if needed
-        const processedSubscribers = await Promise.all(
-          subscribersData.map(async (sub) => {
-            // If we already have user data, use it
-            if (sub.username || sub.displayname) {
-              return {
-                ...sub,
-                lastActivity: sub.lastActivity || null,
-                isNew: Math.random() > 0.7, // Randomly mark some as new for demo purposes
-              }
-            }
-
-            // Otherwise, try to fetch user data
-            try {
-              const userResponse = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/users/${sub.userId}`, {
-                method: "GET",
-                headers: {
-                  "Content-Type": "application/json",
-                },
-                credentials: "include",
-              })
-
-              if (userResponse.ok) {
-                const userData = await userResponse.json()
-                return {
-                  ...sub,
-                  userData,
-                  lastActivity: userData.lastActivity || null,
-                  isNew: Math.random() > 0.7, // Randomly mark some as new for demo purposes
-                }
-              }
-
-              return sub
-            } catch (err) {
-              console.error("Error fetching user data for subscriber:", err)
-              return sub
-            }
-          }),
-        )
-
-        setSubscribers(processedSubscribers)
-      } catch (err) {
-        console.error("Error fetching subscribers:", err)
-        setError("Failed to load subscribers")
-      } finally {
-        setIsLoadingSubscribers(false)
-      }
-    }
-
-    fetchSubscribers()
+    fetchUserData()
   }, [user])
 
   const currentYear = new Date().getFullYear()
 
+  // Don't show subscription sections if user is not logged in or data is loading
+  const showSubscriptions = user && !isLoading && subscriptions.length > 0
+  const showSubscribers = user && !isLoading && subscribers.length > 0
+
   return (
-    <aside className="w-[300px] fixed top-0 right-0 h-full bg-white dark:bg-darkgrey border-l border-gray-100 dark:border-gray-800 overflow-y-auto z-30 pt-16 shadow-md">
+    <aside className="w-[300px] fixed top-0 right-0 h-full bg-white dark:bg-darkgrey border-l border-gray-100 dark:border-gray-800 overflow-y-auto z-30 pt-16 shadow-sm">
       <div className="p-4 space-y-4 h-full flex flex-col">
         {/* User Stats Summary - Only show if user is logged in */}
         {user && (
           <div className="bg-gradient-to-r from-mainColor/10 to-main2Color/10 dark:from-mainColor/20 dark:to-main2Color/20 rounded-xl p-4 shadow-sm">
             <div className="flex justify-between items-center">
               <div className="text-center flex-1">
-                <div className="font-semibold text-lg text-gray-900 dark:text-white">{subscriptions.length}</div>
+                <div className="text-lg font-bold text-mainColor">{subscriptions.length}</div>
                 <div className="text-xs text-gray-600 dark:text-gray-300">Subscriptions</div>
               </div>
               <div className="h-10 w-px bg-gray-200 dark:bg-gray-700"></div>
               <div className="text-center flex-1">
-                <div className="font-semibold text-lg text-gray-900 dark:text-white">{subscribers.length}</div>
+                <div className="text-lg font-bold text-mainColor">{subscribers.length}</div>
                 <div className="text-xs text-gray-600 dark:text-gray-300">Subscribers</div>
               </div>
             </div>
           </div>
         )}
 
-        {/* Subscriptions Section - Only show if user is logged in and has subscriptions */}
-        {user && !isLoadingSubscriptions && subscriptions.length > 0 && (
+        {/* Subscriptions Section */}
+        {showSubscriptions && (
           <section
             aria-labelledby="subscriptions-heading"
-            className="bg-white dark:bg-darkgrey rounded-xl border border-gray-100 dark:border-gray-800 p-5 shadow-md"
+            className="bg-white dark:bg-darkgrey rounded-xl border border-gray-100 dark:border-gray-800 p-3 shadow-sm"
           >
             <SectionHeader
               icon={UserCheck}
@@ -411,11 +270,11 @@ const RightSidebar = () => {
                   animate="visible"
                   exit="hidden"
                 >
-                  <div className="space-y-1 max-h-[200px] overflow-y-auto pr-1 scrollbar-thin scrollbar-thumb-gray-300 dark:scrollbar-thumb-gray-600 scrollbar-track-transparent">
+                  <div className="space-y-1 max-h-[200px] overflow-y-auto scrollbar-thin scrollbar-thumb-gray-300 dark:scrollbar-thumb-gray-600 scrollbar-track-transparent">
                     {subscriptions.map((subscription) => (
                       <UserItem
                         key={subscription._id || subscription.userId}
-                        userData={subscription.userData || subscription}
+                        userData={subscription}
                         lastActivity={subscription.lastActivity}
                       />
                     ))}
@@ -438,11 +297,11 @@ const RightSidebar = () => {
           </section>
         )}
 
-        {/* Subscribers Section - Only show if user is logged in and has subscribers */}
-        {user && !isLoadingSubscribers && subscribers.length > 0 && (
+        {/* Subscribers Section */}
+        {showSubscribers && (
           <section
             aria-labelledby="subscribers-heading"
-            className="bg-white dark:bg-darkgrey rounded-xl border border-gray-100 dark:border-gray-800 p-5 shadow-md"
+            className="bg-white dark:bg-darkgrey rounded-xl border border-gray-100 dark:border-gray-800 p-3 shadow-sm"
           >
             <SectionHeader
               icon={Users}
@@ -461,13 +320,12 @@ const RightSidebar = () => {
                   animate="visible"
                   exit="hidden"
                 >
-                  <div className="space-y-1 max-h-[200px] overflow-y-auto pr-1 scrollbar-thin scrollbar-thumb-gray-300 dark:scrollbar-thumb-gray-600 scrollbar-track-transparent">
+                  <div className="space-y-1 max-h-[200px] overflow-y-auto scrollbar-thin scrollbar-thumb-gray-300 dark:scrollbar-thumb-gray-600 scrollbar-track-transparent">
                     {subscribers.map((subscriber) => (
                       <UserItem
                         key={subscriber._id || subscriber.userId}
-                        userData={subscriber.userData || subscriber}
+                        userData={subscriber}
                         lastActivity={subscriber.lastActivity}
-                        isNew={subscriber.isNew}
                       />
                     ))}
                   </div>
@@ -492,7 +350,7 @@ const RightSidebar = () => {
         {/* Trending Section */}
         <section
           aria-labelledby="trending-heading"
-          className="bg-white dark:bg-darkgrey rounded-xl border border-gray-100 dark:border-gray-800 p-5 shadow-md"
+          className="bg-white dark:bg-darkgrey rounded-xl border border-gray-100 dark:border-gray-800 p-5 shadow-sm"
         >
           <SectionHeader
             icon={TrendingUp}

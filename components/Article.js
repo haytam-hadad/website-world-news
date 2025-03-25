@@ -16,7 +16,8 @@ import {
   ArrowBigDown,
   ChevronRight,
 } from "lucide-react"
-import { useState, useRef, useEffect } from "react"
+import { useState, useRef, useContext, useEffect } from "react"
+import { ThemeContext } from "./../app/ThemeProvider"
 import { ArrowBigUp } from "lucide-react"
 import { motion, AnimatePresence } from "framer-motion"
 import Link from "next/link"
@@ -95,9 +96,11 @@ const Article = ({ articleData }) => {
   const [dislikeCount, setDislikeCount] = useState(downvote || 0)
   const [isMinimized, setIsMinimized] = useState(false)
   const [actionTaken, setActionTaken] = useState(null) // 'hide', 'block', or 'report'
+  const [isDeleting, setIsDeleting] = useState(false)
 
   const optionsRef = useRef(null)
   const router = useRouter()
+  const { user } = useContext(ThemeContext)
 
   // Close dropdown when clicked outside
   useEffect(() => {
@@ -173,6 +176,9 @@ const Article = ({ articleData }) => {
 
   const handleUndoAction = (e) => {
     e.stopPropagation()
+    // Don't allow undoing a delete
+    if (actionTaken === "delete") return
+
     setIsMinimized(false)
     setActionTaken(null)
     // Here you would implement the actual undo functionality with an API call
@@ -295,6 +301,52 @@ const Article = ({ articleData }) => {
     return match ? match[1] : null
   }
 
+  const handleDeleteArticle = async (e) => {
+    e.stopPropagation()
+
+    try {
+      setIsDeleting(true)
+      setShowOptions(false)
+
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/news/${_id}`, {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        credentials: "include", // Important for sending cookies
+      })
+
+      if (response.ok) {
+        // Show success message
+        setActionTaken("delete")
+        setIsMinimized(true)
+
+        // Refresh the page or update the article list after a short delay
+        setTimeout(() => {
+          if (typeof window !== "undefined") {
+            // If we're on the profile page, refresh to update the article list
+            if (window.location.pathname.includes("/profile")) {
+              window.location.reload()
+            }
+            // If we're on the article page, redirect to home
+            else if (window.location.pathname.includes(`/post/${_id.$oid || _id}`)) {
+              router.push("/")
+            }
+          }
+        }, 2000)
+      } else {
+        const errorData = await response.json()
+        console.error("Error deleting article:", errorData)
+        alert(errorData.message || "Failed to delete article. Please try again.")
+      }
+    } catch (error) {
+      console.error("Error deleting article:", error)
+      alert("An error occurred while deleting the article. Please try again.")
+    } finally {
+      setIsDeleting(false)
+    }
+  }
+
   // Render minimized view
   if (isMinimized) {
     let actionIcon = <EyeOff className="w-5 h-5" />
@@ -306,6 +358,26 @@ const Article = ({ articleData }) => {
     } else if (actionTaken === "report") {
       actionIcon = <AlertCircle className="w-5 h-5" />
       actionText = "Post reported"
+    } else if (actionTaken === "delete") {
+      actionIcon = (
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="20"
+          height="20"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="2"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          className="w-5 h-5"
+        >
+          <path d="M3 6h18"></path>
+          <path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"></path>
+          <path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"></path>
+        </svg>
+      )
+      actionText = "Article deleted successfully"
     }
 
     return (
@@ -320,13 +392,15 @@ const Article = ({ articleData }) => {
             {actionIcon}
             <span>{actionText}</span>
           </div>
-          <button
-            onClick={handleUndoAction}
-            className="text-mainColor hover:text-mainColor/80 transition-colors flex items-center space-x-1"
-            aria-label="Undo action"
-          >
-            <span>Undo</span>
-          </button>
+          {actionTaken !== "delete" && (
+            <button
+              onClick={handleUndoAction}
+              className="text-mainColor hover:text-mainColor/80 transition-colors flex items-center space-x-1"
+              aria-label="Undo action"
+            >
+              <span>Undo</span>
+            </button>
+          )}
         </div>
       </motion.article>
     )
@@ -443,6 +517,30 @@ const Article = ({ articleData }) => {
                       <AlertCircle className="w-4 h-4" />
                       <span>Report this post</span>
                     </button>
+                    {user && user.username === authorusername && (
+                      <button
+                        className="w-full border-t text-left px-4 py-2 text-sm text-red-600 dark:text-red-400 hover:bg-gray-100 dark:hover:bg-gray-700 flex items-center space-x-2"
+                        onClick={(e) => handleDeleteArticle(e)}
+                      >
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          width="16"
+                          height="16"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          stroke="currentColor"
+                          strokeWidth="2"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          className="w-4 h-4"
+                        >
+                          <path d="M3 6h18"></path>
+                          <path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"></path>
+                          <path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"></path>
+                        </svg>
+                        <span>Delete article</span>
+                      </button>
+                    )}
                   </motion.div>
                 )}
               </AnimatePresence>
