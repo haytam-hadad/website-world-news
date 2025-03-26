@@ -174,24 +174,14 @@ const Profile = ({ userData }) => {
       className="w-full mx-auto"
     >
       {/* Banner Section */}
-      <div className="relative w-full h-40 sm:h-52 rounded-xl mb-16 bg-gradient-to-r from-mainColor to-main2Color shadow-md">
-        {isOwnProfile && (
-          <button
-            type="button"
-            className="absolute top-4 right-4 flex items-center gap-1.5 bg-white/90 hover:bg-white text-gray-800 px-3 py-2 text-sm font-medium rounded-lg shadow-md transition-colors duration-200"
-          >
-            <ImageIcon className="w-4 h-4" />
-            <span>Change Banner</span>
-          </button>
-        )}
+      <div className="relative w-full h-32 sm:h-40 rounded-xl mb-12 bg-gradient-to-r from-mainColor to-main2Color shadow-md">
 
         {/* Profile Avatar - Positioned to overlap banner and content */}
         <div className="absolute z-20 -bottom-12 left-6 sm:left-8">
-          <div className="relative">
             <div className="w-24 h-24 sm:w-28 sm:h-28 rounded-full bg-white p-1 shadow-md">
-              {userData.picture ? (
+              {userData.profilePicture ? (
                 <Image
-                  src={userData.picture || "/placeholder.svg"}
+                  src={userData.profilePicture || "/placeholder.svg"}
                   alt={userData.displayname}
                   className="w-full h-full rounded-full shadow-inner"
                   width={100}
@@ -203,19 +193,13 @@ const Profile = ({ userData }) => {
                 </div>
               )}
             </div>
-            {isOwnProfile && (
-              <button className="absolute bottom-0 right-0 w-8 h-8 bg-white rounded-full shadow-md flex items-center justify-center text-mainColor hover:bg-gray-100 transition-colors duration-200">
-                <Plus className="w-5 h-5" />
-              </button>
-            )}
-          </div>
         </div>
       </div>
 
       {/* Profile Header */}
       <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between p-1 pb-3">
         <div className="ml-2 sm:ml-32 mb-4 sm:mb-0">
-          <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-white capitalize">
+          <h1 className="text-2xl md:text-3xl font-bold text-gray-900 dark:text-white capitalize">
             {userData.displayname || "Unknown"}
           </h1>
           <p className="text-gray-600 dark:text-gray-400 text-sm sm:text-base">@{userData.username || "username"}</p>
