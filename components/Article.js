@@ -30,7 +30,7 @@ const formatText = (text) => {
   text = text.replace(/^#+\s+/gm, "")
   text = text.replace(/^>\s+/gm, "")
 
-  return text.split(/(\*\*[^*]+\*\*|\*[^*]+\*|~~[^~]+~~|`[^`]+`|_[^_]+_)/).map((chunk, index) => {
+  return text.split(/(\*\*[^*]+\*\*|\*[^*]+\*\*|\*[^*]+\*|~~[^~]+~~|`[^`]+`|_[^_]+_)/).map((chunk, index) => {
     switch (true) {
       case chunk.startsWith("**") && chunk.endsWith("**"):
         return (
@@ -84,7 +84,7 @@ const Article = ({ articleData }) => {
     views,
     upvote,
     downvote,
-    picture,
+    authorpicture,
     isGoogleUser,
     comments = [],
   } = articleData
@@ -428,16 +428,16 @@ const Article = ({ articleData }) => {
             className="flex items-center space-x-2 group"
             onClick={(e) => e.stopPropagation()}
           >
-            {isGoogleUser ? (
+            {authorpicture ? (
               <Image
-                src={picture || "/placeholder.svg"}
+                src={authorpicture || "/placeholder.svg"}
                 alt={authordisplayname || "Unknown"}
                 width={40}
                 height={40}
                 className="rounded-full"
               />
             ) : (
-              <div className="rounded-full bg-mainColor w-10 h-10 flex items-center justify-center text-secondaryColor font-semibold group-hover:shadow-md transition-shadow">
+              <div className="rounded-full bg-mainColor w-10 h-10 flex items-center justify-center text-white font-semibold group-hover:shadow-md transition-shadow">
                 {authordisplayname ? authordisplayname[0].toUpperCase() : "U"}
               </div>
             )}
@@ -458,94 +458,98 @@ const Article = ({ articleData }) => {
             </div>
           </Link>
 
-          {/* Category tag and options */}
-          <div className="flex items-center space-x-1">
-            <Link
-              href={`/categories/${category?.toLowerCase() || "general"}`}
-              className="px-3 py-1 text-xs font-medium text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-900/30 rounded-full capitalize hover:bg-blue-100 dark:hover:bg-blue-900/50 transition-colors"
-              onClick={(e) => e.stopPropagation()}
-              aria-label={`Category: ${category || "General"}`}
+          {/* Options button */}
+          <div className="relative" ref={optionsRef}>
+            <button
+              className="p-1.5 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-500 dark:text-gray-400 transition-colors"
+              onClick={(e) => {
+                e.stopPropagation()
+                setShowOptions(!showOptions)
+              }}
+              aria-label="More options"
+              aria-expanded={showOptions}
+              aria-haspopup="true"
             >
-              {category || "General"}
-            </Link>
+              <MoreHorizontal className="w-5 h-5" />
+            </button>
 
-            {/* Trust Rating Component */}
-            <TrustRating articleData={articleData} />
-
-            <div className="relative" ref={optionsRef}>
-              <button
-                className="p-1.5 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-500 dark:text-gray-400 transition-colors"
-                onClick={(e) => {
-                  e.stopPropagation()
-                  setShowOptions(!showOptions)
-                }}
-                aria-label="More options"
-                aria-expanded={showOptions}
-                aria-haspopup="true"
-              >
-                <MoreHorizontal className="w-5 h-5" />
-              </button>
-
-              <AnimatePresence>
-                {showOptions && (
-                  <motion.div
-                    initial={{ opacity: 0, y: 10, scale: 0.95 }}
-                    animate={{ opacity: 1, y: 0, scale: 1 }}
-                    exit={{ opacity: 0, y: 10, scale: 0.95 }}
-                    transition={{ duration: 0.2 }}
-                    className="absolute right-0 mt-2 w-48 bg-white dark:bg-gray-800 rounded-lg shadow-lg border border-gray-200 dark:border-gray-700 z-10 py-2"
-                    onClick={(e) => e.stopPropagation()}
-                  >
-                    <button
-                      className="w-full text-left px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 flex items-center space-x-2"
-                      onClick={handleHidePost}
-                    >
-                      <EyeOff className="w-4 h-4" />
-                      <span>Hide this post</span>
-                    </button>
-                    <button
-                      className="w-full text-left px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 flex items-center space-x-2"
-                      onClick={handleBlockUser}
-                    >
-                      <UserX className="w-4 h-4" />
-                      <span>Block this user</span>
-                    </button>
+            <AnimatePresence>
+              {showOptions && (
+                <motion.div
+                  initial={{ opacity: 0, y: 10, scale: 0.95 }}
+                  animate={{ opacity: 1, y: 0, scale: 1 }}
+                  exit={{ opacity: 0, y: 10, scale: 0.95 }}
+                  transition={{ duration: 0.2 }}
+                  className="absolute right-0 mt-2 w-48 bg-white dark:bg-gray-800 rounded-lg shadow-lg border border-gray-200 dark:border-gray-700 z-10 py-2"
+                  onClick={(e) => e.stopPropagation()}
+                >
+                  {user && user.username === authorusername ? (
                     <button
                       className="w-full text-left px-4 py-2 text-sm text-red-600 dark:text-red-400 hover:bg-gray-100 dark:hover:bg-gray-700 flex items-center space-x-2"
-                      onClick={handleReportPost}
+                      onClick={(e) => handleDeleteArticle(e)}
                     >
-                      <AlertCircle className="w-4 h-4" />
-                      <span>Report this post</span>
-                    </button>
-                    {user && user.username === authorusername && (
-                      <button
-                        className="w-full border-t text-left px-4 py-2 text-sm text-red-600 dark:text-red-400 hover:bg-gray-100 dark:hover:bg-gray-700 flex items-center space-x-2"
-                        onClick={(e) => handleDeleteArticle(e)}
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="16"
+                        height="16"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="2"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        className="w-4 h-4"
                       >
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          width="16"
-                          height="16"
-                          viewBox="0 0 24 24"
-                          fill="none"
-                          stroke="currentColor"
-                          strokeWidth="2"
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          className="w-4 h-4"
-                        >
-                          <path d="M3 6h18"></path>
-                          <path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"></path>
-                          <path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"></path>
-                        </svg>
-                        <span>Delete article</span>
+                        <path d="M3 6h18"></path>
+                        <path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"></path>
+                        <path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"></path>
+                      </svg>
+                      <span>Delete article</span>
+                    </button>
+                  ) : (
+                    <>
+                      <button
+                        className="w-full text-left px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 flex items-center space-x-2"
+                        onClick={handleHidePost}
+                      >
+                        <EyeOff className="w-4 h-4" />
+                        <span>Hide this post</span>
                       </button>
-                    )}
-                  </motion.div>
-                )}
-              </AnimatePresence>
-            </div>
+                      <button
+                        className="w-full text-left px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 flex items-center space-x-2"
+                        onClick={handleBlockUser}
+                      >
+                        <UserX className="w-4 h-4" />
+                        <span>Block this user</span>
+                      </button>
+                      <button
+                        className="w-full text-left px-4 py-2 text-sm text-red-600 dark:text-red-400 hover:bg-gray-100 dark:hover:bg-gray-700 flex items-center space-x-2"
+                        onClick={handleReportPost}
+                      >
+                        <AlertCircle className="w-4 h-4" />
+                        <span>Report this post</span>
+                      </button>
+                    </>
+                  )}
+                </motion.div>
+              )}
+            </AnimatePresence>
           </div>
+        </div>
+
+        {/* Category and Trust Rating */}
+        <div className="px-4 pb-2 flex items-center space-x-2">
+          <Link
+            href={`/categories/${category?.toLowerCase() || "general"}`}
+            className="px-3 py-1 text-xs font-medium text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-900/30 rounded-full capitalize hover:bg-blue-100 dark:hover:bg-blue-900/50 transition-colors"
+            onClick={(e) => e.stopPropagation()}
+            aria-label={`Category: ${category || "General"}`}
+          >
+            {category || "General"}
+          </Link>
+
+          {/* Trust Rating Component */}
+          <TrustRating articleData={articleData} />
         </div>
 
         {/* Title */}

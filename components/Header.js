@@ -233,7 +233,7 @@ export default function Header({ onToggleMenu }) {
                   >
                     {user.isGoogleUser ? (
                       <Image
-                        src={user.picture || "/placeholder.svg"}
+                        src={user.profilePicture || "/placeholder.svg"}
                         alt={user.displayname}
                         width={32}
                         height={32}

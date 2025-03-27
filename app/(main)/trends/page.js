@@ -7,7 +7,7 @@ import Article from "@/components/Article"
 // Fetch the latest articles from the API
 async function fetchTrendingArticles() {
   try {
-    const apiUrl = `${process.env.NEXT_PUBLIC_API_URL}/news/latest`
+    const apiUrl = `${process.env.NEXT_PUBLIC_API_URL}/news/trending`
     console.log("Fetching trending articles from:", apiUrl)
 
     const res = await fetch(apiUrl)
@@ -18,9 +18,8 @@ async function fetchTrendingArticles() {
     }
 
     const data = await res.json()
-    console.log(`Received ${Array.isArray(data) ? data.length : 0} trending articles`)
 
-    return Array.isArray(data) ? data : []
+    return Array.isArray(data.articles) ? data.articles : []
   } catch (error) {
     console.error("Error fetching trending articles:", error)
     return []

@@ -1,5 +1,5 @@
 "use client"
-import { useState, useContext, useEffect, useMemo, useCallback } from "react"
+import { useState, useContext, useEffect, useMemo, useCallback, useRef } from "react"
 import { useRouter } from "next/navigation"
 import { ThemeContext } from "../../ThemeProvider"
 import {
@@ -44,14 +44,17 @@ import {
   Search,
   X,
   ThumbsUp,
+  Camera,
 } from "lucide-react"
 import { motion, AnimatePresence } from "framer-motion"
+import Image from "next/image"
 
 export default function AddPostPage() {
   const router = useRouter()
   const { user } = useContext(ThemeContext)
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [success, setSuccess] = useState(false)
+  const fileInputRef = useRef(null)
 
   // Form state
   const [formData, setFormData] = useState({
@@ -59,6 +62,7 @@ export default function AddPostPage() {
     content: "",
     description: null,
     category: "",
+    status: "on-going", // Add default status to match backend
     media: {
       type: "image", // image or video
       sourceType: "url", // url or upload
@@ -73,6 +77,9 @@ export default function AddPostPage() {
   const [categorySearch, setCategorySearch] = useState("")
   const [categoryFilter, setCategoryFilter] = useState("all")
   const [showCategorySelector, setShowCategorySelector] = useState(false)
+  const [uploadingImage, setUploadingImage] = useState(false)
+  const [uploadProgress, setUploadProgress] = useState(0)
+  const [showImageModal, setShowImageModal] = useState(false)
 
   // Define categories with the new structure (removed emojis from names)
   const categories = [
@@ -140,7 +147,7 @@ export default function AddPostPage() {
       type: "trusted-news",
       group: "Trusted News",
     },
-    
+
     // Group 2: Community Reports
     {
       id: "local",
@@ -196,7 +203,7 @@ export default function AddPostPage() {
       type: "community-reports",
       group: "Community Reports",
     },
-    
+
     // Group 3: Discussions
     {
       id: "sports",
@@ -252,7 +259,7 @@ export default function AddPostPage() {
       type: "discussions",
       group: "Discussions",
     },
-    
+
     // Group 4: General Info
     {
       id: "health",
@@ -319,7 +326,6 @@ export default function AddPostPage() {
     { id: "general-info", name: "General Info" },
   ]
 
-
   // Memoize filtered categories to prevent unnecessary recalculations
   const filteredCategories = useMemo(() => {
     const searchTerm = categorySearch.toLowerCase().trim()
@@ -370,6 +376,15 @@ export default function AddPostPage() {
       setMediaPreview(null)
     }
   }, [formData.media.file, formData.media.sourceType])
+
+  // Clean up object URLs when component unmounts
+  useEffect(() => {
+    return () => {
+      if (mediaPreview && mediaPreview.startsWith("blob:")) {
+        URL.revokeObjectURL(mediaPreview)
+      }
+    }
+  }, [mediaPreview])
 
   // Handle form field changes
   const handleChange = useCallback((field, value) => {
@@ -450,6 +465,101 @@ export default function AddPostPage() {
     setCategoryFilter("all")
   }, [])
 
+  // Handle file selection
+  const handleFileSelect = (e) => {
+    const file = e.target.files[0]
+    if (!file) return
+
+    // Check file type
+    if (!file.type.startsWith("image/")) {
+      setErrors({ ...errors, media: "Please select an image file" })
+      return
+    }
+
+    // Check file size (max 5MB)
+    if (file.size > 5 * 1024 * 1024) {
+      setErrors({ ...errors, media: "Image size should be less than 5MB" })
+      return
+    }
+
+    // Set the file in form data
+    handleMediaChange("file", file)
+    setShowImageModal(true)
+  }
+
+  // Upload image to Cloudinary
+  const uploadToCloudinary = async () => {
+    const file = formData?.media?.file
+    if (!file) return
+
+    setUploadingImage(true)
+    setUploadProgress(0)
+
+    const cloudName = process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME
+    const uploadPreset = process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET
+
+    if (!cloudName || !uploadPreset) {
+      console.error("Cloudinary environment variables are missing.")
+      setErrors({ ...errors, media: "Configuration error. Please check your environment variables." })
+      setUploadingImage(false)
+      return
+    }
+
+    try {
+      const data = new FormData()
+      data.append("file", file)
+      data.append("upload_preset", uploadPreset)
+
+      const xhr = new XMLHttpRequest()
+      xhr.open("POST", `https://api.cloudinary.com/v1_1/${cloudName}/image/upload`)
+
+      xhr.upload.addEventListener("progress", (event) => {
+        if (event.lengthComputable) {
+          const progress = Math.round((event.loaded / event.total) * 100)
+          setUploadProgress(progress)
+        }
+      })
+
+      xhr.onload = () => {
+        setUploadingImage(false)
+        setUploadProgress(0)
+
+        if (xhr.status === 200) {
+          const response = JSON.parse(xhr.responseText)
+          handleMediaChange("url", response.secure_url)
+          setShowImageModal(false)
+          handleMediaChange("file", null)
+        } else {
+          console.error("Upload failed:", xhr.responseText)
+          setErrors({ ...errors, media: "Failed to upload image. Please try again." })
+        }
+      }
+
+      xhr.addEventListener("error", () => {
+        console.error("Upload error")
+        setErrors({ ...errors, media: "Upload failed due to a network error." })
+        setUploadingImage(false)
+        setUploadProgress(0)
+      })
+
+      xhr.send(data)
+    } catch (error) {
+      console.error("Unexpected error:", error)
+      setErrors({ ...errors, media: "Something went wrong. Please try again." })
+      setUploadingImage(false)
+    }
+  }
+
+  // Cancel image upload
+  const cancelImageUpload = () => {
+    setShowImageModal(false)
+    handleMediaChange("file", null)
+    if (mediaPreview) {
+      URL.revokeObjectURL(mediaPreview)
+      setMediaPreview(null)
+    }
+  }
+
   // Validate URL
   const isValidUrl = useCallback((urlString) => {
     if (!urlString || typeof urlString !== "string" || urlString.trim() === "") {
@@ -458,12 +568,13 @@ export default function AddPostPage() {
 
     try {
       // Make sure it starts with http:// or https://
-      if (!urlString.match(/^https?:\/\//i)) {
-        urlString = "https://" + urlString
+      let normalizedUrl = urlString
+      if (!normalizedUrl.match(/^https?:\/\//i)) {
+        normalizedUrl = "https://" + normalizedUrl
       }
 
       // Check if it's a valid URL
-      new URL(urlString)
+      new URL(normalizedUrl)
       return true
     } catch (e) {
       return false
@@ -484,8 +595,23 @@ export default function AddPostPage() {
       newErrors.media = "Please enter a valid URL (e.g., https://example.com/image.jpg)"
     }
 
+    // Validate sources if any are provided
+    formData.sources.forEach((source, index) => {
+      if (source.value.trim() && source.key === "url" && !isValidUrl(source.value)) {
+        newErrors[`source_${index}`] = "Please enter a valid URL for this source"
+      }
+    })
+
     return newErrors
-  }, [formData.title, formData.content, formData.category, formData.media.sourceType, formData.media.url, isValidUrl])
+  }, [
+    formData.title,
+    formData.content,
+    formData.category,
+    formData.media.sourceType,
+    formData.media.url,
+    formData.sources,
+    isValidUrl,
+  ])
 
   // Handle form submission
   const handleSubmit = async (e) => {
@@ -504,20 +630,30 @@ export default function AddPostPage() {
     setIsSubmitting(true)
 
     try {
-      // Filter out empty sources
-      const filteredSources = formData.sources.filter((source) => source.value.trim() !== "")
+      // Filter out empty sources and format them as expected by backend
+      const filteredSources = formData.sources
+        .filter((source) => source.value.trim() !== "")
+        .map((source) => ({
+          key: source.key,
+          value: source.value.trim(),
+        }))
 
+      // Create article data object with validated data
       const articleData = {
-        title: formData.title,
-        content: formData.content,
-        category: formData.category || "General",
-        status: "on-going",
+        title: formData.title.trim(),
+        content: formData.content.trim(),
+        category: formData.category,
+        status: formData.status || "on-going",
         sources: filteredSources,
-        description: formData.description || null,
       }
 
-      // Handle media URL and type - only process URL media, ignore file uploads
-      if (formData.media.sourceType === "url" && formData.media.url) {
+      // Add description if provided
+      if (formData.description && formData.description.trim()) {
+        articleData.description = formData.description.trim()
+      }
+
+      // Handle media URL and type
+      if (formData.media.url) {
         // Make sure URL starts with http:// or https://
         let mediaUrl = formData.media.url
         if (!mediaUrl.match(/^https?:\/\//i)) {
@@ -548,6 +684,7 @@ export default function AddPostPage() {
       const data = await response.json()
       console.log("Article created successfully:", data)
 
+      // Show success message and redirect after a delay
       setSuccess(true)
     } catch (error) {
       console.error("Error creating post:", error)
@@ -576,23 +713,56 @@ export default function AddPostPage() {
 
   // Function to safely render image preview
   const renderImagePreview = useCallback(() => {
-    // Only show preview for file uploads, not for URLs
     if (formData.media.sourceType === "upload" && mediaPreview) {
       return (
         <div className="relative w-full h-48 rounded-lg overflow-hidden bg-white dark:bg-gray-700">
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img
+          <Image
             src={mediaPreview || "/placeholder.svg"}
             alt="Uploaded preview"
             className="w-full h-full object-contain"
+            width={400}
+            height={160}
           />
         </div>
       )
     }
 
-    // Don't show any preview for URL inputs
+    if (formData.media.sourceType === "url" && formData.media.url) {
+      // Make sure URL is properly formatted
+      let imageUrl = formData.media.url
+      if (!imageUrl.match(/^https?:\/\//i)) {
+        imageUrl = "https://" + imageUrl
+      }
+
+      return (
+        <div className="relative w-full h-48 rounded-lg overflow-hidden bg-white dark:bg-gray-700">
+          <Image
+            src={imageUrl || "/placeholder.svg"}
+            alt="URL preview"
+            className="w-full h-full object-contain"
+            width={400}
+            height={160}
+            onError={(e) => {
+              e.target.onerror = null
+              e.target.src = "/placeholder.svg"
+            }}
+          />
+        </div>
+      )
+    }
+
     return null
-  }, [formData.media.sourceType, mediaPreview])
+  }, [formData.media.sourceType, formData.media.url, mediaPreview])
+
+  // Handle redirect after successful submission
+  useEffect(() => {
+    if (success) {
+      const timer = setTimeout(() => {
+        router.push("/news")
+      }, 2000)
+      return () => clearTimeout(timer)
+    }
+  }, [success, router])
 
   // Don't render anything while redirecting
   if (!user) {
@@ -614,12 +784,92 @@ export default function AddPostPage() {
         <span className="font-semibold p-1">Back</span>
       </button>
 
+      {/* Image Upload Modal */}
+      <AnimatePresence>
+        {showImageModal && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 bg-black/70 z-50 flex items-center justify-center p-4"
+            onClick={cancelImageUpload}
+          >
+            <motion.div
+              initial={{ scale: 0.9, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0.9, opacity: 0 }}
+              className="bg-white dark:bg-darkgrey rounded-xl p-6 max-w-md w-full shadow-xl"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <div className="flex justify-between items-center mb-4">
+                <h3 className="text-xl font-bold text-gray-900 dark:text-white">Upload Image</h3>
+                <button
+                  onClick={cancelImageUpload}
+                  className="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200"
+                >
+                  <X className="w-5 h-5" />
+                </button>
+              </div>
+
+              <div className="mb-6">
+                <div className="w-full h-40 rounded-lg overflow-hidden">
+                  <Image
+                    src={mediaPreview || "/placeholder.svg"}
+                    alt="Image Preview"
+                    className="w-full h-full object-cover"
+                    width={400}
+                    height={160}
+                  />
+                </div>
+              </div>
+
+              {uploadingImage ? (
+                <div className="space-y-3">
+                  <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2.5">
+                    <div
+                      className="bg-mainColor h-2.5 rounded-full transition-all duration-300 ease-in-out"
+                      style={{ width: `${uploadProgress}%` }}
+                    ></div>
+                  </div>
+                  <p className="text-center text-sm text-gray-600 dark:text-gray-400">Uploading... {uploadProgress}%</p>
+                </div>
+              ) : (
+                <div className="flex gap-3">
+                  <button
+                    onClick={cancelImageUpload}
+                    className="flex-1 py-2 px-4 bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-gray-200 rounded-lg hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors"
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    onClick={uploadToCloudinary}
+                    className="flex-1 py-2 px-4 bg-mainColor hover:bg-mainColor/90 text-white rounded-lg transition-colors"
+                  >
+                    Upload
+                  </button>
+                </div>
+              )}
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
       <div className="bg-white dark:bg-darkgrey rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden">
         <div className="p-6 border-b border-gray-200 dark:border-gray-700">
           <div className="flex items-center gap-3 mb-2">
-            <div className="w-10 h-10 rounded-full bg-mainColor text-white flex items-center justify-center font-semibold text-lg">
-              {user?.displayname?.charAt(0).toUpperCase() || "U"}
-            </div>
+            {user?.profilePicture ? (
+              <Image
+                src={user?.profilePicture}
+                className="w-10 h-10 rounded-full"
+                alt={user?.displayname || "User"}
+                width={40}
+                height={40}
+              />
+            ) : (
+              <div className="w-10 h-10 rounded-full bg-mainColor text-white flex items-center justify-center font-semibold text-lg">
+                {user?.displayname?.charAt(0).toUpperCase() || "U"}
+              </div>
+            )}
             <div>
               <h2 className="font-semibold text-gray-900 dark:text-white">{user?.displayname || "User"}</h2>
               <p className="text-gray-500 dark:text-gray-400 text-sm">@{user?.username}</p>
@@ -629,7 +879,7 @@ export default function AddPostPage() {
           <p className="text-gray-600 dark:text-gray-400 mt-1">
             Share your news, insights, or stories with the community
           </p>
-          
+
           {/* Posting Rules Notice */}
           <div className="mt-4 p-3 bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-800 rounded-lg">
             <h3 className="font-medium text-yellow-800 dark:text-yellow-400 flex items-center gap-2 mb-2">
@@ -698,12 +948,14 @@ export default function AddPostPage() {
               <label htmlFor="category" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                 Category <span className="text-red-500">*</span>
               </label>
-              
+
               {selectedCategory ? (
                 <div className="mb-2">
                   <div className="flex items-center justify-between p-3 bg-gray-50 dark:bg-gray-700 rounded-lg border border-gray-200 dark:border-gray-600">
                     <div className="flex items-center gap-3">
-                      <div className={`w-10 h-10 rounded-lg ${selectedCategory.color} bg-opacity-20 dark:bg-opacity-30 flex items-center justify-center`}>
+                      <div
+                        className={`w-10 h-10 rounded-lg ${selectedCategory.color} bg-opacity-20 dark:bg-opacity-30 flex items-center justify-center`}
+                      >
                         {selectedCategory.icon}
                       </div>
                       <div>
@@ -760,7 +1012,7 @@ export default function AddPostPage() {
                         <X className="w-5 h-5" />
                       </button>
                     </div>
-                    
+
                     <div className="p-4">
                       {/* Search and Filter */}
                       <div className="mb-4 space-y-2">
@@ -783,7 +1035,7 @@ export default function AddPostPage() {
                             </button>
                           )}
                         </div>
-                        
+
                         <div className="flex flex-wrap gap-2">
                           {filterTypes.map((filter) => (
                             <button
@@ -801,28 +1053,30 @@ export default function AddPostPage() {
                           ))}
                         </div>
                       </div>
-                      
+
                       {/* Categories List */}
                       <div className="max-h-[50vh] overflow-y-auto pr-1">
                         {filteredCategories.length > 0 ? (
                           <div className="space-y-4">
                             {/* Group categories by type */}
                             {filterTypes.slice(1).map((filter) => {
-                              const categoriesInGroup = filteredCategories.filter(cat => cat.type === filter.id);
-                              if (categoryFilter !== "all" && categoryFilter !== filter.id) return null;
-                              if (categoriesInGroup.length === 0) return null;
-                              
+                              const categoriesInGroup = filteredCategories.filter((cat) => cat.type === filter.id)
+                              if (categoryFilter !== "all" && categoryFilter !== filter.id) return null
+                              if (categoriesInGroup.length === 0) return null
+
                               return (
                                 <div key={filter.id} className="space-y-2">
-                                  <h4 className="text-sm font-medium text-gray-500 dark:text-gray-400">{filter.name}</h4>
+                                  <h4 className="text-sm font-medium text-gray-500 dark:text-gray-400">
+                                    {filter.name}
+                                  </h4>
                                   <div className="grid grid-cols-1 gap-2">
                                     {categoriesInGroup.map((cat) => (
                                       <button
                                         key={cat.id}
                                         type="button"
                                         onClick={() => {
-                                          handleChange("category", cat.id);
-                                          setShowCategorySelector(false);
+                                          handleChange("category", cat.id)
+                                          setShowCategorySelector(false)
                                         }}
                                         className={`p-3 rounded-lg bg-white dark:bg-gray-800 border transition-all ${
                                           formData.category === cat.id
@@ -830,18 +1084,24 @@ export default function AddPostPage() {
                                             : "border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700"
                                         } flex items-center gap-3 text-left`}
                                       >
-                                        <div className={`w-8 h-8 rounded-md ${cat.color} flex items-center justify-center flex-shrink-0`}>
+                                        <div
+                                          className={`w-8 h-8 rounded-md ${cat.color} flex items-center justify-center flex-shrink-0`}
+                                        >
                                           {cat.icon}
                                         </div>
                                         <div>
-                                          <span className="font-medium text-gray-900 dark:text-white block">{cat.name}</span>
-                                          <span className="text-xs text-gray-500 dark:text-gray-400">{cat.description}</span>
+                                          <span className="font-medium text-gray-900 dark:text-white block">
+                                            {cat.name}
+                                          </span>
+                                          <span className="text-xs text-gray-500 dark:text-gray-400">
+                                            {cat.description}
+                                          </span>
                                         </div>
                                       </button>
                                     ))}
                                   </div>
                                 </div>
-                              );
+                              )
                             })}
                           </div>
                         ) : (
@@ -911,14 +1171,10 @@ export default function AddPostPage() {
                 </p>
               )}
               {/* Formatting Guide */}
-              <details
-                className="bg-gray-50 dark:bg-thirdColor text-primary p-3 rounded-lg border border-gray-200 dark:border-gray-700 mt-2 transition-shadow duration-200 hover:shadow-sm"
-              >
+              <details className="bg-gray-50 dark:bg-thirdColor text-primary p-3 rounded-lg border border-gray-200 dark:border-gray-700 mt-2 transition-shadow duration-200 hover:shadow-sm">
                 <summary className="flex items-center gap-2 cursor-pointer">
                   <Info className="w-4 h-4" />
-                  <span className="text-md font-medium text-gray-700 dark:text-gray-300">
-                    Formatting Guide
-                  </span>
+                  <span className="text-md font-medium text-gray-700 dark:text-gray-300">Formatting Guide</span>
                   <ChevronDown className="w-4 h-4 ml-2 transition-transform duration-200" />
                 </summary>
                 <ul className="mt-3 grid gap-1">
@@ -958,23 +1214,19 @@ export default function AddPostPage() {
                     <code className="px-1.5 py-0.5 bg-gray-100 dark:bg-gray-700 rounded text-gray-800 dark:text-white">
                       # Heading 1
                     </code>
-                    <span className="col-span-1 ml-2">
-                      for main titles
-                    </span>
+                    <span className="col-span-1 ml-2">for main titles</span>
                   </li>
                   <li className="grid grid-cols-2 items-center">
                     <code className="px-1.5 py-0.5 bg-gray-100 dark:bg-gray-700 rounded text-gray-800 dark:text-white">
                       ## Heading 2
                     </code>
-                    <span className="col-span-1 ml-2">
-                      for section titles
-                    </span>
+                    <span className="col-span-1 ml-2">for section titles</span>
                   </li>
                 </ul>
               </details>
             </div>
 
-            {/* Media Section - Simplified */}
+            {/* Media Section - Enhanced with Upload Option */}
             <div className="bg-gray-50 dark:bg-gray-600 border border-gray-200 dark:border-gray-700 rounded-lg p-5">
               <div className="flex items-center justify-between mb-4">
                 <h3 className="text-base font-medium text-gray-900 dark:text-white flex items-center gap-2">
@@ -983,7 +1235,7 @@ export default function AddPostPage() {
                 </h3>
               </div>
 
-              {/* Media Type Selector - Simplified */}
+              {/* Media Type Selector */}
               <div className="flex flex-wrap gap-4 mb-4">
                 <button
                   type="button"
@@ -1011,6 +1263,35 @@ export default function AddPostPage() {
                 </button>
               </div>
 
+              {/* Source Type Selector (URL or Upload) */}
+              {formData.media.type === "image" && (
+                <div className="mb-4">
+                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Source Type</label>
+                  <div className="flex gap-4">
+                    <label className="flex items-center gap-2 cursor-pointer">
+                      <input
+                        type="radio"
+                        name="sourceType"
+                        checked={formData.media.sourceType === "url"}
+                        onChange={() => handleMediaChange("sourceType", "url")}
+                        className="w-4 h-4 text-mainColor focus:ring-mainColor"
+                      />
+                      <span className="text-gray-700 dark:text-gray-300">URL</span>
+                    </label>
+                    <label className="flex items-center gap-2 cursor-pointer">
+                      <input
+                        type="radio"
+                        name="sourceType"
+                        checked={formData.media.sourceType === "upload"}
+                        onChange={() => handleMediaChange("sourceType", "upload")}
+                        className="w-4 h-4 text-mainColor focus:ring-mainColor"
+                      />
+                      <span className="text-gray-700 dark:text-gray-300">Upload</span>
+                    </label>
+                  </div>
+                </div>
+              )}
+
               {/* Display media errors */}
               {errors.media && (
                 <div className="mb-4 p-3 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg text-red-600 dark:text-red-400 text-sm flex items-center">
@@ -1020,27 +1301,71 @@ export default function AddPostPage() {
               )}
 
               {/* URL Input for Video or Image */}
-              <div>
-                <label htmlFor="mediaUrl" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                  {formData.media.type === "image" ? "Image URL" : "Video URL"}
-                </label>
-                <input
-                  id="mediaUrl"
-                  type="text"
-                  value={formData.media.url || ""}
-                  onChange={(e) => handleMediaChange("url", e.target.value)}
-                  placeholder={`Enter ${formData.media.type} URL`}
-                  className="w-full px-4 py-2.5 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-mainColor focus:border-transparent transition-colors"
-                />
-                <p className="mt-1 text-xs text-gray-500 dark:text-gray-400">
-                  {formData.media.type === "image"
-                    ? "Enter a valid image URL (e.g., https://example.com/image.jpg)"
-                    : "Enter a valid video URL (e.g., https://youtube.com/watch?v=...)"}
-                </p>
-              </div>
+              {(formData.media.type === "video" || formData.media.sourceType === "url") && (
+                <div>
+                  <label htmlFor="mediaUrl" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                    {formData.media.type === "image" ? "Image URL" : "Video URL"}
+                  </label>
+                  <input
+                    id="mediaUrl"
+                    type="text"
+                    value={formData.media.url || ""}
+                    onChange={(e) => handleMediaChange("url", e.target.value)}
+                    placeholder={`Enter ${formData.media.type} URL`}
+                    className="w-full px-4 py-2.5 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-mainColor focus:border-transparent transition-colors"
+                  />
+                  <p className="mt-1 text-xs text-gray-500 dark:text-gray-400">
+                    {formData.media.type === "image"
+                      ? "Enter a valid image URL (e.g., https://example.com/image.jpg)"
+                      : "Enter a valid video URL (e.g., https://youtube.com/watch?v=...)"}
+                  </p>
+                </div>
+              )}
+
+              {/* File Upload for Image */}
+              {formData.media.type === "image" && formData.media.sourceType === "upload" && (
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                    Upload Image
+                  </label>
+                  <div className="mt-1 flex justify-center px-6 pt-5 pb-6 border-2 border-gray-300 dark:border-gray-600 border-dashed rounded-lg">
+                    <div className="space-y-1 text-center">
+                      <Camera className="mx-auto h-12 w-12 text-gray-400" />
+                      <div className="flex text-sm text-gray-600 dark:text-gray-400">
+                        <label
+                          htmlFor="file-upload"
+                          className="relative cursor-pointer bg-white dark:bg-gray-700 rounded-md font-medium text-mainColor hover:text-mainColor/80 focus-within:outline-none focus-within:ring-2 focus-within:ring-offset-2 focus-within:ring-mainColor"
+                        >
+                          <span className="px-2">Upload a file</span>
+                          <input
+                            id="file-upload"
+                            name="file-upload"
+                            type="file"
+                            ref={fileInputRef}
+                            className="sr-only"
+                            accept="image/*"
+                            onChange={handleFileSelect}
+                          />
+                        </label>
+                        <p className="pl-1">or drag and drop</p>
+                      </div>
+                      <p className="text-xs text-gray-500 dark:text-gray-400">PNG, JPG, GIF up to 5MB</p>
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {/* Image Preview */}
+              {((formData.media.sourceType === "url" && formData.media.url) ||
+                (formData.media.sourceType === "upload" && mediaPreview)) && (
+                <div className="mt-4">
+                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Preview</label>
+                  {renderImagePreview()}
+                </div>
+              )}
             </div>
 
-            {/* Sources Section - Simplified */}
+            {/* Sources Section */}
             <div className="bg-gray-50 dark:bg-gray-600 border border-gray-200 dark:border-gray-700 rounded-lg p-5">
               <div className="flex items-center justify-between mb-4">
                 <h3 className="text-base font-medium text-gray-900 dark:text-white flex items-center gap-2">
@@ -1048,7 +1373,7 @@ export default function AddPostPage() {
                   Sources (Optional)
                 </h3>
               </div>
-              
+
               {formData.sources.length === 0 ? (
                 <div className="text-center py-6">
                   <p className="text-gray-500 dark:text-gray-400 mb-4">No sources added yet</p>
@@ -1065,7 +1390,10 @@ export default function AddPostPage() {
                 <>
                   <div className="space-y-3 mb-4">
                     {formData.sources.map((source, index) => (
-                      <div key={index} className="flex items-center gap-2 bg-white dark:bg-gray-700 p-3 rounded-lg border border-gray-200 dark:border-gray-600">
+                      <div
+                        key={index}
+                        className="flex items-center gap-2 bg-white dark:bg-gray-700 p-3 rounded-lg border border-gray-200 dark:border-gray-600"
+                      >
                         <div className="w-1/4">
                           <select
                             value={source.key}
@@ -1101,7 +1429,7 @@ export default function AddPostPage() {
                       </div>
                     ))}
                   </div>
-                  
+
                   <div className="flex justify-between items-center">
                     <button
                       type="button"
@@ -1114,12 +1442,14 @@ export default function AddPostPage() {
                   </div>
                 </>
               )}
-              
+
               {/* Recommended Sources */}
               <div className="mt-4 pt-3 border-t border-gray-200 dark:border-gray-700">
                 <div className="flex items-center gap-1">
                   <ThumbsUp className="w-4 h-4 text-mainColor" />
-                  <h4 className="text-sm font-medium text-gray-700 dark:text-gray-300">Add sources to make your post more credible</h4>
+                  <h4 className="text-sm font-medium text-gray-700 dark:text-gray-300">
+                    Add sources to make your post more credible
+                  </h4>
                 </div>
               </div>
             </div>

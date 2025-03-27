@@ -39,7 +39,7 @@ const UserDashboard = () => {
         setUserData({
           ...data,
           // Make sure we prioritize the profilePicture field from the database
-          profilePicture: data.profilePicture || data.picture || user.picture,
+          profilePicture: data.profilePicture,
           // Ensure we're using the profileBanner from the database
           profileBanner: data.profileBanner || "",
         })
@@ -448,7 +448,7 @@ const UserDashboard = () => {
         country: userData.country || "",
         city: userData.city || "",
         zipCode: userData.zipCode || "",
-        profilePicture: userData.profilePicture || userData.picture || "",
+        profilePicture: userData.profilePicture || "",
         profileBanner: userData.profileBanner || "",
       }
 
@@ -574,7 +574,7 @@ const UserDashboard = () => {
                 {uploadType === "profile" ? (
                   <div className="w-32 h-32 mx-auto rounded-full overflow-hidden border-4 border-white dark:border-gray-800 shadow-md">
                     <Image
-                      src={imagePreview || "/placeholder.svg"}
+                      src={imagePreview || userData?.profilePicture || "/placeholder.svg"}
                       alt="Profile Preview"
                       className="w-full h-full object-cover"
                       width={128}
