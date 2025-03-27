@@ -243,7 +243,7 @@ export default function HeaderDash({ onToggleMenu }) {
                     aria-expanded={dropdownOpen}
                     aria-haspopup="true"
                   >
-                    {user.isGoogleUser ? (
+                    {user.profilePicture ? (
                       <Image
                         src={user.profilePicture || "/placeholder.svg"}
                         alt={user.displayname}

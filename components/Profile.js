@@ -1,5 +1,5 @@
-"use client"
-import { useContext, useEffect, useState } from "react"
+"use client";
+import { useContext, useEffect, useState } from "react";
 import {
   Bell,
   BellOff,
@@ -15,85 +15,94 @@ import {
   BookOpen,
   Heart,
   Bookmark,
-} from "lucide-react"
-import Article from "./Article"
-import { ThemeContext } from "../app/ThemeProvider"
-import Link from "next/link"
-import { motion, AnimatePresence } from "framer-motion"
-import Image from "next/image"
+} from "lucide-react";
+import Article from "./Article";
+import { ThemeContext } from "../app/ThemeProvider";
+import Link from "next/link";
+import { motion, AnimatePresence } from "framer-motion";
+import Image from "next/image";
 
 const Profile = ({ userData }) => {
-  const [articles, setArticles] = useState([])
+  const [articles, setArticles] = useState([]);
   const [subscriptionState, setSubscriptionState] = useState({
     isSubscribed: false,
     isLoading: false,
-  })
-  const [activeTab, setActiveTab] = useState("articles")
-  const [isLoading, setIsLoading] = useState(true)
-  const { user } = useContext(ThemeContext)
+  });
+  const [activeTab, setActiveTab] = useState("articles");
+  const [isLoading, setIsLoading] = useState(true);
+  const { user } = useContext(ThemeContext);
 
-  const isOwnProfile = user && user._id === userData._id
+  const isOwnProfile = user && user._id === userData._id;
 
   useEffect(() => {
     const checkSubscriptionStatus = async () => {
-      if (!user || !userData || isOwnProfile) return
+      if (!user || !userData || isOwnProfile) return;
 
       try {
-        console.log("Checking subscription status for user:", userData.username)
+        console.log(
+          "Checking subscription status for user:",
+          userData.username
+        );
 
-        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/users/${userData._id}/subscription-status`, {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          credentials: "include",
-        })
-        console.log(response)
+        const response = await fetch(
+          `${process.env.NEXT_PUBLIC_API_URL}/users/${userData._id}/subscription-status`,
+          {
+            method: "GET",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            credentials: "include",
+          }
+        );
+        console.log(response);
 
-        console.log("Subscription status response:", response.status)
+        console.log("Subscription status response:", response.status);
 
         if (response.ok) {
-          const data = await response.json()
-          console.log("Subscription status data:", data)
+          const data = await response.json();
+          console.log("Subscription status data:", data);
 
           setSubscriptionState((prev) => ({
             ...prev,
             isSubscribed: data.subscribed,
-          }))
+          }));
         }
       } catch (error) {
-        console.error("Error checking subscription status:", error)
+        console.error("Error checking subscription status:", error);
       }
-    }
+    };
 
-    checkSubscriptionStatus()
-  }, [user]) // Add dependencies here
+    checkSubscriptionStatus();
+  }, [user]); // Add dependencies here
 
   const toggleSubscribe = async () => {
     if (!user) {
       // Redirect to login if not logged in
-      window.location.href = "/login"
-      return
+      window.location.href = "/login";
+      return;
     }
 
     try {
-      setSubscriptionState((prev) => ({ ...prev, isLoading: true }))
+      setSubscriptionState((prev) => ({ ...prev, isLoading: true }));
 
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/users/${userData._id}/subscribe`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        credentials: "include",
-      })
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_API_URL}/users/${userData._id}/subscribe`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          credentials: "include",
+        }
+      );
 
       if (response.ok) {
-        const data = await response.json()
+        const data = await response.json();
         setSubscriptionState((prev) => ({
           ...prev,
           isSubscribed: data.subscribed,
           isLoading: false,
-        }))
+        }));
 
         // Update the subscribers count in the UI
         if (data.subscribed) {
@@ -104,67 +113,71 @@ const Profile = ({ userData }) => {
               userId: user._id,
               userModel: user.isGoogleUser ? "Googleuser" : "User",
             },
-          ]
+          ];
         } else {
           // Removing a subscriber
           userData.subscribers = (userData.subscribers || []).filter(
-            (sub) => sub.userId.$oid !== user._id && sub.userId !== user._id,
-          )
+            (sub) => sub.userId.$oid !== user._id && sub.userId !== user._id
+          );
         }
       } else {
-        const errorData = await response.json()
-        console.error(`Error toggling subscription:`, errorData)
-        setSubscriptionState((prev) => ({ ...prev, isLoading: false }))
+        const errorData = await response.json();
+        console.error(`Error toggling subscription:`, errorData);
+        setSubscriptionState((prev) => ({ ...prev, isLoading: false }));
       }
     } catch (error) {
-      console.error(`Error toggling subscription:`, error)
-      setSubscriptionState((prev) => ({ ...prev, isLoading: false }))
+      console.error(`Error toggling subscription:`, error);
+      setSubscriptionState((prev) => ({ ...prev, isLoading: false }));
     }
-  }
+  };
 
   useEffect(() => {
     const fetchArticles = async (username) => {
-      setIsLoading(true)
+      setIsLoading(true);
       try {
-        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/articles/${username}`)
+        const response = await fetch(
+          `${process.env.NEXT_PUBLIC_API_URL}/articles/${username}`
+        );
         if (!response.ok) {
           if (response.status === 404) {
-            setArticles([])
-            return
+            setArticles([]);
+            return;
           }
-          throw new Error(`Failed to fetch articles: ${response.status} ${response.statusText}`)
+          throw new Error(
+            `Failed to fetch articles: ${response.status} ${response.statusText}`
+          );
         }
-        const data = await response.json()
-        setArticles(data)
+        const data = await response.json();
+        setArticles(data);
       } catch (err) {
-        console.error("Error fetching articles:", err)
-        setArticles([])
+        console.error("Error fetching articles:", err);
+        setArticles([]);
       } finally {
-        setIsLoading(false)
+        setIsLoading(false);
       }
-    }
+    };
 
     if (userData) {
-      fetchArticles(userData.username)
+      fetchArticles(userData.username);
     }
-  }, [userData])
+  }, [userData]);
 
   const formatDate = (dateString) => {
-    if (!dateString) return "N/A"
-    const date = new Date(dateString)
+    if (!dateString) return "N/A";
+    const date = new Date(dateString);
     return date.toLocaleDateString("en-US", {
       year: "numeric",
       month: "long",
       day: "numeric",
-    })
-  }
+    });
+  };
 
   // Tab icons mapping
   const tabIcons = {
     articles: <BookOpen className="w-4 h-4" />,
     liked: <Heart className="w-4 h-4" />,
     saved: <Bookmark className="w-4 h-4" />,
-  }
+  };
 
   return (
     <motion.div
@@ -173,11 +186,23 @@ const Profile = ({ userData }) => {
       transition={{ duration: 0.4, ease: [0.5, 0, 0.5, 1] }}
       className="w-full mx-auto"
     >
-      {/* Banner Section */}
-      <div className="relative w-full h-32 sm:h-40 rounded-xl mb-12 bg-gradient-to-r from-mainColor to-main2Color shadow-md">
-
-        {/* Profile Avatar - Positioned to overlap banner and content */}
-        <div className="absolute z-20 -bottom-12 left-6 sm:left-8">
+      <div className="relative">
+        {/* Banner Section */}
+        <div className="w-full h-32 sm:h-40 rounded-xl mb-12 shadow-md overflow-hidden">
+          {userData.profileBanner ? (
+            <Image
+              src={userData.profileBanner || "/placeholder.svg"}
+              alt={userData.displayname}
+              className="object-cover w-full h-full"
+              width={1000}
+              height={400}
+            />
+          ) : (
+            <div className="w-full h-full bg-gradient-to-r from-mainColor to-main2Color"></div>
+          )}
+        </div>
+          {/* Profile Avatar - Positioned to overlap banner and content */}
+          <div className="absolute z-20 -bottom-12 left-6 sm:left-8">
             <div className="w-24 h-24 sm:w-28 sm:h-28 rounded-full bg-white p-1 shadow-md">
               {userData.profilePicture ? (
                 <Image
@@ -193,7 +218,7 @@ const Profile = ({ userData }) => {
                 </div>
               )}
             </div>
-        </div>
+          </div>
       </div>
 
       {/* Profile Header */}
@@ -202,7 +227,9 @@ const Profile = ({ userData }) => {
           <h1 className="text-2xl md:text-3xl font-bold text-gray-900 dark:text-white capitalize">
             {userData.displayname || "Unknown"}
           </h1>
-          <p className="text-gray-600 dark:text-gray-400 text-sm sm:text-base">@{userData.username || "username"}</p>
+          <p className="text-gray-600 dark:text-gray-400 text-sm sm:text-base">
+            @{userData.username || "username"}
+          </p>
         </div>
 
         <div className="flex flex-wrap gap-2 justify-center sm:justify-end">
@@ -222,7 +249,11 @@ const Profile = ({ userData }) => {
                 subscriptionState.isSubscribed
                   ? "bg-gray-100 dark:bg-gray-800 text-gray-800 dark:text-gray-200 border border-gray-300 dark:border-gray-600"
                   : "bg-mainColor text-white hover:bg-mainColor/90"
-              } ${subscriptionState.isLoading ? "opacity-70 cursor-not-allowed" : ""}`}
+              } ${
+                subscriptionState.isLoading
+                  ? "opacity-70 cursor-not-allowed"
+                  : ""
+              }`}
             >
               {subscriptionState.isLoading ? (
                 <span className="flex items-center">
@@ -286,9 +317,13 @@ const Profile = ({ userData }) => {
               </h2>
               <div className="space-y-3">
                 {userData.bio ? (
-                  <p className="text-gray-700 dark:text-gray-300">{userData.bio}</p>
+                  <p className="text-gray-700 dark:text-gray-300">
+                    {userData.bio}
+                  </p>
                 ) : (
-                  <p className="text-gray-500 dark:text-gray-400 italic">No bio provided</p>
+                  <p className="text-gray-500 dark:text-gray-400 italic">
+                    No bio provided
+                  </p>
                 )}
                 <div className="w-full h-0.5 bg-gray-100 dark:bg-gray-700"></div>
                 <div className="pt-1 space-y-3">
@@ -314,7 +349,11 @@ const Profile = ({ userData }) => {
                         <LinkIcon className="w-4 h-4 text-mainColor" />
                       </div>
                       <a
-                        href={userData.website.startsWith("http") ? userData.website : `https://${userData.website}`}
+                        href={
+                          userData.website.startsWith("http")
+                            ? userData.website
+                            : `https://${userData.website}`
+                        }
                         target="_blank"
                         rel="noopener noreferrer"
                         className="text-blue-600 dark:text-blue-400 hover:underline truncate max-w-[200px]"
@@ -327,26 +366,34 @@ const Profile = ({ userData }) => {
               </div>
             </div>
 
-            <div className="bg-gray-50 dark:bg-thirdColor rounded-b-xl border-t border-gray-200 dark:border-gray-700 px-4 py-3">
+            <Link href={`/profile/${userData.username}/subscriptions`} className="block w-full bg-gray-50 dark:bg-thirdColor rounded-b-xl border-t border-gray-200 dark:border-gray-700 px-4 py-3">
               <div className="flex justify-between">
                 <div className="text-center">
-                  <div className="font-semibold text-lg text-gray-900 dark:text-white">{articles.length}</div>
-                  <div className="text-xs text-gray-500 dark:text-gray-400">Articles</div>
+                  <span className="font-semibold text-lg text-gray-900 dark:text-white hover:underline">
+                      {articles.length}
+                  </span>
+                  <div className="text-xs hover:underline text-gray-500 dark:text-gray-400">
+                    Articles
+                  </div>
                 </div>
                 <div className="text-center">
-                  <div className="font-semibold text-lg text-gray-900 dark:text-white">
-                    {userData.subscribers ? userData.subscribers.length : 0}
+                  <span className="font-semibold text-lg text-gray-900 dark:text-white hover:underline">
+                      {userData.subscribers ? userData.subscribers.length : 0}
+                  </span>
+                  <div className="text-xs hover:underline text-gray-500 dark:text-gray-400">
+                    Subscribers
                   </div>
-                  <div className="text-xs text-gray-500 dark:text-gray-400">Subscribers</div>
                 </div>
                 <div className="text-center">
-                  <div className="font-semibold text-lg text-gray-900 dark:text-white">
-                    {userData.subscriptions ? userData.subscriptions.length : 0}
+                  <span className="font-semibold text-lg text-gray-900 dark:text-white hover:underline">
+                      {userData.subscriptions ? userData.subscriptions.length : 0}
+                  </span>
+                  <div className="text-xs hover:underline text-gray-500 dark:text-gray-400">
+                    Subscriptions
                   </div>
-                  <div className="text-xs text-gray-500 dark:text-gray-400">Subscriptions</div>
                 </div>
               </div>
-            </div>
+            </Link>
           </div>
         </div>
 
@@ -386,7 +433,9 @@ const Profile = ({ userData }) => {
                 <div className="flex items-center justify-between mb-2">
                   <h2 className="text-xl font-semibold text-gray-900 dark:text-white flex items-center gap-2">
                     <BookOpen className="w-5 h-5 text-mainColor" />
-                    {isOwnProfile ? "Your Articles" : `${userData.displayname}'s Articles`}
+                    {isOwnProfile
+                      ? "Your Articles"
+                      : `${userData.displayname}'s Articles`}
                   </h2>
                   {isOwnProfile && (
                     <Link
@@ -406,7 +455,9 @@ const Profile = ({ userData }) => {
                 ) : articles.length === 0 ? (
                   <div className="bg-white dark:bg-darkgrey rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-8 text-center">
                     <User className="w-14 h-14 mx-auto text-gray-300 dark:text-gray-600 mb-4" />
-                    <h3 className="text-lg font-medium text-gray-900 dark:text-white mb-2">No articles yet</h3>
+                    <h3 className="text-lg font-medium text-gray-900 dark:text-white mb-2">
+                      No articles yet
+                    </h3>
                     <p className="text-gray-500 dark:text-gray-400 max-w-md mx-auto">
                       {isOwnProfile
                         ? "You haven't published any articles yet. Create your first article to get started!"
@@ -442,7 +493,9 @@ const Profile = ({ userData }) => {
               >
                 <div className="bg-white dark:bg-darkgrey rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-8 text-center">
                   <Star className="w-14 h-14 mx-auto text-gray-300 dark:text-gray-600 mb-4" />
-                  <h3 className="text-lg font-medium text-gray-900 dark:text-white mb-2">No liked articles</h3>
+                  <h3 className="text-lg font-medium text-gray-900 dark:text-white mb-2">
+                    No liked articles
+                  </h3>
                   <p className="text-gray-500 dark:text-gray-400 max-w-md mx-auto">
                     {isOwnProfile
                       ? "Articles you like will appear here."
@@ -462,7 +515,9 @@ const Profile = ({ userData }) => {
               >
                 <div className="bg-white dark:bg-darkgrey rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-8 text-center">
                   <Briefcase className="w-14 h-14 mx-auto text-gray-300 dark:text-gray-600 mb-4" />
-                  <h3 className="text-lg font-medium text-gray-900 dark:text-white mb-2">No saved articles</h3>
+                  <h3 className="text-lg font-medium text-gray-900 dark:text-white mb-2">
+                    No saved articles
+                  </h3>
                   <p className="text-gray-500 dark:text-gray-400 max-w-md mx-auto">
                     {isOwnProfile
                       ? "Articles you save will appear here for easy access later."
@@ -475,8 +530,7 @@ const Profile = ({ userData }) => {
         </div>
       </div>
     </motion.div>
-  )
-}
+  );
+};
 
-export default Profile
-
+export default Profile;

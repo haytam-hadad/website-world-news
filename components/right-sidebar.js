@@ -192,10 +192,10 @@ const RightSidebar = () => {
       try {
         // Fetch subscriptions and subscribers in parallel
         const [subscriptionsRes, subscribersRes] = await Promise.all([
-          fetch(`${process.env.NEXT_PUBLIC_API_URL}/users/${user._id}/subscriptions`, {
+          fetch(`${process.env.NEXT_PUBLIC_API_URL}/users/${user.username}/subscriptions`, {
             credentials: "include",
           }),
-          fetch(`${process.env.NEXT_PUBLIC_API_URL}/users/${user._id}/subscribers`, {
+          fetch(`${process.env.NEXT_PUBLIC_API_URL}/users/${user.username}/subscribers`, {
             credentials: "include",
           }),
         ])
@@ -282,7 +282,7 @@ const RightSidebar = () => {
 
                   <div className="mt-4 text-center">
                     <Link
-                      href="/subscriptions"
+                      href={`/profile/${user.username}/subscriptions`}
                       className="inline-flex items-center text-mainColor text-sm font-medium hover:text-mainColor/80 transition-colors focus:outline-none group"
                     >
                       See all subscriptions
@@ -332,7 +332,7 @@ const RightSidebar = () => {
 
                   <div className="mt-4 text-center">
                     <Link
-                      href="/subscribers"
+                      href={`/profile/${user.username}/subscriptions`}
                       className="inline-flex items-center text-mainColor text-sm font-medium hover:text-mainColor/80 transition-colors focus:outline-none group"
                     >
                       See all subscribers
@@ -377,7 +377,7 @@ const RightSidebar = () => {
 
                 <div className="mt-4 text-center">
                   <Link
-                    href="/trending"
+                    href="/trends"
                     className="inline-flex items-center text-mainColor text-sm font-medium hover:text-mainColor/80 transition-colors focus:outline-none group"
                   >
                     See all trending topics
@@ -427,4 +427,3 @@ const RightSidebar = () => {
 }
 
 export default RightSidebar
-

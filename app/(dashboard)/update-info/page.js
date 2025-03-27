@@ -539,7 +539,7 @@ const UserDashboard = () => {
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.4 }}
-      className="max-w-4xl p-6 mx-auto"
+      className="max-w-4xl p-1 md:p-3 mx-auto"
     >
       {/* Image Upload Modal */}
       <AnimatePresence>
@@ -687,7 +687,7 @@ const UserDashboard = () => {
         </div>
 
         {/* Profile Header */}
-        <div className="p-6 border-b border-gray-200 dark:border-gray-700 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <div className="p-5 border-b border-gray-200 dark:border-gray-700 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div className="flex items-center gap-4">
             <div className="relative">
               <div className="w-20 h-20 rounded-full overflow-hidden border-4 border-white dark:border-darkgrey shadow-md">
