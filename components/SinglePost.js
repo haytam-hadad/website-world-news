@@ -19,14 +19,12 @@ import {
   MoreHorizontal,
   Clock,
   Eye,
-  ChevronDown,
-  ChevronUp,
-  Loader2,
   AlertCircle,
 } from "lucide-react"
 
 import SourcesDisplay from "./sources-display"
 import { TrustRating } from "./article-trust-rating"
+import CommentSection from "./comment-section"
 
 const SinglePost = ({ post, initialComments = [] }) => {
   const [userLiked, setUserLiked] = useState(false)
@@ -35,19 +33,14 @@ const SinglePost = ({ post, initialComments = [] }) => {
   const [downvoteCount, setDownvoteCount] = useState(post?.downvote || 0)
   const [isSaved, setIsSaved] = useState(false)
   const [showOptions, setShowOptions] = useState(false)
-  const [showCommentForm, setShowCommentForm] = useState(false)
-  const [commentText, setCommentText] = useState("")
-  const [localComments, setLocalComments] = useState(initialComments)
   const [mediaLoaded, setMediaLoaded] = useState(false)
   const [mediaError, setMediaError] = useState(false)
-  const [showAllComments, setShowAllComments] = useState(false)
   const [isVoting, setIsVoting] = useState(false)
-  const [isSubmittingComment, setIsSubmittingComment] = useState(false)
-  const [commentError, setCommentError] = useState(null)
-  const [isLoadingComments, setIsLoadingComments] = useState(false)
+  const [actionTaken, setActionTaken] = useState(null) // 'hide', 'block', or 'report'
+  const [isMinimized, setIsMinimized] = useState(false)
+  const [isDeleting, setIsDeleting] = useState(false)
 
   const optionsRef = useRef(null)
-  const commentInputRef = useRef(null)
   const router = useRouter()
   const { user } = useContext(ThemeContext)
 
@@ -67,13 +60,6 @@ const SinglePost = ({ post, initialComments = [] }) => {
     }
   }, [post, user])
 
-  // Fetch comments when component mounts
-  useEffect(() => {
-    if (post && post._id) {
-      fetchComments()
-    }
-  }, [post])
-
   // Close dropdown when clicked outside
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -87,38 +73,6 @@ const SinglePost = ({ post, initialComments = [] }) => {
       document.removeEventListener("mousedown", handleClickOutside)
     }
   }, [])
-
-  // Focus comment input when form is shown
-  useEffect(() => {
-    if (showCommentForm && commentInputRef.current) {
-      commentInputRef.current.focus()
-    }
-  }, [showCommentForm])
-
-  // Fetch comments from the API
-  const fetchComments = async () => {
-    try {
-      setIsLoadingComments(true)
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/news/${post._id}/comments`, {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        credentials: "include", // Important for sending cookies
-      })
-
-      if (!response.ok) {
-        throw new Error("Failed to fetch comments")
-      }
-
-      const data = await response.json()
-      setLocalComments(data.comments || [])
-    } catch (error) {
-      console.error("Error fetching comments:", error)
-    } finally {
-      setIsLoadingComments(false)
-    }
-  }
 
   const handleUpvote = async () => {
     if (!user) {
@@ -221,54 +175,78 @@ const SinglePost = ({ post, initialComments = [] }) => {
     }
   }
 
-  const handleSubmitComment = async (e) => {
-    e.preventDefault()
-    setCommentError(null)
+  const handleHidePost = (e) => {
+    e.stopPropagation()
+    setActionTaken("hide")
+    setIsMinimized(true)
+    setShowOptions(false)
+    // Here you would implement the actual hide functionality with an API call
+  }
 
-    if (!commentText.trim()) return
-    if (!user) {
-      router.push("/login")
-      return
-    }
+  const handleBlockUser = (e) => {
+    e.stopPropagation()
+    setActionTaken("block")
+    setIsMinimized(true)
+    setShowOptions(false)
+    // Here you would implement the actual block functionality with an API call
+  }
+
+  const handleReportPost = (e) => {
+    e.stopPropagation()
+    setActionTaken("report")
+    setIsMinimized(true)
+    setShowOptions(false)
+    // Here you would implement the actual report functionality with an API call
+  }
+
+  const handleUndoAction = (e) => {
+    e.stopPropagation()
+    // Don't allow undoing a delete
+    if (actionTaken === "delete") return
+
+    setIsMinimized(false)
+    setActionTaken(null)
+    // Here you would implement the actual undo functionality with an API call
+  }
+
+  const handleDeleteArticle = async (e) => {
+    e.stopPropagation()
 
     try {
-      setIsSubmittingComment(true)
+      setIsDeleting(true)
+      setShowOptions(false)
 
-      const commentData = {
-        text: commentText.trim(),
-      }
-
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/news/${post._id}/comments`, {
-        method: "POST",
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/news/${post._id}`, {
+        method: "DELETE",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify(commentData),
         credentials: "include", // Important for sending cookies
       })
 
-      if (!response.ok) {
+      if (response.ok) {
+        // Show success message
+        setActionTaken("delete")
+        setIsMinimized(true)
+
+        // Redirect to home after a short delay
+        setTimeout(() => {
+          router.push("/")
+        }, 2000)
+      } else {
         const errorData = await response.json()
-        throw new Error(errorData.message || "Failed to post comment")
+        console.error("Error deleting article:", errorData)
+        alert(errorData.message || "Failed to delete article. Please try again.")
       }
-
-      const data = await response.json()
-
-      // Add the new comment to the local state
-      setLocalComments((prev) => [data.comment, ...prev])
-
-      // Reset the form
-      setCommentText("")
-      setShowCommentForm(false)
     } catch (error) {
-      console.error("Error posting comment:", error)
-      setCommentError(error.message || "Failed to post comment. Please try again.")
+      console.error("Error deleting article:", error)
+      alert("An error occurred while deleting the article. Please try again.")
     } finally {
-      setIsSubmittingComment(false)
+      setIsDeleting(false)
     }
   }
 
-  // Format the date
+  // Calculate time ago
   const calculateTimeAgo = (publishedAt) => {
     if (!publishedAt) return "N/A"
 
@@ -461,6 +439,65 @@ const SinglePost = ({ post, initialComments = [] }) => {
     })
   }
 
+  // Render minimized view
+  if (isMinimized) {
+    let actionIcon = <EyeOff className="w-5 h-5" />
+    let actionText = "Post hidden"
+
+    if (actionTaken === "block") {
+      actionIcon = <UserX className="w-5 h-5" />
+      actionText = `User @${post.authorusername} blocked`
+    } else if (actionTaken === "report") {
+      actionIcon = <AlertCircle className="w-5 h-5" />
+      actionText = "Post reported"
+    } else if (actionTaken === "delete") {
+      actionIcon = (
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="20"
+          height="20"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="2"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          className="w-5 h-5"
+        >
+          <path d="M3 6h18"></path>
+          <path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"></path>
+          <path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"></path>
+        </svg>
+      )
+      actionText = "Article deleted successfully"
+    }
+
+    return (
+      <motion.article
+        initial={{ opacity: 0, y: 15 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.3 }}
+        className="w-full my-2 max-w-3xl mx-auto"
+      >
+        <div className="bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl p-4 flex items-center justify-between">
+          <div className="flex items-center space-x-3 text-gray-500 dark:text-gray-400">
+            {actionIcon}
+            <span>{actionText}</span>
+          </div>
+          {actionTaken !== "delete" && (
+            <button
+              onClick={handleUndoAction}
+              className="text-mainColor hover:text-mainColor/80 transition-colors flex items-center space-x-1"
+              aria-label="Undo action"
+            >
+              <span>Undo</span>
+            </button>
+          )}
+        </div>
+      </motion.article>
+    )
+  }
+
   // If post is not available yet
   if (!post) {
     return (
@@ -484,9 +521,19 @@ const SinglePost = ({ post, initialComments = [] }) => {
         {/* Header with user info */}
         <div className="p-2 sm:p-4 flex items-center justify-between border-b border-gray-200 dark:border-gray-700">
           <Link href={`/profile/${post.authorusername || "unknown"}`} className="flex items-center space-x-2 group">
-            <div className="rounded-full bg-mainColor w-10 h-10 flex items-center justify-center text-secondaryColor font-semibold text-lg cursor-pointer group-hover:shadow-md transition-shadow">
-              {post.authordisplayname ? post.authordisplayname[0].toUpperCase() : "U"}
-            </div>
+            {post.authorpicture ? (
+              <Image
+                src={post.authorpicture || "/placeholder.svg"}
+                alt={post.authordisplayname || "Unknown"}
+                width={40}
+                height={40}
+                className="rounded-full"
+              />
+            ) : (
+              <div className="rounded-full bg-mainColor w-10 h-10 flex items-center justify-center text-white font-semibold text-lg cursor-pointer group-hover:shadow-md transition-shadow">
+                {post.authordisplayname ? post.authordisplayname[0].toUpperCase() : "U"}
+              </div>
+            )}
             <div>
               <p className="font-medium text-gray-900 dark:text-gray-100 capitalize group-hover:underline">
                 {post.authordisplayname || "Unknown"}
@@ -504,91 +551,92 @@ const SinglePost = ({ post, initialComments = [] }) => {
             </div>
           </Link>
 
-          {/* Category tag and options */}
-          <div className="flex items-center space-x-1">
-            <Link href={`/category/${post.category?.toLowerCase() || "general"}`}>
-              <div className="px-3 py-1 text-xs sm:text-sm font-medium text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-900/30 rounded-full capitalize hover:bg-blue-100 dark:hover:bg-blue-900/50 transition-colors">
-                {post.category || "General"}
-              </div>
-            </Link>
+          {/* Options button */}
+          <div className="relative" ref={optionsRef}>
+            <button
+              className="p-1.5 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-500 dark:text-gray-400 transition-colors"
+              onClick={() => setShowOptions(!showOptions)}
+              aria-label="More options"
+              aria-expanded={showOptions}
+              aria-haspopup="true"
+            >
+              <MoreHorizontal className="w-5 h-5" />
+            </button>
 
-            {/* Trust Rating Component */}
-            <TrustRating articleData={post} />
-
-            <div className="relative" ref={optionsRef}>
-              <button
-                className="p-1.5 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-500 dark:text-gray-400 transition-colors"
-                onClick={() => setShowOptions(!showOptions)}
-                aria-label="More options"
-                aria-expanded={showOptions}
-                aria-haspopup="true"
-              >
-                <MoreHorizontal className="w-5 h-5" />
-              </button>
-
-              <AnimatePresence>
-                {showOptions && (
-                  <motion.div
-                    initial={{ opacity: 0, y: 10, scale: 0.95 }}
-                    animate={{ opacity: 1, y: 0, scale: 1 }}
-                    exit={{ opacity: 0, y: 10, scale: 0.95 }}
-                    transition={{ duration: 0.2 }}
-                    className="absolute right-0 mt-2 w-48 bg-white dark:bg-gray-800 rounded-lg shadow-lg border border-gray-200 dark:border-gray-700 z-10 py-2"
-                    onClick={(e) => e.stopPropagation()}
-                  >
-                    {user && user.username === authorusername ? (
-                      <button
-                        className="w-full border-t text-left px-4 py-2 text-sm text-red-600 dark:text-red-400 hover:bg-gray-100 dark:hover:bg-gray-700 flex items-center space-x-2"
-                        onClick={(e) => handleDeleteArticle(e)}
+            <AnimatePresence>
+              {showOptions && (
+                <motion.div
+                  initial={{ opacity: 0, y: 10, scale: 0.95 }}
+                  animate={{ opacity: 1, y: 0, scale: 1 }}
+                  exit={{ opacity: 0, y: 10, scale: 0.95 }}
+                  transition={{ duration: 0.2 }}
+                  className="absolute right-0 mt-2 w-48 bg-white dark:bg-gray-800 rounded-lg shadow-lg border border-gray-200 dark:border-gray-700 z-10 py-2"
+                  onClick={(e) => e.stopPropagation()}
+                >
+                  {user && user.username === post.authorusername ? (
+                    <button
+                      className="w-full text-left px-4 py-2 text-sm text-red-600 dark:text-red-400 hover:bg-gray-100 dark:hover:bg-gray-700 flex items-center space-x-2"
+                      onClick={handleDeleteArticle}
+                    >
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="16"
+                        height="16"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="2"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        className="w-4 h-4"
                       >
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          width="16"
-                          height="16"
-                          viewBox="0 0 24 24"
-                          fill="none"
-                          stroke="currentColor"
-                          strokeWidth="2"
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          className="w-4 h-4"
-                        >
-                          <path d="M3 6h18"></path>
-                          <path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"></path>
-                          <path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"></path>
-                        </svg>
-                        <span>Delete article</span>
+                        <path d="M3 6h18"></path>
+                        <path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"></path>
+                        <path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"></path>
+                      </svg>
+                      <span>Delete article</span>
+                    </button>
+                  ) : (
+                    <>
+                      <button
+                        className="w-full text-left px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 flex items-center space-x-2"
+                        onClick={handleHidePost}
+                      >
+                        <EyeOff className="w-4 h-4" />
+                        <span>Hide this post</span>
                       </button>
-                    ) : (
-                      <>
-                        <button
-                          className="w-full text-left px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 flex items-center space-x-2"
-                          onClick={handleHidePost}
-                        >
-                          <EyeOff className="w-4 h-4" />
-                          <span>Hide this post</span>
-                        </button>
-                        <button
-                          className="w-full text-left px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 flex items-center space-x-2"
-                          onClick={handleBlockUser}
-                        >
-                          <UserX className="w-4 h-4" />
-                          <span>Block this user</span>
-                        </button>
-                        <button
-                          className="w-full text-left px-4 py-2 text-sm text-red-600 dark:text-red-400 hover:bg-gray-100 dark:hover:bg-gray-700 flex items-center space-x-2"
-                          onClick={handleReportPost}
-                        >
-                          <AlertCircle className="w-4 h-4" />
-                          <span>Report this post</span>
-                        </button>
-                      </>
-                    )}
-                  </motion.div>
-                )}
-              </AnimatePresence>
-            </div>
+                      <button
+                        className="w-full text-left px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 flex items-center space-x-2"
+                        onClick={handleBlockUser}
+                      >
+                        <UserX className="w-4 h-4" />
+                        <span>Block this user</span>
+                      </button>
+                      <button
+                        className="w-full text-left px-4 py-2 text-sm text-red-600 dark:text-red-400 hover:bg-gray-100 dark:hover:bg-gray-700 flex items-center space-x-2"
+                        onClick={handleReportPost}
+                      >
+                        <AlertCircle className="w-4 h-4" />
+                        <span>Report this post</span>
+                      </button>
+                    </>
+                  )}
+                </motion.div>
+              )}
+            </AnimatePresence>
           </div>
+        </div>
+
+        {/* Category and Trust Rating */}
+        <div className="px-4 py-2 flex items-center space-x-2">
+          <Link href={`/category/${post.category?.toLowerCase() || "general"}`}>
+            <div className="px-3 py-1 text-xs sm:text-sm font-medium text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-900/30 rounded-full capitalize hover:bg-blue-100 dark:hover:bg-blue-900/50 transition-colors">
+              {post.category || "General"}
+            </div>
+          </Link>
+
+          {/* Trust Rating Component */}
+          <TrustRating articleData={post} />
         </div>
 
         {/* Content */}
@@ -625,7 +673,7 @@ const SinglePost = ({ post, initialComments = [] }) => {
               </span>
               <span className="flex items-center">
                 <MessageCircle className="w-4 h-4 mr-1" />
-                {localComments.length || 0}
+                {initialComments.length || 0}
               </span>
               <span className="flex items-center">
                 <Eye className="w-4 h-4 mr-1" />
@@ -693,222 +741,7 @@ const SinglePost = ({ post, initialComments = [] }) => {
       </article>
 
       {/* Comments section */}
-      <div className="bg-white dark:bg-darkgrey border border-gray-200 dark:border-gray-700 rounded-xl shadow-sm overflow-hidden">
-        <div className="p-4 sm:p-6 border-b border-gray-200 dark:border-gray-700">
-          <h2 className="text-xl font-bold text-gray-900 dark:text-gray-100" id="comments">
-            Comments ({localComments.length})
-          </h2>
-        </div>
-
-        {/* Comment form */}
-        {user ? (
-          <div className="p-4 sm:p-6 border-b border-gray-200 dark:border-gray-700">
-            {showCommentForm ? (
-              <form onSubmit={handleSubmitComment} className="space-y-3">
-                <div className="flex items-start space-x-3">
-                  <div className="rounded-full bg-mainColor w-10 h-10 flex-shrink-0 flex items-center justify-center text-secondaryColor font-semibold">
-                    {user.profilePicture ? (
-                      <Image
-                        src={user.profilePicture}
-                        alt={user.displayname || "User"}
-                        width={40}
-                        height={40}
-                        className="object-cover rounded-full"
-                      />
-                    ) : (
-                      user.displayname ? user.displayname[0].toUpperCase() : "U"
-                    )}
-                  </div>
-                  <div className="flex-1">
-                    <textarea
-                      ref={commentInputRef}
-                      value={commentText}
-                      onChange={(e) => setCommentText(e.target.value)}
-                      placeholder="Write your comment..."
-                      className="w-full p-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-mainColor focus:border-transparent bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 resize-none min-h-[100px]"
-                    />
-
-                    {commentError && (
-                      <div className="mt-2 text-sm text-red-500 flex items-center">
-                        <AlertCircle className="w-4 h-4 mr-1" />
-                        {commentError}
-                      </div>
-                    )}
-                  </div>
-                </div>
-                <div className="flex justify-end space-x-2">
-                  <button
-                    type="button"
-                    onClick={() => {
-                      setShowCommentForm(false)
-                      setCommentText("")
-                      setCommentError(null)
-                    }}
-                    className="px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
-                    disabled={isSubmittingComment}
-                  >
-                    Cancel
-                  </button>
-                  <button
-                    type="submit"
-                    disabled={!commentText.trim() || isSubmittingComment}
-                    className="px-4 py-2 rounded-lg bg-mainColor text-white font-medium hover:bg-mainColor/90 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-                  >
-                    {isSubmittingComment ? (
-                      <span className="flex items-center">
-                        <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                        Posting...
-                      </span>
-                    ) : (
-                      "Post Comment"
-                    )}
-                  </button>
-                </div>
-              </form>
-            ) : (
-              <button
-                onClick={() => setShowCommentForm(true)}
-                className="flex items-center space-x-3 w-full p-3 border border-gray-300 dark:border-gray-600 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors text-gray-500 dark:text-gray-400 text-left"
-              >
-                <div className="rounded-full bg-mainColor w-10 h-10 flex-shrink-0 flex items-center justify-center text-secondaryColor font-semibold">
-                  {user.displayname ? user.displayname[0].toUpperCase() : "U"}
-                </div>
-                <span>Write a comment...</span>
-              </button>
-            )}
-          </div>
-        ) : (
-          <div className="p-4 sm:p-6 border-b border-gray-200 dark:border-gray-700 text-center">
-            <p className="text-gray-600 dark:text-gray-400">
-              <Link href="/login" className="text-mainColor hover:underline">
-                Sign in
-              </Link>{" "}
-              to join the conversation
-            </p>
-          </div>
-        )}
-
-        {/* Comments list */}
-        <div className="divide-y divide-gray-200 dark:divide-gray-700">
-          {isLoadingComments ? (
-            <div className="p-8 text-center">
-              <Loader2 className="w-8 h-8 text-mainColor mx-auto mb-3 animate-spin" />
-              <p className="text-gray-500 dark:text-gray-400">Loading comments...</p>
-            </div>
-          ) : localComments.length > 0 ? (
-            <>
-              {(showAllComments ? localComments : localComments.slice(0, 5)).map((comment, index) => {
-                // Check if the comment author is the same as the post author
-                const isAuthorComment = comment.author?.username === post.authorusername
-
-                return (
-                  <div
-                    key={comment._id || comment.id || index}
-                    className={`p-3 sm:p-5 ${isAuthorComment ? "bg-blue-50 dark:bg-blue-900/20 border-mainColor" : ""}`}
-                  >
-                    <div className="flex items-start space-x-3">
-                      <Link href={`/profile/${comment.author?.username || "unknown"}`}>
-                        <div
-                          className={`rounded-full ${isAuthorComment ? "bg-mainColor text-white" : "bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300"} w-10 h-10 flex-shrink-0 flex items-center justify-center font-semibold`}
-                        >
-                          {comment.author?.displayname ? comment.author.displayname[0].toUpperCase() : "U"}
-                        </div>
-                      </Link>
-                      <div className="flex-1">
-                        <div className="flex items-center justify-between mb-1">
-                          <div className="flex items-center">
-                            <Link href={`/profile/${comment.author?.username || "unknown"}`}>
-                              <span className="font-medium capitalize text-gray-900 dark:text-gray-100 hover:underline">
-                                {comment.author?.displayname || "Unknown User"}
-                              </span>
-                            </Link>
-                            <span className="text-xs text-gray-500 dark:text-gray-400 ml-1">
-                              @{comment.author?.username || "unknown"}
-                            </span>
-                            {isAuthorComment && (
-                              <span className="ml-2 px-2 py-0.5 text-xs font-medium bg-mainColor text-white rounded-full">
-                                Author
-                              </span>
-                            )}
-                          </div>
-                          <span className="text-xs text-gray-500 dark:text-gray-400">
-                            {calculateTimeAgo(comment.createdAt)}
-                          </span>
-                        </div>
-                        <p className="text-gray-700 dark:text-gray-300 whitespace-pre-line break-words">
-                          {comment.text}
-                        </p>
-
-                        {/* Comment actions */}
-                        <div className="flex items-center mt-2 space-x-3 text-xs">
-                          {user && user.username === comment.author?.username && (
-                            <button
-                              className="text-red-500 dark:text-red-400 hover:text-red-600 dark:hover:text-red-300 transition-colors flex items-center"
-                              onClick={() => {
-                                // Here you would implement the actual delete functionality
-                                console.log(`Deleting comment ${comment._id || comment.id}`)
-                                // For now, just remove it from the local state
-                                setLocalComments((prev) =>
-                                  prev.filter((c) => c._id !== comment._id && c.id !== comment.id),
-                                )
-                              }}
-                            >
-                              <svg
-                                xmlns="http://www.w3.org/2000/svg"
-                                width="14"
-                                height="14"
-                                viewBox="0 0 24 24"
-                                fill="none"
-                                stroke="currentColor"
-                                strokeWidth="2"
-                                strokeLinecap="round"
-                                strokeLinejoin="round"
-                                className="mr-1"
-                              >
-                                <path d="M3 6h18"></path>
-                                <path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"></path>
-                                <path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"></path>
-                              </svg>
-                              Delete
-                            </button>
-                          )}
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                )
-              })}
-
-              {/* Show more/less comments button */}
-              {localComments.length > 5 && (
-                <div className="p-4 text-center">
-                  <button
-                    onClick={() => setShowAllComments(!showAllComments)}
-                    className="text-mainColor hover:underline flex items-center justify-center mx-auto"
-                  >
-                    {showAllComments ? (
-                      <>
-                        <ChevronUp className="w-4 h-4 mr-1" />
-                        Show less comments
-                      </>
-                    ) : (
-                      <>
-                        <ChevronDown className="w-4 h-4 mr-1" />
-                        Show all {localComments.length} comments
-                      </>
-                    )}
-                  </button>
-                </div>
-              )}
-            </>
-          ) : (
-            <div className="p-8 text-center">
-              <MessageCircle className="w-12 h-12 text-gray-300 dark:text-gray-600 mx-auto mb-3" />
-              <p className="text-gray-500 dark:text-gray-400">No comments yet. Be the first to comment!</p>
-            </div>
-          )}
-        </div>
-      </div>
+      <CommentSection postId={post._id} initialComments={initialComments} postAuthorUsername={post.authorusername} />
     </div>
   )
 }
