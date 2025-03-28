@@ -7,6 +7,7 @@ import { SearchIcon } from "lucide-react"
 import ProfileCard from "@/components/profile-card"
 import { ThemeContext } from "./../app/ThemeProvider"
 import { Input } from "@/components/ui/input"
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 
 // Keep the existing fetch function for articles
 async function fetchSearchResults(query) {
@@ -115,10 +116,15 @@ export default function Search({ query }) {
     }
   }
 
+  // Handle tab change
+  const handleTabChange = (value) => {
+    setActiveTab(value)
+  }
+
   return (
     <div className="container mx-auto p-1">
       {/* Search Bar */}
-      <div className="m-1">
+      <div>
         <form onSubmit={handleSearch} className="relative max-w-3xl mx-auto">
           <div className="relative flex items-center overflow-hidden rounded-full shadow-md hover:shadow-lg transition-all duration-300 border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 group">
             <Input
@@ -126,7 +132,7 @@ export default function Search({ query }) {
               value={searchInput}
               onChange={(e) => setSearchInput(e.target.value)}
               placeholder="Search for posts or profiles..."
-              className="w-full px-6 py-3 pl-12 bg-transparent focus:outline-none text-gray-800 dark:text-gray-200"
+              className="w-full px-6 py-6 pl-12  bg-transparent focus:outline-none text-gray-800 dark:text-gray-200"
               aria-label="Search query"
             />
             <SearchIcon className="absolute left-4 h-5 w-5 text-gray-400 group-hover:text-mainColor transition-colors duration-300" />
@@ -142,59 +148,51 @@ export default function Search({ query }) {
         </form>
       </div>
 
-      {/* Tabs Navigation */}
-      <div className="flex border-b border-gray-200 dark:border-gray-700 mb-1">
-        <button
-          onClick={() => setActiveTab("posts")}
-          className={`p-2 font-medium text-sm flex-1 max-w-[200px] text-center transition-all duration-300 ${
-            activeTab === "posts"
-              ? "border-b-4 border-mainColor text-primary font-semibold"
-              : "text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-300"
-          }`}
-        >
-          Posts
-        </button>
-        <button
-          onClick={() => setActiveTab("profiles")}
-          className={`p-2 font-medium text-sm flex-1 max-w-[200px] text-center transition-all duration-300 ${
-            activeTab === "profiles"
-              ? "border-b-4 border-mainColor text-primary font-semibold"
-              : "text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-300"
-          }`}
-        >
-          Profiles
-        </button>
-      </div>
+      {/* Tabs using shadcn/ui */}
+      <Tabs defaultValue="posts" value={activeTab} onValueChange={handleTabChange} className="mt-5 w-full">
+        <TabsList className="grid text-mainColor w-full grid-cols-2 mx-auto mb-6">
+          <TabsTrigger value="posts">Posts</TabsTrigger>
+          <TabsTrigger value="profiles">Profiles</TabsTrigger>
+        </TabsList>
 
-      {/* Posts Tab Content */}
-      <main className={`${activeTab !== "posts" ? "hidden" : ""}`}>
-        <div className="flex flex-wrap justify-center sm:justify-start md:justify-around gap-6">
-          { isLoading ? null : articles.length === 0 ? (
-            <div className="w-full text-center py-12 text-gray-500 dark:text-gray-400">
-              No articles found matching your search. Try different keywords.
-            </div>
-          ) : (
-            articles.map((article) => {
-              return <Article key={article._id} articleData={article} />
-            })
-          )}
-        </div>
-      </main>
+        {/* Posts Tab Content */}
+        <TabsContent value="posts">
+          <div className="flex flex-wrap justify-center sm:justify-start md:justify-around gap-6">
+            {isLoading ? (
+              <div className="w-full text-center py-12">
+                <div className="animate-pulse inline-block h-6 w-24 bg-gray-200 dark:bg-gray-700 rounded"></div>
+              </div>
+            ) : articles.length === 0 ? (
+              <div className="w-full text-center py-12 text-gray-500 dark:text-gray-400">
+                No articles found matching your search. Try different keywords.
+              </div>
+            ) : (
+              articles.map((article) => {
+                return <Article key={article._id} articleData={article} />
+              })
+            )}
+          </div>
+        </TabsContent>
 
-      {/* Profiles Tab Content */}
-      <main className={`${activeTab !== "profiles" ? "hidden" : ""}`}>
-        <div className="flex flex-col space-y-6 w-full max-w-3xl mx-auto">
-          {isLoading ? null : profiles.length === 0 ? (
-            <div className="w-full text-center py-12 text-gray-500 dark:text-gray-400">
-              No profiles found matching your search. Try different keywords.
-            </div>
-          ) : (
-            profiles.map((profile) => (
-              <ProfileCard key={profile.id || profile._id} profile={profile} currentUser={user} />
-            ))
-          )}
-        </div>
-      </main>
+        {/* Profiles Tab Content */}
+        <TabsContent value="profiles">
+          <div className="flex flex-col w-full mx-auto">
+            {isLoading ? (
+              <div className="w-full text-center py-12">
+                <div className="animate-pulse inline-block h-6 w-24 bg-gray-200 dark:bg-gray-700 rounded"></div>
+              </div>
+            ) : profiles.length === 0 ? (
+              <div className="w-full text-center py-12 text-gray-500 dark:text-gray-400">
+                No profiles found matching your search. Try different keywords.
+              </div>
+            ) : (
+              profiles.map((profile) => (
+                <ProfileCard key={profile.id || profile._id} profile={profile} currentUser={user} />
+              ))
+            )}
+          </div>
+        </TabsContent>
+      </Tabs>
     </div>
   )
 }

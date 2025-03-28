@@ -754,16 +754,6 @@ export default function AddPostPage() {
     return null
   }, [formData.media.sourceType, formData.media.url, mediaPreview])
 
-  // Handle redirect after successful submission
-  useEffect(() => {
-    if (success) {
-      const timer = setTimeout(() => {
-        router.push("/news")
-      }, 2000)
-      return () => clearTimeout(timer)
-    }
-  }, [success, router])
-
   // Don't render anything while redirecting
   if (!user) {
     return null

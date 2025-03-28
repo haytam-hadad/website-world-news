@@ -104,11 +104,11 @@ export default function Page({ params }) {
   }
 
   return (
-    <div className="container mx-auto p-1 sm:p-4">
-      <h1 className="text-2xl font-semibold mt-1 mb-4">@{username}</h1>
+    <div className="container mx-auto p-1 sm:p-3">
+      <h1 className="text-lg p-3 md:text-xl font-semibold mb-3">@{username}</h1>
         
       <Tabs defaultValue="subscriptions" className="w-full" onValueChange={handleTabChange}>
-        <TabsList className="grid w-full grid-cols-2 mb-8">
+        <TabsList className="grid text-mainColor w-full grid-cols-2 mb-8">
           <TabsTrigger value="subscriptions" className="flex items-center gap-2">
             <UserRound className="h-4 w-4" />
             <span>subscriptions</span>

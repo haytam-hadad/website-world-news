@@ -150,15 +150,6 @@ export default function ProfileCard({ profile, currentUser }) {
     }
   }
 
-  // Format count for display
-  const formatCount = (count) => {
-    if (!count) return "0"
-    if (typeof count === "object" && Array.isArray(count)) return count.length.toString()
-    if (count >= 1000000) return `${(count / 1000000).toFixed(1)}M`
-    if (count >= 1000) return `${(count / 1000).toFixed(1)}K`
-    return count.toString()
-  }
-
   // Get username safely
   const getUsername = () => {
     return profile?.username || "user"
@@ -177,7 +168,7 @@ export default function ProfileCard({ profile, currentUser }) {
   return (
     <Link
       href={`/profile/${getUsername()}`}
-      className="block bg-white dark:bg-darkgrey rounded-lg shadow-sm overflow-hidden w-full border border-gray-100 dark:border-gray-700 hover:shadow-md transition-shadow duration-300"
+      className="block bg-white my-2 dark:bg-darkgrey rounded-lg shadow-sm overflow-hidden w-full border border-gray-100 dark:border-gray-700 hover:shadow-md transition-shadow duration-300"
     >
       <div className="p-4">
         <div className="flex items-center gap-4">

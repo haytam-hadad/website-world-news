@@ -3,11 +3,7 @@ import { ChevronDown } from "lucide-react"
 
 const fetchSubscribedArticles = async () => {
   try {
-    const apiUrl = `${process.env.NEXT_PUBLIC_API_URL}/post/subscribed`
-
-    if (!apiUrl) throw new Error("API URL is not defined in environment variables")
-
-    const res = await fetch(apiUrl, {
+    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/post/subscribed`, {
       credentials: "include"
     })
 

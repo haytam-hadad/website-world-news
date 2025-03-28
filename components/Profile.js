@@ -208,7 +208,7 @@ const Profile = ({ userData }) => {
                 <Image
                   src={userData.profilePicture || "/placeholder.svg"}
                   alt={userData.displayname}
-                  className="w-full h-full rounded-full shadow-inner"
+                  className="w-full h-full  object-cover rounded-full"
                   width={100}
                   height={100}
                 />
