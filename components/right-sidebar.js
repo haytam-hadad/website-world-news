@@ -9,6 +9,7 @@ import { ThemeContext } from "../app/ThemeProvider"
 
 // Section header component
 const SectionHeader = ({ icon: Icon, title, action, isExpanded, onToggle, id }) => {
+
   return (
     <div className="flex items-center justify-between mb-4">
       <div className="flex items-center">
@@ -229,22 +230,24 @@ const RightSidebar = () => {
 
   return (
     <aside className="w-[300px] fixed top-0 right-0 h-full bg-white dark:bg-darkgrey border-l border-gray-100 dark:border-gray-800 overflow-y-auto z-30 pt-16 shadow-sm">
-      <div className="p-4 space-y-4 h-full flex flex-col">
+      <div className="p-3 space-y-4 h-full flex flex-col">
         {/* User Stats Summary - Only show if user is logged in */}
         {user && (
-          <div className="bg-gradient-to-r from-mainColor/10 to-main2Color/10 dark:from-mainColor/20 dark:to-main2Color/20 rounded-xl p-4 shadow-sm">
-            <div className="flex justify-between items-center">
-              <div className="text-center flex-1">
-                <div className="text-lg font-bold text-mainColor">{subscriptions.length}</div>
-                <div className="text-xs text-gray-600 dark:text-gray-300">Subscriptions</div>
+          <Link href={`/profile/${user.username}/subscriptions`} 
+            className="block bg-lightgrey border hover:border-mainColor dark:bg-thirdColor text-center rounded-lg p-4 cursor-pointer"
+            >
+              <div className="flex items-center justify-around mb-2">
+                <div className="flex flex-col items-center">
+                  <div className="text-xl font-bold text-primary">{subscriptions.length}</div>
+                  <div className="text-xs text-primary">Subscriptions</div>
+                </div>
+                <div className="h-10 w-px bg-gray-200 dark:bg-gray-700"></div>
+                <div className="flex flex-col items-center">
+                  <div className="text-xl font-bold text-primary">{subscribers.length}</div>
+                  <div className="text-xs text-primary">Subscribers</div>
+                </div>
               </div>
-              <div className="h-10 w-px bg-gray-200 dark:bg-gray-700"></div>
-              <div className="text-center flex-1">
-                <div className="text-lg font-bold text-mainColor">{subscribers.length}</div>
-                <div className="text-xs text-gray-600 dark:text-gray-300">Subscribers</div>
-              </div>
-            </div>
-          </div>
+          </Link>
         )}
 
         {/* Subscriptions Section */}

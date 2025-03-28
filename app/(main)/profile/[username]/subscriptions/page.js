@@ -92,7 +92,7 @@ export default function Page({ params }) {
       <div className="container mx-auto py-12 px-4 text-center">
         <AlertCircle className="h-12 w-12 text-red-500 mx-auto mb-4" />
         <h1 className="text-2xl font-bold mb-2">User Not Found</h1>
-        <p className="text-gray-600 dark:text-gray-400 mb-6">The user "{username}" could not be found.</p>
+        <p className="text-gray-600 dark:text-gray-400 mb-6">The user <u>{username}</u> could not be found.</p>
         <button
           onClick={() => window.history.back()}
           className="px-4 py-2 bg-mainColor text-white rounded-lg hover:bg-mainColor/90 transition-colors"
