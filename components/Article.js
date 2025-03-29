@@ -69,7 +69,7 @@ const formatText = (text) => {
 }
 
 const Article = ({ articleData }) => {
-  console.log(articleData)
+
   // No destructuring, we'll use articleData directly
   const [isSaved, setIsSaved] = useState(false)
   const [isSaving, setIsSaving] = useState(false)
@@ -608,7 +608,7 @@ const Article = ({ articleData }) => {
           <div>{displayMedia()}</div>
 
           {/* Action bar */}
-          <div className="p-4 pt-3">
+          <div className="px-4 py-2">
             <div className="flex items-center justify-between">
               {/* Engagement stats */}
               <div className="flex items-center space-x-4 text-sm text-gray-500 dark:text-gray-400">
