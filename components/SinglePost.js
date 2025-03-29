@@ -32,6 +32,7 @@ const SinglePost = ({ post, initialComments = [] }) => {
   const [upvoteCount, setUpvoteCount] = useState(post?.upvote || 0)
   const [downvoteCount, setDownvoteCount] = useState(post?.downvote || 0)
   const [isSaved, setIsSaved] = useState(false)
+  const [isSaving, setIsSaving] = useState(false)
   const [showOptions, setShowOptions] = useState(false)
   const [mediaLoaded, setMediaLoaded] = useState(false)
   const [mediaError, setMediaError] = useState(false)
@@ -59,6 +60,32 @@ const SinglePost = ({ post, initialComments = [] }) => {
       setDownvoteCount(post.downvote || 0)
     }
   }, [post, user])
+
+  // Add this useEffect to check if the post is saved when the component loads
+  useEffect(() => {
+    const checkSaveStatus = async () => {
+      if (!user || !post._id) return
+
+      try {
+        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/news/${post._id}/save-status`, {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          credentials: "include",
+        })
+
+        if (response.ok) {
+          const data = await response.json()
+          setIsSaved(data.saved)
+        }
+      } catch (error) {
+        console.error("Error checking save status:", error)
+      }
+    }
+
+    checkSaveStatus()
+  }, [post._id, user])
 
   // Close dropdown when clicked outside
   useEffect(() => {
@@ -150,11 +177,6 @@ const SinglePost = ({ post, initialComments = [] }) => {
     }
   }
 
-  const toggleSave = () => {
-    setIsSaved(!isSaved)
-    // Here you would implement the actual save functionality with an API call
-  }
-
   const handleShare = () => {
     if (navigator.share) {
       navigator
@@ -243,6 +265,39 @@ const SinglePost = ({ post, initialComments = [] }) => {
       alert("An error occurred while deleting the article. Please try again.")
     } finally {
       setIsDeleting(false)
+    }
+  }
+
+  const toggleSave = async (e) => {
+    e.preventDefault()
+
+    if (!user) {
+      router.push("/login")
+      return
+    }
+
+    setIsSaving(true)
+    try {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/news/${post._id}/save`, {
+        method: isSaved ? "DELETE" : "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        credentials: "include",
+      })
+
+      if (response.ok) {
+        setIsSaved(!isSaved)
+      } else {
+        const errorData = await response.json()
+        console.error("Error saving article:", errorData)
+        alert(errorData.message || "Failed to save article. Please try again.")
+      }
+    } catch (error) {
+      console.error("Error saving article:", error)
+      alert("An error occurred while saving the article. Please try again.")
+    } finally {
+      setIsSaving(false)
     }
   }
 
@@ -446,7 +501,7 @@ const SinglePost = ({ post, initialComments = [] }) => {
 
     if (actionTaken === "block") {
       actionIcon = <UserX className="w-5 h-5" />
-      actionText = `User @${post.authorusername} blocked`
+      actionText = `User @${post.authorId?.username || post.authorusername || "unknown"} blocked`
     } else if (actionTaken === "report") {
       actionIcon = <AlertCircle className="w-5 h-5" />
       actionText = "Post reported"
@@ -520,27 +575,34 @@ const SinglePost = ({ post, initialComments = [] }) => {
       <article className="bg-white dark:bg-darkgrey border border-gray-200 dark:border-gray-700 rounded-xl shadow-sm overflow-hidden mb-6">
         {/* Header with user info */}
         <div className="p-2 sm:p-4 flex items-center justify-between border-b border-gray-200 dark:border-gray-700">
-          <Link href={`/profile/${post.authorusername || "unknown"}`} className="flex items-center space-x-2 group">
-            {post.authorpicture ? (
+          <Link
+            href={`/profile/${post.authorId?.username || post.authorusername || "unknown"}`}
+            className="flex items-center space-x-2 group"
+          >
+            {post.authorId?.profilePicture ? (
               <Image
-                src={post.authorpicture || "/placeholder.svg"}
-                alt={post.authordisplayname || "Unknown"}
+                src={post.authorId.profilePicture || "/placeholder.svg"}
+                alt={post.authorId?.displayname || "Unknown"}
                 width={40}
                 height={40}
                 className="rounded-full"
               />
             ) : (
               <div className="rounded-full bg-mainColor w-10 h-10 flex items-center justify-center text-white font-semibold text-lg cursor-pointer group-hover:shadow-md transition-shadow">
-                {post.authordisplayname ? post.authordisplayname[0].toUpperCase() : "U"}
+                {post.authorId?.displayname ? post.authorId.displayname[0].toUpperCase() : "U"}
               </div>
             )}
             <div>
               <p className="font-medium text-gray-900 dark:text-gray-100 capitalize group-hover:underline">
-                {post.authordisplayname || "Unknown"}
+                {post.authorId?.displayname || "Unknown"}
               </p>
               <div className="flex items-center space-x-1">
                 <span className="text-sm text-gray-500 dark:text-gray-400">
-                  {post.authorusername ? `@${post.authorusername}` : "N/A"}
+                  {post.authorId?.username
+                    ? `@${post.authorId.username}`
+                    : post.authorusername
+                      ? `@${post.authorusername}`
+                      : "N/A"}
                 </span>
                 <span className="text-gray-400">•</span>
                 <span className="text-sm text-gray-500 dark:text-gray-400 flex items-center">
@@ -573,7 +635,7 @@ const SinglePost = ({ post, initialComments = [] }) => {
                   className="absolute right-0 mt-2 w-48 bg-white dark:bg-gray-800 rounded-lg shadow-lg border border-gray-200 dark:border-gray-700 z-10 py-2"
                   onClick={(e) => e.stopPropagation()}
                 >
-                  {user && user.username === post.authorusername ? (
+                  {user && user.username === (post.authorId?.username || post.authorusername) ? (
                     <button
                       className="w-full text-left px-4 py-2 text-sm text-red-600 dark:text-red-400 hover:bg-gray-100 dark:hover:bg-gray-700 flex items-center space-x-2"
                       onClick={handleDeleteArticle}
@@ -689,6 +751,7 @@ const SinglePost = ({ post, initialComments = [] }) => {
                   : "text-gray-500 dark:text-gray-400 hover:text-yellow-500 dark:hover:text-yellow-400"
               }`}
               onClick={toggleSave}
+              disabled={isSaving}
               aria-label={isSaved ? "Unsave article" : "Save article"}
               aria-pressed={isSaved}
             >
@@ -741,7 +804,11 @@ const SinglePost = ({ post, initialComments = [] }) => {
       </article>
 
       {/* Comments section */}
-      <CommentSection postId={post._id} initialComments={initialComments} postAuthorUsername={post.authorusername} />
+      <CommentSection
+        postId={post._id}
+        initialComments={initialComments}
+        postAuthorUsername={post.authorId?.username || post.authorusername}
+      />
     </div>
   )
 }

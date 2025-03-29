@@ -69,31 +69,15 @@ const formatText = (text) => {
 }
 
 const Article = ({ articleData }) => {
-  const {
-    _id,
-    title,
-    content,
-    description,
-    imageUrl,
-    mediaType,
-    mediaUrl,
-    authorusername,
-    authordisplayname,
-    category,
-    publishedAt,
-    views,
-    upvote,
-    downvote,
-    authorpicture,
-    isGoogleUser,
-    comments = [],
-  } = articleData
+  console.log(articleData)
+  // No destructuring, we'll use articleData directly
   const [isSaved, setIsSaved] = useState(false)
+  const [isSaving, setIsSaving] = useState(false)
   const [showOptions, setShowOptions] = useState(false)
   const [mediaLoaded, setMediaLoaded] = useState(false)
   const [mediaError, setMediaError] = useState(false)
-  const [likeCount, setLikeCount] = useState(upvote || 0)
-  const [dislikeCount, setDislikeCount] = useState(downvote || 0)
+  const [likeCount, setLikeCount] = useState(articleData.upvote || 0)
+  const [dislikeCount, setDislikeCount] = useState(articleData.downvote || 0)
   const [isMinimized, setIsMinimized] = useState(false)
   const [actionTaken, setActionTaken] = useState(null) // 'hide', 'block', or 'report'
   const [isDeleting, setIsDeleting] = useState(false)
@@ -118,14 +102,69 @@ const Article = ({ articleData }) => {
 
   const handleClick = () => {
     if (!isMinimized) {
-      router.push(`/post/${_id.$oid || _id}`)
+      router.push(`/post/${articleData._id}`)
     }
   }
 
-  const toggleSave = (e) => {
+  // Add this useEffect to check if the article is saved when the component loads
+  useEffect(() => {
+    const checkSaveStatus = async () => {
+      if (!user || !articleData._id) return
+
+      try {
+        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/news/${articleData._id}/save-status`, {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          credentials: "include",
+        })
+
+        if (response.ok) {
+          const data = await response.json()
+          setIsSaved(data.saved)
+        }
+      } catch (error) {
+        console.error("Error checking save status:", error)
+      }
+    }
+
+    checkSaveStatus()
+  }, [articleData._id, user])
+
+  const toggleSave = async (e) => {
     e.stopPropagation()
-    setIsSaved(!isSaved)
-    // Here you would implement the actual save functionality with an API call
+
+    if (!user) {
+      router.push("/login")
+      return
+    }
+
+    if (isSaving) return // Prevent multiple clicks
+
+    try {
+      setIsSaving(true)
+
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/news/${articleData._id}/save`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        credentials: "include",
+      })
+
+      if (response.ok) {
+        const data = await response.json()
+        setIsSaved(data.saved)
+      } else {
+        const errorData = await response.json()
+        console.error("Error saving article:", errorData)
+      }
+    } catch (error) {
+      console.error("Error saving article:", error)
+    } finally {
+      setIsSaving(false)
+    }
   }
 
   const handleShare = (e) => {
@@ -134,15 +173,15 @@ const Article = ({ articleData }) => {
     if (navigator.share) {
       navigator
         .share({
-          title: title,
-          text: description || content?.substring(0, 100) + "...",
-          url: `/post/${_id}`,
+          title: articleData.title,
+          text: articleData.description || articleData.content?.substring(0, 100) + "...",
+          url: `/post/${articleData._id}`,
         })
         .catch((err) => console.error("Error sharing", err))
     } else {
       // Fallback for browsers that don't support navigator.share
       navigator.clipboard
-        .writeText(window.location.origin + `/post/${_id.$oid || _id}`)
+        .writeText(window.location.origin + `/post/${articleData._id}`)
         .then(() => {
           alert("Link copied to clipboard!")
         })
@@ -225,9 +264,9 @@ const Article = ({ articleData }) => {
 
   // Update the displayMedia function to handle both image and video types
   const displayMedia = () => {
-    if (!mediaUrl) return null
+    if (!articleData.mediaUrl) return null
 
-    if (mediaType === "image") {
+    if (articleData.mediaType === "image") {
       return (
         <div className="w-full relative overflow-hidden rounded-lg">
           <div className="w-full aspect-[16/9] relative overflow-hidden">
@@ -238,8 +277,8 @@ const Article = ({ articleData }) => {
             )}
             <Image
               className={`object-cover scale-95 rounded-md transition-opacity duration-300 ${mediaLoaded ? "opacity-100" : "opacity-0"}`}
-              src={mediaUrl || "/placeholder.svg"}
-              alt={title || "Article image"}
+              src={articleData.mediaUrl || "/placeholder.svg"}
+              alt={articleData.title || "Article image"}
               fill
               sizes="(max-width: 768px) 100vw, (max-width: 1200px) 40vw, 30vw"
               priority
@@ -253,8 +292,8 @@ const Article = ({ articleData }) => {
           </div>
         </div>
       )
-    } else if (mediaType === "video") {
-      const youtubeID = getYouTubeID(mediaUrl)
+    } else if (articleData.mediaType === "video") {
+      const youtubeID = getYouTubeID(articleData.mediaUrl)
 
       return (
         <div className="w-full relative overflow-hidden rounded-lg">
@@ -274,7 +313,7 @@ const Article = ({ articleData }) => {
 
             <Image
               src={youtubeID ? `https://img.youtube.com/vi/${youtubeID}/hqdefault.jpg` : "/placeholder.svg"}
-              alt={title || "Video thumbnail"}
+              alt={articleData.title || "Video thumbnail"}
               fill
               className="object-cover scale-95 rounded-md "
               onLoad={() => setMediaLoaded(true)}
@@ -308,7 +347,7 @@ const Article = ({ articleData }) => {
       setIsDeleting(true)
       setShowOptions(false)
 
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/news/${_id}`, {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/news/${articleData._id}`, {
         method: "DELETE",
         headers: {
           "Content-Type": "application/json",
@@ -329,7 +368,7 @@ const Article = ({ articleData }) => {
               window.location.reload()
             }
             // If we're on the article page, redirect to home
-            else if (window.location.pathname.includes(`/post/${_id.$oid || _id}`)) {
+            else if (window.location.pathname.includes(`/post/${articleData._id}`)) {
               router.push("/")
             }
           }
@@ -354,7 +393,7 @@ const Article = ({ articleData }) => {
 
     if (actionTaken === "block") {
       actionIcon = <UserX className="w-5 h-5" />
-      actionText = `User @${authorusername} blocked`
+      actionText = `User @${articleData.authorId?.username || articleData.authorusername || "unknown"} blocked`
     } else if (actionTaken === "report") {
       actionIcon = <AlertCircle className="w-5 h-5" />
       actionText = "Post reported"
@@ -419,40 +458,44 @@ const Article = ({ articleData }) => {
         tabIndex="0"
         onClick={handleClick}
         onKeyDown={(e) => e.key === "Enter" && handleClick()}
-        aria-label={`Article: ${title || "Untitled"}`}
+        aria-label={`Article: ${articleData.title || "Untitled"}`}
       >
         {/* Header with user info */}
         <div className="p-4 flex items-center justify-between">
           <Link
-            href={`/profile/${authorusername || "unknown"}`}
+            href={`/profile/${articleData.authorId?.username || articleData.authorusername || "unknown"}`}
             className="flex items-center space-x-2 group"
             onClick={(e) => e.stopPropagation()}
           >
-            {authorpicture ? (
+            {articleData.authorId?.profilePicture ? (
               <Image
-                src={authorpicture || "/placeholder.svg"}
-                alt={authordisplayname || "Unknown"}
+                src={articleData.authorId.profilePicture || "/placeholder.svg"}
+                alt={articleData.authorId?.displayname || "Unknown"}
                 width={40}
                 height={40}
                 className="rounded-full"
               />
             ) : (
               <div className="rounded-full bg-mainColor w-10 h-10 flex items-center justify-center text-white font-semibold group-hover:shadow-md transition-shadow">
-                {authordisplayname ? authordisplayname[0].toUpperCase() : "U"}
+                {articleData.authorId?.displayname ? articleData.authorId.displayname[0].toUpperCase() : "U"}
               </div>
             )}
             <div>
               <p className="font-medium text-gray-900 dark:text-gray-100 capitalize group-hover:underline">
-                {authordisplayname || "Unknown"}
+                {articleData.authorId?.displayname || "Unknown"}
               </p>
               <div className="flex items-center space-x-1">
                 <span className="text-sm text-gray-500 dark:text-gray-400">
-                  {authorusername ? `@${authorusername}` : "N/A"}
+                  {articleData.authorId?.username
+                    ? `@${articleData.authorId.username}`
+                    : articleData.authorusername
+                      ? `@${articleData.authorusername}`
+                      : "N/A"}
                 </span>
                 <span className="text-gray-400">•</span>
                 <span className="text-sm text-gray-500 dark:text-gray-400 flex items-center">
                   <Clock className="w-3.5 h-3.5 mr-1" />
-                  <time dateTime={publishedAt?.$date || publishedAt}>{calculateTimeAgo(publishedAt)}</time>
+                  <time dateTime={articleData.publishedAt}>{calculateTimeAgo(articleData.publishedAt)}</time>
                 </span>
               </div>
             </div>
@@ -483,7 +526,7 @@ const Article = ({ articleData }) => {
                   className="absolute right-0 mt-2 w-48 bg-white dark:bg-gray-800 rounded-lg shadow-lg border border-gray-200 dark:border-gray-700 z-10 py-2"
                   onClick={(e) => e.stopPropagation()}
                 >
-                  {user && user.username === authorusername ? (
+                  {user && user.username === (articleData.authorId?.username || articleData.authorusername) ? (
                     <button
                       className="w-full text-left px-4 py-2 text-sm text-red-600 dark:text-red-400 hover:bg-gray-100 dark:hover:bg-gray-700 flex items-center space-x-2"
                       onClick={(e) => handleDeleteArticle(e)}
@@ -540,12 +583,12 @@ const Article = ({ articleData }) => {
         {/* Category and Trust Rating */}
         <div className="px-4 pb-2 flex items-center space-x-2">
           <Link
-            href={`/categories/${category?.toLowerCase() || "general"}`}
+            href={`/categories/${articleData.category?.toLowerCase() || "general"}`}
             className="px-3 py-1 text-xs font-medium text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-900/30 rounded-full capitalize hover:bg-blue-100 dark:hover:bg-blue-900/50 transition-colors"
             onClick={(e) => e.stopPropagation()}
-            aria-label={`Category: ${category || "General"}`}
+            aria-label={`Category: ${articleData.category || "General"}`}
           >
-            {category || "General"}
+            {articleData.category || "General"}
           </Link>
 
           {/* Trust Rating Component */}
@@ -555,14 +598,16 @@ const Article = ({ articleData }) => {
         {/* Title */}
         <div className="px-4 pb-4">
           <h2 className="font-serif font-bold text-xl text-gray-900 dark:text-gray-100 capitalize hover:underline decoration-2 underline-offset-2">
-            {title}
+            {articleData.title}
           </h2>
         </div>
 
         {/* Content preview */}
         <div className="px-4 pb-3">
           <p className="text-gray-600 dark:text-gray-300 text-md">
-            {description ? formatText(description) : formatText(truncateContent(content, 150))}
+            {articleData.description
+              ? formatText(articleData.description)
+              : formatText(truncateContent(articleData.content, 150))}
           </p>
 
           {/* Add this new element to indicate this is just a preview */}
@@ -590,11 +635,11 @@ const Article = ({ articleData }) => {
               </div>
               <div className="flex items-center space-x-1">
                 <MessageCircle className="w-4 h-4" />
-                <span>{comments.length || 0}</span>
+                <span>{articleData.comments?.length || 0}</span>
               </div>
               <div className="flex items-center space-x-1">
                 <Eye className="w-4 h-4" />
-                <span>{views || 0}</span>
+                <span>{articleData.views || 0}</span>
               </div>
             </div>
 
@@ -617,10 +662,10 @@ const Article = ({ articleData }) => {
         {/* Action buttons */}
         <div className="border-t border-gray-200 dark:border-gray-700 grid grid-cols-2 divide-x divide-gray-200 dark:divide-gray-700">
           <Link
-            href={`/post/${_id.$oid || _id}#comments`}
+            href={`/post/${articleData._id}#comments`}
             className="p-3 flex items-center justify-center space-x-2 text-gray-500 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors"
             onClick={(e) => e.stopPropagation()}
-            aria-label={`Comments (${comments.length || 0})`}
+            aria-label={`Comments (${articleData.comments?.length || 0})`}
           >
             <MessageCircle className="w-5 h-5" />
             <span className="font-medium">Comment</span>
