@@ -11,7 +11,6 @@ import {
   BookmarkCheck,
   Eye,
   AlertCircle,
-  UserX,
   EyeOff,
   ArrowBigDown,
   ChevronRight,
@@ -22,6 +21,7 @@ import { ArrowBigUp } from "lucide-react"
 import { motion, AnimatePresence } from "framer-motion"
 import Link from "next/link"
 import { TrustRating } from "./article-trust-rating"
+import ReportModal from "./report-modal"
 
 const formatText = (text) => {
   if (!text) return null
@@ -79,8 +79,9 @@ const Article = ({ articleData }) => {
   const [likeCount, setLikeCount] = useState(articleData.upvote || 0)
   const [dislikeCount, setDislikeCount] = useState(articleData.downvote || 0)
   const [isMinimized, setIsMinimized] = useState(false)
-  const [actionTaken, setActionTaken] = useState(null) // 'hide', 'block', or 'report'
+  const [actionTaken, setActionTaken] = useState(null) // 'hide' or 'report'
   const [isDeleting, setIsDeleting] = useState(false)
+  const [showReportModal, setShowReportModal] = useState(false)
 
   const optionsRef = useRef(null)
   const router = useRouter()
@@ -197,20 +198,15 @@ const Article = ({ articleData }) => {
     // Here you would implement the actual hide functionality with an API call
   }
 
-  const handleBlockUser = (e) => {
+  const handleReportClick = (e) => {
     e.stopPropagation()
-    setActionTaken("block")
-    setIsMinimized(true)
     setShowOptions(false)
-    // Here you would implement the actual block functionality with an API call
+    setShowReportModal(true)
   }
 
-  const handleReportPost = (e) => {
-    e.stopPropagation()
+  const handleReportSuccess = () => {
     setActionTaken("report")
     setIsMinimized(true)
-    setShowOptions(false)
-    // Here you would implement the actual report functionality with an API call
   }
 
   const handleUndoAction = (e) => {
@@ -391,10 +387,7 @@ const Article = ({ articleData }) => {
     let actionIcon = <EyeOff className="w-5 h-5" />
     let actionText = "Post hidden"
 
-    if (actionTaken === "block") {
-      actionIcon = <UserX className="w-5 h-5" />
-      actionText = `User @${articleData.authorId?.username || articleData.authorusername || "unknown"} blocked`
-    } else if (actionTaken === "report") {
+    if (actionTaken === "report") {
       actionIcon = <AlertCircle className="w-5 h-5" />
       actionText = "Post reported"
     } else if (actionTaken === "delete") {
@@ -446,242 +439,245 @@ const Article = ({ articleData }) => {
   }
 
   return (
-    <motion.article
-      initial={{ opacity: 0, y: 15 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.3 }}
-      className="w-full my-2 max-w-3xl mx-auto"
-    >
-      <div
-        className="bg-white dark:bg-darkgrey border border-gray-200 dark:border-gray-700 rounded-xl shadow-sm hover:shadow-md transition-shadow duration-200 overflow-hidden cursor-pointer"
-        role="article"
-        tabIndex="0"
-        onClick={handleClick}
-        onKeyDown={(e) => e.key === "Enter" && handleClick()}
-        aria-label={`Article: ${articleData.title || "Untitled"}`}
+    <>
+      <motion.article
+        initial={{ opacity: 0, y: 15 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.3 }}
+        className="w-full my-2 max-w-3xl mx-auto"
       >
-        {/* Header with user info */}
-        <div className="p-4 flex items-center justify-between">
-          <Link
-            href={`/profile/${articleData.authorId?.username || articleData.authorusername || "unknown"}`}
-            className="flex items-center space-x-2 group"
-            onClick={(e) => e.stopPropagation()}
-          >
-            {articleData.authorId?.profilePicture ? (
-              <Image
-                src={articleData.authorId.profilePicture || "/placeholder.svg"}
-                alt={articleData.authorId?.displayname || "Unknown"}
-                width={40}
-                height={40}
-                className="rounded-full"
-              />
-            ) : (
-              <div className="rounded-full bg-mainColor w-10 h-10 flex items-center justify-center text-white font-semibold group-hover:shadow-md transition-shadow">
-                {articleData.authorId?.displayname ? articleData.authorId.displayname[0].toUpperCase() : "U"}
-              </div>
-            )}
-            <div>
-              <p className="font-medium text-gray-900 dark:text-gray-100 capitalize group-hover:underline">
-                {articleData.authorId?.displayname || "Unknown"}
-              </p>
-              <div className="flex items-center space-x-1">
-                <span className="text-sm text-gray-500 dark:text-gray-400">
-                  {articleData.authorId?.username
-                    ? `@${articleData.authorId.username}`
-                    : articleData.authorusername
-                      ? `@${articleData.authorusername}`
-                      : "N/A"}
-                </span>
-                <span className="text-gray-400">•</span>
-                <span className="text-sm text-gray-500 dark:text-gray-400 flex items-center">
-                  <Clock className="w-3.5 h-3.5 mr-1" />
-                  <time dateTime={articleData.publishedAt}>{calculateTimeAgo(articleData.publishedAt)}</time>
-                </span>
-              </div>
-            </div>
-          </Link>
-
-          {/* Options button */}
-          <div className="relative" ref={optionsRef}>
-            <button
-              className="p-1.5 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-500 dark:text-gray-400 transition-colors"
-              onClick={(e) => {
-                e.stopPropagation()
-                setShowOptions(!showOptions)
-              }}
-              aria-label="More options"
-              aria-expanded={showOptions}
-              aria-haspopup="true"
+        <div
+          className="bg-white dark:bg-darkgrey border border-gray-200 dark:border-gray-700 rounded-xl shadow-sm hover:shadow-md transition-shadow duration-200 overflow-hidden cursor-pointer"
+          role="article"
+          tabIndex="0"
+          onClick={handleClick}
+          onKeyDown={(e) => e.key === "Enter" && handleClick()}
+          aria-label={`Article: ${articleData.title || "Untitled"}`}
+        >
+          {/* Header with user info */}
+          <div className="p-4 flex items-center justify-between">
+            <Link
+              href={`/profile/${articleData.authorId?.username || articleData.authorusername || "unknown"}`}
+              className="flex items-center space-x-2 group"
+              onClick={(e) => e.stopPropagation()}
             >
-              <MoreHorizontal className="w-5 h-5" />
-            </button>
+              {articleData.authorId?.profilePicture ? (
+                <Image
+                  src={articleData.authorId.profilePicture || "/placeholder.svg"}
+                  alt={articleData.authorId?.displayname || "Unknown"}
+                  width={40}
+                  height={40}
+                  className="rounded-full"
+                />
+              ) : (
+                <div className="rounded-full bg-mainColor w-10 h-10 flex items-center justify-center text-white font-semibold group-hover:shadow-md transition-shadow">
+                  {articleData.authorId?.displayname ? articleData.authorId.displayname[0].toUpperCase() : "U"}
+                </div>
+              )}
+              <div>
+                <p className="font-medium text-gray-900 dark:text-gray-100 capitalize group-hover:underline">
+                  {articleData.authorId?.displayname || "Unknown"}
+                </p>
+                <div className="flex items-center space-x-1">
+                  <span className="text-sm text-gray-500 dark:text-gray-400">
+                    {articleData.authorId?.username
+                      ? `@${articleData.authorId.username}`
+                      : articleData.authorusername
+                        ? `@${articleData.authorusername}`
+                        : "N/A"}
+                  </span>
+                  <span className="text-gray-400">•</span>
+                  <span className="text-sm text-gray-500 dark:text-gray-400 flex items-center">
+                    <Clock className="w-3.5 h-3.5 mr-1" />
+                    <time dateTime={articleData.publishedAt}>{calculateTimeAgo(articleData.publishedAt)}</time>
+                  </span>
+                </div>
+              </div>
+            </Link>
 
-            <AnimatePresence>
-              {showOptions && (
-                <motion.div
-                  initial={{ opacity: 0, y: 10, scale: 0.95 }}
-                  animate={{ opacity: 1, y: 0, scale: 1 }}
-                  exit={{ opacity: 0, y: 10, scale: 0.95 }}
-                  transition={{ duration: 0.2 }}
-                  className="absolute right-0 mt-2 w-48 bg-white dark:bg-gray-800 rounded-lg shadow-lg border border-gray-200 dark:border-gray-700 z-10 py-2"
-                  onClick={(e) => e.stopPropagation()}
-                >
-                  {user && user.username === (articleData.authorId?.username || articleData.authorusername) ? (
-                    <button
-                      className="w-full text-left px-4 py-2 text-sm text-red-600 dark:text-red-400 hover:bg-gray-100 dark:hover:bg-gray-700 flex items-center space-x-2"
-                      onClick={(e) => handleDeleteArticle(e)}
-                    >
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        width="16"
-                        height="16"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        stroke="currentColor"
-                        strokeWidth="2"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        className="w-4 h-4"
-                      >
-                        <path d="M3 6h18"></path>
-                        <path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"></path>
-                        <path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"></path>
-                      </svg>
-                      <span>Delete article</span>
-                    </button>
-                  ) : (
-                    <>
-                      <button
-                        className="w-full text-left px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 flex items-center space-x-2"
-                        onClick={handleHidePost}
-                      >
-                        <EyeOff className="w-4 h-4" />
-                        <span>Hide this post</span>
-                      </button>
-                      <button
-                        className="w-full text-left px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 flex items-center space-x-2"
-                        onClick={handleBlockUser}
-                      >
-                        <UserX className="w-4 h-4" />
-                        <span>Block this user</span>
-                      </button>
+            {/* Options button */}
+            <div className="relative" ref={optionsRef}>
+              <button
+                className="p-1.5 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-500 dark:text-gray-400 transition-colors"
+                onClick={(e) => {
+                  e.stopPropagation()
+                  setShowOptions(!showOptions)
+                }}
+                aria-label="More options"
+                aria-expanded={showOptions}
+                aria-haspopup="true"
+              >
+                <MoreHorizontal className="w-5 h-5" />
+              </button>
+
+              <AnimatePresence>
+                {showOptions && (
+                  <motion.div
+                    initial={{ opacity: 0, y: 10, scale: 0.95 }}
+                    animate={{ opacity: 1, y: 0, scale: 1 }}
+                    exit={{ opacity: 0, y: 10, scale: 0.95 }}
+                    transition={{ duration: 0.2 }}
+                    className="absolute right-0 mt-2 w-48 bg-white dark:bg-gray-800 rounded-lg shadow-lg border border-gray-200 dark:border-gray-700 z-10 py-2"
+                    onClick={(e) => e.stopPropagation()}
+                  >
+                    {user && user.username === (articleData.authorId?.username || articleData.authorusername) ? (
                       <button
                         className="w-full text-left px-4 py-2 text-sm text-red-600 dark:text-red-400 hover:bg-gray-100 dark:hover:bg-gray-700 flex items-center space-x-2"
-                        onClick={handleReportPost}
+                        onClick={(e) => handleDeleteArticle(e)}
                       >
-                        <AlertCircle className="w-4 h-4" />
-                        <span>Report this post</span>
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          width="16"
+                          height="16"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          stroke="currentColor"
+                          strokeWidth="2"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          className="w-4 h-4"
+                        >
+                          <path d="M3 6h18"></path>
+                          <path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"></path>
+                          <path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"></path>
+                        </svg>
+                        <span>Delete article</span>
                       </button>
-                    </>
-                  )}
-                </motion.div>
-              )}
-            </AnimatePresence>
-          </div>
-        </div>
-
-        {/* Category and Trust Rating */}
-        <div className="px-4 pb-2 flex items-center space-x-2">
-          <Link
-            href={`/categories/${articleData.category?.toLowerCase() || "general"}`}
-            className="px-3 py-1 text-xs font-medium text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-900/30 rounded-full capitalize hover:bg-blue-100 dark:hover:bg-blue-900/50 transition-colors"
-            onClick={(e) => e.stopPropagation()}
-            aria-label={`Category: ${articleData.category || "General"}`}
-          >
-            {articleData.category || "General"}
-          </Link>
-
-          {/* Trust Rating Component */}
-          <TrustRating articleData={articleData} />
-        </div>
-
-        {/* Title */}
-        <div className="px-4 pb-4">
-          <h2 className="font-serif font-bold text-xl text-gray-900 dark:text-gray-100 capitalize hover:underline decoration-2 underline-offset-2">
-            {articleData.title}
-          </h2>
-        </div>
-
-        {/* Content preview */}
-        <div className="px-4 pb-3">
-          <p className="text-gray-600 dark:text-gray-300 text-md">
-            {articleData.description
-              ? formatText(articleData.description)
-              : formatText(truncateContent(articleData.content, 150))}
-          </p>
-
-          {/* Add this new element to indicate this is just a preview */}
-          <div className="mt-2 flex items-center text-sm">
-            <ChevronRight className="w-4 h-4 text-mainColor mr-1" />
-            <span className="font-medium text-mainColor">Read full article</span>
-          </div>
-        </div>
-
-        {/* Media */}
-        <div>{displayMedia()}</div>
-
-        {/* Action bar */}
-        <div className="p-4 pt-3">
-          <div className="flex items-center justify-between">
-            {/* Engagement stats */}
-            <div className="flex items-center space-x-4 text-sm text-gray-500 dark:text-gray-400">
-              <div className="flex items-center space-x-1">
-                <ArrowBigUp className="w-4 h-4" />
-                <span>{likeCount}</span>
-              </div>
-              <div className="flex items-center space-x-1">
-                <ArrowBigDown className="w-4 h-4" />
-                <span>{dislikeCount}</span>
-              </div>
-              <div className="flex items-center space-x-1">
-                <MessageCircle className="w-4 h-4" />
-                <span>{articleData.comments?.length || 0}</span>
-              </div>
-              <div className="flex items-center space-x-1">
-                <Eye className="w-4 h-4" />
-                <span>{articleData.views || 0}</span>
-              </div>
+                    ) : (
+                      <>
+                        <button
+                          className="w-full text-left px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 flex items-center space-x-2"
+                          onClick={handleHidePost}
+                        >
+                          <EyeOff className="w-4 h-4" />
+                          <span>Hide this post</span>
+                        </button>
+                        <button
+                          className="w-full text-left px-4 py-2 text-sm text-red-600 dark:text-red-400 hover:bg-gray-100 dark:hover:bg-gray-700 flex items-center space-x-2"
+                          onClick={handleReportClick}
+                        >
+                          <AlertCircle className="w-4 h-4" />
+                          <span>Report this post</span>
+                        </button>
+                      </>
+                    )}
+                  </motion.div>
+                )}
+              </AnimatePresence>
             </div>
+          </div>
 
-            {/* Save button */}
-            <button
-              className={`p-1.5 rounded-full transition-colors ${
-                isSaved
-                  ? "text-yellow-500 dark:text-yellow-400"
-                  : "text-gray-500 dark:text-gray-400 hover:text-yellow-500 dark:hover:text-yellow-400"
-              }`}
-              onClick={toggleSave}
-              aria-label={isSaved ? "Unsave article" : "Save article"}
-              aria-pressed={isSaved}
+          {/* Category and Trust Rating */}
+          <div className="px-4 pb-2 flex items-center space-x-2">
+            <Link
+              href={`/categories/${articleData.category?.toLowerCase() || "general"}`}
+              className="px-3 py-1 text-xs font-medium text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-900/30 rounded-full capitalize hover:bg-blue-100 dark:hover:bg-blue-900/50 transition-colors"
+              onClick={(e) => e.stopPropagation()}
+              aria-label={`Category: ${articleData.category || "General"}`}
             >
-              {isSaved ? <BookmarkCheck className="w-5 h-5" /> : <Bookmark className="w-5 h-5" />}
+              {articleData.category || "General"}
+            </Link>
+
+            {/* Trust Rating Component */}
+            <TrustRating articleData={articleData} />
+          </div>
+
+          {/* Title */}
+          <div className="px-4 pb-4">
+            <h2 className="font-serif font-bold text-xl text-gray-900 dark:text-gray-100 capitalize hover:underline decoration-2 underline-offset-2">
+              {articleData.title}
+            </h2>
+          </div>
+
+          {/* Content preview */}
+          <div className="px-4 pb-3">
+            <p className="text-gray-600 dark:text-gray-300 text-md">
+              {articleData.description
+                ? formatText(articleData.description)
+                : formatText(truncateContent(articleData.content, 150))}
+            </p>
+
+            {/* Add this new element to indicate this is just a preview */}
+            <div className="mt-2 flex items-center text-sm">
+              <ChevronRight className="w-4 h-4 text-mainColor mr-1" />
+              <span className="font-medium text-mainColor">Read full article</span>
+            </div>
+          </div>
+
+          {/* Media */}
+          <div>{displayMedia()}</div>
+
+          {/* Action bar */}
+          <div className="p-4 pt-3">
+            <div className="flex items-center justify-between">
+              {/* Engagement stats */}
+              <div className="flex items-center space-x-4 text-sm text-gray-500 dark:text-gray-400">
+                <div className="flex items-center space-x-1">
+                  <ArrowBigUp className="w-4 h-4" />
+                  <span>{likeCount}</span>
+                </div>
+                <div className="flex items-center space-x-1">
+                  <ArrowBigDown className="w-4 h-4" />
+                  <span>{dislikeCount}</span>
+                </div>
+                <div className="flex items-center space-x-1">
+                  <MessageCircle className="w-4 h-4" />
+                  <span>{articleData.comments?.length || 0}</span>
+                </div>
+                <div className="flex items-center space-x-1">
+                  <Eye className="w-4 h-4" />
+                  <span>{articleData.views || 0}</span>
+                </div>
+              </div>
+
+              {/* Save button */}
+              <button
+                className={`p-1.5 rounded-full transition-colors ${
+                  isSaved
+                    ? "text-yellow-500 dark:text-yellow-400"
+                    : "text-gray-500 dark:text-gray-400 hover:text-yellow-500 dark:hover:text-yellow-400"
+                }`}
+                onClick={toggleSave}
+                aria-label={isSaved ? "Unsave article" : "Save article"}
+                aria-pressed={isSaved}
+              >
+                {isSaved ? <BookmarkCheck className="w-5 h-5" /> : <Bookmark className="w-5 h-5" />}
+              </button>
+            </div>
+          </div>
+
+          {/* Action buttons */}
+          <div className="border-t border-gray-200 dark:border-gray-700 grid grid-cols-2 divide-x divide-gray-200 dark:divide-gray-700">
+            <Link
+              href={`/post/${articleData._id}#comments`}
+              className="p-3 flex items-center justify-center space-x-2 text-gray-500 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors"
+              onClick={(e) => e.stopPropagation()}
+              aria-label={`Comments (${articleData.comments?.length || 0})`}
+            >
+              <MessageCircle className="w-5 h-5" />
+              <span className="font-medium">Comment</span>
+            </Link>
+
+            <button
+              className="p-3 flex items-center justify-center space-x-2 text-gray-500 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors"
+              onClick={handleShare}
+              aria-label="Share"
+            >
+              <Share2 className="w-5 h-5" />
+              <span className="font-medium">Share</span>
             </button>
           </div>
         </div>
+      </motion.article>
 
-        {/* Action buttons */}
-        <div className="border-t border-gray-200 dark:border-gray-700 grid grid-cols-2 divide-x divide-gray-200 dark:divide-gray-700">
-          <Link
-            href={`/post/${articleData._id}#comments`}
-            className="p-3 flex items-center justify-center space-x-2 text-gray-500 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors"
-            onClick={(e) => e.stopPropagation()}
-            aria-label={`Comments (${articleData.comments?.length || 0})`}
-          >
-            <MessageCircle className="w-5 h-5" />
-            <span className="font-medium">Comment</span>
-          </Link>
-
-          <button
-            className="p-3 flex items-center justify-center space-x-2 text-gray-500 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors"
-            onClick={handleShare}
-            aria-label="Share"
-          >
-            <Share2 className="w-5 h-5" />
-            <span className="font-medium">Share</span>
-          </button>
-        </div>
-      </div>
-    </motion.article>
+      {/* Report Modal */}
+      <ReportModal
+        articleId={articleData._id}
+        isOpen={showReportModal}
+        onClose={() => setShowReportModal(false)}
+        onSuccess={handleReportSuccess}
+      />
+    </>
   )
 }
 

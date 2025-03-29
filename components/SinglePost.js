@@ -8,7 +8,6 @@ import { motion, AnimatePresence } from "framer-motion"
 import { ThemeContext } from "../app/ThemeProvider"
 
 import {
-  UserX,
   EyeOff,
   ArrowBigUp,
   ArrowBigDown,
@@ -25,6 +24,7 @@ import {
 import SourcesDisplay from "./sources-display"
 import { TrustRating } from "./article-trust-rating"
 import CommentSection from "./comment-section"
+import ReportModal from "./report-modal"
 
 const SinglePost = ({ post, initialComments = [] }) => {
   const [userLiked, setUserLiked] = useState(false)
@@ -37,9 +37,10 @@ const SinglePost = ({ post, initialComments = [] }) => {
   const [mediaLoaded, setMediaLoaded] = useState(false)
   const [mediaError, setMediaError] = useState(false)
   const [isVoting, setIsVoting] = useState(false)
-  const [actionTaken, setActionTaken] = useState(null) // 'hide', 'block', or 'report'
+  const [actionTaken, setActionTaken] = useState(null) // 'hide' or 'report'
   const [isMinimized, setIsMinimized] = useState(false)
   const [isDeleting, setIsDeleting] = useState(false)
+  const [showReportModal, setShowReportModal] = useState(false)
 
   const optionsRef = useRef(null)
   const router = useRouter()
@@ -177,6 +178,40 @@ const SinglePost = ({ post, initialComments = [] }) => {
     }
   }
 
+  const toggleSave = async (e) => {
+    e.preventDefault()
+
+    if (!user) {
+      router.push("/login")
+      return
+    }
+
+    setIsSaving(true)
+    try {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/news/${post._id}/save`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        credentials: "include",
+      })
+
+      if (response.ok) {
+        const data = await response.json()
+        setIsSaved(data.saved)
+      } else {
+        const errorData = await response.json()
+        console.error("Error saving article:", errorData)
+        alert(errorData.message || "Failed to save article. Please try again.")
+      }
+    } catch (error) {
+      console.error("Error saving article:", error)
+      alert("An error occurred while saving the article. Please try again.")
+    } finally {
+      setIsSaving(false)
+    }
+  }
+
   const handleShare = () => {
     if (navigator.share) {
       navigator
@@ -205,20 +240,15 @@ const SinglePost = ({ post, initialComments = [] }) => {
     // Here you would implement the actual hide functionality with an API call
   }
 
-  const handleBlockUser = (e) => {
+  const handleReportClick = (e) => {
     e.stopPropagation()
-    setActionTaken("block")
-    setIsMinimized(true)
     setShowOptions(false)
-    // Here you would implement the actual block functionality with an API call
+    setShowReportModal(true)
   }
 
-  const handleReportPost = (e) => {
-    e.stopPropagation()
+  const handleReportSuccess = () => {
     setActionTaken("report")
     setIsMinimized(true)
-    setShowOptions(false)
-    // Here you would implement the actual report functionality with an API call
   }
 
   const handleUndoAction = (e) => {
@@ -265,39 +295,6 @@ const SinglePost = ({ post, initialComments = [] }) => {
       alert("An error occurred while deleting the article. Please try again.")
     } finally {
       setIsDeleting(false)
-    }
-  }
-
-  const toggleSave = async (e) => {
-    e.preventDefault()
-
-    if (!user) {
-      router.push("/login")
-      return
-    }
-
-    setIsSaving(true)
-    try {
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/news/${post._id}/save`, {
-        method: isSaved ? "DELETE" : "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        credentials: "include",
-      })
-
-      if (response.ok) {
-        setIsSaved(!isSaved)
-      } else {
-        const errorData = await response.json()
-        console.error("Error saving article:", errorData)
-        alert(errorData.message || "Failed to save article. Please try again.")
-      }
-    } catch (error) {
-      console.error("Error saving article:", error)
-      alert("An error occurred while saving the article. Please try again.")
-    } finally {
-      setIsSaving(false)
     }
   }
 
@@ -499,10 +496,7 @@ const SinglePost = ({ post, initialComments = [] }) => {
     let actionIcon = <EyeOff className="w-5 h-5" />
     let actionText = "Post hidden"
 
-    if (actionTaken === "block") {
-      actionIcon = <UserX className="w-5 h-5" />
-      actionText = `User @${post.authorId?.username || post.authorusername || "unknown"} blocked`
-    } else if (actionTaken === "report") {
+    if (actionTaken === "report") {
       actionIcon = <AlertCircle className="w-5 h-5" />
       actionText = "Post reported"
     } else if (actionTaken === "delete") {
@@ -571,245 +565,248 @@ const SinglePost = ({ post, initialComments = [] }) => {
   }
 
   return (
-    <div className="max-w-4xl mx-auto p-1">
-      <article className="bg-white dark:bg-darkgrey border border-gray-200 dark:border-gray-700 rounded-xl shadow-sm overflow-hidden mb-6">
-        {/* Header with user info */}
-        <div className="p-2 sm:p-4 flex items-center justify-between border-b border-gray-200 dark:border-gray-700">
-          <Link
-            href={`/profile/${post.authorId?.username || post.authorusername || "unknown"}`}
-            className="flex items-center space-x-2 group"
-          >
-            {post.authorId?.profilePicture ? (
-              <Image
-                src={post.authorId.profilePicture || "/placeholder.svg"}
-                alt={post.authorId?.displayname || "Unknown"}
-                width={40}
-                height={40}
-                className="rounded-full"
-              />
-            ) : (
-              <div className="rounded-full bg-mainColor w-10 h-10 flex items-center justify-center text-white font-semibold text-lg cursor-pointer group-hover:shadow-md transition-shadow">
-                {post.authorId?.displayname ? post.authorId.displayname[0].toUpperCase() : "U"}
-              </div>
-            )}
-            <div>
-              <p className="font-medium text-gray-900 dark:text-gray-100 capitalize group-hover:underline">
-                {post.authorId?.displayname || "Unknown"}
-              </p>
-              <div className="flex items-center space-x-1">
-                <span className="text-sm text-gray-500 dark:text-gray-400">
-                  {post.authorId?.username
-                    ? `@${post.authorId.username}`
-                    : post.authorusername
-                      ? `@${post.authorusername}`
-                      : "N/A"}
-                </span>
-                <span className="text-gray-400">•</span>
-                <span className="text-sm text-gray-500 dark:text-gray-400 flex items-center">
-                  <Clock className="w-3.5 h-3.5 mr-1" />
-                  <time dateTime={post.publishedAt}>{calculateTimeAgo(post.publishedAt)}</time>
-                </span>
-              </div>
-            </div>
-          </Link>
-
-          {/* Options button */}
-          <div className="relative" ref={optionsRef}>
-            <button
-              className="p-1.5 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-500 dark:text-gray-400 transition-colors"
-              onClick={() => setShowOptions(!showOptions)}
-              aria-label="More options"
-              aria-expanded={showOptions}
-              aria-haspopup="true"
+    <>
+      <div className="max-w-4xl mx-auto p-1">
+        <article className="bg-white dark:bg-darkgrey border border-gray-200 dark:border-gray-700 rounded-xl shadow-sm overflow-hidden mb-6">
+          {/* Header with user info */}
+          <div className="p-2 sm:p-4 flex items-center justify-between border-b border-gray-200 dark:border-gray-700">
+            <Link
+              href={`/profile/${post.authorId?.username || post.authorusername || "unknown"}`}
+              className="flex items-center space-x-2 group"
             >
-              <MoreHorizontal className="w-5 h-5" />
-            </button>
+              {post.authorId?.profilePicture ? (
+                <Image
+                  src={post.authorId.profilePicture || "/placeholder.svg"}
+                  alt={post.authorId?.displayname || "Unknown"}
+                  width={40}
+                  height={40}
+                  className="rounded-full"
+                />
+              ) : (
+                <div className="rounded-full bg-mainColor w-10 h-10 flex items-center justify-center text-white font-semibold text-lg cursor-pointer group-hover:shadow-md transition-shadow">
+                  {post.authorId?.displayname ? post.authorId.displayname[0].toUpperCase() : "U"}
+                </div>
+              )}
+              <div>
+                <p className="font-medium text-gray-900 dark:text-gray-100 capitalize group-hover:underline">
+                  {post.authorId?.displayname || "Unknown"}
+                </p>
+                <div className="flex items-center space-x-1">
+                  <span className="text-sm text-gray-500 dark:text-gray-400">
+                    {post.authorId?.username
+                      ? `@${post.authorId.username}`
+                      : post.authorusername
+                        ? `@${post.authorusername}`
+                        : "N/A"}
+                  </span>
+                  <span className="text-gray-400">•</span>
+                  <span className="text-sm text-gray-500 dark:text-gray-400 flex items-center">
+                    <Clock className="w-3.5 h-3.5 mr-1" />
+                    <time dateTime={post.publishedAt}>{calculateTimeAgo(post.publishedAt)}</time>
+                  </span>
+                </div>
+              </div>
+            </Link>
 
-            <AnimatePresence>
-              {showOptions && (
-                <motion.div
-                  initial={{ opacity: 0, y: 10, scale: 0.95 }}
-                  animate={{ opacity: 1, y: 0, scale: 1 }}
-                  exit={{ opacity: 0, y: 10, scale: 0.95 }}
-                  transition={{ duration: 0.2 }}
-                  className="absolute right-0 mt-2 w-48 bg-white dark:bg-gray-800 rounded-lg shadow-lg border border-gray-200 dark:border-gray-700 z-10 py-2"
-                  onClick={(e) => e.stopPropagation()}
-                >
-                  {user && user.username === (post.authorId?.username || post.authorusername) ? (
-                    <button
-                      className="w-full text-left px-4 py-2 text-sm text-red-600 dark:text-red-400 hover:bg-gray-100 dark:hover:bg-gray-700 flex items-center space-x-2"
-                      onClick={handleDeleteArticle}
-                    >
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        width="16"
-                        height="16"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        stroke="currentColor"
-                        strokeWidth="2"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        className="w-4 h-4"
-                      >
-                        <path d="M3 6h18"></path>
-                        <path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"></path>
-                        <path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"></path>
-                      </svg>
-                      <span>Delete article</span>
-                    </button>
-                  ) : (
-                    <>
-                      <button
-                        className="w-full text-left px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 flex items-center space-x-2"
-                        onClick={handleHidePost}
-                      >
-                        <EyeOff className="w-4 h-4" />
-                        <span>Hide this post</span>
-                      </button>
-                      <button
-                        className="w-full text-left px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 flex items-center space-x-2"
-                        onClick={handleBlockUser}
-                      >
-                        <UserX className="w-4 h-4" />
-                        <span>Block this user</span>
-                      </button>
+            {/* Options button */}
+            <div className="relative" ref={optionsRef}>
+              <button
+                className="p-1.5 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-500 dark:text-gray-400 transition-colors"
+                onClick={() => setShowOptions(!showOptions)}
+                aria-label="More options"
+                aria-expanded={showOptions}
+                aria-haspopup="true"
+              >
+                <MoreHorizontal className="w-5 h-5" />
+              </button>
+
+              <AnimatePresence>
+                {showOptions && (
+                  <motion.div
+                    initial={{ opacity: 0, y: 10, scale: 0.95 }}
+                    animate={{ opacity: 1, y: 0, scale: 1 }}
+                    exit={{ opacity: 0, y: 10, scale: 0.95 }}
+                    transition={{ duration: 0.2 }}
+                    className="absolute right-0 mt-2 w-48 bg-white dark:bg-gray-800 rounded-lg shadow-lg border border-gray-200 dark:border-gray-700 z-10 py-2"
+                    onClick={(e) => e.stopPropagation()}
+                  >
+                    {user && user.username === (post.authorId?.username || post.authorusername) ? (
                       <button
                         className="w-full text-left px-4 py-2 text-sm text-red-600 dark:text-red-400 hover:bg-gray-100 dark:hover:bg-gray-700 flex items-center space-x-2"
-                        onClick={handleReportPost}
+                        onClick={handleDeleteArticle}
                       >
-                        <AlertCircle className="w-4 h-4" />
-                        <span>Report this post</span>
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          width="16"
+                          height="16"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          stroke="currentColor"
+                          strokeWidth="2"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          className="w-4 h-4"
+                        >
+                          <path d="M3 6h18"></path>
+                          <path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"></path>
+                          <path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"></path>
+                        </svg>
+                        <span>Delete article</span>
                       </button>
-                    </>
-                  )}
-                </motion.div>
-              )}
-            </AnimatePresence>
-          </div>
-        </div>
-
-        {/* Category and Trust Rating */}
-        <div className="px-4 py-2 flex items-center space-x-2">
-          <Link href={`/category/${post.category?.toLowerCase() || "general"}`}>
-            <div className="px-3 py-1 text-xs sm:text-sm font-medium text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-900/30 rounded-full capitalize hover:bg-blue-100 dark:hover:bg-blue-900/50 transition-colors">
-              {post.category || "General"}
+                    ) : (
+                      <>
+                        <button
+                          className="w-full text-left px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 flex items-center space-x-2"
+                          onClick={handleHidePost}
+                        >
+                          <EyeOff className="w-4 h-4" />
+                          <span>Hide this post</span>
+                        </button>
+                        <button
+                          className="w-full text-left px-4 py-2 text-sm text-red-600 dark:text-red-400 hover:bg-gray-100 dark:hover:bg-gray-700 flex items-center space-x-2"
+                          onClick={handleReportClick}
+                        >
+                          <AlertCircle className="w-4 h-4" />
+                          <span>Report this post</span>
+                        </button>
+                      </>
+                    )}
+                  </motion.div>
+                )}
+              </AnimatePresence>
             </div>
-          </Link>
+          </div>
 
-          {/* Trust Rating Component */}
-          <TrustRating articleData={post} />
-        </div>
+          {/* Category and Trust Rating */}
+          <div className="px-4 py-2 flex items-center space-x-2">
+            <Link href={`/category/${post.category?.toLowerCase() || "general"}`}>
+              <div className="px-3 py-1 text-xs sm:text-sm font-medium text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-900/30 rounded-full capitalize hover:bg-blue-100 dark:hover:bg-blue-900/50 transition-colors">
+                {post.category || "General"}
+              </div>
+            </Link>
 
-        {/* Content */}
-        <div className="p-2 sm:p-4">
-          {/* Title */}
-          <h1 className="font-serif font-bold text-2xl m-2 sm:text-3xl text-gray-900 dark:text-gray-100 mb-10">
-            {post.title}
-          </h1>
-
-          {/* Media */}
-          {displayMedia()}
+            {/* Trust Rating Component */}
+            <TrustRating articleData={post} />
+          </div>
 
           {/* Content */}
-          <div className="prose prose-sm sm:prose max-w-none dark:prose-invert">
-            {formatContent(post.content)}
-            {/* Sources section */}
-            {post.sources && post.sources.length > 0 && (
-              <div className="mt-6 pt-4 border-t border-gray-200 dark:border-gray-700">
-                <SourcesDisplay sources={post.sources} />
-              </div>
-            )}
-          </div>
+          <div className="p-2 sm:p-4">
+            {/* Title */}
+            <h1 className="font-serif font-bold text-2xl m-2 sm:text-3xl text-gray-900 dark:text-gray-100 mb-10">
+              {post.title}
+            </h1>
 
-          {/* Post stats */}
-          <div className="flex items-center justify-between mt-6 pt-4 border-t border-gray-200 dark:border-gray-700">
-            <div className="flex items-center space-x-4 text-sm text-gray-500 dark:text-gray-400">
-              <span className="flex items-center">
-                <ArrowBigUp className={`w-4 h-4 mr-1 ${userLiked ? "text-green-500 dark:text-green-400" : ""}`} />
-                {upvoteCount}
-              </span>
-              <span className="flex items-center">
-                <ArrowBigDown className={`w-4 h-4 mr-1 ${userDisliked ? "text-red-500 dark:text-red-400" : ""}`} />
-                {downvoteCount}
-              </span>
-              <span className="flex items-center">
-                <MessageCircle className="w-4 h-4 mr-1" />
-                {initialComments.length || 0}
-              </span>
-              <span className="flex items-center">
-                <Eye className="w-4 h-4 mr-1" />
-                {post.views || 0}
-              </span>
+            {/* Media */}
+            {displayMedia()}
+
+            {/* Content */}
+            <div className="prose prose-sm sm:prose max-w-none dark:prose-invert">
+              {formatContent(post.content)}
+              {/* Sources section */}
+              {post.sources && post.sources.length > 0 && (
+                <div className="mt-6 pt-4 border-t border-gray-200 dark:border-gray-700">
+                  <SourcesDisplay sources={post.sources} />
+                </div>
+              )}
             </div>
 
-            {/* Save button */}
+            {/* Post stats */}
+            <div className="flex items-center justify-between mt-6 pt-4 border-t border-gray-200 dark:border-gray-700">
+              <div className="flex items-center space-x-4 text-sm text-gray-500 dark:text-gray-400">
+                <span className="flex items-center">
+                  <ArrowBigUp className={`w-4 h-4 mr-1 ${userLiked ? "text-green-500 dark:text-green-400" : ""}`} />
+                  {upvoteCount}
+                </span>
+                <span className="flex items-center">
+                  <ArrowBigDown className={`w-4 h-4 mr-1 ${userDisliked ? "text-red-500 dark:text-red-400" : ""}`} />
+                  {downvoteCount}
+                </span>
+                <span className="flex items-center">
+                  <MessageCircle className="w-4 h-4 mr-1" />
+                  {initialComments.length || 0}
+                </span>
+                <span className="flex items-center">
+                  <Eye className="w-4 h-4 mr-1" />
+                  {post.views || 0}
+                </span>
+              </div>
+
+              {/* Save button */}
+              <button
+                className={`p-1.5 rounded-full transition-colors ${
+                  isSaved
+                    ? "text-yellow-500 dark:text-yellow-400"
+                    : "text-gray-500 dark:text-gray-400 hover:text-yellow-500 dark:hover:text-yellow-400"
+                }`}
+                onClick={toggleSave}
+                disabled={isSaving}
+                aria-label={isSaved ? "Unsave article" : "Save article"}
+                aria-pressed={isSaved}
+              >
+                {isSaved ? <BookmarkCheck className="w-5 h-5" /> : <Bookmark className="w-5 h-5" />}
+              </button>
+            </div>
+          </div>
+
+          {/* Action buttons */}
+          <div className="border-t border-gray-200 dark:border-gray-700 grid grid-cols-3 divide-x divide-gray-200 dark:divide-gray-700">
             <button
-              className={`p-1.5 rounded-full transition-colors ${
-                isSaved
-                  ? "text-yellow-500 dark:text-yellow-400"
-                  : "text-gray-500 dark:text-gray-400 hover:text-yellow-500 dark:hover:text-yellow-400"
+              className={`py-3 flex items-center justify-center space-x-2 transition-colors ${
+                userLiked
+                  ? "text-green-500 dark:text-green-400"
+                  : "text-gray-500 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-800"
               }`}
-              onClick={toggleSave}
-              disabled={isSaving}
-              aria-label={isSaved ? "Unsave article" : "Save article"}
-              aria-pressed={isSaved}
+              onClick={handleUpvote}
+              disabled={isVoting}
+              aria-label="Upvote"
+              aria-pressed={userLiked}
             >
-              {isSaved ? <BookmarkCheck className="w-5 h-5" /> : <Bookmark className="w-5 h-5" />}
+              <ArrowBigUp className="w-5 h-5" />
+              <span className="font-medium">Upvote</span>
+            </button>
+
+            <button
+              className={`py-3 flex items-center justify-center space-x-2 transition-colors ${
+                userDisliked
+                  ? "text-red-500 dark:text-red-400"
+                  : "text-gray-500 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-800"
+              }`}
+              onClick={handleDownvote}
+              disabled={isVoting}
+              aria-label="Downvote"
+              aria-pressed={userDisliked}
+            >
+              <ArrowBigDown className="w-5 h-5" />
+              <span className="font-medium">Downvote</span>
+            </button>
+
+            <button
+              className="py-3 flex items-center justify-center space-x-2 text-gray-500 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors"
+              onClick={handleShare}
+              aria-label="Share"
+            >
+              <Share2 className="w-5 h-5" />
+              <span className="font-medium">Share</span>
             </button>
           </div>
-        </div>
+        </article>
 
-        {/* Action buttons */}
-        <div className="border-t border-gray-200 dark:border-gray-700 grid grid-cols-3 divide-x divide-gray-200 dark:divide-gray-700">
-          <button
-            className={`py-3 flex items-center justify-center space-x-2 transition-colors ${
-              userLiked
-                ? "text-green-500 dark:text-green-400"
-                : "text-gray-500 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-800"
-            }`}
-            onClick={handleUpvote}
-            disabled={isVoting}
-            aria-label="Upvote"
-            aria-pressed={userLiked}
-          >
-            <ArrowBigUp className="w-5 h-5" />
-            <span className="font-medium">Upvote</span>
-          </button>
+        {/* Comments section */}
+        <CommentSection
+          postId={post._id}
+          initialComments={initialComments}
+          postAuthorUsername={post.authorId?.username || post.authorusername}
+        />
+      </div>
 
-          <button
-            className={`py-3 flex items-center justify-center space-x-2 transition-colors ${
-              userDisliked
-                ? "text-red-500 dark:text-red-400"
-                : "text-gray-500 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-800"
-            }`}
-            onClick={handleDownvote}
-            disabled={isVoting}
-            aria-label="Downvote"
-            aria-pressed={userDisliked}
-          >
-            <ArrowBigDown className="w-5 h-5" />
-            <span className="font-medium">Downvote</span>
-          </button>
-
-          <button
-            className="py-3 flex items-center justify-center space-x-2 text-gray-500 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors"
-            onClick={handleShare}
-            aria-label="Share"
-          >
-            <Share2 className="w-5 h-5" />
-            <span className="font-medium">Share</span>
-          </button>
-        </div>
-      </article>
-
-      {/* Comments section */}
-      <CommentSection
-        postId={post._id}
-        initialComments={initialComments}
-        postAuthorUsername={post.authorId?.username || post.authorusername}
+      {/* Report Modal */}
+      <ReportModal
+        articleId={post._id}
+        isOpen={showReportModal}
+        onClose={() => setShowReportModal(false)}
+        onSuccess={handleReportSuccess}
       />
-    </div>
+    </>
   )
 }
 
