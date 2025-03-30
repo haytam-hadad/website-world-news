@@ -81,7 +81,7 @@ export default function Page({ params }) {
     }
 
     fetchUserData()
-  }, [user])
+  }, [user,activeTab])
 
   const handleTabChange = (value) => {
     setActiveTab(value)

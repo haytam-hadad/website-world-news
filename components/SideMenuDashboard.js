@@ -33,12 +33,12 @@ const SideMenuDashboard = ({ setVisible }) => {
     },
     {
       name: "Update Info",
-      path: "/update-info",
+      path: "/dashboard/update-info",
       icon: <Edit3 size={20} />,
     },
     {
       name: "Settings",
-      path: "/settings",
+      path: "/dashboard/settings",
       icon: <Settings size={20} />,
     },
   ]

@@ -520,13 +520,6 @@ const UserDashboard = () => {
     }
   }
 
-  if (loading)
-    return (
-      <div className="flex justify-center items-center min-h-[60vh]">
-        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-mainColor"></div>
-      </div>
-    )
-
   if (!userData)
     return (
       <div className="max-w-4xl p-6 mx-auto bg-white dark:bg-darkgrey rounded-xl shadow-md">

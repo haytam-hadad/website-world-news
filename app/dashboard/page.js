@@ -1,7 +1,7 @@
 "use client"
 
 import { useState, useEffect, useContext } from "react"
-import { ThemeContext } from "../../ThemeProvider"
+import { ThemeContext } from "../ThemeProvider"
 import {
   BarChart3,
   Users,

@@ -11,7 +11,7 @@
     --mainColor: #4B70F5;
     --main2Color: #3DC2EC;
     --secondaryColor: #fff;
-    --thirdColor: #0d1117;
+    --thirdColor: #10151c;
     --mainTextColor: #000;
     --lightgrey: #fafafa;
     --darkgrey: #161b22;
@@ -51,8 +51,7 @@
     /* Custom dark mode colors */
     --mainColor: #567afd;
     --main2Color: #3DC2EC;
-    --secondaryColor: #0d1117;
-    --thirdColor: #161b22;
+    --secondaryColor: #0c0f15;
     --mainTextColor: #fff;
     --lightgrey: #1c2128;
     --darkgrey: #161b22;
