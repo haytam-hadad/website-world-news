@@ -2,6 +2,7 @@
 import "../globals.css"
 import Header from "@/components/Header"
 import { GoUp } from "@/components/GoUp"
+import Post from "@/components/post"
 import SideMenu from "@/components/SideMenu"
 import RightSidebar from "@/components/right-sidebar"
 import { useState, useContext, useEffect } from "react"
@@ -59,7 +60,8 @@ function LayoutContent({ children }) {
           >
             {children}
           </motion.div>
-          <GoUp />
+          <GoUp/>
+          <Post/>
         </div>
 
         {/* Right Sidebar - Wide Desktop Only */}

@@ -447,7 +447,7 @@ const Article = ({ articleData }) => {
         className="w-full my-2 max-w-3xl mx-auto"
       >
         <div
-          className="bg-white dark:bg-darkgrey border border-gray-200 dark:border-gray-700 rounded-xl shadow-sm hover:shadow-md transition-shadow duration-200 overflow-hidden cursor-pointer"
+          className="bg-white dark:bg-darkgrey border border-gray-200 dark:border-gray-700 rounded-xl shadow-sm hover:shadow-md overflow-hidden cursor-pointer"
           role="article"
           tabIndex="0"
           onClick={handleClick}
@@ -583,24 +583,24 @@ const Article = ({ articleData }) => {
           </div>
 
           {/* Title */}
-          <div className="px-4 pb-4">
+          <div className="px-5 pb-4">
             <h2 className="font-serif font-bold text-xl text-gray-900 dark:text-gray-100 capitalize hover:underline decoration-2 underline-offset-2">
               {articleData.title}
             </h2>
           </div>
 
           {/* Content preview */}
-          <div className="px-4 pb-3">
-            <p className="text-gray-600 dark:text-gray-300 text-md">
+          <div className="px-5 pb-2">
+            <p className="text-gray-600 dark:text-gray-300 text-md break-words">
               {articleData.description
                 ? formatText(articleData.description)
                 : formatText(truncateContent(articleData.content, 150))}
             </p>
 
-            {/* Add this new element to indicate this is just a preview */}
-            <div className="mt-2 flex items-center text-sm">
-              <ChevronRight className="w-4 h-4 text-mainColor mr-1" />
-              <span className="font-medium text-mainColor">Read full article</span>
+            {/* Preview indicator */}
+            <div className="mt-2 flex items-center text-sm text-mainColor cursor-pointer hover:underline">
+              <ChevronRight className="w-4 h-4 mr-1" />
+              <span className="font-medium">Read full article</span>
             </div>
           </div>
 
