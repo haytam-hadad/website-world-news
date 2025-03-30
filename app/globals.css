@@ -7,87 +7,96 @@
 
 @layer base {
   :root {
-    --background: 0 0% 100%;
-    --foreground: 0 0% 3.9%;
-    --card: 0 0% 100%;
-    --card-foreground: 0 0% 3.9%;
-    --popover: 0 0% 100%;
-    --popover-foreground: 0 0% 3.9%;
-    --primary: 0 0% 9%;
-    --primary-foreground: 0 0% 98%;
-    --secondary: 0 0% 96.1%;
-    --secondary-foreground: 0 0% 9%;
-    --muted: 0 0% 96.1%;
-    --muted-foreground: 0 0% 45.1%;
-    --accent: 0 0% 96.1%;
-    --accent-foreground: 0 0% 9%;
-    --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 0 0% 98%;
-    --border: 0 0% 89.8%;
-    --input: 0 0% 89.8%;
-    --ring: 0 0% 3.9%;
-    --chart-1: 12 76% 61%;
-    --chart-2: 173 58% 39%;
-    --chart-3: 197 37% 24%;
-    --chart-4: 43 74% 66%;
-    --chart-5: 27 87% 67%;
-    --radius: 0.5rem;
-
-    /* royalblue 7418ff 6f00ff 6528F7  */
-    --mainColor: #4B70F5 ;
+    /* Custom application colors */
+    --mainColor: #4B70F5;
     --main2Color: #3DC2EC;
     --secondaryColor: #fff;
     --thirdColor: #0d1117;
     --mainTextColor: #000;
     --lightgrey: #fafafa;
     --darkgrey: #161b22;
-
+    
+    /* shadcn/ui theme colors - aligned with custom colors */
+    --background: 0 0% 100%;
+    --foreground: 0 0% 3.9%;
+    --card: 0 0% 100%;
+    --card-foreground: 0 0% 3.9%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 0 0% 3.9%;
+    --primary: 224 84% 63%; /* Matches --mainColor: #4B70F5 */
+    --primary-foreground: 0 0% 98%;
+    --secondary: 0 0% 96.1%;
+    --secondary-foreground: 0 0% 9%;
+    --muted: 0 0% 96.1%;
+    --muted-foreground: 0 0% 45.1%;
+    --accent: 196 83% 58%; /* Matches --main2Color: #3DC2EC */
+    --accent-foreground: 0 0% 9%;
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 0 0% 89.8%;
+    --input: 0 0% 89.8%;
+    --ring: 224 84% 63%; /* Matches --mainColor for consistent focus rings */
+    
+    /* Chart colors */
+    --chart-1: 224 84% 63%; /* Aligned with mainColor */
+    --chart-2: 196 83% 58%; /* Aligned with main2Color */
+    --chart-3: 197 37% 24%;
+    --chart-4: 43 74% 66%;
+    --chart-5: 27 87% 67%;
+    
+    --radius: 0.5rem;
   }
+  
   .dark {
-    --background: 0 0% 3.9%;
+    /* Custom dark mode colors */
+    --mainColor: #567afd;
+    --main2Color: #3DC2EC;
+    --secondaryColor: #0d1117;
+    --thirdColor: #161b22;
+    --mainTextColor: #fff;
+    --lightgrey: #1c2128;
+    --darkgrey: #161b22;
+    
+    /* shadcn/ui dark theme colors - aligned with custom colors */
+    --background: 222 18% 7%; /* Matches --thirdColor: #0d1117 */
     --foreground: 0 0% 98%;
-    --card: 0 0% 3.9%;
+    --card: 222 18% 7%;
     --card-foreground: 0 0% 98%;
-    --popover: 0 0% 3.9%;
+    --popover: 222 18% 7%;
     --popover-foreground: 0 0% 98%;
-    --primary: 0 0% 98%;
-    --primary-foreground: 0 0% 9%;
-    --secondary: 0 0% 14.9%;
+    --primary: 224 98% 67%; /* Matches --mainColor: #567afd */
+    --primary-foreground: 0 0% 98%;
+    --secondary: 215 14% 14%; /* Matches --darkgrey: #161b22 */
     --secondary-foreground: 0 0% 98%;
-    --muted: 0 0% 14.9%;
+    --muted: 215 14% 14%;
     --muted-foreground: 0 0% 63.9%;
-    --accent: 0 0% 14.9%;
+    --accent: 196 83% 58%; /* Matches --main2Color */
     --accent-foreground: 0 0% 98%;
     --destructive: 0 62.8% 30.6%;
     --destructive-foreground: 0 0% 98%;
-    --border: 0 0% 14.9%;
-    --input: 0 0% 14.9%;
-    --ring: 0 0% 83.1%;
-    --chart-1: 220 70% 50%;
-    --chart-2: 160 60% 45%;
+    --border: 215 14% 14%;
+    --input: 215 14% 14%;
+    --ring: 224 98% 67%; /* Matches --mainColor for consistent focus rings */
+    
+    /* Chart colors */
+    --chart-1: 224 98% 67%; /* Aligned with mainColor */
+    --chart-2: 196 83% 58%; /* Aligned with main2Color */
     --chart-3: 30 80% 55%;
     --chart-4: 280 65% 60%;
     --chart-5: 340 75% 55%;
-
-    --mainColor: #567afd ;
-
   }
 }
 
 body {
   font-family: "Poppins", sans-serif;
-  background-color: var(--secondaryColor);
+  @apply bg-background text-foreground;
 }
 
 @layer base {
-  body {
-    @apply bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-gray-100;
-  }
-
-  /* Custom Scrollbar Styling */
+  /* Custom Scrollbar Styling - Improved for better visibility and interaction */
   ::-webkit-scrollbar {
-    width: 5px;
-    height: 5px;
+    width: 6px;
+    height: 6px;
   }
 
   ::-webkit-scrollbar-track {
@@ -98,10 +107,11 @@ body {
   ::-webkit-scrollbar-thumb {
     background: #bbb;
     border-radius: 10px;
+    transition: background-color 0.2s ease;
   }
 
   ::-webkit-scrollbar-thumb:hover {
-    background: #13132c;
+    background: var(--mainColor);
   }
 
   /* Firefox scrollbar styling */
@@ -111,16 +121,21 @@ body {
   }
 
   .dark ::-webkit-scrollbar-thumb {
-    background: #13132c;
+    background: #2a2a3c;
   }
 
   .dark ::-webkit-scrollbar-thumb:hover {
-    background: #bbb;
+    background: var(--mainColor);
   }
 
   /* Firefox dark mode scrollbar */
   .dark * {
-    scrollbar-color: #13132c ;
+    scrollbar-color: #2a2a3c transparent;
+  }
+  
+  /* Border utility */
+  * {
+    @apply border-border;
   }
 }
 
@@ -133,17 +148,18 @@ body {
 :focus-visible {
   outline: 2px solid var(--mainColor);
   outline-offset: 2px;
+  @apply transition-all duration-200;
 }
 
 /* Smooth scrolling */
 html {
   scroll-behavior: smooth;
+  @apply antialiased;
 }
 
 /* Loading and transition animations */
 @keyframes pulse {
-  0%,
-  100% {
+  0%, 100% {
     opacity: 1;
   }
   50% {
@@ -164,57 +180,79 @@ html {
   display: none; /* Chrome, Safari and Opera */
 }
 
-@layer base {
-  * {
-    @apply border-border;
-  }
+@layer components {
   .nav_Link {
     @apply flex-grow border-r border-secondaryColor last:border-none transition-all hover:text-thirdColor font-semibold capitalize;
   }
+  
   .separator {
-    @apply text-[gray];
+    @apply text-muted-foreground;
   }
+  
   .title {
-    @apply text-xl md:text-2xl m-1 p-2 rounded-sm font-bold text-primary px-4 ;
+    @apply text-xl md:text-2xl m-1 p-2 rounded-sm font-bold text-foreground px-4;
   }
+  
   .side_menu_link {
-    @apply flex mb-1 border-l-4 border-transparent my-1 transition-all duration-100 rounded-xl hover:border-l-mainColor items-center text-lg space-x-2 w-full text-left px-5 py-3 hover:bg-primary hover:text-primary-foreground;
+    @apply flex mb-1 border-l-4 border-transparent my-1 transition-all duration-200 rounded-xl 
+           hover:border-l-primary items-center text-lg space-x-2 w-full text-left px-5 py-3 
+           hover:bg-primary/10 hover:text-primary;
   }
+  
   .side_menu_link_dashboard {
-    @apply flex mb-1 border-l-4 border-transparent my-1 transition-all duration-100 rounded-xl hover:border-l-primary-foreground items-center text-lg space-x-2 w-full text-left px-5 py-3 hover:bg-primary text-secondaryColor hover:text-primary-foreground;
+    @apply flex mb-1 border-l-4 border-transparent my-1 transition-all duration-200 rounded-xl 
+           hover:border-l-primary-foreground items-center text-lg space-x-2 w-full text-left px-5 py-3 
+           hover:bg-primary text-secondaryColor hover:text-primary-foreground;
   }
+  
   .form_input {
-    @apply w-full p-3 text-sm rounded-md bg-gray-100 border-l-4 border-mainColor ring-offset-background focus-visible:right-1 focus-visible:ring-ring focus-visible:ring-offset-2 dark:bg-darkgrey dark:text-foreground;
+    @apply w-full p-3 text-sm rounded-md bg-secondary border-l-4 border-primary 
+           ring-offset-background focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 
+           dark:bg-darkgrey dark:text-foreground transition-colors duration-200;
   }
+  
   .main_btn {
-    @apply w-full bg-mainColor text-lg hover:bg-primary rounded-lg p-3 text-primary-foreground font-semibold hover:opacity-95 shadow-sm;
+    @apply w-full bg-primary text-lg hover:bg-primary/90 rounded-lg p-3 text-primary-foreground 
+           font-semibold shadow-sm transition-all duration-200 hover:shadow-md active:scale-[0.98];
   }
 
   /* Improved button focus styles */
   button:focus-visible {
-    @apply outline-none ring-2 ring-mainColor ring-offset-2;
+    @apply outline-none ring-2 ring-primary ring-offset-2 transition-shadow duration-200;
   }
 
   /* Improved form input focus styles */
   input:focus-visible,
   textarea:focus-visible,
   select:focus-visible {
-    @apply outline-none ring-2 ring-mainColor ring-offset-1;
-  }
-
-  /* Responsive typography */
-  h1,
-  h2,
-  h3,
-  h4,
-  h5,
-  h6 {
-    @apply tracking-tight;
-  }
-
-  /* Better link hover states */
-  a:not(.no-underline):hover {
-    @apply underline-offset-4 decoration-2;
+    @apply outline-none ring-2 ring-primary ring-offset-1 transition-shadow duration-200;
   }
 }
 
+/* Responsive typography */
+h1, h2, h3, h4, h5, h6 {
+  @apply tracking-tight font-medium;
+}
+
+/* Better link hover states */
+a:not(.no-underline):hover {
+  @apply underline-offset-4 decoration-2 decoration-primary/70 transition-all duration-200;
+}
+
+/* Improved card hover effects */
+.hover-card {
+  @apply transition-all duration-300 hover:shadow-md hover:translate-y-[-2px];
+}
+
+/* Responsive padding utility classes */
+.responsive-p {
+  @apply p-3 sm:p-4 md:p-5;
+}
+
+.responsive-px {
+  @apply px-3 sm:px-4 md:px-6;
+}
+
+.responsive-py {
+  @apply py-2 sm:py-3 md:py-4;
+}

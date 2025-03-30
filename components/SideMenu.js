@@ -9,8 +9,6 @@ import {
   Trophy,
   Landmark,
   BarChartIcon as ChartNoAxesCombined,
-  ChevronUp,
-  ChevronDown,
   TestTube,
   Plus,
   Sun,
@@ -19,15 +17,15 @@ import {
   UserPlus,
   Users,
   BookOpen,
-  Bell,
   Bookmark,
   ChevronRight,
   Briefcase,
 } from "lucide-react"
 import Link from "next/link"
-import { motion, AnimatePresence } from "framer-motion"
+import { motion } from "framer-motion"
 import { Label } from "@/components/ui/label"
 import { usePathname } from "next/navigation"
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion"
 
 const menuItems = [
   {
@@ -51,8 +49,7 @@ const menuItems = [
 ]
 
 const SideMenu = ({ setVisible }) => {
-  const [categoriesVisible, setCategoriesVisible] = useState(true)
-  const [personalVisible, setPersonalVisible] = useState(true)
+  const [expandedSections, setExpandedSections] = useState(["categories", "personal"])
   const { theme, setTheme, user } = useContext(ThemeContext)
   const activePath = usePathname()
 
@@ -117,48 +114,47 @@ const SideMenu = ({ setVisible }) => {
         {/* Post Button (for logged in users) */}
         {user && (
           <>
-          <Link href="/add" className="block">
-            <button
-              onClick={() => setVisible(false)}
-              className={`flex items-center outline outline-1 outline-offset-[-4px] justify-center gap-2 w-full p-3.5 rounded-xl transition-all duration-300 ${
-                activePath === "/add"
-                  ? "bg-mainColor text-white font-medium shadow-md shadow-mainColor/20"
-                  : "bg-mainColor/10 text-mainColor hover:bg-mainColor/20 hover:shadow-sm"
-              }`}
-            >
-              <Plus size={20} />
-              <span className="text-base font-semibold">Create Post</span>
-            </button>
-          </Link>
-          <Link href="/subscriptions" className="block">
-          <button
-            onClick={() => setVisible(false)}
-            className={`flex items-center w-full p-3.5 rounded-xl transition-all duration-300 ${
-              activePath === "/subscriptions"
-                ? "bg-mainColor text-white font-medium shadow-md shadow-mainColor/20"
-                : "text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-800/70 hover:text-gray-900 dark:hover:text-white"
-            }`}
-            aria-label="Subscriptions"
-          >
-            <Users size={20} className={`mr-3 ${activePath === "/subscriptions" ? "" : "text-mainColor"}`} />
-            <span className="text-base font-medium">Subscriptions</span>
-          </button>
-        </Link>
-        <Link href="/saved" className="block">
-          <button
-            onClick={() => setVisible(false)}
-            className={`flex items-center w-full p-3.5 rounded-xl transition-all duration-300 ${
-              activePath === "/saved"
-                ? "bg-mainColor text-white font-medium shadow-md shadow-mainColor/20"
-                : "text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-800/70 hover:text-gray-900 dark:hover:text-white"
-            }`}
-            aria-label="Saved"
-          >
-            <Bookmark size={20} className={`mr-3 ${activePath === "/saved" ? "" : "text-mainColor"}`} />
-            <span className="text-base font-medium">Saved</span>
-          </button>
-        </Link>
-
+            <Link href="/add" className="block">
+              <button
+                onClick={() => setVisible(false)}
+                className={`flex items-center outline outline-1 outline-offset-[-4px] justify-center gap-2 w-full p-3.5 rounded-xl transition-all duration-300 ${
+                  activePath === "/add"
+                    ? "bg-mainColor text-white font-medium shadow-md shadow-mainColor/20"
+                    : "bg-mainColor/10 text-mainColor hover:bg-mainColor/20 hover:shadow-sm"
+                }`}
+              >
+                <Plus size={20} />
+                <span className="text-base font-semibold">Create Post</span>
+              </button>
+            </Link>
+            <Link href="/subscriptions" className="block">
+              <button
+                onClick={() => setVisible(false)}
+                className={`flex items-center w-full p-3.5 rounded-xl transition-all duration-300 ${
+                  activePath === "/subscriptions"
+                    ? "bg-mainColor text-white font-medium shadow-md shadow-mainColor/20"
+                    : "text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-800/70 hover:text-gray-900 dark:hover:text-white"
+                }`}
+                aria-label="Subscriptions"
+              >
+                <Users size={20} className={`mr-3 ${activePath === "/subscriptions" ? "" : "text-mainColor"}`} />
+                <span className="text-base font-medium">Subscriptions</span>
+              </button>
+            </Link>
+            <Link href="/saved" className="block">
+              <button
+                onClick={() => setVisible(false)}
+                className={`flex items-center w-full p-3.5 rounded-xl transition-all duration-300 ${
+                  activePath === "/saved"
+                    ? "bg-mainColor text-white font-medium shadow-md shadow-mainColor/20"
+                    : "text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-800/70 hover:text-gray-900 dark:hover:text-white"
+                }`}
+                aria-label="Saved"
+              >
+                <Bookmark size={20} className={`mr-3 ${activePath === "/saved" ? "" : "text-mainColor"}`} />
+                <span className="text-base font-medium">Saved</span>
+              </button>
+            </Link>
           </>
         )}
 
@@ -209,65 +205,49 @@ const SideMenu = ({ setVisible }) => {
             <div className="w-full border-t border-gray-100 dark:border-gray-800"></div>
           </div>
           <div className="relative flex justify-center">
-            <span className="bg-white dark:bg-gray-900 px-2 text-xs text-gray-400 dark:text-gray-500">sections</span>
+            <span className="bg-white dark:bg-darkgrey px-2 text-xs text-gray-400 dark:text-gray-500">sections</span>
           </div>
         </div>
 
         {/* Categories Section */}
-        <div>
-          <button
-            className="flex items-center justify-between w-full p-3.5 rounded-xl transition-all duration-300 text-mainColor font-medium hover:bg-gray-50 dark:hover:bg-gray-800/70 group"
-            onClick={() => setCategoriesVisible(!categoriesVisible)}
-            aria-expanded={categoriesVisible}
-          >
-            <div className="flex items-center">
-              <BookOpen size={20} className="mr-3 group-hover:text-mainColor/80 transition-colors" />
-              <span className="group-hover:text-mainColor/80 transition-colors">Categories</span>
-            </div>
-            <div className="bg-gray-100 dark:bg-gray-800 rounded-full p-1 group-hover:bg-gray-200 dark:group-hover:bg-gray-700 transition-colors">
-              {categoriesVisible ? <ChevronUp size={16} /> : <ChevronDown size={16} />}
-            </div>
-          </button>
-
-          <AnimatePresence initial={false}>
-            {categoriesVisible && (
-              <motion.div
-                initial={{ height: 0, opacity: 0 }}
-                animate={{ height: "auto", opacity: 1 }}
-                exit={{ height: 0, opacity: 0 }}
-                transition={{ duration: 0.3, ease: "easeInOut" }}
-                className="overflow-hidden"
-              >
-                <div className="flex flex-col pl-4 max-h-[calc(100vh-300px)] overflow-y-auto pr-2 py-1">
-                  {menuItems.map(({ name, path, icon }) => (
-                    <Link key={path} href={path} className="block">
-                      <button
-                        onClick={() => setVisible(false)}
-                        className={`flex items-center w-full p-3 rounded-xl transition-all duration-300 ${
-                          activePath === path
-                            ? "bg-mainColor/10 text-mainColor font-medium"
-                            : "text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800/70 hover:text-gray-900 dark:hover:text-white"
-                        }`}
-                      >
-                        <span className="mr-3 text-mainColor">{icon}</span>
-                        <span className="text-base">{name}</span>
-                      </button>
-                    </Link>
-                  ))}
-                  <Link href="/categories" className="block mt-2">
+        <Accordion type="multiple" defaultValue={expandedSections} className="space-y-1">
+          <AccordionItem value="categories" className="border-0">
+            <AccordionTrigger className="flex items-center justify-between w-full p-3.5 rounded-xl transition-all duration-300 text-mainColor font-medium hover:bg-gray-50 dark:hover:bg-gray-800/70 group hover:no-underline py-0">
+              <div className="flex items-center">
+                <BookOpen size={20} className="mr-3 group-hover:text-mainColor/80 transition-colors" />
+                <span className="group-hover:text-mainColor/80 transition-colors p-2">Categories</span>
+              </div>
+            </AccordionTrigger>
+            <AccordionContent className="pt-1 pb-0">
+              <div className="flex flex-col pl-4 max-h-[calc(100vh-300px)] overflow-y-auto pr-2 py-1">
+                {menuItems.map(({ name, path, icon }) => (
+                  <Link key={path} href={path} className="block">
                     <button
                       onClick={() => setVisible(false)}
-                      className="flex items-center justify-between w-full p-1 rounded-xl transition-all duration-300 text-mainColor hover:bg-gray-50 dark:hover:bg-gray-800/70 mt-1"
+                      className={`flex items-center w-full p-3 rounded-xl transition-all duration-300 ${
+                        activePath === path
+                          ? "bg-mainColor/10 text-mainColor font-medium"
+                          : "text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800/70 hover:text-gray-900 dark:hover:text-white"
+                      }`}
                     >
-                      <span className="text-base font-medium">View All Categories</span>
-                        <ChevronRight size={11} />
+                      <span className="mr-3 text-mainColor">{icon}</span>
+                      <span className="text-base">{name}</span>
                     </button>
                   </Link>
-                </div>
-              </motion.div>
-            )}
-          </AnimatePresence>
-        </div>
+                ))}
+                <Link href="/categories" className="block mt-2">
+                  <button
+                    onClick={() => setVisible(false)}
+                    className="flex items-center justify-between w-full p-1 rounded-xl transition-all duration-300 text-mainColor hover:bg-gray-50 dark:hover:bg-gray-800/70 mt-1"
+                  >
+                    <span className="text-base font-medium">View All Categories</span>
+                    <ChevronRight size={11} />
+                  </button>
+                </Link>
+              </div>
+            </AccordionContent>
+          </AccordionItem>
+        </Accordion>
       </div>
     </motion.div>
   )

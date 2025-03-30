@@ -2,7 +2,7 @@ import Image from "next/image"
 
 export default function Footer() {
   return (
-    <footer className="w-full py-6 border-t-8 border-mainColor bg-primary text-primary-foreground mt-auto">
+    <footer className="w-full py-6 border-t-8 border-mainColor dark:bg-white bg-thirdColor text-primary mt-auto">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex flex-col md:flex-row items-center justify-between space-y-4 md:space-y-0">
           <div className="flex items-center space-x-2 group">
@@ -21,20 +21,6 @@ export default function Footer() {
           <p className="text-sm md:text-base text-center opacity-90">
             Copyright &copy; {new Date().getFullYear()} All rights reserved.
           </p>
-
-          <div className="flex items-center space-x-4">
-            <select className="bg-transparent text-sm font-medium text-primary-foreground outline-none focus:ring-2">
-              <option className="bg-primary" value="en" defaultValue={"en"}>
-                English
-              </option>
-              <option className="bg-primary" value="fr">
-                Français
-              </option>
-              <option className="bg-primary" value="es">
-                Español
-              </option>
-            </select>
-          </div>
         </div>
       </div>
     </footer>

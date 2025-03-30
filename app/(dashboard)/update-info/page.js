@@ -677,7 +677,7 @@ const UserDashboard = () => {
               />
               <label
                 htmlFor="banner-upload"
-                className="flex items-center gap-2 px-3 py-2 bg-black/50 hover:bg-black/70 text-white rounded-lg cursor-pointer transition-colors"
+                className="flex items-center gap-2 px-3 py-2 bg-mainColor hover:bg-mainColor/20 text-white rounded-lg cursor-pointer transition-colors"
               >
                 <Upload className="w-4 h-4" />
                 <span>{userData.profileBanner ? "Change Banner" : "Add Banner"}</span>
@@ -772,12 +772,12 @@ const UserDashboard = () => {
                 {editMode ? (
                   <input
                     type="text"
-                    className="w-full text-primary p-3 rounded-lg bg-gray-50 dark:bg-gray-800 border border-gray-300 dark:border-gray-600 focus:ring-2 focus:ring-mainColor focus:border-transparent transition-colors"
+                    className="w-full p-3 rounded-lg bg-gray-50 dark:bg-gray-800 border border-gray-300 dark:border-gray-600 focus:ring-2 focus:ring-mainColor focus:border-transparent transition-colors"
                     value={userData.displayname || ""}
                     onChange={(e) => handleChange("displayname", e.target.value)}
                   />
                 ) : (
-                  <div className="p-3 text-primary bg-gray-50 dark:bg-gray-800 rounded-lg">
+                  <div className="p-3 bg-gray-50 dark:bg-gray-800 rounded-lg">
                     {userData.displayname || "Not set"}
                   </div>
                 )}
@@ -791,7 +791,7 @@ const UserDashboard = () => {
                   <div>
                     <input
                       type="email"
-                      className={`w-full text-primary p-3 rounded-lg bg-gray-50 dark:bg-gray-800 border ${
+                      className={`w-full p-3 rounded-lg bg-gray-50 dark:bg-gray-800 border ${
                         validationErrors.email
                           ? "border-red-500 dark:border-red-500"
                           : "border-gray-300 dark:border-gray-600"
@@ -807,7 +807,7 @@ const UserDashboard = () => {
                     )}
                   </div>
                 ) : (
-                  <div className="p-3 text-primary bg-gray-50 dark:bg-gray-800 rounded-lg">
+                  <div className="p-3 bg-gray-50 dark:bg-gray-800 rounded-lg">
                     {userData.email || "Not set"}
                   </div>
                 )}
@@ -820,12 +820,12 @@ const UserDashboard = () => {
                 {editMode ? (
                   <input
                     type="tel"
-                    className="w-full text-primary p-3 rounded-lg bg-gray-50 dark:bg-gray-800 border border-gray-300 dark:border-gray-600 focus:ring-2 focus:ring-mainColor focus:border-transparent transition-colors"
+                    className="w-full p-3 rounded-lg bg-gray-50 dark:bg-gray-800 border border-gray-300 dark:border-gray-600 focus:ring-2 focus:ring-mainColor focus:border-transparent transition-colors"
                     value={userData.phone || ""}
                     onChange={(e) => handleChange("phone", e.target.value)}
                   />
                 ) : (
-                  <div className="p-3 text-primary bg-gray-50 dark:bg-gray-800 rounded-lg">
+                  <div className="p-3 bg-gray-50 dark:bg-gray-800 rounded-lg">
                     {userData.phone || "Not set"}
                   </div>
                 )}
@@ -835,12 +835,12 @@ const UserDashboard = () => {
                 <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Bio</label>
                 {editMode ? (
                   <textarea
-                    className="w-full text-primary p-3 rounded-lg bg-gray-50 dark:bg-gray-800 border border-gray-300 dark:border-gray-600 focus:ring-2 focus:ring-mainColor focus:border-transparent transition-colors min-h-[100px]"
+                    className="w-full p-3 rounded-lg bg-gray-50 dark:bg-gray-800 border border-gray-300 dark:border-gray-600 focus:ring-2 focus:ring-mainColor focus:border-transparent transition-colors min-h-[100px]"
                     value={userData.bio || ""}
                     onChange={(e) => handleChange("bio", e.target.value)}
                   ></textarea>
                 ) : (
-                  <div className="p-3 text-primary bg-gray-50 dark:bg-gray-800 rounded-lg min-h-[100px]">
+                  <div className="p-3 bg-gray-50 dark:bg-gray-800 rounded-lg min-h-[100px]">
                     {userData.bio || "No bio provided"}
                   </div>
                 )}
@@ -861,12 +861,12 @@ const UserDashboard = () => {
                 {editMode ? (
                   <input
                     type="url"
-                    className="w-full p-3 text-primary rounded-lg bg-gray-50 dark:bg-gray-800 border border-gray-300 dark:border-gray-600 focus:ring-2 focus:ring-mainColor focus:border-transparent transition-colors"
+                    className="w-full p-3 rounded-lg bg-gray-50 dark:bg-gray-800 border border-gray-300 dark:border-gray-600 focus:ring-2 focus:ring-mainColor focus:border-transparent transition-colors"
                     value={userData.website || ""}
                     onChange={(e) => handleChange("website", e.target.value)}
                   />
                 ) : (
-                  <div className="p-3 text-primary bg-gray-50 dark:bg-gray-800 rounded-lg">
+                  <div className="p-3 bg-gray-50 dark:bg-gray-800 rounded-lg">
                     {userData.website ? (
                       <a
                         href={userData.website.startsWith("http") ? userData.website : `https://${userData.website}`}
@@ -890,12 +890,12 @@ const UserDashboard = () => {
                 {editMode ? (
                   <input
                     type="text"
-                    className="w-full p-3 text-primary rounded-lg bg-gray-50 dark:bg-gray-800 border border-gray-300 dark:border-gray-600 focus:ring-2 focus:ring-mainColor focus:border-transparent transition-colors"
+                    className="w-full p-3 rounded-lg bg-gray-50 dark:bg-gray-800 border border-gray-300 dark:border-gray-600 focus:ring-2 focus:ring-mainColor focus:border-transparent transition-colors"
                     value={userData.zipCode || ""}
                     onChange={(e) => handleChange("zipCode", e.target.value)}
                   />
                 ) : (
-                  <div className="p-3 text-primary bg-gray-50 dark:bg-gray-800 rounded-lg">
+                  <div className="p-3 bg-gray-50 dark:bg-gray-800 rounded-lg">
                     {userData.zipCode || "Not set"}
                   </div>
                 )}
@@ -907,7 +907,7 @@ const UserDashboard = () => {
                 </label>
                 {editMode ? (
                   <select
-                    className="w-full text-primary p-3 rounded-lg bg-gray-50 dark:bg-gray-800 border border-gray-300 dark:border-gray-600 focus:ring-2 focus:ring-mainColor focus:border-transparent transition-colors"
+                    className="w-full p-3 rounded-lg bg-gray-50 dark:bg-gray-800 border border-gray-300 dark:border-gray-600 focus:ring-2 focus:ring-mainColor focus:border-transparent transition-colors"
                     value={userData.country || ""}
                     onChange={(e) => handleChange("country", e.target.value)}
                   >
@@ -919,7 +919,7 @@ const UserDashboard = () => {
                     ))}
                   </select>
                 ) : (
-                  <div className="p-3 text-primary bg-gray-50 dark:bg-gray-800 rounded-lg">
+                  <div className="p-3 bg-gray-50 dark:bg-gray-800 rounded-lg">
                     {userData.country || "Not set"}
                   </div>
                 )}
@@ -932,12 +932,12 @@ const UserDashboard = () => {
                 {editMode ? (
                   <input
                     type="text"
-                    className="w-full p-3 text-primary rounded-lg bg-gray-50 dark:bg-gray-800 border border-gray-300 dark:border-gray-600 focus:ring-2 focus:ring-mainColor focus:border-transparent transition-colors"
+                    className="w-full p-3 rounded-lg bg-gray-50 dark:bg-gray-800 border border-gray-300 dark:border-gray-600 focus:ring-2 focus:ring-mainColor focus:border-transparent transition-colors"
                     value={userData.city || ""}
                     onChange={(e) => handleChange("city", e.target.value)}
                   />
                 ) : (
-                  <div className="p-3 text-primary bg-gray-50 dark:bg-gray-800 rounded-lg">
+                  <div className="p-3 bg-gray-50 dark:bg-gray-800 rounded-lg">
                     {userData.city || "Not set"}
                   </div>
                 )}
@@ -950,12 +950,12 @@ const UserDashboard = () => {
                 {editMode ? (
                   <input
                     type="date"
-                    className="w-full p-3 text-primary rounded-lg bg-gray-50 dark:bg-gray-800 border border-gray-300 dark:border-gray-600 focus:ring-2 focus:ring-mainColor focus:border-transparent transition-colors"
+                    className="w-full p-3 rounded-lg bg-gray-50 dark:bg-gray-800 border border-gray-300 dark:border-gray-600 focus:ring-2 focus:ring-mainColor focus:border-transparent transition-colors"
                     value={userData.birthdate ? new Date(userData.birthdate).toISOString().split("T")[0] : ""}
                     onChange={(e) => handleChange("birthdate", e.target.value)}
                   />
                 ) : (
-                  <div className="p-3 text-primary bg-gray-50 dark:bg-gray-800 rounded-lg">
+                  <div className="p-3 bg-gray-50 dark:bg-gray-800 rounded-lg">
                     {userData.birthdate ? new Date(userData.birthdate).toLocaleDateString() : "Not set"}
                   </div>
                 )}
@@ -968,7 +968,7 @@ const UserDashboard = () => {
             <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Gender</label>
             {editMode ? (
               <select
-                className="w-full text-primary p-3 rounded-lg bg-gray-50 dark:bg-gray-800 border border-gray-300 dark:border-gray-600 focus:ring-2 focus:ring-mainColor focus:border-transparent transition-colors"
+                className="w-full p-3 rounded-lg bg-gray-50 dark:bg-gray-800 border border-gray-300 dark:border-gray-600 focus:ring-2 focus:ring-mainColor focus:border-transparent transition-colors"
                 value={userData.gender || ""}
                 onChange={(e) => handleChange("gender", e.target.value)}
               >
@@ -978,7 +978,7 @@ const UserDashboard = () => {
                 <option value="U">Prefer not to say</option>
               </select>
             ) : (
-              <div className="p-3 text-primary bg-gray-50 dark:bg-gray-800 rounded-lg">
+              <div className="p-3 bg-gray-50 dark:bg-gray-800 rounded-lg">
                 {userData.gender ? (
                   <span className="capitalize">
                     {userData.gender === "M" ? "Male" : userData.gender === "F" ? "Female" : "Prefer not to say"}

@@ -32,7 +32,7 @@ export default async function Home() {
 
   return (
     <div>
-    <Welcome/>
+      <Welcome/>
       {/* Articles Section */}
       <h2 className="title">
         Latest News <ChevronDown className="ml-2 inline-block" />

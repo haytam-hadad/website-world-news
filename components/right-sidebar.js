@@ -2,40 +2,10 @@
 
 import { useState, useEffect, useContext } from "react"
 import Link from "next/link"
-import { motion, AnimatePresence } from "framer-motion"
-import { CheckCircle, ChevronDown, ChevronUp, UserCheck, TrendingUp, ExternalLink, Users } from "lucide-react"
+import { CheckCircle, UserCheck, TrendingUp, ExternalLink, Users } from "lucide-react"
 import Image from "next/image"
 import { ThemeContext } from "../app/ThemeProvider"
-
-// Section header component
-const SectionHeader = ({ icon: Icon, title, action, isExpanded, onToggle, id }) => {
-
-  return (
-    <div className="flex items-center justify-between mb-4">
-      <div className="flex items-center">
-        <Icon className="w-5 h-5 text-mainColor mr-2.5" aria-hidden="true" />
-        <h3 className="font-bold text-gray-900 dark:text-gray-100" id={id}>
-          {title}
-        </h3>
-      </div>
-      {action ? (
-        action
-      ) : (
-        <button
-          onClick={onToggle}
-          className="p-1.5 rounded-full hover:bg-gray-100 dark:hover:bg-gray-800 text-gray-500 dark:text-gray-400 focus:outline-none transition-colors duration-300"
-          aria-expanded={isExpanded}
-          aria-controls={`${id}-content`}
-          aria-label={isExpanded ? `Collapse ${title}` : `Expand ${title}`}
-        >
-          <div className="bg-gray-100 dark:bg-gray-800 rounded-full p-1 hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors">
-            {isExpanded ? <ChevronUp size={16} /> : <ChevronDown size={16} />}
-          </div>
-        </button>
-      )}
-    </div>
-  )
-}
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion"
 
 // User item component (used for both subscribers and subscriptions)
 const UserItem = ({ userData, lastActivity, isNew }) => {
@@ -126,12 +96,6 @@ const TrendingTopicItem = ({ topic }) => {
   )
 }
 
-// Animation variants
-const contentVariants = {
-  hidden: { opacity: 0, height: 0 },
-  visible: { opacity: 1, height: "auto", transition: { duration: 0.3, ease: "easeInOut" } },
-}
-
 const trendingTopics = [
   {
     id: 1,
@@ -165,23 +129,11 @@ const trendingTopics = [
 
 // Main RightSidebar component
 const RightSidebar = () => {
-  const [expandedSections, setExpandedSections] = useState({
-    subscriptions: true,
-    subscribers: true,
-    trending: true,
-  })
+  const [expandedSections, setExpandedSections] = useState(["subscriptions", "subscribers", "trending"])
   const [subscriptions, setSubscriptions] = useState([])
   const [subscribers, setSubscribers] = useState([])
   const [isLoading, setIsLoading] = useState(false)
   const { user } = useContext(ThemeContext)
-
-  // Toggle section expansion
-  const toggleSection = (section) => {
-    setExpandedSections((prev) => ({
-      ...prev,
-      [section]: !prev[section],
-    }))
-  }
 
   // Fetch user data (subscriptions and subscribers)
   useEffect(() => {
@@ -233,166 +185,133 @@ const RightSidebar = () => {
       <div className="p-3 space-y-4 h-full flex flex-col">
         {/* User Stats Summary - Only show if user is logged in */}
         {user && (
-          <Link href={`/profile/${user.username}/subscriptions`} 
+          <Link
+            href={`/profile/${user.username}/subscriptions`}
             className="block bg-lightgrey border hover:border-mainColor dark:bg-thirdColor text-center rounded-lg p-4 cursor-pointer"
-            >
-              <div className="flex items-center justify-around mb-2">
-                <div className="flex flex-col items-center">
-                  <div className="text-xl font-bold text-primary">{subscriptions.length}</div>
-                  <div className="text-xs text-primary">Subscriptions</div>
-                </div>
-                <div className="h-10 w-px bg-gray-200 dark:bg-gray-700"></div>
-                <div className="flex flex-col items-center">
-                  <div className="text-xl font-bold text-primary">{subscribers.length}</div>
-                  <div className="text-xs text-primary">Subscribers</div>
-                </div>
+          >
+            <div className="flex items-center justify-around mb-2">
+              <div className="flex flex-col items-center">
+                <div className="text-xl font-bold text-primary">{subscriptions.length}</div>
+                <div className="text-xs text-primary">Subscriptions</div>
               </div>
+              <div className="h-10 w-px bg-gray-200 dark:bg-gray-700"></div>
+              <div className="flex flex-col items-center">
+                <div className="text-xl font-bold text-primary">{subscribers.length}</div>
+                <div className="text-xs text-primary">Subscribers</div>
+              </div>
+            </div>
           </Link>
         )}
 
-        {/* Subscriptions Section */}
-        {showSubscriptions && (
-          <section
-            aria-labelledby="subscriptions-heading"
-            className="bg-white dark:bg-darkgrey rounded-xl border border-gray-100 dark:border-gray-800 p-3 shadow-sm"
-          >
-            <SectionHeader
-              icon={UserCheck}
-              title="Your Subscriptions"
-              isExpanded={expandedSections.subscriptions}
-              onToggle={() => toggleSection("subscriptions")}
-              id="subscriptions-heading"
-            />
-
-            <AnimatePresence initial={false}>
-              {expandedSections.subscriptions && (
-                <motion.div
-                  id="subscriptions-content"
-                  variants={contentVariants}
-                  initial="hidden"
-                  animate="visible"
-                  exit="hidden"
-                >
-                  <div className="space-y-1 max-h-[200px] overflow-y-auto scrollbar-thin scrollbar-thumb-gray-300 dark:scrollbar-thumb-gray-600 scrollbar-track-transparent">
-                    {subscriptions.map((subscription) => (
-                      <UserItem
-                        key={subscription._id || subscription.userId}
-                        userData={subscription}
-                        lastActivity={subscription.lastActivity}
-                      />
-                    ))}
-                  </div>
-
-                  <div className="mt-4 text-center">
-                    <Link
-                      href={`/profile/${user.username}/subscriptions`}
-                      className="inline-flex items-center text-mainColor text-sm font-medium hover:text-mainColor/80 transition-colors focus:outline-none group"
-                    >
-                      See all subscriptions
-                      <div className="ml-1.5 bg-mainColor/10 rounded-full p-1 group-hover:bg-mainColor/20 transition-colors">
-                        <ExternalLink className="w-3 h-3" aria-hidden="true" />
-                      </div>
-                    </Link>
-                  </div>
-                </motion.div>
-              )}
-            </AnimatePresence>
-          </section>
-        )}
-
-        {/* Subscribers Section */}
-        {showSubscribers && (
-          <section
-            aria-labelledby="subscribers-heading"
-            className="bg-white dark:bg-darkgrey rounded-xl border border-gray-100 dark:border-gray-800 p-3 shadow-sm"
-          >
-            <SectionHeader
-              icon={Users}
-              title="Your Subscribers"
-              isExpanded={expandedSections.subscribers}
-              onToggle={() => toggleSection("subscribers")}
-              id="subscribers-heading"
-            />
-
-            <AnimatePresence initial={false}>
-              {expandedSections.subscribers && (
-                <motion.div
-                  id="subscribers-content"
-                  variants={contentVariants}
-                  initial="hidden"
-                  animate="visible"
-                  exit="hidden"
-                >
-                  <div className="space-y-1 max-h-[200px] overflow-y-auto scrollbar-thin scrollbar-thumb-gray-300 dark:scrollbar-thumb-gray-600 scrollbar-track-transparent">
-                    {subscribers.map((subscriber) => (
-                      <UserItem
-                        key={subscriber._id || subscriber.userId}
-                        userData={subscriber}
-                        lastActivity={subscriber.lastActivity}
-                      />
-                    ))}
-                  </div>
-
-                  <div className="mt-4 text-center">
-                    <Link
-                      href={`/profile/${user.username}/subscriptions`}
-                      className="inline-flex items-center text-mainColor text-sm font-medium hover:text-mainColor/80 transition-colors focus:outline-none group"
-                    >
-                      See all subscribers
-                      <div className="ml-1.5 bg-mainColor/10 rounded-full p-1 group-hover:bg-mainColor/20 transition-colors">
-                        <ExternalLink className="w-3 h-3" aria-hidden="true" />
-                      </div>
-                    </Link>
-                  </div>
-                </motion.div>
-              )}
-            </AnimatePresence>
-          </section>
-        )}
-
-        {/* Trending Section */}
-        <section
-          aria-labelledby="trending-heading"
-          className="bg-white dark:bg-darkgrey rounded-xl border border-gray-100 dark:border-gray-800 p-5 shadow-sm"
-        >
-          <SectionHeader
-            icon={TrendingUp}
-            title="Trending Now"
-            isExpanded={expandedSections.trending}
-            onToggle={() => toggleSection("trending")}
-            id="trending-heading"
-          />
-
-          <AnimatePresence initial={false}>
-            {expandedSections.trending && (
-              <motion.div
-                id="trending-content"
-                variants={contentVariants}
-                initial="hidden"
-                animate="visible"
-                exit="hidden"
-              >
-                <div className="space-y-1 max-h-[200px] overflow-y-auto pr-1 scrollbar-thin scrollbar-thumb-gray-300 dark:scrollbar-thumb-gray-600 scrollbar-track-transparent">
-                  {trendingTopics.map((topic) => (
-                    <TrendingTopicItem key={topic.id} topic={topic} />
+        <Accordion type="multiple" defaultValue={expandedSections} className="space-y-4">
+          {/* Subscriptions Section */}
+          {showSubscriptions && (
+            <AccordionItem
+              value="subscriptions"
+              className="bg-white dark:bg-darkgrey rounded-xl border border-gray-100 dark:border-gray-800 p-3 shadow-sm"
+            >
+              <AccordionTrigger className="flex items-center justify-between py-0 hover:no-underline">
+                <div className="flex items-center">
+                  <UserCheck className="w-5 h-5 text-mainColor mr-2.5" aria-hidden="true" />
+                  <h3 className="font-bold text-gray-900 dark:text-gray-100">Your Subscriptions</h3>
+                </div>
+              </AccordionTrigger>
+              <AccordionContent>
+                <div className="space-y-1 max-h-[200px] overflow-y-auto scrollbar-thin scrollbar-thumb-gray-300 dark:scrollbar-thumb-gray-600 scrollbar-track-transparent">
+                  {subscriptions.map((subscription) => (
+                    <UserItem
+                      key={subscription._id || subscription.userId}
+                      userData={subscription}
+                      lastActivity={subscription.lastActivity}
+                    />
                   ))}
                 </div>
 
                 <div className="mt-4 text-center">
                   <Link
-                    href="/trends"
+                    href={`/profile/${user.username}/subscriptions`}
                     className="inline-flex items-center text-mainColor text-sm font-medium hover:text-mainColor/80 transition-colors focus:outline-none group"
                   >
-                    See all trending topics
+                    See all subscriptions
                     <div className="ml-1.5 bg-mainColor/10 rounded-full p-1 group-hover:bg-mainColor/20 transition-colors">
                       <ExternalLink className="w-3 h-3" aria-hidden="true" />
                     </div>
                   </Link>
                 </div>
-              </motion.div>
-            )}
-          </AnimatePresence>
-        </section>
+              </AccordionContent>
+            </AccordionItem>
+          )}
+
+          {/* Subscribers Section */}
+          {showSubscribers && (
+            <AccordionItem
+              value="subscribers"
+              className="bg-white dark:bg-darkgrey rounded-xl border border-gray-100 dark:border-gray-800 p-3 shadow-sm"
+            >
+              <AccordionTrigger className="flex items-center justify-between py-0 hover:no-underline">
+                <div className="flex items-center">
+                  <Users className="w-5 h-5 text-mainColor mr-2.5" aria-hidden="true" />
+                  <h3 className="font-bold text-gray-900 dark:text-gray-100">Your Subscribers</h3>
+                </div>
+              </AccordionTrigger>
+              <AccordionContent>
+                <div className="space-y-1 max-h-[200px] overflow-y-auto scrollbar-thin scrollbar-thumb-gray-300 dark:scrollbar-thumb-gray-600 scrollbar-track-transparent">
+                  {subscribers.map((subscriber) => (
+                    <UserItem
+                      key={subscriber._id || subscriber.userId}
+                      userData={subscriber}
+                      lastActivity={subscriber.lastActivity}
+                    />
+                  ))}
+                </div>
+
+                <div className="mt-4 text-center">
+                  <Link
+                    href={`/profile/${user.username}/subscriptions`}
+                    className="inline-flex items-center text-mainColor text-sm font-medium hover:text-mainColor/80 transition-colors focus:outline-none group"
+                  >
+                    See all subscribers
+                    <div className="ml-1.5 bg-mainColor/10 rounded-full p-1 group-hover:bg-mainColor/20 transition-colors">
+                      <ExternalLink className="w-3 h-3" aria-hidden="true" />
+                    </div>
+                  </Link>
+                </div>
+              </AccordionContent>
+            </AccordionItem>
+          )}
+
+          {/* Trending Section */}
+          <AccordionItem
+            value="trending"
+            className="bg-white dark:bg-darkgrey rounded-xl border border-gray-100 dark:border-gray-800 p-3 shadow-sm"
+          >
+            <AccordionTrigger className="flex items-center justify-between py-0 hover:no-underline">
+              <div className="flex items-center">
+                <TrendingUp className="w-5 h-5 text-mainColor mr-2.5" aria-hidden="true" />
+                <h3 className="font-bold text-gray-900 dark:text-gray-100">Trending Now</h3>
+              </div>
+            </AccordionTrigger>
+            <AccordionContent>
+              <div className="space-y-1 max-h-[200px] overflow-y-auto pr-1 scrollbar-thin scrollbar-thumb-gray-300 dark:scrollbar-thumb-gray-600 scrollbar-track-transparent">
+                {trendingTopics.map((topic) => (
+                  <TrendingTopicItem key={topic.id} topic={topic} />
+                ))}
+              </div>
+
+              <div className="mt-4 text-center">
+                <Link
+                  href="/trends"
+                  className="inline-flex items-center text-mainColor text-sm font-medium hover:text-mainColor/80 transition-colors focus:outline-none group"
+                >
+                  See all trending topics
+                  <div className="ml-1.5 bg-mainColor/10 rounded-full p-1 group-hover:bg-mainColor/20 transition-colors">
+                    <ExternalLink className="w-3 h-3" aria-hidden="true" />
+                  </div>
+                </Link>
+              </div>
+            </AccordionContent>
+          </AccordionItem>
+        </Accordion>
 
         {/* Footer */}
         <footer className="text-xs text-gray-500 dark:text-gray-400 mt-auto pt-5 border-t border-gray-100 dark:border-gray-800">
@@ -430,3 +349,4 @@ const RightSidebar = () => {
 }
 
 export default RightSidebar
+

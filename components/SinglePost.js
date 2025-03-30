@@ -700,7 +700,7 @@ const SinglePost = ({ post, initialComments = [] }) => {
             {displayMedia()}
 
             {/* Content */}
-            <div className="prose prose-sm sm:prose max-w-none dark:prose-invert">
+            <div className="prose prose-sm sm:prose break-words max-w-none dark:prose-invert">
               {formatContent(post.content)}
               {/* Sources section */}
               {post.sources && post.sources.length > 0 && (
