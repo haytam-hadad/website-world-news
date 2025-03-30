@@ -2,25 +2,12 @@
 
 import { useRouter } from "next/navigation"
 import Image from "next/image"
-import {
-  Clock,
-  Share2,
-  MessageCircle,
-  MoreHorizontal,
-  Bookmark,
-  BookmarkCheck,
-  Eye,
-  AlertCircle,
-  EyeOff,
-  ArrowBigDown,
-  ChevronRight,
-} from "lucide-react"
+import { Clock, Share2, MessageCircle, MoreHorizontal, Bookmark, BookmarkCheck, Eye, AlertCircle, EyeOff, ArrowBigDown, ChevronRight, ShieldCheck } from 'lucide-react'
 import { useState, useRef, useContext, useEffect } from "react"
 import { ThemeContext } from "./../app/ThemeProvider"
-import { ArrowBigUp } from "lucide-react"
+import { ArrowBigUp } from 'lucide-react'
 import { motion, AnimatePresence } from "framer-motion"
 import Link from "next/link"
-import { TrustRating } from "./article-trust-rating"
 import ReportModal from "./report-modal"
 
 const formatText = (text) => {
@@ -68,8 +55,18 @@ const formatText = (text) => {
   })
 }
 
-const Article = ({ articleData }) => {
+// Function to determine rating color based on score
+const getRatingColor = (rating) => {
+  if (rating >= 80) return "text-green-600 dark:text-green-400 bg-green-50 dark:bg-green-900/20"
+  if (rating >= 60) return "text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-900/20"
+  if (rating >= 40) return "text-yellow-600 dark:text-yellow-400 bg-yellow-50 dark:bg-yellow-900/20"
+  if (rating >= 20) return "text-orange-600 dark:text-orange-400 bg-orange-50 dark:bg-orange-900/20"
+  return "text-red-600 dark:text-red-400 bg-red-50 dark:bg-red-900/20"
+}
 
+// Add the onUnsave prop to the Article component
+const Article = ({ articleData, onUnsave }) => {
+  console.log(articleData)
   // No destructuring, we'll use articleData directly
   const [isSaved, setIsSaved] = useState(false)
   const [isSaving, setIsSaving] = useState(false)
@@ -134,17 +131,17 @@ const Article = ({ articleData }) => {
   }, [articleData._id, user])
 
   const toggleSave = async (e) => {
-    e.stopPropagation()
+    e.stopPropagation();
 
     if (!user) {
-      router.push("/login")
-      return
+      router.push("/login");
+      return;
     }
 
-    if (isSaving) return // Prevent multiple clicks
+    if (isSaving) return; // Prevent multiple clicks
 
     try {
-      setIsSaving(true)
+      setIsSaving(true);
 
       const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/news/${articleData._id}/save`, {
         method: "POST",
@@ -152,19 +149,24 @@ const Article = ({ articleData }) => {
           "Content-Type": "application/json",
         },
         credentials: "include",
-      })
+      });
 
       if (response.ok) {
-        const data = await response.json()
-        setIsSaved(data.saved)
+        const data = await response.json();
+        setIsSaved(data.saved);
+        
+        // If the article was unsaved and we have an onUnsave callback, call it
+        if (!data.saved && onUnsave) {
+          onUnsave(articleData._id);
+        }
       } else {
-        const errorData = await response.json()
-        console.error("Error saving article:", errorData)
+        const errorData = await response.json();
+        console.error("Error saving article:", errorData);
       }
     } catch (error) {
-      console.error("Error saving article:", error)
+      console.error("Error saving article:", error);
     } finally {
-      setIsSaving(false)
+      setIsSaving(false);
     }
   }
 
@@ -447,7 +449,7 @@ const Article = ({ articleData }) => {
         className="w-full my-2 max-w-3xl mx-auto"
       >
         <div
-          className="bg-white dark:bg-darkgrey border border-gray-200 dark:border-gray-700 rounded-xl shadow-sm hover:shadow-md overflow-hidden cursor-pointer"
+          className="bg-white dark:bg-darkgrey border border-gray-200 dark:border-gray-700 rounded-xl shadow-sm hover:shadow-md transition-shadow duration-200 overflow-hidden cursor-pointer"
           role="article"
           tabIndex="0"
           onClick={handleClick}
@@ -462,13 +464,15 @@ const Article = ({ articleData }) => {
               onClick={(e) => e.stopPropagation()}
             >
               {articleData.authorId?.profilePicture ? (
-                <Image
-                  src={articleData.authorId.profilePicture || "/placeholder.svg"}
-                  alt={articleData.authorId?.displayname || "Unknown"}
-                  width={40}
-                  height={40}
-                  className="rounded-full"
-                />
+                <div className="rounded-full overflow-hidden w-10 h-10">
+                  <Image
+                    src={articleData.authorId.profilePicture || "/placeholder.svg"}
+                    alt={articleData.authorId?.displayname || "Unknown"}
+                    width="60"
+                    height="60"
+                    className="h-full w-full object-cover"
+                    />
+                </div>
               ) : (
                 <div className="rounded-full bg-mainColor w-10 h-10 flex items-center justify-center text-white font-semibold group-hover:shadow-md transition-shadow">
                   {articleData.authorId?.displayname ? articleData.authorId.displayname[0].toUpperCase() : "U"}
@@ -567,7 +571,7 @@ const Article = ({ articleData }) => {
             </div>
           </div>
 
-          {/* Category and Trust Rating */}
+          {/* Category and Rating */}
           <div className="px-4 pb-2 flex items-center space-x-2">
             <Link
               href={`/categories/${articleData.category?.toLowerCase() || "general"}`}
@@ -578,29 +582,46 @@ const Article = ({ articleData }) => {
               {articleData.category || "General"}
             </Link>
 
-            {/* Trust Rating Component */}
-            <TrustRating articleData={articleData} />
+
+            {/* Numerical Rating Display */}
+            {articleData.rating !== undefined && articleData.rating !== 0 ? (
+              <div
+                className={`px-2 py-1 text-xs font-medium rounded-full flex items-center ${getRatingColor(articleData.rating)}`}
+                title="Article trustworthiness rating"
+              >
+                <ShieldCheck className="w-3.5 h-3.5 mr-1" />
+                <span>{Math.round(articleData.rating)}%</span>
+              </div>
+            ) : articleData.rating === 0 ? (
+              <div
+                className="px-2 py-1 text-xs font-medium rounded-full flex items-center text-gray-600 dark:text-gray-400 bg-gray-100 dark:bg-gray-700"
+                title="Rating needs calculation"
+              >
+                <ShieldCheck className="w-3.5 h-3.5 mr-1" />
+                <span>Pending</span>
+              </div>
+            ) : null}
           </div>
 
           {/* Title */}
-          <div className="px-5 pb-4">
+          <div className="px-4 pb-4">
             <h2 className="font-serif font-bold text-xl text-gray-900 dark:text-gray-100 capitalize hover:underline decoration-2 underline-offset-2">
               {articleData.title}
             </h2>
           </div>
 
           {/* Content preview */}
-          <div className="px-5 pb-2">
-            <p className="text-gray-600 dark:text-gray-300 text-md break-words">
+          <div className="px-4 pb-3">
+            <p className="text-gray-600 break-words dark:text-gray-300 text-md">
               {articleData.description
                 ? formatText(articleData.description)
                 : formatText(truncateContent(articleData.content, 150))}
             </p>
 
-            {/* Preview indicator */}
-            <div className="mt-2 flex items-center text-sm text-mainColor cursor-pointer hover:underline">
-              <ChevronRight className="w-4 h-4 mr-1" />
-              <span className="font-medium">Read full article</span>
+            {/* Add this new element to indicate this is just a preview */}
+            <div className="mt-2 flex items-center text-sm">
+              <ChevronRight className="w-4 h-4 text-mainColor mr-1" />
+              <span className="font-medium text-mainColor">Read full article</span>
             </div>
           </div>
 
@@ -608,7 +629,7 @@ const Article = ({ articleData }) => {
           <div>{displayMedia()}</div>
 
           {/* Action bar */}
-          <div className="px-4 py-2">
+          <div className="p-4 pt-3">
             <div className="flex items-center justify-between">
               {/* Engagement stats */}
               <div className="flex items-center space-x-4 text-sm text-gray-500 dark:text-gray-400">
@@ -682,4 +703,3 @@ const Article = ({ articleData }) => {
 }
 
 export default Article
-

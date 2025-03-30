@@ -19,12 +19,21 @@ import {
   Clock,
   Eye,
   AlertCircle,
+  ShieldCheck,
 } from "lucide-react"
 
 import SourcesDisplay from "./sources-display"
-import { TrustRating } from "./article-trust-rating"
 import CommentSection from "./comment-section"
 import ReportModal from "./report-modal"
+
+// Function to determine rating color based on score
+const getRatingColor = (rating) => {
+  if (rating >= 80) return "text-green-600 dark:text-green-400 bg-green-50 dark:bg-green-900/20"
+  if (rating >= 60) return "text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-900/20"
+  if (rating >= 40) return "text-yellow-600 dark:text-yellow-400 bg-yellow-50 dark:bg-yellow-900/20"
+  if (rating >= 20) return "text-orange-600 dark:text-orange-400 bg-orange-50 dark:bg-orange-900/20"
+  return "text-red-600 dark:text-red-400 bg-red-50 dark:bg-red-900/20"
+}
 
 const SinglePost = ({ post, initialComments = [] }) => {
   const [userLiked, setUserLiked] = useState(false)
@@ -575,13 +584,15 @@ const SinglePost = ({ post, initialComments = [] }) => {
               className="flex items-center space-x-2 group"
             >
               {post.authorId?.profilePicture ? (
-                <Image
-                  src={post.authorId.profilePicture || "/placeholder.svg"}
-                  alt={post.authorId?.displayname || "Unknown"}
-                  width={40}
-                  height={40}
-                  className="rounded-full"
-                />
+                <div className="rounded-full overflow-hidden w-10 h-10">
+                  <Image
+                    src={post.authorId.profilePicture || "/placeholder.svg"}
+                    alt={post.authorId?.displayname || "Unknown"}
+                    width="60"
+                    height="60"
+                    className="h-full w-full object-cover"
+                    />
+                </div>
               ) : (
                 <div className="rounded-full bg-mainColor w-10 h-10 flex items-center justify-center text-white font-semibold text-lg cursor-pointer group-hover:shadow-md transition-shadow">
                   {post.authorId?.displayname ? post.authorId.displayname[0].toUpperCase() : "U"}
@@ -677,7 +688,7 @@ const SinglePost = ({ post, initialComments = [] }) => {
             </div>
           </div>
 
-          {/* Category and Trust Rating */}
+          {/* Category and Rating */}
           <div className="px-4 py-2 flex items-center space-x-2">
             <Link href={`/category/${post.category?.toLowerCase() || "general"}`}>
               <div className="px-3 py-1 text-xs sm:text-sm font-medium text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-900/30 rounded-full capitalize hover:bg-blue-100 dark:hover:bg-blue-900/50 transition-colors">
@@ -685,8 +696,24 @@ const SinglePost = ({ post, initialComments = [] }) => {
               </div>
             </Link>
 
-            {/* Trust Rating Component */}
-            <TrustRating articleData={post} />
+            {/* Numerical Rating Display */}
+            {post.rating !== undefined && post.rating !== 0 ? (
+              <div
+                className={`px-2 py-1 text-xs font-medium rounded-full flex items-center ${getRatingColor(post.rating)}`}
+                title="Article trustworthiness rating"
+              >
+                <ShieldCheck className="w-3.5 h-3.5 mr-1" />
+                <span>{Math.round(post.rating)}%</span>
+              </div>
+            ) : post.rating === 0 ? (
+              <div
+                className="px-2 py-1 text-xs font-medium rounded-full flex items-center text-gray-600 dark:text-gray-400 bg-gray-100 dark:bg-gray-700"
+                title="Rating needs calculation"
+              >
+                <ShieldCheck className="w-3.5 h-3.5 mr-1" />
+                <span>Pending</span>
+              </div>
+            ) : null}
           </div>
 
           {/* Content */}

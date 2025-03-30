@@ -145,6 +145,23 @@ const Profile = ({ userData }) => {
     })
   }
 
+  // Get badge styles based on badge type
+  const getBadgeStyles = (badge) => {
+    switch (badge) {
+      case "Platinum":
+        return "bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 text-white"
+      case "Gold":
+        return "bg-gradient-to-r from-yellow-400 to-yellow-600 text-white"
+      case "Silver":
+        return "bg-gradient-to-r from-gray-300 to-gray-400 text-gray-800"
+      case "Bronze":
+        return "bg-gradient-to-r from-amber-600 to-amber-700 text-white"
+      case "Iron":
+      default:
+        return "bg-gradient-to-r from-gray-500 to-gray-600 text-white"
+    }
+  }
+
   // Handle tab change
   const handleTabChange = (value) => {
     setActiveTab(value)

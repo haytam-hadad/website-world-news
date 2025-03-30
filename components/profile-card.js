@@ -173,26 +173,19 @@ export default function ProfileCard({ profile, currentUser }) {
       <div className="p-4">
         <div className="flex items-center gap-4">
           {/* Profile Avatar */}
-          <div className="relative h-16 w-16 rounded-full overflow-hidden bg-mainColor flex-shrink-0 flex items-center justify-center text-white font-bold text-xl shadow-md">
-            {getProfilePicture() ? (
+          {getProfilePicture() ? (
+            <div className="rounded-full overflow-hidden w-10 h-10">
               <Image
                 src={getProfilePicture() || "/placeholder.svg"}
                 alt={getDisplayName()}
                 className="h-full w-full object-cover"
-                width={64}
-                height={64}
               />
-            ) : (
-              <span>{getDisplayName().charAt(0).toUpperCase()}</span>
-            )}
-
-            {/* Verification Badge (if applicable) */}
-            {profile?.isVerified && (
-              <div className="absolute bottom-0 right-0 bg-mainColor rounded-full p-1 w-5 h-5 flex items-center justify-center border-2 border-white dark:border-gray-800">
-                <CheckCircle className="w-3 h-3 text-white" />
-              </div>
-            )}
-          </div>
+            </div>
+          ) : (
+            <div className="rounded-full bg-mainColor w-full h-full flex items-center justify-center text-white font-semibold">
+              {getDisplayName().charAt(0).toUpperCase()}
+            </div>
+          )}
 
           {/* Profile Info */}
           <div className="flex-1 min-w-0 flex justify-between">
