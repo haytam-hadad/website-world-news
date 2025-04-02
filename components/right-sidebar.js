@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useContext } from "react"
 import Link from "next/link"
-import { CheckCircle, UserCheck, TrendingUp, ExternalLink, Users } from "lucide-react"
+import { CheckCircle, UserCheck, ExternalLink, Users, FolderIcon, Layers } from "lucide-react"
 import Image from "next/image"
 import { ThemeContext } from "../app/ThemeProvider"
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion"
@@ -31,7 +31,7 @@ const UserItem = ({ userData, lastActivity, isNew }) => {
   return (
     <Link
       href={`/profile/${userData.username}`}
-      className={`block p-2 px-3 rounded-xl mb-2 hover:bg-gray-50 dark:hover:bg-gray-800/70 focus:outline-none group ${
+      className={`block p-2 px-3 rounded-xl mb-2 hover:bg-gray-50 dark:hover:bg-gray-800/70 focus:outline-none group transition-colors duration-200 ${
         hasNewContent || isNew ? "bg-gray-50/80 dark:bg-gray-800/40 border-l-2 border-mainColor" : ""
       }`}
     >
@@ -70,25 +70,30 @@ const UserItem = ({ userData, lastActivity, isNew }) => {
   )
 }
 
-// Trending topic item component
-const TrendingTopicItem = ({ topic }) => {
+// Category item component
+const CategoryItem = ({ category }) => {
+  // Format the category name to be more readable
+  const formatCategoryName = (name) => {
+    if (!name) return "Uncategorized"
+    // Convert to title case and replace hyphens with spaces
+    return name.charAt(0).toUpperCase() + name.slice(1).replace(/-/g, " ")
+  }
+
   return (
     <Link
-      href={`/search/${encodeURIComponent(topic.title)}`}
-      className="block p-3 rounded-xl mb-2 hover:bg-gray-50 dark:hover:bg-gray-800/70 transition-all duration-300 focus:outline-none group"
+      href={`/categories/${category._id}`}
+      className="block p-3 rounded-xl mb-2 hover:bg-gray-50 dark:hover:bg-gray-800/70 group"
     >
       <div className="flex items-start space-x-3">
-        <div className="flex-shrink-0 mt-1 bg-mainColor/10 p-1.5 rounded-full group-hover:bg-mainColor/20 transition-colors">
-          <TrendingUp className="w-3.5 h-3.5 text-mainColor" aria-hidden="true" />
+        <div className="flex-shrink-0 mt-1 capitalize bg-mainColor/80 p-1 rounded-full group-hover:bg-mainColor transition-colors">
+          <FolderIcon className="w-4 h-4 dark:text-white" aria-hidden="true" />
         </div>
         <div className="flex-1 min-w-0">
-          <h4 className="font-medium text-sm text-gray-900 dark:text-gray-100 line-clamp-1 group-hover:text-mainColor transition-colors">
-            {topic.title}
+          <h4 className="font-medium text-sm  text-gray-900 dark:text-gray-100 line-clamp-1 group-hover:text-mainColor transition-colors">
+            {formatCategoryName(category._id)}
           </h4>
-          <div className="flex items-center mt-1.5 space-x-2">
-            <span className="text-xs text-gray-500 dark:text-gray-400">{topic.views} views</span>
-            <span className="w-1 h-1 bg-gray-300 dark:bg-gray-600 rounded-full" aria-hidden="true"></span>
-            <span className="text-xs text-gray-500 dark:text-gray-400">{topic.timePosted}</span>
+          <div className="flex items-center mt-1.5">
+            <span className="text-xs text-gray-500"><b className=" text-mainColor">{category.totalArticles}</b> articles</span>
           </div>
         </div>
       </div>
@@ -96,43 +101,14 @@ const TrendingTopicItem = ({ topic }) => {
   )
 }
 
-const trendingTopics = [
-  {
-    id: 1,
-    title: "AI Breakthrough in Medical Research",
-    views: "1.2M",
-    category: "Technology",
-    timePosted: "3h ago",
-  },
-  {
-    id: 2,
-    title: "Global Climate Summit Results",
-    views: "856K",
-    category: "Environment",
-    timePosted: "5h ago",
-  },
-  {
-    id: 3,
-    title: "New Economic Policy Announced",
-    views: "723K",
-    category: "Business",
-    timePosted: "12h ago",
-  },
-  {
-    id: 4,
-    title: "Space Exploration Mission Launch",
-    views: "1.5M",
-    category: "Science",
-    timePosted: "1d ago",
-  },
-]
-
 // Main RightSidebar component
 const RightSidebar = () => {
-  const [expandedSections, setExpandedSections] = useState(["subscriptions", "subscribers", "trending"])
+  const [expandedSections, setExpandedSections] = useState(["subscriptions", "subscribers", "categories"])
   const [subscriptions, setSubscriptions] = useState([])
   const [subscribers, setSubscribers] = useState([])
+  const [topCategories, setTopCategories] = useState([])
   const [isLoading, setIsLoading] = useState(false)
+  const [isCategoriesLoading, setIsCategoriesLoading] = useState(true)
   const { user } = useContext(ThemeContext)
 
   // Fetch user data (subscriptions and subscribers)
@@ -174,6 +150,34 @@ const RightSidebar = () => {
     fetchUserData()
   }, [user])
 
+  // Fetch top categories
+  useEffect(() => {
+    const fetchTopCategories = async () => {
+      setIsCategoriesLoading(true)
+      try {
+        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/news/topcategories/`)
+
+        if (!response.ok) {
+          if (response.status === 404) {
+            setTopCategories([])
+            return
+          }
+          throw new Error(`Failed to fetch top categories: ${response.status} ${response.statusText}`)
+        }
+
+        const data = await response.json()
+        setTopCategories(data)
+      } catch (error) {
+        console.error("Error fetching top categories:", error)
+        setTopCategories([])
+      } finally {
+        setIsCategoriesLoading(false)
+      }
+    }
+
+    fetchTopCategories()
+  }, [])
+
   const currentYear = new Date().getFullYear()
 
   // Don't show subscription sections if user is not logged in or data is loading
@@ -187,7 +191,7 @@ const RightSidebar = () => {
         {user && (
           <Link
             href={`/profile/${user.username}/subscriptions`}
-            className="block bg-lightgrey border hover:border-mainColor dark:bg-thirdColor text-center rounded-lg p-4 cursor-pointer"
+            className="block bg-lightgrey border hover:border-mainColor dark:bg-thirdColor text-center rounded-lg p-4 cursor-pointer transition-colors duration-200"
           >
             <div className="flex items-center justify-around mb-2">
               <div className="flex flex-col items-center">
@@ -204,16 +208,66 @@ const RightSidebar = () => {
         )}
 
         <Accordion type="multiple" defaultValue={expandedSections} className="space-y-4">
+          {/* Top Categories Section */}
+          <AccordionItem
+            value="categories"
+            className="bg-white dark:bg-darkgrey rounded-xl border border-gray-100 dark:border-gray-800 p-3 shadow-sm"
+          >
+            <AccordionTrigger className="flex items-center justify-between py-0 hover:no-underline group">
+              <div className="flex items-center">
+                <Layers
+                  className="w-5 h-5 text-mainColor mr-2.5 group-hover:text-mainColor/80 transition-colors"
+                  aria-hidden="true"
+                />
+                <h3 className="font-bold text-gray-900 dark:text-gray-100 group-hover:text-mainColor/80 transition-colors">
+                  Top Categories
+                </h3>
+              </div>
+            </AccordionTrigger>
+            <AccordionContent>
+              {isCategoriesLoading ? (
+                <div className="flex justify-center py-4">
+                  <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-mainColor"></div>
+                </div>
+              ) : topCategories.length === 0 ? (
+                <div className="text-center py-4 text-gray-500 dark:text-gray-400 text-sm">No categories found</div>
+              ) : (
+                <div className="space-y-1 max-h-[200px] overflow-y-auto pr-1 scrollbar-thin scrollbar-thumb-gray-300 dark:scrollbar-thumb-gray-600 scrollbar-track-transparent">
+                  {topCategories.map((category) => (
+                    <CategoryItem key={category._id} category={category} />
+                  ))}
+                </div>
+              )}
+
+              <div className="mt-4 text-center">
+                <Link
+                  href="/categories"
+                  className="inline-flex items-center text-mainColor text-sm font-medium hover:text-mainColor/80 transition-colors focus:outline-none group"
+                >
+                  See all categories
+                  <div className="ml-1.5 bg-mainColor/10 rounded-full p-1 group-hover:bg-mainColor/20 transition-colors">
+                    <ExternalLink className="w-3 h-3" aria-hidden="true" />
+                  </div>
+                </Link>
+              </div>
+            </AccordionContent>
+          </AccordionItem>
+
           {/* Subscriptions Section */}
           {showSubscriptions && (
             <AccordionItem
               value="subscriptions"
               className="bg-white dark:bg-darkgrey rounded-xl border border-gray-100 dark:border-gray-800 p-3 shadow-sm"
             >
-              <AccordionTrigger className="flex items-center justify-between py-0 hover:no-underline">
+              <AccordionTrigger className="flex items-center justify-between py-0 hover:no-underline group">
                 <div className="flex items-center">
-                  <UserCheck className="w-5 h-5 text-mainColor mr-2.5" aria-hidden="true" />
-                  <h3 className="font-bold text-gray-900 dark:text-gray-100">Your Subscriptions</h3>
+                  <UserCheck
+                    className="w-5 h-5 text-mainColor mr-2.5 group-hover:text-mainColor/80 transition-colors"
+                    aria-hidden="true"
+                  />
+                  <h3 className="font-bold text-gray-900 dark:text-gray-100 group-hover:text-mainColor/80 transition-colors">
+                    Your Subscriptions
+                  </h3>
                 </div>
               </AccordionTrigger>
               <AccordionContent>
@@ -248,10 +302,15 @@ const RightSidebar = () => {
               value="subscribers"
               className="bg-white dark:bg-darkgrey rounded-xl border border-gray-100 dark:border-gray-800 p-3 shadow-sm"
             >
-              <AccordionTrigger className="flex items-center justify-between py-0 hover:no-underline">
+              <AccordionTrigger className="flex items-center justify-between py-0 hover:no-underline group">
                 <div className="flex items-center">
-                  <Users className="w-5 h-5 text-mainColor mr-2.5" aria-hidden="true" />
-                  <h3 className="font-bold text-gray-900 dark:text-gray-100">Your Subscribers</h3>
+                  <Users
+                    className="w-5 h-5 text-mainColor mr-2.5 group-hover:text-mainColor/80 transition-colors"
+                    aria-hidden="true"
+                  />
+                  <h3 className="font-bold text-gray-900 dark:text-gray-100 group-hover:text-mainColor/80 transition-colors">
+                    Your Subscribers
+                  </h3>
                 </div>
               </AccordionTrigger>
               <AccordionContent>
@@ -267,7 +326,7 @@ const RightSidebar = () => {
 
                 <div className="mt-4 text-center">
                   <Link
-                    href={`/profile/${user.username}/subscriptions`}
+                    href={`/profile/${user.username}/subscribers`}
                     className="inline-flex items-center text-mainColor text-sm font-medium hover:text-mainColor/80 transition-colors focus:outline-none group"
                   >
                     See all subscribers
@@ -279,38 +338,6 @@ const RightSidebar = () => {
               </AccordionContent>
             </AccordionItem>
           )}
-
-          {/* Trending Section */}
-          <AccordionItem
-            value="trending"
-            className="bg-white dark:bg-darkgrey rounded-xl border border-gray-100 dark:border-gray-800 p-3 shadow-sm"
-          >
-            <AccordionTrigger className="flex items-center justify-between py-0 hover:no-underline">
-              <div className="flex items-center">
-                <TrendingUp className="w-5 h-5 text-mainColor mr-2.5" aria-hidden="true" />
-                <h3 className="font-bold text-gray-900 dark:text-gray-100">Trending Now</h3>
-              </div>
-            </AccordionTrigger>
-            <AccordionContent>
-              <div className="space-y-1 max-h-[200px] overflow-y-auto pr-1 scrollbar-thin scrollbar-thumb-gray-300 dark:scrollbar-thumb-gray-600 scrollbar-track-transparent">
-                {trendingTopics.map((topic) => (
-                  <TrendingTopicItem key={topic.id} topic={topic} />
-                ))}
-              </div>
-
-              <div className="mt-4 text-center">
-                <Link
-                  href="/trends"
-                  className="inline-flex items-center text-mainColor text-sm font-medium hover:text-mainColor/80 transition-colors focus:outline-none group"
-                >
-                  See all trending topics
-                  <div className="ml-1.5 bg-mainColor/10 rounded-full p-1 group-hover:bg-mainColor/20 transition-colors">
-                    <ExternalLink className="w-3 h-3" aria-hidden="true" />
-                  </div>
-                </Link>
-              </div>
-            </AccordionContent>
-          </AccordionItem>
         </Accordion>
 
         {/* Footer */}

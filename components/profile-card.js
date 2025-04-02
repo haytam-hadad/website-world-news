@@ -179,6 +179,8 @@ export default function ProfileCard({ profile, currentUser }) {
                 src={getProfilePicture() || "/placeholder.svg"}
                 alt={getDisplayName()}
                 className="h-full w-full object-cover"
+                width={40}
+                height={40}
               />
             </div>
           ) : (

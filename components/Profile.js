@@ -1,6 +1,6 @@
 "use client"
 import { useContext, useEffect, useState } from "react"
-import { Bell, BellOff, Edit, Plus, Calendar, LinkIcon, User, Cake, BookOpen, Heart } from "lucide-react"
+import { Bell, BellOff, Edit, Plus, Calendar, LinkIcon, User, Cake, BookOpen, ArrowUp } from "lucide-react"
 import Article from "./Article"
 import { ThemeContext } from "../app/ThemeProvider"
 import Link from "next/link"
@@ -10,12 +10,14 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 
 const Profile = ({ userData }) => {
   const [articles, setArticles] = useState([])
+  const [upvotedArticles, setUpvotedArticles] = useState([])
   const [subscriptionState, setSubscriptionState] = useState({
     isSubscribed: false,
     isLoading: false,
   })
   const [activeTab, setActiveTab] = useState("articles")
   const [isLoading, setIsLoading] = useState(true)
+  const [isLoadingUpvotes, setIsLoadingUpvotes] = useState(true)
   const { user } = useContext(ThemeContext)
 
   const isOwnProfile = user && user._id === userData._id
@@ -53,7 +55,7 @@ const Profile = ({ userData }) => {
     }
 
     checkSubscriptionStatus()
-  }, [user, userData, isOwnProfile]) // Added missing dependencies
+  }, [user, userData, isOwnProfile])
 
   const toggleSubscribe = async () => {
     if (!user) {
@@ -134,6 +136,36 @@ const Profile = ({ userData }) => {
       fetchArticles(userData.username)
     }
   }, [userData])
+
+  // Fetch upvoted articles when the upvote tab is selected
+  useEffect(() => {
+    const fetchUpvotedArticles = async (username) => {
+      if (activeTab !== "upvoted") return
+
+      setIsLoadingUpvotes(true)
+      try {
+        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/articles/upvoted/${username}`)
+        if (!response.ok) {
+          if (response.status === 404) {
+            setUpvotedArticles([])
+            return
+          }
+          throw new Error(`Failed to fetch upvoted articles: ${response.status} ${response.statusText}`)
+        }
+        const data = await response.json()
+        setUpvotedArticles(data)
+      } catch (err) {
+        console.error("Error fetching upvoted articles:", err)
+        setUpvotedArticles([])
+      } finally {
+        setIsLoadingUpvotes(false)
+      }
+    }
+
+    if (userData) {
+      fetchUpvotedArticles(userData.username)
+    }
+  }, [userData, activeTab])
 
   const formatDate = (dateString) => {
     if (!dateString) return "N/A"
@@ -381,11 +413,11 @@ const Profile = ({ userData }) => {
                 <span>Articles</span>
               </TabsTrigger>
               <TabsTrigger
-                value="liked"
+                value="upvoted"
                 className="flex items-center justify-center gap-2 py-3 data-[state=active]:text-mainColor data-[state=active]:border-b-2 data-[state=active]:border-mainColor data-[state=active]:shadow-none data-[state=active]:rounded-none"
               >
-                <Heart className="w-4 h-4" />
-                <span>Liked</span>
+                <ArrowUp className="w-4 h-4" />
+                <span>Upvoted</span>
               </TabsTrigger>
             </TabsList>
 
@@ -439,16 +471,35 @@ const Profile = ({ userData }) => {
               )}
             </TabsContent>
 
-            <TabsContent value="liked" className="mt-0">
-              <div className="bg-white dark:bg-darkgrey rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-8 text-center">
-                <Heart className="w-14 h-14 mx-auto text-gray-300 dark:text-gray-600 mb-4" />
-                <h3 className="text-lg font-medium text-gray-900 dark:text-white mb-2">No liked articles</h3>
-                <p className="text-gray-500 dark:text-gray-400 max-w-md mx-auto">
-                  {isOwnProfile
-                    ? "Articles you like will appear here."
-                    : `${userData.displayname} hasn't liked any articles yet.`}
-                </p>
+            <TabsContent value="upvoted" className="mt-0">
+              <div className="flex items-center justify-between mb-4">
+                <h2 className="text-xl font-semibold text-gray-900 dark:text-white flex items-center gap-2">
+                  <ArrowUp className="w-5 h-5 text-mainColor" />
+                  {isOwnProfile ? "Articles You Upvoted" : `Articles ${userData.displayname} Upvoted`}
+                </h2>
               </div>
+
+              {isLoadingUpvotes ? (
+                <div className="flex justify-center py-8">
+                  <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-mainColor"></div>
+                </div>
+              ) : upvotedArticles.length === 0 ? (
+                <div className="bg-white dark:bg-darkgrey rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-8 text-center">
+                  <ArrowUp className="w-14 h-14 mx-auto text-gray-300 dark:text-gray-600 mb-4" />
+                  <h3 className="text-lg font-medium text-gray-900 dark:text-white mb-2">No upvoted articles</h3>
+                  <p className="text-gray-500 dark:text-gray-400 max-w-md mx-auto">
+                    {isOwnProfile
+                      ? "Articles you upvote will appear here."
+                      : `${userData.displayname} hasn't upvoted any articles yet.`}
+                  </p>
+                </div>
+              ) : (
+                <div className="space-y-4">
+                  {upvotedArticles.map((article, i) => (
+                    <Article key={i} articleData={article} />
+                  ))}
+                </div>
+              )}
             </TabsContent>
           </Tabs>
         </div>
