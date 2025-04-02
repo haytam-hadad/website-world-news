@@ -1,12 +1,14 @@
 "use client"
 import { useContext, useEffect, useState } from "react"
-import { Bell, BellOff, Edit, Plus, Calendar, LinkIcon, User, Cake, BookOpen, ArrowUp } from "lucide-react"
+import { Bell, BellOff, Edit, Plus, Calendar, LinkIcon, User, Cake, BookOpen, ArrowUp, Award } from "lucide-react"
 import Article from "./Article"
 import { ThemeContext } from "../app/ThemeProvider"
 import Link from "next/link"
 import { motion } from "framer-motion"
 import Image from "next/image"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+// First, import the Tooltip components at the top of the file
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip"
 
 const Profile = ({ userData }) => {
   const [articles, setArticles] = useState([])
@@ -199,6 +201,23 @@ const Profile = ({ userData }) => {
     setActiveTab(value)
   }
 
+  // Add a new function to get badge descriptions
+  const getBadgeDescription = (badge) => {
+    switch (badge) {
+      case "Platinum":
+        return "Elite contributor with exceptional engagement and high-quality content"
+      case "Gold":
+        return "Outstanding contributor with significant impact on the community"
+      case "Silver":
+        return "Valued contributor with consistent quality content"
+      case "Bronze":
+        return "Active contributor with growing reputation"
+      case "Iron":
+      default:
+        return "New community member starting their journey"
+    }
+  }
+
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
@@ -244,10 +263,30 @@ const Profile = ({ userData }) => {
       {/* Profile Header */}
       <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between p-1 pb-3">
         <div className="ml-2 sm:ml-32 mb-4 sm:mb-0">
-          <h1 className="text-2xl md:text-3xl font-bold text-gray-900 dark:text-white capitalize">
-            {userData.displayname || "Unknown"}
-          </h1>
+          <div className="flex items-center gap-2">
+            <h1 className="text-2xl md:text-3xl font-bold text-gray-900 dark:text-white capitalize">
+              {userData.displayname || "Unknown"}
+            </h1>
+          </div>
           <p className="text-gray-600 dark:text-gray-400 text-sm sm:text-base">@{userData.username || "username"}</p>
+                        {/* Display user badge if available */}
+                        {userData.badge && (
+              <TooltipProvider>
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <span
+                      className={`text-xs px-3 py-1 w-fit rounded-full font-medium flex items-center gap-1 cursor-help ${getBadgeStyles(userData.badge)}`}
+                    >
+                      <Award className="w-3 h-3" />
+                      {userData.badge}
+                    </span>
+                  </TooltipTrigger>
+                  <TooltipContent>
+                    <p>{getBadgeDescription(userData.badge)}</p>
+                  </TooltipContent>
+                </Tooltip>
+              </TooltipProvider>
+            )}
         </div>
 
         <div className="flex flex-wrap gap-2 justify-center sm:justify-end">
@@ -366,6 +405,32 @@ const Profile = ({ userData }) => {
                       >
                         {userData.website.replace(/^https?:\/\//, "")}
                       </a>
+                    </div>
+                  )}
+
+                  {/* Display user badge in the About section as well */}
+                  {userData.badge && (
+                    <div className="flex items-center gap-3 text-gray-700 dark:text-gray-300">
+                      <div className="w-8 h-8 rounded-full bg-mainColor/10 flex items-center justify-center flex-shrink-0">
+                        <Award className="w-4 h-4 text-mainColor" />
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <span>Badge:</span>
+                        <TooltipProvider>
+                          <Tooltip>
+                            <TooltipTrigger asChild>
+                              <span
+                                className={`text-xs px-2 py-0.5 rounded-full font-medium cursor-help ${getBadgeStyles(userData.badge)}`}
+                              >
+                                {userData.badge}
+                              </span>
+                            </TooltipTrigger>
+                            <TooltipContent>
+                              <p>{getBadgeDescription(userData.badge)}</p>
+                            </TooltipContent>
+                          </Tooltip>
+                        </TooltipProvider>
+                      </div>
                     </div>
                   )}
                 </div>
