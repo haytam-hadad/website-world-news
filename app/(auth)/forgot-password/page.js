@@ -16,11 +16,6 @@ export default function ForgotPasswordPage() {
   const [loading, setLoading] = useState(false)
   const [success, setSuccess] = useState(false)
 
-  useEffect(() => {
-    if (user) {
-      router.push(`/`)
-    }
-  }, [user, router])
 
   const handleSubmit = async (e) => {
     e.preventDefault()

@@ -5,48 +5,35 @@ export const ThemeContext = createContext()
 
 export function ThemeProvider({ children }) {
   const [isLoading, setIsLoading] = useState(true)
-  const [theme, setThemeState] = useState(false)
+  const [theme, setThemeState] = useState(() => {
+    const savedTheme = localStorage.getItem("theme")
+    return savedTheme !== null ? JSON.parse(savedTheme) : false
+  })
   const [user, setUser] = useState(null)
   const [isMinimized, setIsMinimized] = useState(() => {
-    if (typeof window !== "undefined") {
-      const savedState = localStorage.getItem("isMinimized")
-      return savedState !== null ? JSON.parse(savedState) : false
-    }
-    return false
+    const savedState = localStorage.getItem("isMinimized")
+    return savedState !== null ? JSON.parse(savedState) : false
   })
 
-  // Initialize theme based on user preference or system preference
   useEffect(() => {
     const initializeTheme = async () => {
       if (typeof window !== "undefined") {
-        // Check for saved preference first
-        const savedTheme = localStorage.getItem("theme")
-
-        if (savedTheme !== null) {
-          const isDark = savedTheme === "true"
-          setThemeState(isDark)
-          document.documentElement.classList.toggle("dark", isDark)
+        if (theme) {
+          document.documentElement.classList.add("dark")
         } else {
-          // If no saved preference, use system preference
-          const prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches
-          setThemeState(prefersDark)
-          document.documentElement.classList.toggle("dark", prefersDark)
-          localStorage.setItem("theme", prefersDark ? "true" : "false")
+          document.documentElement.classList.remove("dark")
         }
       }
       setIsLoading(false)
     }
     initializeTheme()
-  }, [])
+  }, [theme])
 
-  // Add listener for system theme changes
   useEffect(() => {
     const mediaQuery = window.matchMedia("(prefers-color-scheme: dark)")
     const handleChange = (e) => {
-      // Only apply if user hasn't set a preference
       if (localStorage.getItem("theme") === null) {
         setThemeState(e.matches)
-        document.documentElement.classList.toggle("dark", e.matches)
       }
     }
 
@@ -54,7 +41,6 @@ export function ThemeProvider({ children }) {
     return () => mediaQuery.removeEventListener("change", handleChange)
   }, [])
 
-  // Check authentication status and periodically validate it
   useEffect(() => {
     const checkAuthStatus = async () => {
       try {
@@ -69,10 +55,8 @@ export function ThemeProvider({ children }) {
         if (res.ok) {
           const userData = await res.json()
 
-          // Store user data in state
           setUser(userData)
         } else {
-          // Handle unauthenticated state
           setUser(null)
         }
       } catch (error) {
@@ -83,11 +67,8 @@ export function ThemeProvider({ children }) {
       }
     }
 
-    // Initial check
     checkAuthStatus()
 
-    // Set up periodic authentication validation
-    // This helps ensure the session is still valid and user is authenticated
     const authCheckInterval = setInterval(checkAuthStatus, 15 * 60 * 1000) // Check every 15 minutes
 
     return () => clearInterval(authCheckInterval)
@@ -95,9 +76,7 @@ export function ThemeProvider({ children }) {
 
   const setTheme = (newTheme) => {
     setThemeState(newTheme)
-    localStorage.setItem("theme", newTheme ? "true" : "false")
-
-    // Apply theme class to <html> dynamically
+    localStorage.setItem("theme", JSON.stringify(newTheme))
     document.documentElement.classList.toggle("dark", newTheme)
   }
 
@@ -106,7 +85,6 @@ export function ThemeProvider({ children }) {
     localStorage.setItem("isMinimized", JSON.stringify(state))
   }
 
-  // Check if user is authenticated
   const isAuthenticated = !!user
 
   return (
