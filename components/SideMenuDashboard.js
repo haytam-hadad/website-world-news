@@ -87,8 +87,8 @@ const SideMenuDashboard = ({ setVisible }) => {
         <Link href="/" className="block">
           <button
             onClick={() => setVisible(false)}
-            className={`flex items-center w-full p-3 rounded-lg transition-all duration-200 ${
-              activePath === "/" ? "bg-white text-mainColor font-medium shadow-md" : "text-white hover:bg-white/10"
+            className={`flex items-center w-full p-3 rounded-lg  ${ activePath === "/" 
+              ? "bg-white text-mainColor font-medium shadow-md" : "text-white hover:bg-white/10"
             }`}
             aria-label="Home"
           >

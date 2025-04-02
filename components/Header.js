@@ -54,28 +54,14 @@ export default function Header({ onToggleMenu }) {
 
     // Apply theme class to document for immediate visual feedback
     if (newTheme) {
-      document.documentElement.classList.add("dark")
+      document.documentElement.classList.add("true")
     } else {
-      document.documentElement.classList.remove("dark")
+      document.documentElement.classList.remove("true")
     }
 
     // Save theme preference to localStorage
-    localStorage.setItem("theme", newTheme ? "dark" : "light")
+    localStorage.setItem("theme", newTheme ? "true" : "false")
   }
-
-  // Initialize theme from localStorage on component mount
-  useEffect(() => {
-    const savedTheme = localStorage.getItem("theme")
-    if (savedTheme) {
-      const isDark = savedTheme === "dark"
-      setTheme(isDark)
-      if (isDark) {
-        document.documentElement.classList.add("dark")
-      } else {
-        document.documentElement.classList.remove("dark")
-      }
-    }
-  }, [setTheme])
 
   const logout = async () => {
     try {
@@ -268,7 +254,7 @@ export default function Header({ onToggleMenu }) {
                           <span>Profile</span>
                         </button>
                       </Link>
-                      <Link href={`/dashboard/update-info`}>
+                      <Link href={`/dashboard`}>
                         <button
                           className="flex items-center w-full text-left px-4 py-2.5 text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors duration-150"
                           onClick={() => setDropdownOpen(false)}
