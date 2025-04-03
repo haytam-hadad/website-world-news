@@ -2,10 +2,23 @@
 
 import { useRouter } from "next/navigation"
 import Image from "next/image"
-import { Clock, Share2, MessageCircle, MoreHorizontal, Bookmark, BookmarkCheck, Eye, AlertCircle, EyeOff, ArrowBigDown, ChevronRight, ShieldCheck } from 'lucide-react'
+import {
+  Clock,
+  Share2,
+  MessageCircle,
+  MoreHorizontal,
+  Bookmark,
+  BookmarkCheck,
+  Eye,
+  AlertCircle,
+  EyeOff,
+  ArrowBigDown,
+  ChevronRight,
+  ShieldCheck,
+} from "lucide-react"
 import { useState, useRef, useContext, useEffect } from "react"
 import { ThemeContext } from "./../app/ThemeProvider"
-import { ArrowBigUp } from 'lucide-react'
+import { ArrowBigUp } from "lucide-react"
 import { motion, AnimatePresence } from "framer-motion"
 import Link from "next/link"
 import ReportModal from "./report-modal"
@@ -131,17 +144,17 @@ const Article = ({ articleData, onUnsave }) => {
   }, [articleData._id, user])
 
   const toggleSave = async (e) => {
-    e.stopPropagation();
+    e.stopPropagation()
 
     if (!user) {
-      router.push("/login");
-      return;
+      router.push("/login")
+      return
     }
 
-    if (isSaving) return; // Prevent multiple clicks
+    if (isSaving) return // Prevent multiple clicks
 
     try {
-      setIsSaving(true);
+      setIsSaving(true)
 
       const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/news/${articleData._id}/save`, {
         method: "POST",
@@ -149,24 +162,24 @@ const Article = ({ articleData, onUnsave }) => {
           "Content-Type": "application/json",
         },
         credentials: "include",
-      });
+      })
 
       if (response.ok) {
-        const data = await response.json();
-        setIsSaved(data.saved);
-        
+        const data = await response.json()
+        setIsSaved(data.saved)
+
         // If the article was unsaved and we have an onUnsave callback, call it
         if (!data.saved && onUnsave) {
-          onUnsave(articleData._id);
+          onUnsave(articleData._id)
         }
       } else {
-        const errorData = await response.json();
-        console.error("Error saving article:", errorData);
+        const errorData = await response.json()
+        console.error("Error saving article:", errorData)
       }
     } catch (error) {
-      console.error("Error saving article:", error);
+      console.error("Error saving article:", error)
     } finally {
-      setIsSaving(false);
+      setIsSaving(false)
     }
   }
 
@@ -459,36 +472,47 @@ const Article = ({ articleData, onUnsave }) => {
           {/* Header with user info */}
           <div className="p-4 flex items-center justify-between">
             <Link
-              href={`/profile/${articleData.authorId?.username || articleData.authorusername || "unknown"}`}
+              href={`/profile/${articleData.authorIdGoogle?.username || articleData.authorId?.username || articleData.authorusername || "unknown"}`}
               className="flex items-center space-x-2 group"
               onClick={(e) => e.stopPropagation()}
             >
-              {articleData.authorId?.profilePicture ? (
+              {articleData.authorIdGoogle?.profilePicture || articleData.authorId?.profilePicture ? (
                 <div className="rounded-full overflow-hidden w-10 h-10">
                   <Image
-                    src={articleData.authorId.profilePicture || "/placeholder.svg"}
-                    alt={articleData.authorId?.displayname || "Unknown"}
+                    src={
+                      articleData.authorIdGoogle?.profilePicture ||
+                      articleData.authorId?.profilePicture ||
+                      "/placeholder.svg"
+                    }
+                    alt={articleData.authorIdGoogle?.displayname || articleData.authorId?.displayname || "Unknown"}
                     width="60"
                     height="60"
                     className="h-full w-full object-cover"
-                    />
+                  />
                 </div>
               ) : (
                 <div className="rounded-full bg-mainColor w-10 h-10 flex items-center justify-center text-white font-semibold group-hover:shadow-md transition-shadow">
-                  {articleData.authorId?.displayname ? articleData.authorId.displayname[0].toUpperCase() : "U"}
+                  {articleData.authorIdGoogle?.displayname
+                    ? articleData.authorIdGoogle.displayname[0].toUpperCase()
+                    : articleData.authorId?.displayname
+                      ? articleData.authorId.displayname[0].toUpperCase()
+                      : "U"}
                 </div>
               )}
               <div>
                 <p className="font-medium text-gray-900 dark:text-gray-100 capitalize group-hover:underline">
-                  {articleData.authorId?.displayname || "Unknown"}
+                  {articleData.authorIdGoogle?.displayname ||
+                    articleData.authorId?.displayname ||
+                    articleData.authordisplayname ||
+                    "Unknown"}
                 </p>
                 <div className="flex items-center space-x-1">
                   <span className="text-sm text-gray-500 dark:text-gray-400">
-                    {articleData.authorId?.username
-                      ? `@${articleData.authorId.username}`
-                      : articleData.authorusername
-                        ? `@${articleData.authorusername}`
-                        : "N/A"}
+                    @
+                    {articleData.authorIdGoogle?.username ||
+                      articleData.authorId?.username ||
+                      articleData.authorusername ||
+                      "unknown"}
                   </span>
                   <span className="text-gray-400">•</span>
                   <span className="text-sm text-gray-500 dark:text-gray-400 flex items-center">
@@ -524,7 +548,11 @@ const Article = ({ articleData, onUnsave }) => {
                     className="absolute right-0 mt-2 w-48 bg-white dark:bg-gray-800 rounded-lg shadow-lg border border-gray-200 dark:border-gray-700 z-10 py-2"
                     onClick={(e) => e.stopPropagation()}
                   >
-                    {user && user.username === (articleData.authorId?.username || articleData.authorusername) ? (
+                    {user &&
+                    user.username ===
+                      (articleData.authorIdGoogle?.username ||
+                        articleData.authorId?.username ||
+                        articleData.authorusername) ? (
                       <button
                         className="w-full text-left px-4 py-2 text-sm text-red-600 dark:text-red-400 hover:bg-gray-100 dark:hover:bg-gray-700 flex items-center space-x-2"
                         onClick={(e) => handleDeleteArticle(e)}
@@ -581,7 +609,6 @@ const Article = ({ articleData, onUnsave }) => {
             >
               {articleData.category || "General"}
             </Link>
-
 
             {/* Numerical Rating Display */}
             {articleData.rating !== undefined && articleData.rating !== 0 ? (
@@ -703,3 +730,4 @@ const Article = ({ articleData, onUnsave }) => {
 }
 
 export default Article
+

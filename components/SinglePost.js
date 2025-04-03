@@ -580,35 +580,41 @@ const SinglePost = ({ post, initialComments = [] }) => {
           {/* Header with user info */}
           <div className="p-2 sm:p-4 flex items-center justify-between border-b border-gray-200 dark:border-gray-700">
             <Link
-              href={`/profile/${post.authorId?.username || post.authorusername || "unknown"}`}
+              href={`/profile/${post.authorIdGoogle?.username || post.authorId?.username || post.authorusername || "unknown"}`}
               className="flex items-center space-x-2 group"
             >
-              {post.authorId?.profilePicture ? (
+              {post.authorIdGoogle?.profilePicture || post.authorId?.profilePicture ? (
                 <div className="rounded-full overflow-hidden w-10 h-10">
                   <Image
-                    src={post.authorId.profilePicture || "/placeholder.svg"}
-                    alt={post.authorId?.displayname || "Unknown"}
+                    src={post.authorIdGoogle?.profilePicture || post.authorId?.profilePicture || "/placeholder.svg"}
+                    alt={post.authorIdGoogle?.displayname || post.authorId?.displayname || "Unknown"}
                     width="60"
                     height="60"
                     className="h-full w-full object-cover"
-                    />
+                  />
                 </div>
               ) : (
                 <div className="rounded-full bg-mainColor w-10 h-10 flex items-center justify-center text-white font-semibold text-lg cursor-pointer group-hover:shadow-md transition-shadow">
-                  {post.authorId?.displayname ? post.authorId.displayname[0].toUpperCase() : "U"}
+                  {post.authorIdGoogle?.displayname
+                    ? post.authorIdGoogle.displayname[0].toUpperCase()
+                    : post.authorId?.displayname
+                      ? post.authorId.displayname[0].toUpperCase()
+                      : "U"}
                 </div>
               )}
               <div>
                 <p className="font-medium text-gray-900 dark:text-gray-100 capitalize group-hover:underline">
-                  {post.authorId?.displayname || "Unknown"}
+                  {post.authorIdGoogle?.displayname || post.authorId?.displayname || "Unknown"}
                 </p>
                 <div className="flex items-center space-x-1">
                   <span className="text-sm text-gray-500 dark:text-gray-400">
-                    {post.authorId?.username
-                      ? `@${post.authorId.username}`
-                      : post.authorusername
-                        ? `@${post.authorusername}`
-                        : "N/A"}
+                    {post.authorIdGoogle?.username
+                      ? `@${post.authorIdGoogle.username}`
+                      : post.authorId?.username
+                        ? `@${post.authorId.username}`
+                        : post.authorusername
+                          ? `@${post.authorusername}`
+                          : "N/A"}
                   </span>
                   <span className="text-gray-400">•</span>
                   <span className="text-sm text-gray-500 dark:text-gray-400 flex items-center">
@@ -641,7 +647,9 @@ const SinglePost = ({ post, initialComments = [] }) => {
                     className="absolute right-0 mt-2 w-48 bg-white dark:bg-gray-800 rounded-lg shadow-lg border border-gray-200 dark:border-gray-700 z-10 py-2"
                     onClick={(e) => e.stopPropagation()}
                   >
-                    {user && user.username === (post.authorId?.username || post.authorusername) ? (
+                    {user &&
+                    user.username ===
+                      (post.authorIdGoogle?.username || post.authorId?.username || post.authorusername) ? (
                       <button
                         className="w-full text-left px-4 py-2 text-sm text-red-600 dark:text-red-400 hover:bg-gray-100 dark:hover:bg-gray-700 flex items-center space-x-2"
                         onClick={handleDeleteArticle}
