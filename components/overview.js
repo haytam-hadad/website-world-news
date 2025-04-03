@@ -141,7 +141,7 @@ export default function Overview() {
 
         {/* User Profile Summary */}
         {overviewData && (
-          <Card className="bg-white dark:bg-darkgrey border border-b-4 border-b-mainColor">
+          <Card className="bg-white dark:bg-darkgrey border border-b-2 border-b-mainColor">
             <CardContent className="p-5">
               <div className="flex flex-col sm:flex-row items-center sm:items-start gap-4">
                 <div className="relative">

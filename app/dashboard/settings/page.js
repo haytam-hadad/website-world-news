@@ -10,13 +10,13 @@ import { Label } from "@/components/ui/label"
 import { Separator } from "@/components/ui/separator"
 
 export default function SettingsPage() {
-  const { theme, setTheme } = useContext(ThemeContext)
+  const { theme , setTheme } = useContext(ThemeContext)
   const [notifications, setNotifications] = useState(true)
 
 
   const toggleTheme = () => {
-    const newTheme = !theme
-    setTheme(newTheme)
+    setTheme(!theme)
+    console.log(theme)
   }
   
   return (

@@ -205,7 +205,7 @@ export default function Header({ onToggleMenu }) {
                 <div className="flex gap-1 items-center">
                   {/* Notifications */}
                   <button
-                    className="p-1 rounded-full text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors duration-200 relative"
+                    className="p-1 hidden rounded-full text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors duration-200 relative"
                     aria-label="Notifications"
                   >
                     <Bell className="w-5 h-5" />

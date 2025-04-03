@@ -383,33 +383,15 @@ const RightSidebar = () => {
 
         {/* Footer */}
         <footer className="text-xs text-gray-500 dark:text-gray-400 mt-auto pt-5 border-t border-gray-100 dark:border-gray-800">
-          <div className="flex flex-wrap gap-3">
+          <div className="flex justify-between p-3 items-center gap-3">
+            <p>© {currentYear} Newsify</p>
             <Link
-              href="/help"
-              className="hover:text-gray-700 dark:hover:text-gray-300 transition-colors focus:outline-none rounded"
-            >
-              Help Center
-            </Link>
-            <Link
-              href="/terms"
-              className="hover:text-gray-700 dark:hover:text-gray-300 transition-colors focus:outline-none rounded"
-            >
-              Terms
-            </Link>
-            <Link
-              href="/privacy"
-              className="hover:text-gray-700 dark:hover:text-gray-300 transition-colors focus:outline-none rounded"
-            >
-              Privacy
-            </Link>
-            <Link
-              href="/settings"
+              href="/dashboard/settings"
               className="hover:text-gray-700 dark:hover:text-gray-300 transition-colors focus:outline-none rounded"
             >
               Settings
             </Link>
           </div>
-          <p className="mt-3">© {currentYear} Newsify</p>
         </footer>
       </div>
     </aside>
