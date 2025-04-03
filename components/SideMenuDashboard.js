@@ -19,9 +19,8 @@ const SideMenuDashboard = ({ setVisible }) => {
     {
       name: "Overview",
       path: "/dashboard",
-      icon: <Home size={20} />,
-    },
-
+      icon: <BarChart3 size={20} />,
+    }
   ]
 
   // Account menu items

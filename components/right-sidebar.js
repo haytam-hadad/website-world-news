@@ -2,7 +2,26 @@
 
 import { useState, useEffect, useContext } from "react"
 import Link from "next/link"
-import { CheckCircle, UserCheck, ExternalLink, Users, FolderIcon, Layers } from "lucide-react"
+import {
+  CheckCircle,
+  UserCheck,
+  ExternalLink,
+  Users,
+  FolderIcon,
+  Layers,
+  Globe,
+  Building,
+  TestTube,
+  Briefcase,
+  Trophy,
+  HeartPulse,
+  Laptop,
+  GraduationCap,
+  Plane,
+  Leaf,
+  Film,
+  TrendingUp,
+} from "lucide-react"
 import Image from "next/image"
 import { ThemeContext } from "../app/ThemeProvider"
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion"
@@ -70,6 +89,28 @@ const UserItem = ({ userData, lastActivity, isNew }) => {
   )
 }
 
+// Add this function before the CategoryItem component
+const getCategoryIcon = (categoryName) => {
+  const name = categoryName.toLowerCase()
+
+  // Map category names to appropriate icons
+  if (name.includes("tech") || name.includes("technology")) return <Laptop className="w-3.5 h-3.5 text-mainColor" />
+  if (name.includes("health")) return <HeartPulse className="w-3.5 h-3.5 text-mainColor" />
+  if (name.includes("sport")) return <Trophy className="w-3.5 h-3.5 text-mainColor" />
+  if (name.includes("politic")) return <Building className="w-3.5 h-3.5 text-mainColor" />
+  if (name.includes("science")) return <TestTube className="w-3.5 h-3.5 text-mainColor" />
+  if (name.includes("business")) return <Briefcase className="w-3.5 h-3.5 text-mainColor" />
+  if (name.includes("world") || name.includes("global")) return <Globe className="w-3.5 h-3.5 text-mainColor" />
+  if (name.includes("trend")) return <TrendingUp className="w-3.5 h-3.5 text-mainColor" />
+  if (name.includes("entertainment")) return <Film className="w-3.5 h-3.5 text-mainColor" />
+  if (name.includes("education")) return <GraduationCap className="w-3.5 h-3.5 text-mainColor" />
+  if (name.includes("travel")) return <Plane className="w-3.5 h-3.5 text-mainColor" />
+  if (name.includes("nature") || name.includes("environment")) return <Leaf className="w-3.5 h-3.5 text-mainColor" />
+
+  // Default icon
+  return <FolderIcon className="w-3.5 h-3.5 text-mainColor" />
+}
+
 // Category item component
 const CategoryItem = ({ category }) => {
   // Format the category name to be more readable
@@ -82,18 +123,18 @@ const CategoryItem = ({ category }) => {
   return (
     <Link
       href={`/categories/${category._id}`}
-      className="block p-3 rounded-xl mb-2 hover:bg-gray-50 dark:hover:bg-gray-800/70 group"
+      className="block p-3 rounded-xl mb-2 hover:bg-gray-50 dark:hover:bg-gray-800/70 transition-all duration-300 focus:outline-none group"
     >
       <div className="flex items-start space-x-3">
-        <div className="flex-shrink-0 mt-1 capitalize bg-mainColor/80 p-1 rounded-full group-hover:bg-mainColor transition-colors">
-          <FolderIcon className="w-4 h-4 dark:text-white" aria-hidden="true" />
+        <div className="flex-shrink-0 mt-1 bg-mainColor/10 p-1.5 rounded-full group-hover:bg-mainColor/20 transition-colors">
+          {getCategoryIcon(category._id)}
         </div>
         <div className="flex-1 min-w-0">
-          <h4 className="font-medium text-sm  text-gray-900 dark:text-gray-100 line-clamp-1 group-hover:text-mainColor transition-colors">
+          <h4 className="font-medium text-sm text-gray-900 dark:text-gray-100 line-clamp-1 group-hover:text-mainColor transition-colors">
             {formatCategoryName(category._id)}
           </h4>
           <div className="flex items-center mt-1.5">
-            <span className="text-xs text-gray-500"><b className=" text-mainColor">{category.totalArticles}</b> articles</span>
+            <span className="text-xs text-gray-500 dark:text-gray-400">{category.totalArticles} articles</span>
           </div>
         </div>
       </div>

@@ -1,9 +1,10 @@
 "use client"
 
-import { useState, useEffect, useMemo } from "react"
+import { useState, useEffect, useMemo, useContext } from "react"
 import { motion } from "framer-motion"
 import Link from "next/link"
 import Image from "next/image"
+import { ThemeContext } from "../../ThemeProvider"
 import {
   Search,
   Filter,
@@ -12,313 +13,34 @@ import {
   X,
   Sparkles,
   Globe,
-  Building,
-  ShieldAlert,
-  Briefcase,
-  TestTube,
-  Shield,
-  DollarSign,
-  MapPin,
-  CheckSquare,
-  SearchIcon,
-  Heart,
-  CalendarDays,
-  Flame,
-  PenTool,
-  Film,
-  Theater,
-  Star,
-  Leaf,
-  GraduationCap,
-  Rocket,
-  Plane,
   TrendingUp,
+  FolderIcon,
   Laptop,
   HeartPulse,
   Trophy,
+  Building,
+  TestTube,
+  Briefcase,
+  Film,
+  GraduationCap,
+  Plane,
+  Leaf,
 } from "lucide-react"
 
-// Define categories with the new structure from add-post page
-const allCategories = [
-  // Group 1: Trusted News
-  {
-    id: "world",
-    name: "World",
-    icon: <Globe className="w-5 h-5" />,
-    description: "Global news and international affairs",
-    color: "bg-blue-500",
-    type: "trusted-news",
-    group: "Trusted News",
-    featured: true,
-  },
-  {
-    id: "politics",
-    name: "Politics",
-    icon: <Building className="w-5 h-5" />,
-    description: "Political developments, policy changes, and governance",
-    color: "bg-red-500",
-    type: "trusted-news",
-    group: "Trusted News",
-    featured: true,
-  },
-  {
-    id: "crime",
-    name: "Crime",
-    icon: <ShieldAlert className="w-5 h-5" />,
-    description: "Crime reports, legal cases, and law enforcement",
-    color: "bg-gray-500",
-    type: "trusted-news",
-    group: "Trusted News",
-    featured: false,
-  },
-  {
-    id: "business",
-    name: "Business",
-    icon: <Briefcase className="w-5 h-5" />,
-    description: "Business news, market trends, and corporate updates",
-    color: "bg-amber-500",
-    type: "trusted-news",
-    group: "Trusted News",
-    featured: true,
-  },
-  {
-    id: "science",
-    name: "Science",
-    icon: <TestTube className="w-5 h-5" />,
-    description: "Scientific discoveries, research, and innovations",
-    color: "bg-indigo-500",
-    type: "trusted-news",
-    group: "Trusted News",
-    featured: true,
-  },
-  {
-    id: "defense",
-    name: "Defense",
-    icon: <Shield className="w-5 h-5" />,
-    description: "Military news, defense technology, and security",
-    color: "bg-green-700",
-    type: "trusted-news",
-    group: "Trusted News",
-    featured: false,
-  },
-  {
-    id: "economy",
-    name: "Economy",
-    icon: <DollarSign className="w-5 h-5" />,
-    description: "Economic trends, financial news, and market analysis",
-    color: "bg-emerald-500",
-    type: "trusted-news",
-    group: "Trusted News",
-    featured: false,
-  },
-
-  // Group 2: Community Reports
-  {
-    id: "local",
-    name: "Local",
-    icon: <MapPin className="w-5 h-5" />,
-    description: "News and events from your local community",
-    color: "bg-orange-500",
-    type: "community-reports",
-    group: "Community Reports",
-    featured: false,
-  },
-  {
-    id: "facts",
-    name: "Facts",
-    icon: <CheckSquare className="w-5 h-5" />,
-    description: "Fact-checking and verification of news",
-    color: "bg-green-500",
-    type: "community-reports",
-    group: "Community Reports",
-    featured: false,
-  },
-  {
-    id: "investigations",
-    name: "Investigations",
-    icon: <SearchIcon className="w-5 h-5" />,
-    description: "Investigative journalism and in-depth reports",
-    color: "bg-purple-500",
-    type: "community-reports",
-    group: "Community Reports",
-    featured: false,
-  },
-  {
-    id: "humans",
-    name: "Humans",
-    icon: <Heart className="w-5 h-5" />,
-    description: "Personal stories and human interest pieces",
-    color: "bg-pink-500",
-    type: "community-reports",
-    group: "Community Reports",
-    featured: false,
-  },
-  {
-    id: "jobs",
-    name: "Jobs",
-    icon: <Briefcase className="w-5 h-5" />,
-    description: "Career news, job opportunities, and workplace trends",
-    color: "bg-blue-600",
-    type: "community-reports",
-    group: "Community Reports",
-    featured: false,
-  },
-  {
-    id: "events",
-    name: "Events",
-    icon: <CalendarDays className="w-5 h-5" />,
-    description: "Upcoming events, conferences, and gatherings",
-    color: "bg-teal-500",
-    type: "community-reports",
-    group: "Community Reports",
-    featured: false,
-  },
-
-  // Group 3: Discussions
-  {
-    id: "sports",
-    name: "Sports",
-    icon: <Trophy className="w-5 h-5" />,
-    description: "Sports news, results, and athlete stories",
-    color: "bg-green-600",
-    type: "discussions",
-    group: "Discussions",
-    featured: true,
-  },
-  {
-    id: "trending",
-    name: "Trending",
-    icon: <Flame className="w-5 h-5" />,
-    description: "Hot topics and viral content",
-    color: "bg-red-600",
-    type: "discussions",
-    group: "Discussions",
-    featured: false,
-  },
-  {
-    id: "opinions",
-    name: "Opinions",
-    icon: <PenTool className="w-5 h-5" />,
-    description: "Opinion pieces, editorials, and commentary",
-    color: "bg-yellow-500",
-    type: "discussions",
-    group: "Discussions",
-    featured: false,
-  },
-  {
-    id: "entertainment",
-    name: "Entertainment",
-    icon: <Film className="w-5 h-5" />,
-    description: "Movies, TV shows, celebrity news, and entertainment",
-    color: "bg-pink-600",
-    type: "discussions",
-    group: "Discussions",
-    featured: true,
-  },
-  {
-    id: "culture",
-    name: "Culture",
-    icon: <Theater className="w-5 h-5" />,
-    description: "Arts, culture, and societal trends",
-    color: "bg-purple-600",
-    type: "discussions",
-    group: "Discussions",
-    featured: false,
-  },
-  {
-    id: "reviews",
-    name: "Reviews",
-    icon: <Star className="w-5 h-5" />,
-    description: "Product, service, and media reviews",
-    color: "bg-amber-600",
-    type: "discussions",
-    group: "Discussions",
-    featured: false,
-  },
-
-  // Group 4: General Info
-  {
-    id: "health",
-    name: "Health",
-    icon: <HeartPulse className="w-5 h-5" />,
-    description: "Health news, medical breakthroughs, and wellness advice",
-    color: "bg-red-500",
-    type: "general-info",
-    group: "General Info",
-    featured: true,
-  },
-  {
-    id: "nature",
-    name: "Nature",
-    icon: <Leaf className="w-5 h-5" />,
-    description: "Environmental news, wildlife, and natural phenomena",
-    color: "bg-green-500",
-    type: "general-info",
-    group: "General Info",
-    featured: false,
-  },
-  {
-    id: "tech",
-    name: "Tech",
-    icon: <Laptop className="w-5 h-5" />,
-    description: "Technology news, gadgets, and digital innovation",
-    color: "bg-blue-500",
-    type: "general-info",
-    group: "General Info",
-    featured: true,
-  },
-  {
-    id: "education",
-    name: "Education",
-    icon: <GraduationCap className="w-5 h-5" />,
-    description: "Educational news, learning resources, and academic insights",
-    color: "bg-indigo-500",
-    type: "general-info",
-    group: "General Info",
-    featured: false,
-  },
-  {
-    id: "space",
-    name: "Space",
-    icon: <Rocket className="w-5 h-5" />,
-    description: "Space exploration, astronomy, and cosmic discoveries",
-    color: "bg-violet-500",
-    type: "general-info",
-    group: "General Info",
-    featured: false,
-  },
-  {
-    id: "travel",
-    name: "Travel",
-    icon: <Plane className="w-5 h-5" />,
-    description: "Travel destinations, tips, and adventure stories",
-    color: "bg-cyan-500",
-    type: "general-info",
-    group: "General Info",
-    featured: false,
-  },
-]
-
 export default function CategoriesPage() {
+  const { categories, filterTypes, topCategories } = useContext(ThemeContext)
   const [searchQuery, setSearchQuery] = useState("")
   const [activeFilter, setActiveFilter] = useState("all")
   const [visibleCategories, setVisibleCategories] = useState([])
-
-  // Filter types for the category filter - updated to match add-post page
-  const filterTypes = [
-    { id: "all", name: "All Categories" },
-    { id: "trusted-news", name: "Trusted News" },
-    { id: "community-reports", name: "Community Reports" },
-    { id: "discussions", name: "Discussions" },
-    { id: "general-info", name: "General Info" },
-  ]
+  const [apiTopCategories, setApiTopCategories] = useState([])
+  const [isLoading, setIsLoading] = useState(true)
 
   // Featured categories for the top section
-  const featuredCategories = allCategories.filter((cat) => cat.featured)
+  const featuredCategories = useMemo(() => categories.filter((cat) => cat.featured), [categories])
 
   // Use useMemo to avoid unnecessary recalculations
   const filteredCategories = useMemo(() => {
-    let filtered = [...allCategories]
+    let filtered = [...categories]
 
     // Apply search filter
     if (searchQuery) {
@@ -335,9 +57,37 @@ export default function CategoriesPage() {
     }
 
     return filtered
-  }, [allCategories, searchQuery, activeFilter])
+  }, [categories, searchQuery, activeFilter])
 
-  // Update visible categories when filters change - no artificial delay
+  // Fetch top categories from API
+  useEffect(() => {
+    const fetchTopCategories = async () => {
+      setIsLoading(true)
+      try {
+        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/news/topcategories/`)
+
+        if (!response.ok) {
+          if (response.status === 404) {
+            setApiTopCategories([])
+            return
+          }
+          throw new Error(`Failed to fetch top categories: ${response.status} ${response.statusText}`)
+        }
+
+        const data = await response.json()
+        setApiTopCategories(data)
+      } catch (error) {
+        console.error("Error fetching top categories:", error)
+        setApiTopCategories([])
+      } finally {
+        setIsLoading(false)
+      }
+    }
+
+    fetchTopCategories()
+  }, [])
+
+  // Update visible categories when filters change
   useEffect(() => {
     setVisibleCategories(filteredCategories)
   }, [filteredCategories])
@@ -393,6 +143,56 @@ export default function CategoriesPage() {
     }
 
     return colorMap[color] || color
+  }
+
+  // Format category name to be more readable
+  const formatCategoryName = (name) => {
+    if (!name) return "Uncategorized"
+    // Convert to title case and replace hyphens with spaces
+    return name.charAt(0).toUpperCase() + name.slice(1).replace(/-/g, " ")
+  }
+
+  // Add this function after the formatCategoryName function
+  const getCategoryIcon = (categoryName) => {
+    const name = categoryName.toLowerCase()
+
+    // Map category names to appropriate icons
+    if (name.includes("tech") || name.includes("technology")) return <Laptop className="w-3.5 h-3.5 text-white" />
+    if (name.includes("health")) return <HeartPulse className="w-3.5 h-3.5 text-white" />
+    if (name.includes("sport")) return <Trophy className="w-3.5 h-3.5 text-white" />
+    if (name.includes("politic")) return <Building className="w-3.5 h-3.5 text-white" />
+    if (name.includes("science")) return <TestTube className="w-3.5 h-3.5 text-white" />
+    if (name.includes("business")) return <Briefcase className="w-3.5 h-3.5 text-white" />
+    if (name.includes("world") || name.includes("global")) return <Globe className="w-3.5 h-3.5 text-white" />
+    if (name.includes("trend")) return <TrendingUp className="w-3.5 h-3.5 text-white" />
+    if (name.includes("entertainment")) return <Film className="w-3.5 h-3.5 text-white" />
+    if (name.includes("education")) return <GraduationCap className="w-3.5 h-3.5 text-white" />
+    if (name.includes("travel")) return <Plane className="w-3.5 h-3.5 text-white" />
+    if (name.includes("nature") || name.includes("environment")) return <Leaf className="w-3.5 h-3.5 text-white" />
+
+    // Default icon
+    return <FolderIcon className="w-3.5 h-3.5 text-white" />
+  }
+
+  // Get category color based on name
+  const getCategoryColor = (categoryName) => {
+    const name = categoryName.toLowerCase()
+
+    if (name.includes("tech") || name.includes("technology")) return "bg-blue-500"
+    if (name.includes("health")) return "bg-red-500"
+    if (name.includes("sport")) return "bg-green-600"
+    if (name.includes("politic")) return "bg-red-500"
+    if (name.includes("science")) return "bg-indigo-500"
+    if (name.includes("business")) return "bg-amber-500"
+    if (name.includes("world") || name.includes("global")) return "bg-blue-500"
+    if (name.includes("trend")) return "bg-red-600"
+    if (name.includes("entertainment")) return "bg-pink-600"
+    if (name.includes("education")) return "bg-indigo-500"
+    if (name.includes("travel")) return "bg-cyan-500"
+    if (name.includes("nature") || name.includes("environment")) return "bg-green-500"
+
+    // Default color
+    return "bg-mainColor"
   }
 
   return (
@@ -464,7 +264,7 @@ export default function CategoriesPage() {
               Discover content across a wide range of topics, from breaking news to lifestyle, technology, and more.
             </motion.p>
           </div>
-          
+
           <motion.div
             className="hidden md:block"
             initial={{ opacity: 0, x: 20 }}
@@ -512,6 +312,64 @@ export default function CategoriesPage() {
         </div>
       </motion.div>
 
+      {/* Top Categories from API */}
+      <motion.section
+        className="mb-8"
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5, delay: 0.1 }}
+      >
+        <div className="flex items-center justify-between mb-4">
+          <h2 className="text-xl font-bold text-gray-900 dark:text-white flex items-center gap-2">
+            <TrendingUp className="w-4 h-4 text-mainColor" />
+            Top Categories
+          </h2>
+        </div>
+
+        {isLoading ? (
+          <div className="flex justify-center py-4">
+            <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-mainColor"></div>
+          </div>
+        ) : apiTopCategories.length === 0 ? (
+          <div className="text-center py-4 text-gray-500 dark:text-gray-400 text-sm">No categories found</div>
+        ) : (
+          <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-3">
+            {apiTopCategories.map((category) => (
+              <motion.div
+                key={category._id}
+                whileHover={{ y: -3, boxShadow: "0 8px 20px -5px rgba(0, 0, 0, 0.1)" }}
+                className="bg-white dark:bg-darkgrey rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden group"
+              >
+                <Link href={`/categories/${category._id}`} className="block">
+                  <div className="p-4">
+                    <div className="flex items-start space-x-3">
+                      <div
+                        className={`flex-shrink-0 mt-1 ${getCategoryColor(category._id)} p-1.5 rounded-full group-hover:bg-mainColor transition-colors`}
+                      >
+                        {getCategoryIcon(category._id)}
+                      </div>
+                      <div className="flex-1 min-w-0">
+                        <h4 className="font-medium text-sm text-gray-900 dark:text-gray-100 line-clamp-1 group-hover:text-mainColor transition-colors">
+                          {formatCategoryName(category._id)}
+                        </h4>
+                        <div className="flex items-center mt-1.5">
+                          <span className="text-xs text-gray-500 dark:text-gray-400">
+                            {category.totalArticles} articles
+                          </span>
+                        </div>
+                      </div>
+                      <span className="text-mainColor group-hover:text-main2Color text-sm font-medium inline-flex items-center gap-1 transition-colors group-hover:gap-2">
+                        <ArrowUpRight className="w-3.5 h-3.5 transition-all duration-300" />
+                      </span>
+                    </div>
+                  </div>
+                </Link>
+              </motion.div>
+            ))}
+          </div>
+        )}
+      </motion.section>
+
       {/* Featured Categories - More compact grid */}
       <motion.section
         className="mb-8"
@@ -521,7 +379,7 @@ export default function CategoriesPage() {
       >
         <div className="flex items-center justify-between mb-4">
           <h2 className="text-xl font-bold text-gray-900 dark:text-white flex items-center gap-2">
-            <TrendingUp className="w-4 h-4 text-mainColor" />
+            <Sparkles className="w-4 h-4 text-mainColor" />
             Featured Categories
           </h2>
           <Link

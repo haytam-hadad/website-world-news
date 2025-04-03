@@ -16,30 +16,6 @@ import {
   Check,
   Loader2,
   ArrowLeft,
-  Globe,
-  Building,
-  ShieldAlert,
-  Briefcase,
-  TestTube,
-  Shield,
-  DollarSign,
-  MapPin,
-  CheckSquare,
-  SearchIcon,
-  Heart,
-  CalendarDays,
-  ClubIcon as Football,
-  Flame,
-  PenTool,
-  Film,
-  Theater,
-  Star,
-  Stethoscope,
-  Leaf,
-  Lightbulb,
-  GraduationCap,
-  Rocket,
-  Plane,
   ChevronRight,
   Search,
   X,
@@ -51,7 +27,7 @@ import Image from "next/image"
 
 export default function AddPostPage() {
   const router = useRouter()
-  const { user } = useContext(ThemeContext)
+  const { user, categories, filterTypes } = useContext(ThemeContext)
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [success, setSuccess] = useState(false)
   const fileInputRef = useRef(null)
@@ -80,251 +56,6 @@ export default function AddPostPage() {
   const [uploadingImage, setUploadingImage] = useState(false)
   const [uploadProgress, setUploadProgress] = useState(0)
   const [showImageModal, setShowImageModal] = useState(false)
-
-  // Define categories with the new structure (removed emojis from names)
-  const categories = [
-    // Group 1: Trusted News
-    {
-      id: "world",
-      name: "World",
-      icon: <Globe className="w-4 h-4" />,
-      description: "Global news and international affairs",
-      color: "bg-blue-500",
-      type: "trusted-news",
-      group: "Trusted News",
-    },
-    {
-      id: "politics",
-      name: "Politics",
-      icon: <Building className="w-4 h-4" />,
-      description: "Political developments, policy changes, and governance",
-      color: "bg-red-500",
-      type: "trusted-news",
-      group: "Trusted News",
-    },
-    {
-      id: "crime",
-      name: "Crime",
-      icon: <ShieldAlert className="w-4 h-4" />,
-      description: "Crime reports, legal cases, and law enforcement",
-      color: "bg-gray-500",
-      type: "trusted-news",
-      group: "Trusted News",
-    },
-    {
-      id: "business",
-      name: "Business",
-      icon: <Briefcase className="w-4 h-4" />,
-      description: "Business news, market trends, and corporate updates",
-      color: "bg-amber-500",
-      type: "trusted-news",
-      group: "Trusted News",
-    },
-    {
-      id: "science",
-      name: "Science",
-      icon: <TestTube className="w-4 h-4" />,
-      description: "Scientific discoveries, research, and innovations",
-      color: "bg-indigo-500",
-      type: "trusted-news",
-      group: "Trusted News",
-    },
-    {
-      id: "defense",
-      name: "Defense",
-      icon: <Shield className="w-4 h-4" />,
-      description: "Military news, defense technology, and security",
-      color: "bg-green-700",
-      type: "trusted-news",
-      group: "Trusted News",
-    },
-    {
-      id: "economy",
-      name: "Economy",
-      icon: <DollarSign className="w-4 h-4" />,
-      description: "Economic trends, financial news, and market analysis",
-      color: "bg-emerald-500",
-      type: "trusted-news",
-      group: "Trusted News",
-    },
-
-    // Group 2: Community Reports
-    {
-      id: "local",
-      name: "Local",
-      icon: <MapPin className="w-4 h-4" />,
-      description: "News and events from your local community",
-      color: "bg-orange-500",
-      type: "community-reports",
-      group: "Community Reports",
-    },
-    {
-      id: "facts",
-      name: "Facts",
-      icon: <CheckSquare className="w-4 h-4" />,
-      description: "Fact-checking and verification of news",
-      color: "bg-green-500",
-      type: "community-reports",
-      group: "Community Reports",
-    },
-    {
-      id: "investigations",
-      name: "Investigations",
-      icon: <SearchIcon className="w-4 h-4" />,
-      description: "Investigative journalism and in-depth reports",
-      color: "bg-purple-500",
-      type: "community-reports",
-      group: "Community Reports",
-    },
-    {
-      id: "humans",
-      name: "Humans",
-      icon: <Heart className="w-4 h-4" />,
-      description: "Personal stories and human interest pieces",
-      color: "bg-pink-500",
-      type: "community-reports",
-      group: "Community Reports",
-    },
-    {
-      id: "jobs",
-      name: "Jobs",
-      icon: <Briefcase className="w-4 h-4" />,
-      description: "Career news, job opportunities, and workplace trends",
-      color: "bg-blue-600",
-      type: "community-reports",
-      group: "Community Reports",
-    },
-    {
-      id: "events",
-      name: "Events",
-      icon: <CalendarDays className="w-4 h-4" />,
-      description: "Upcoming events, conferences, and gatherings",
-      color: "bg-teal-500",
-      type: "community-reports",
-      group: "Community Reports",
-    },
-
-    // Group 3: Discussions
-    {
-      id: "sports",
-      name: "Sports",
-      icon: <Football className="w-4 h-4" />,
-      description: "Sports news, results, and athlete stories",
-      color: "bg-green-600",
-      type: "discussions",
-      group: "Discussions",
-    },
-    {
-      id: "trending",
-      name: "Trending",
-      icon: <Flame className="w-4 h-4" />,
-      description: "Hot topics and viral content",
-      color: "bg-red-600",
-      type: "discussions",
-      group: "Discussions",
-    },
-    {
-      id: "opinions",
-      name: "Opinions",
-      icon: <PenTool className="w-4 h-4" />,
-      description: "Opinion pieces, editorials, and commentary",
-      color: "bg-yellow-500",
-      type: "discussions",
-      group: "Discussions",
-    },
-    {
-      id: "entertainment",
-      name: "Entertainment",
-      icon: <Film className="w-4 h-4" />,
-      description: "Movies, TV shows, celebrity news, and entertainment",
-      color: "bg-pink-600",
-      type: "discussions",
-      group: "Discussions",
-    },
-    {
-      id: "culture",
-      name: "Culture",
-      icon: <Theater className="w-4 h-4" />,
-      description: "Arts, culture, and societal trends",
-      color: "bg-purple-600",
-      type: "discussions",
-      group: "Discussions",
-    },
-    {
-      id: "reviews",
-      name: "Reviews",
-      icon: <Star className="w-4 h-4" />,
-      description: "Product, service, and media reviews",
-      color: "bg-amber-600",
-      type: "discussions",
-      group: "Discussions",
-    },
-
-    // Group 4: General Info
-    {
-      id: "health",
-      name: "Health",
-      icon: <Stethoscope className="w-4 h-4" />,
-      description: "Health news, medical breakthroughs, and wellness advice",
-      color: "bg-red-500",
-      type: "general-info",
-      group: "General Info",
-    },
-    {
-      id: "nature",
-      name: "Nature",
-      icon: <Leaf className="w-4 h-4" />,
-      description: "Environmental news, wildlife, and natural phenomena",
-      color: "bg-green-500",
-      type: "general-info",
-      group: "General Info",
-    },
-    {
-      id: "tech",
-      name: "Tech",
-      icon: <Lightbulb className="w-4 h-4" />,
-      description: "Technology news, gadgets, and digital innovation",
-      color: "bg-blue-500",
-      type: "general-info",
-      group: "General Info",
-    },
-    {
-      id: "education",
-      name: "Education",
-      icon: <GraduationCap className="w-4 h-4" />,
-      description: "Educational news, learning resources, and academic insights",
-      color: "bg-indigo-500",
-      type: "general-info",
-      group: "General Info",
-    },
-    {
-      id: "space",
-      name: "Space",
-      icon: <Rocket className="w-4 h-4" />,
-      description: "Space exploration, astronomy, and cosmic discoveries",
-      color: "bg-violet-500",
-      type: "general-info",
-      group: "General Info",
-    },
-    {
-      id: "travel",
-      name: "Travel",
-      icon: <Plane className="w-4 h-4" />,
-      description: "Travel destinations, tips, and adventure stories",
-      color: "bg-cyan-500",
-      type: "general-info",
-      group: "General Info",
-    },
-  ]
-
-  // Filter types for category filtering
-  const filterTypes = [
-    { id: "all", name: "All Categories" },
-    { id: "trusted-news", name: "Trusted News" },
-    { id: "community-reports", name: "Community Reports" },
-    { id: "discussions", name: "Discussions" },
-    { id: "general-info", name: "General Info" },
-  ]
 
   // Memoize filtered categories to prevent unnecessary recalculations
   const filteredCategories = useMemo(() => {
@@ -686,6 +417,9 @@ export default function AddPostPage() {
 
       // Show success message and redirect after a delay
       setSuccess(true)
+      setTimeout(() => {
+        router.push("/")
+      }, 2000)
     } catch (error) {
       console.error("Error creating post:", error)
       setErrors({ general: error.message || "An unexpected error occurred" })
@@ -849,7 +583,7 @@ export default function AddPostPage() {
           <div className="flex items-center gap-3 mb-2">
             {user?.profilePicture ? (
               <Image
-                src={user?.profilePicture}
+                src={user?.profilePicture || "/placeholder.svg"}
                 className="w-10 h-10 rounded-full"
                 alt={user?.displayname || "User"}
                 width={40}
