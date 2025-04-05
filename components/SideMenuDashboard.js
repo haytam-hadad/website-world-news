@@ -20,6 +20,11 @@ const SideMenuDashboard = ({ setVisible }) => {
       name: "Overview",
       path: "/dashboard",
       icon: <BarChart3 size={20} />,
+    },
+    {
+      name: "Pending article",
+      path: "/dashboard/ongoing-articles",
+      icon: <FileText size={20} />,
     }
   ]
 

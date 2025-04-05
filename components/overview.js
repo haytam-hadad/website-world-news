@@ -3,22 +3,21 @@
 import { useState, useEffect, useContext } from "react"
 import { motion } from "framer-motion"
 import { ThemeContext } from "../app/ThemeProvider"
-import {
-  FileText,
-  ThumbsUp,
-  Eye,
-  MessageSquare,
-  Award,
-  TrendingUp,
-  Calendar,
-  ChevronRight,
-  ExternalLink,
-} from "lucide-react"
+import { FileText, ThumbsUp, Eye, MessageSquare, Award, TrendingUp, Calendar, ChevronRight, ExternalLink, ArrowBigDown, ArrowBigUp } from 'lucide-react'
 import { Skeleton } from "@/components/ui/skeleton"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import Link from "next/link"
 import Image from "next/image"
+import {
+  BarChart,
+  Bar,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
+  ResponsiveContainer,
+} from "recharts"
 
 // Helper function to get month name
 const getMonthName = (monthNum) => {
@@ -44,11 +43,29 @@ const formatNumber = (num) => {
   return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")
 }
 
+// Custom tooltip for charts
+const CustomTooltip = ({ active, payload, label }) => {
+  if (active && payload && payload.length) {
+    return (
+      <div className="bg-white dark:bg-gray-800 p-3 border border-gray-200 dark:border-gray-700 rounded-md shadow-lg">
+        <p className="font-medium">{label}</p>
+        {payload.map((entry, index) => (
+          <p key={index} style={{ color: entry.color }}>
+            {`${entry.name}: ${entry.value}`}
+          </p>
+        ))}
+      </div>
+    )
+  }
+  return null
+}
+
 export default function Overview() {
   const { user } = useContext(ThemeContext)
   const [overviewData, setOverviewData] = useState(null)
   const [isLoading, setIsLoading] = useState(true)
   const [error, setError] = useState(null)
+  const [chartData, setChartData] = useState([])
 
   // Fetch overview data
   useEffect(() => {
@@ -65,6 +82,16 @@ export default function Overview() {
 
         const data = await response.json()
         setOverviewData(data)
+
+        // Prepare chart data
+        if (data.articlesByMonth) {
+          const formattedChartData = data.articlesByMonth.map(item => ({
+            name: getMonthName(item.month).substring(0, 3),
+            Articles: item.count,
+            fullMonth: getMonthName(item.month)
+          }))
+          setChartData(formattedChartData)
+        }
       } catch (err) {
         console.error("Error fetching overview data:", err)
         setError("Failed to load your statistics. Please try again later.")
@@ -92,25 +119,25 @@ export default function Overview() {
         return "bg-gradient-to-r from-gray-500 to-gray-600 text-white"
     }
   }
-    // Loading state
-    if (isLoading) {
-        return (
-          <div className="w-full max-w-6xl mx-auto px-4 py-6">
-            <Skeleton className="h-8 w-64 mb-4" />
-            <Skeleton className="h-4 w-full max-w-md mb-8" />
-    
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
-              {[...Array(4)].map((_, i) => (
-                <Skeleton key={i} className="h-32 w-full rounded-xl" />
-              ))}
-            </div>
-    
-            <Skeleton className="h-64 w-full rounded-xl mb-8" />
-    
-            <Skeleton className="h-48 w-full rounded-xl" />
-          </div>
-        )
-      }
+
+  // Loading state
+  if (isLoading) {
+    return (
+      <div className="w-full max-w-6xl mx-auto px-4 py-6">
+        <Skeleton className="h-8 w-64 mb-4" />
+        <Skeleton className="h-4 w-full max-w-md mb-8" />
+
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+          {[...Array(4)].map((_, i) => (
+            <Skeleton key={i} className="h-32 w-full rounded-xl" />
+          ))}
+        </div>
+
+        <Skeleton className="h-64 w-full rounded-xl mb-8" />
+      </div>
+    )
+  }
+
   // Error state
   if (error) {
     return (
@@ -281,31 +308,35 @@ export default function Overview() {
               <CardDescription>Your content creation activity over the past year</CardDescription>
             </CardHeader>
             <CardContent>
-              <div className="h-80 w-full border rounded-md p-2">
-                <div className="grid grid-cols-12 h-full gap-2 items-end">
-                  {overviewData.articlesByMonth.map((item, index) => (
-                    <div key={index} className="flex flex-col items-center">
-                      <div className="w-full relative group">
-                        <div
-                          className="w-full bg-mainColor hover:bg-mainColor/90 rounded-t-sm transition-all"
-                          style={{
-                            height: `${item.count ? (item.count / Math.max(...overviewData.articlesByMonth.map((m) => m.count))) * 200 : 0}px`,
-                            minHeight: item.count ? "4px" : "0",
-                          }}
-                        ></div>
-
-                        {/* Tooltip */}
-                        <div className="absolute bottom-full mb-2 left-1/2 transform -translate-x-1/2 bg-white dark:bg-gray-800 p-2 rounded shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all z-10 min-w-[100px] text-center pointer-events-none">
-                          <p className="font-medium text-sm">{getMonthName(item.month)}</p>
-                          <p className="text-mainColor text-sm">{item.count} articles</p>
-                        </div>
-                      </div>
-                      <span className="text-xs text-gray-500 dark:text-gray-400 mt-1">
-                        {getMonthName(item.month).substring(0, 3)}
-                      </span>
-                    </div>
-                  ))}
-                </div>
+              <div className="h-80 w-full">
+                <ResponsiveContainer width="100%" height="100%">
+                  <BarChart
+                    data={chartData}
+                    margin={{
+                      top: 5,
+                      right: 30,
+                      left: 20,
+                      bottom: 5,
+                    }}
+                  >
+                    <CartesianGrid strokeDasharray="3 3" className="stroke-gray-200 dark:stroke-gray-700" />
+                    <XAxis 
+                      dataKey="name" 
+                      className="text-xs text-gray-500 dark:text-gray-400"
+                    />
+                    <YAxis className="text-xs text-gray-500 dark:text-gray-400" />
+                    <Tooltip 
+                      content={<CustomTooltip />}
+                      cursor={{ fill: 'rgba(0, 0, 0, 0.1)' }}
+                    />
+                    <Bar 
+                      dataKey="Articles" 
+                      fill="var(--mainColor, #3b82f6)" 
+                      radius={[4, 4, 0, 0]}
+                      name="Articles"
+                    />
+                  </BarChart>
+                </ResponsiveContainer>
               </div>
             </CardContent>
           </Card>
@@ -327,13 +358,15 @@ export default function Overview() {
                   <h3 className="text-lg font-medium text-gray-900 dark:text-white line-clamp-2">
                     {overviewData.mostPopularArticle.title}
                   </h3>
-                  <div className="flex items-center mt-2 text-gray-500 dark:text-gray-400">
-                    <Eye className="w-4 h-4 mr-1" />
-                    <span>{formatNumber(overviewData.mostPopularArticle.views)} views</span>
+                  <div className="flex flex-wrap gap-3 p-1 mt-2">
+                    <div className="flex items-center text-gray-500 dark:text-gray-400">
+                      <Eye className="w-4 h-4 text-mainColor mr-1" />
+                      <span>{formatNumber(overviewData.mostPopularArticle.views)} views</span>
+                    </div>
                   </div>
                 </div>
 
-                <Link href={`/article/${overviewData.mostPopularArticle._id}`}>
+                <Link href={`/post/${overviewData.mostPopularArticle._id}`}>
                   <Button variant="outline" size="sm">
                     View Article
                     <ChevronRight className="w-4 h-4 ml-1" />
@@ -347,4 +380,3 @@ export default function Overview() {
     </motion.div>
   )
 }
-
