@@ -8,7 +8,6 @@ import { ThemeContext } from "../../ThemeProvider"
 import {
   Search,
   Filter,
-  ChevronRight,
   ArrowUpRight,
   X,
   Sparkles,
@@ -34,9 +33,6 @@ export default function CategoriesPage() {
   const [visibleCategories, setVisibleCategories] = useState([])
   const [apiTopCategories, setApiTopCategories] = useState([])
   const [isLoading, setIsLoading] = useState(true)
-
-  // Featured categories for the top section
-  const featuredCategories = useMemo(() => categories.filter((cat) => cat.featured), [categories])
 
   // Use useMemo to avoid unnecessary recalculations
   const filteredCategories = useMemo(() => {
@@ -370,74 +366,6 @@ export default function CategoriesPage() {
         )}
       </motion.section>
 
-      {/* Featured Categories - More compact grid */}
-      <motion.section
-        className="mb-8"
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5, delay: 0.2 }}
-      >
-        <div className="flex items-center justify-between mb-4">
-          <h2 className="text-xl font-bold text-gray-900 dark:text-white flex items-center gap-2">
-            <Sparkles className="w-4 h-4 text-mainColor" />
-            Featured Categories
-          </h2>
-          <Link
-            href="#all-categories"
-            className="text-mainColor hover:text-main2Color text-sm font-medium flex items-center gap-1 transition-colors"
-          >
-            View All
-            <ChevronRight className="w-4 h-4" />
-          </Link>
-        </div>
-
-        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-3">
-          {featuredCategories.map((category) => (
-            <motion.div
-              key={category.id}
-              whileHover={{ y: -3, boxShadow: "0 8px 20px -5px rgba(0, 0, 0, 0.1)" }}
-              className="bg-white dark:bg-darkgrey rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden group"
-            >
-              <div
-                className={`h-1.5 ${category.color} group-hover:${getLighterColor(category.color)} transition-colors duration-300`}
-              ></div>
-              <div className="p-4">
-                <div className="flex items-start justify-between mb-3">
-                  <div className="flex items-center gap-2">
-                    <div
-                      className={`w-10 h-10 rounded-lg ${category.color} bg-opacity-20 dark:bg-opacity-30 flex items-center justify-center text-${category.color.split("-")[1]}-600 dark:text-${category.color.split("-")[1]}-400 group-hover:scale-110 transition-transform duration-300`}
-                    >
-                      {category.icon}
-                    </div>
-                    <div>
-                      <h3 className="font-bold text-base text-gray-900 dark:text-white">{category.name}</h3>
-                    </div>
-                  </div>
-                  <Link href={`/categories/${category.id}`}>
-                    <button className="p-1.5 rounded-full bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300 hover:bg-mainColor hover:text-white transition-colors duration-200 group-hover:rotate-12 transform">
-                      <ArrowUpRight className="w-4 h-4" />
-                    </button>
-                  </Link>
-                </div>
-                <p className="text-sm text-gray-600 dark:text-gray-300 mb-3 line-clamp-2">{category.description}</p>
-                <div className="flex justify-between gap-4 items-center">
-                  <span className="text-xs px-2 text-center py-0.5 rounded-full bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300">
-                    {category.group}
-                  </span>
-                  <Link
-                    href={`/categories/${category.id}`}
-                    className="text-mainColor text-xs hover:text-main2Color font-medium inline-flex items-center gap-1 transition-colors"
-                  >
-                    Browse Articles
-                    <ChevronRight className="w-4 h-4" />
-                  </Link>
-                </div>
-              </div>
-            </motion.div>
-          ))}
-        </div>
-      </motion.section>
-
       {/* Search and Filter - More compact layout */}
       <motion.div
         className="mb-6 space-y-3 sm:space-y-0 sm:flex sm:flex-row sm:gap-3 sm:items-center sm:justify-between"
@@ -548,110 +476,6 @@ export default function CategoriesPage() {
           </div>
         )}
       </motion.div>
-
-      {/* Newsletter Subscription - More compact */}
-      <motion.div
-        className="mt-8 bg-gradient-to-r from-mainColor to-main2Color rounded-xl p-4 sm:p-6 text-white overflow-hidden relative"
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5, delay: 0.5 }}
-      >
-        {/* Background elements */}
-        <div className="absolute top-0 left-0 w-full h-full overflow-hidden pointer-events-none">
-          <motion.div
-            className="absolute top-[10%] right-[5%] w-64 h-64 rounded-full bg-white/10 blur-3xl"
-            animate={{
-              scale: [1, 1.2, 1],
-              opacity: [0.1, 0.2, 0.1],
-            }}
-            transition={{
-              duration: 10,
-              repeat: Number.POSITIVE_INFINITY,
-              repeatType: "reverse",
-            }}
-          />
-        </div>
-
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 items-center relative z-10">
-          <div>
-            <motion.div
-              initial={{ opacity: 0, y: -10 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5, delay: 0.6 }}
-              className="inline-flex items-center gap-1.5 px-3 py-1 bg-white/20 backdrop-blur-sm rounded-full text-xs font-medium mb-3"
-            >
-              <Globe className="w-3.5 h-3.5" />
-              <span>Stay in the loop</span>
-            </motion.div>
-
-            <motion.h2
-              className="text-xl font-bold mb-2"
-              initial={{ opacity: 0, y: -10 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5, delay: 0.7 }}
-            >
-              Never Miss an Update
-            </motion.h2>
-
-            <motion.p
-              className="text-white/90 mb-3 text-sm"
-              initial={{ opacity: 0, y: -10 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5, delay: 0.8 }}
-            >
-              Subscribe to our newsletter to receive personalized news updates.
-            </motion.p>
-
-            <motion.div
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5, delay: 0.9 }}
-              className="flex flex-col sm:flex-row gap-2"
-            >
-              <input
-                type="email"
-                placeholder="Enter your email"
-                className="px-3 py-2 rounded-lg bg-white/20 backdrop-blur-sm border border-white/30 text-white placeholder-white/70 focus:outline-none focus:ring-2 focus:ring-white/50 w-full"
-              />
-              <button className="px-4 py-2 bg-white text-mainColor font-medium rounded-lg hover:bg-gray-100 transition-colors whitespace-nowrap flex items-center justify-center gap-2 group">
-                Subscribe
-                <ArrowUpRight className="w-4 h-4 group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform" />
-              </button>
-            </motion.div>
-          </div>
-
-          <div className="hidden md:flex justify-end">
-            <motion.div
-              className="relative w-32 h-32"
-              initial={{ opacity: 0, scale: 0.8 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ duration: 0.6, delay: 0.7 }}
-            >
-              <Image
-                src="/images/i1.svg"
-                alt="Newsletter illustration"
-                fill
-                className="object-contain filter invert opacity-90"
-              />
-
-              {/* Animated elements */}
-              <motion.div
-                className="absolute top-1/4 right-1/4 w-2 h-2 rounded-full bg-yellow-300"
-                animate={{
-                  scale: [1, 1.5, 1],
-                  opacity: [0.7, 1, 0.7],
-                }}
-                transition={{
-                  duration: 2,
-                  repeat: Number.POSITIVE_INFINITY,
-                  repeatType: "reverse",
-                }}
-              />
-            </motion.div>
-          </div>
-        </div>
-      </motion.div>
     </div>
   )
 }
-

@@ -604,16 +604,6 @@ export default function AddPostPage() {
             Share your news, insights, or stories with the community
           </p>
 
-          {/* Posting Rules Notice */}
-          <div className="mt-4 p-3 bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-800 rounded-lg">
-            <h3 className="font-medium text-yellow-800 dark:text-yellow-400 flex items-center gap-2 mb-2">
-              <Info className="w-4 h-4" />
-              Posting Rules
-            </h3>
-            <p className="text-sm text-yellow-700 dark:text-yellow-300">
-              Your post will undergo a review process before being published, as your account is not verified.
-            </p>
-          </div>
         </div>
 
         <form onSubmit={handleSubmit} className="p-6">

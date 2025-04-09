@@ -11,16 +11,24 @@ import {
   FileText,
   AlertCircle,
   Search,
-  Filter,
-  SortAsc,
-  SortDesc,
   Eye,
   Calendar,
   Loader2,
   Trash2,
   XCircle,
   MessageSquare,
+  MoreVertical,
 } from "lucide-react"
+
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog"
+import { Button } from "@/components/ui/button"
 
 // Format date for display
 const formatDate = (dateString) => {
@@ -196,16 +204,15 @@ export default function OngoingArticles() {
   const [viewArticle, setViewArticle] = useState(null)
   const [activeTab, setActiveTab] = useState("content")
 
-
   const getYouTubeID = (url) => {
     if (!url) return null
 
     // Handle different YouTube URL formats
-    const regExp = /(?:youtube\.com\/(?:[^/]+\/.+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=)|youtu\.be\/)([^"&?/\s]{11})/i
+    const regExp =
+      /^(?:https?:\/\/)?(?:www\.)?(?:youtube\.com|youtu\.be)\/(?:watch\?v=)?([^&\s]+)$/
     const match = url.match(regExp)
     return match ? match[1] : null
   }
-  
   // Fetch ongoing articles
   useEffect(() => {
     const fetchOngoingArticles = async () => {
@@ -231,6 +238,7 @@ export default function OngoingArticles() {
         if (!data.success) {
           throw new Error(data.message || "Failed to fetch ongoing articles")
         }
+        console.log(data.data)
 
         setArticles(data.data || [])
         setFilteredArticles(data.data || [])
@@ -371,7 +379,7 @@ export default function OngoingArticles() {
 
   return (
     <motion.div
-      className="w-full max-w-6xl mx-auto p-4 py-6"
+      className="w-full max-w-6xl mx-auto p-2 mb-10 md:p-6"
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0 }}
@@ -387,10 +395,10 @@ export default function OngoingArticles() {
         </div>
 
         <Link href="/add">
-          <button className="px-4 py-2 bg-mainColor hover:bg-mainColor/90 text-white rounded-md flex items-center transition-colors">
+          <Button className="bg-mainColor hover:bg-mainColor/90">
             <FileText className="mr-2 h-4 w-4" />
             Create New Article
-          </button>
+          </Button>
         </Link>
       </div>
 
@@ -406,83 +414,6 @@ export default function OngoingArticles() {
             onChange={(e) => setSearchQuery(e.target.value)}
           />
         </div>
-
-        <div className="relative">
-          <button
-            className="px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors flex items-center gap-2"
-            onClick={(e) => {
-              e.stopPropagation()
-              setShowSortDropdown(!showSortDropdown)
-            }}
-          >
-            {sortOrder === "newest" || sortOrder === "oldest" ? (
-              sortOrder === "newest" ? (
-                <SortDesc className="h-4 w-4" />
-              ) : (
-                <SortAsc className="h-4 w-4" />
-              )
-            ) : (
-              <Filter className="h-4 w-4" />
-            )}
-            <span>
-              {sortOrder === "newest"
-                ? "Newest First"
-                : sortOrder === "oldest"
-                  ? "Oldest First"
-                  : sortOrder === "title-asc"
-                    ? "Title (A-Z)"
-                    : "Title (Z-A)"}
-            </span>
-          </button>
-
-          {showSortDropdown && (
-            <div
-              className="absolute right-0 mt-2 w-48 bg-white dark:bg-gray-800 rounded-md shadow-lg border border-gray-200 dark:border-gray-700 z-10 py-1"
-              onClick={(e) => e.stopPropagation()}
-            >
-              <button
-                className="w-full text-left px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 flex items-center"
-                onClick={() => {
-                  setSortOrder("newest")
-                  setShowSortDropdown(false)
-                }}
-              >
-                <SortDesc className="mr-2 h-4 w-4" />
-                <span>Newest First</span>
-              </button>
-              <button
-                className="w-full text-left px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 flex items-center"
-                onClick={() => {
-                  setSortOrder("oldest")
-                  setShowSortDropdown(false)
-                }}
-              >
-                <SortAsc className="mr-2 h-4 w-4" />
-                <span>Oldest First</span>
-              </button>
-              <button
-                className="w-full text-left px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 flex items-center"
-                onClick={() => {
-                  setSortOrder("title-asc")
-                  setShowSortDropdown(false)
-                }}
-              >
-                <span className="mr-2">A→Z</span>
-                <span>Title (A-Z)</span>
-              </button>
-              <button
-                className="w-full text-left px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 flex items-center"
-                onClick={() => {
-                  setSortOrder("title-desc")
-                  setShowSortDropdown(false)
-                }}
-              >
-                <span className="mr-2">Z→A</span>
-                <span>Title (Z-A)</span>
-              </button>
-            </div>
-          )}
-        </div>
       </div>
 
       {/* Articles Grid */}
@@ -496,10 +427,10 @@ export default function OngoingArticles() {
               : "You don't have any articles in progress. Create a new article to get started."}
           </p>
           <Link href="/add">
-            <button className="px-4 py-2 bg-mainColor hover:bg-mainColor/90 text-white rounded-md flex items-center transition-colors mx-auto">
+            <Button className="bg-mainColor hover:bg-mainColor/90">
               <FileText className="mr-2 h-4 w-4" />
               Create New Article
-            </button>
+            </Button>
           </Link>
         </div>
       ) : (
@@ -523,21 +454,7 @@ export default function OngoingArticles() {
                         setShowDropdown(showDropdown === article._id ? null : article._id)
                       }}
                     >
-                      <svg
-                        width="15"
-                        height="15"
-                        viewBox="0 0 15 15"
-                        fill="none"
-                        xmlns="http://www.w3.org/2000/svg"
-                        className="h-4 w-4"
-                      >
-                        <path
-                          d="M3.625 7.5C3.625 8.12132 3.12132 8.625 2.5 8.625C1.87868 8.625 1.375 8.12132 1.375 7.5C1.375 6.87868 1.87868 6.375 2.5 6.375C3.12132 6.375 3.625 6.87868 3.625 7.5ZM8.625 7.5C8.625 8.12132 8.12132 8.625 7.5 8.625C6.87868 8.625 6.375 8.12132 6.375 7.5C6.375 6.87868 6.87868 6.375 7.5 6.375C8.12132 6.375 8.625 6.87868 8.625 7.5ZM13.625 7.5C13.625 8.12132 13.1213 8.625 12.5 8.625C11.8787 8.625 11.375 8.12132 11.375 7.5C11.375 6.87868 11.8787 6.375 12.5 6.375C13.1213 6.375 13.625 6.87868 13.625 7.5Z"
-                          fill="currentColor"
-                          fillRule="evenodd"
-                          clipRule="evenodd"
-                        ></path>
-                      </svg>
+                      <MoreVertical className="h-4 w-4" />
                     </button>
 
                     {showDropdown === article._id && (
@@ -588,16 +505,17 @@ export default function OngoingArticles() {
                 <div className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 dark:bg-gray-800 text-gray-800 dark:text-gray-200 border border-gray-200 dark:border-gray-700 capitalize">
                   {article.category || "Uncategorized"}
                 </div>
-                <button
+                <Button
+                  variant="outline"
+                  size="sm"
                   onClick={() => {
                     setViewArticle(article)
                     setActiveTab("content")
                   }}
-                  className="px-3 py-1.5 border border-gray-300 dark:border-gray-600 rounded-md text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors flex items-center"
                 >
                   <Eye className="mr-2 h-3 w-3" />
                   View Article
-                </button>
+                </Button>
               </div>
             </div>
           ))}
@@ -654,29 +572,29 @@ export default function OngoingArticles() {
 
               {activeTab === "content" ? (
                 <>
-                  {viewArticle.mediaUrl && viewArticle.mediaType === "video" ? (
-                    <div className="rounded-md overflow-hidden mb-4">
+                  {viewArticle.mediaUrl && viewArticle.mediaType == "video" ? (
+                    <div className="rounded-md overflow-hidden mb-4 max-w-md mx-auto">
                       <iframe
+                        width="100%"
+                        height="250"
                         src={`https://www.youtube.com/embed/${getYouTubeID(viewArticle.mediaUrl)}`}
-                        title={viewArticle.title}
-                        className="w-full h-auto"
-                        width="200"
-                        height="100"
+                        title="YouTube video player"
                         allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                         allowFullScreen
-                      />
+                      ></iframe>
                     </div>
-                  ) : viewArticle.mediaUrl && (
-                    <div className="rounded-md overflow-hidden mb-4">
-                      <Image
-                        src={viewArticle.mediaUrl || "/placeholder.svg"}
-                        alt={viewArticle.title}
-                        className="w-full h-auto object-cover"
-                        width={200}
-                        height={100}
-                        layout="responsive"
-                      />
-                    </div>
+                  ) : (
+                    viewArticle.mediaUrl && (
+                      <div className="rounded-md overflow-hidden mb-4">
+                        <Image
+                          src={viewArticle.mediaUrl || "/placeholder.svg"}
+                          alt={viewArticle.title || "Article image"}
+                          width={800}
+                          height={450}
+                          className="w-full h-auto object-cover"
+                        />
+                      </div>
+                    )
                   )}
 
                   <div className="prose prose-sm max-w-none dark:prose-invert">
@@ -717,117 +635,77 @@ export default function OngoingArticles() {
                       </span>
                     </div>
                   </div>
-
-                  <div>
-                    <h3 className="text-sm font-medium text-gray-500 dark:text-gray-400 mb-1">Statistics</h3>
-                    <div className="flex flex-wrap gap-4 mt-2">
-                      <div className="flex items-center text-gray-500 dark:text-gray-400">
-                        <Eye className="w-4 h-4 mr-1" />
-                        <span>{viewArticle.views || 0} views</span>
-                      </div>
-                      <div className="flex items-center text-gray-500 dark:text-gray-400">
-                        <MessageSquare className="w-4 h-4 mr-1" />
-                        <span>{viewArticle.comments?.length || 0} comments</span>
-                      </div>
-                    </div>
-                  </div>
                 </div>
               )}
             </div>
 
             <div className="sticky bottom-0 bg-white dark:bg-gray-800 border-t border-gray-200 dark:border-gray-700 px-6 py-4 flex justify-between items-center">
               <div className="flex items-center gap-2">
-                <button
+                <Button
+                  variant="destructive"
                   onClick={() => {
                     setSelectedArticle(viewArticle)
                     setShowDeleteDialog(true)
                     setViewArticle(null)
                   }}
-                  className="px-3 py-1.5 bg-red-600 hover:bg-red-700 text-white rounded-md transition-colors flex items-center gap-1"
                 >
-                  <Trash2 className="h-4 w-4" />
+                  <Trash2 className="h-4 w-4 mr-2" />
                   Delete
-                </button>
-                <button
-                  onClick={() => setViewArticle(null)}
-                  className="px-3 py-1.5 border border-gray-300 dark:border-gray-600 rounded-md hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
-                >
+                </Button>
+                <Button variant="outline" onClick={() => setViewArticle(null)}>
                   Close
-                </button>
+                </Button>
               </div>
             </div>
           </div>
         </div>
       )}
 
-      {/* Delete Confirmation Dialog */}
-      {showDeleteDialog && (
-        <div className="fixed inset-0 z-50 overflow-y-auto">
-          <div className="flex items-center justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
-            <div
-              className="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity"
-              onClick={() => setShowDeleteDialog(false)}
-            ></div>
+      {/* Delete Confirmation Dialog using shadcn/ui Dialog */}
+      <Dialog open={showDeleteDialog} onOpenChange={setShowDeleteDialog}>
+        <DialogContent className="sm:max-w-md">
+          <DialogHeader>
+            <DialogTitle>Delete Article</DialogTitle>
+            <DialogDescription>
+              Are you sure you want to delete this article? This action cannot be undone.
+            </DialogDescription>
+          </DialogHeader>
 
-            <span className="hidden sm:inline-block sm:align-middle sm:h-screen">&#8203;</span>
-
-            <div className="inline-block align-bottom bg-white dark:bg-gray-800 rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full">
-              <div className="bg-white dark:bg-gray-800 px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
-                <div className="sm:flex sm:items-start">
-                  <div className="mx-auto flex-shrink-0 flex items-center justify-center h-12 w-12 rounded-full bg-red-100 dark:bg-red-900/20 sm:mx-0 sm:h-10 sm:w-10">
-                    <Trash2 className="h-6 w-6 text-red-600 dark:text-red-400" />
-                  </div>
-                  <div className="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left">
-                    <h3 className="text-lg leading-6 font-medium text-gray-900 dark:text-white">Delete Article</h3>
-                    <div className="mt-2">
-                      <p className="text-sm text-gray-500 dark:text-gray-400">
-                        Are you sure you want to delete this article? This action cannot be undone.
-                      </p>
-                    </div>
-                    <div className="mt-3 bg-gray-50 dark:bg-gray-700 p-3 rounded-md">
-                      <h4 className="font-medium text-gray-900 dark:text-white">
-                        {selectedArticle?.title || "Untitled Article"}
-                      </h4>
-                      <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">
-                        {truncateText(selectedArticle?.content || "No content", 100)}
-                      </p>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div className="bg-gray-50 dark:bg-gray-700 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
-                <button
-                  type="button"
-                  className={`w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-red-600 text-base font-medium text-white hover:bg-red-700 focus:outline-none sm:ml-3 sm:w-auto sm:text-sm ${isDeleting ? "opacity-75 cursor-not-allowed" : ""}`}
-                  onClick={() => selectedArticle && handleDeleteArticle(selectedArticle._id)}
-                  disabled={isDeleting}
-                >
-                  {isDeleting ? (
-                    <>
-                      <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                      Deleting...
-                    </>
-                  ) : (
-                    <>
-                      <Trash2 className="mr-2 h-4 w-4" />
-                      Delete
-                    </>
-                  )}
-                </button>
-                <button
-                  type="button"
-                  className="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 dark:border-gray-600 shadow-sm px-4 py-2 bg-white dark:bg-gray-800 text-base font-medium text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-700 focus:outline-none sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm"
-                  onClick={() => setShowDeleteDialog(false)}
-                  disabled={isDeleting}
-                >
-                  Cancel
-                </button>
-              </div>
+          {selectedArticle && (
+            <div className="bg-gray-50 dark:bg-gray-800 p-3 rounded-md">
+              <h4 className="font-medium text-gray-900 dark:text-white">
+                {selectedArticle.title || "Untitled Article"}
+              </h4>
+              <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">
+                {truncateText(selectedArticle.content || "No content", 100)}
+              </p>
             </div>
-          </div>
-        </div>
-      )}
+          )}
+
+          <DialogFooter className="sm:justify-between">
+            <Button variant="outline" onClick={() => setShowDeleteDialog(false)} disabled={isDeleting}>
+              Cancel
+            </Button>
+            <Button
+              variant="destructive"
+              onClick={() => selectedArticle && handleDeleteArticle(selectedArticle._id)}
+              disabled={isDeleting}
+            >
+              {isDeleting ? (
+                <>
+                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                  Deleting...
+                </>
+              ) : (
+                <>
+                  <Trash2 className="mr-2 h-4 w-4" />
+                  Delete
+                </>
+              )}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </motion.div>
   )
 }
-

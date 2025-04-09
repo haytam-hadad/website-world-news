@@ -11,7 +11,7 @@ import { Separator } from "@/components/ui/separator"
 
 export default function SettingsPage() {
   const { theme , setTheme } = useContext(ThemeContext)
-  const [notifications, setNotifications] = useState(true)
+  // const [notifications, setNotifications] = useState(true)
 
 
   const toggleTheme = () => {
@@ -117,7 +117,7 @@ export default function SettingsPage() {
                   />
                 </div>
 
-                <div className="flex items-center justify-between p-4 rounded-xl bg-gray-50 dark:bg-gray-800/50 border border-transparent">
+                {/* <div className="flex items-center justify-between p-4 rounded-xl bg-gray-50 dark:bg-gray-800/50 border border-transparent">
                   <div className="flex items-center space-x-4">
                     <div className="w-10 h-10 rounded-full bg-mainColor/10 dark:bg-mainColor/20 flex items-center justify-center">
                       <Bell className="w-5 h-5 text-mainColor" />
@@ -140,7 +140,7 @@ export default function SettingsPage() {
                     onCheckedChange={setNotifications}
                     className="data-[state=checked]:bg-mainColor"
                   />
-                </div>
+                </div> */}
               </div>
             </div>
           </CardContent>
