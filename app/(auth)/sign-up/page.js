@@ -484,6 +484,12 @@ export default function SignUpPage() {
 
             {/* Alternative Sign-up Options */}
             <div className="mt-6">
+              <Link
+                href="/terms-of-use"
+                className="hover:text-gray-700 text-mainColor dark:hover:text-gray-300 transition-colors focus:outline-none rounded"
+              >
+                Terms of use
+              </Link>
               <div className="relative">
                 <div className="absolute inset-0 flex items-center">
                   <div className="w-full border-t border-gray-300 dark:border-gray-600"></div>

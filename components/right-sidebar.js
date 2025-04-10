@@ -391,6 +391,12 @@ const RightSidebar = () => {
             >
               Settings
             </Link>
+            <Link
+              href="/terms-of-use"
+              className="hover:text-gray-700 dark:hover:text-gray-300 transition-colors focus:outline-none rounded"
+            >
+              Terms of use
+            </Link>
           </div>
         </footer>
       </div>

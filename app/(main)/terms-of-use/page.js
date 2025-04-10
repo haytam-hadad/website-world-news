@@ -1,6 +1,7 @@
 "use client"
 
 import { motion } from "framer-motion"
+import Image from "next/image"
 import {
   AlertTriangle,
   FileText,
@@ -134,15 +135,18 @@ export default function TermsOfUsePage() {
   ]
 
   return (
-    <div className="max-w-4xl mx-auto px-4 py-8 sm:px-6 sm:py-12">
+    <div className="max-w-4xl mx-auto p-3 sm:p-6">
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5 }}
         className="mb-8 text-center"
       >
-        <div className="inline-flex items-center justify-center w-16 h-16 mb-4 rounded-full bg-mainColor/10">
-          <FileText className="w-8 h-8 text-mainColor" />
+        <div className="inline-flex gap-2 mb-12 items-center justify-center w-16 h-16 rounded-full bg-mainColor/10 dark:bg-transparent">
+          <Image src="/images/i1.svg" alt="Newsify" width={40} height={40} className="w-20 h-20 dark:filter dark:invert" />
+          <span className="font-semibold text-mainColor text-4xl transition-colors duration-200 group-hover:text-mainColor dark:group-hover:text-mainColor">
+            Newsify 
+            </span>
         </div>
         <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-2">Terms of Use</h1>
         <p className="text-gray-600 dark:text-gray-400 max-w-2xl mx-auto">
